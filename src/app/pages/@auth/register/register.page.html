@@ -1,0 +1,50 @@
+
+<ion-header>
+  <ion-toolbar>
+    <!-- <ion-navbar transparent></ion-navbar> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid background>
+      <form [formGroup]="formReg" (ngSubmit)="onRegister(formReg.value)"> 
+      <ion-row>
+        <ion-col buttons padding-top-2 col-12 text-center>
+          <h3 white>New User</h3>
+          
+          <ion-card>
+            <ion-card-content background-white>
+              <ion-item>
+                <ion-input type="text" formControlName="firstname" placeholder="First name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="text" formControlName="lastname" placeholder="Last name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="text"  formControlName="emailaddres" placeholder="Enter your email addres"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="text"  formControlName="username" placeholder="Enter a username"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="password"  formControlName="password" placeholder="Enter a password"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="password"  formControlName="confirmpassword" placeholder="Confirm your password"></ion-input>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+              <ion-col col-12 text-center>
+                <button gradient-button color-1 ion-button icon-end [disabled]="formReg.invalid" type="submit"
+                  color="black">
+                  Register
+                </button>
+              </ion-col>
+        
+        </ion-col>
+      </ion-row>
+      </form>
+      
+
+  </ion-grid>
+</ion-content>
