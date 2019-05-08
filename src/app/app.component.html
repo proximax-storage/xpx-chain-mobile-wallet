@@ -1,4 +1,27 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-  
+<ion-app background>
+    <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios hydrated">
+        <ion-menu-button white class="ios button ion-activatable hydrated"></ion-menu-button>
+        
+      </ion-buttons>
+      
+
+        
+        <ion-menu side="start" menuId="custom" class="my-custom-menu">
+            <br>
+            <ion-toolbar>
+              <ion-title>Hi Usuario</ion-title>
+            </ion-toolbar>
+          <ion-content >
+            <ion-list>
+              <ion-item [routerLink]="['/wallets']">Wallets</ion-item>
+              <ion-item>Services</ion-item>
+              <ion-item>Setting</ion-item>
+              <ion-item>Notifications</ion-item>
+              <ion-item>Account</ion-item>
+              <ion-item>Sing Out</ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-menu>
+
+  <ion-router-outlet main></ion-router-outlet>
 </ion-app>

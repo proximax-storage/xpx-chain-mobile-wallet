@@ -74,6 +74,8 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  
 }
 
 [background] {
@@ -106,15 +108,14 @@
   );
 }
 
+
 [gradient-button][color-2] {
   color: yellow
 }
 
-// pendiente por usar
 [toolbar-background]{
   background-color: #0d0c0cbd !important;
 }
-// 
 
 [padding-top]{
   padding-top: 150px !important;
@@ -128,13 +129,10 @@
   background: white
 }
 
-[background-black-trans]{
-  background: #0c0c0c82;
-}
-
 [white]{
   color: white;
 }
+
 
 [transparent]{
   background-color: transparent;
@@ -172,22 +170,6 @@
 
 [logo] {
   width: 60%;
-}
-
-[icon] {
-  width: 8%;
-  display: block;
-  margin: auto;
-}
-
-[icon-add] {
-  width: 10% !important;
-  // display: block;
-  // margin: auto;
-}
-
-[icon-back] {
-  width: 5% !important;
 }
 
 

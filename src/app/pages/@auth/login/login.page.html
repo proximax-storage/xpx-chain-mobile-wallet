@@ -1,49 +1,54 @@
 <ion-header no-border>
-    <!-- <ion-navbar transparent></ion-navbar> -->
-  </ion-header>
-  <ion-content fullscreen >
-    <ion-grid  background >
-        <form [formGroup]="formLogin" (ngSubmit)="onSubmit(formLogin.value)">
-      <ion-row>
-        <ion-col buttons padding-top col-12 text-center >
-          <img logo src="assets/imgs/logo.png">
-        </ion-col>
-      </ion-row>
-    <ion-row>
-        <ion-col buttons padding col-12 text-center>
-            <h3 white >Welcome!</h3>
-              <ion-card>
-                  <ion-card-content background-white>
-                    <ion-item >
-                        <ion-input type="text"  formControlName="username" placeholder="Enter your username"></ion-input>
-                      </ion-item>
-                      <ion-item >
-                          <ion-input type="password" formControlName="password" placeholder="Enter your password"></ion-input>
-                      </ion-item>
-                </ion-card-content>
-              </ion-card>
-              <ion-label white padding>Forgot you password?</ion-label>
-            <ion-row >
+  <!-- <ion-navbar transparent></ion-navbar> -->
+</ion-header>
+<ion-content fullscreen>
+  <ion-grid background>
+    <block-ui>
+      <form [formGroup]="formLogin" (ngSubmit)="onSubmit(formLogin.value)">
+        <ion-row>
+          <ion-col buttons padding-top col-12 text-center>
+            <img logo src="assets/imgs/logo.png">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col buttons padding col-12 text-center>
+            <h3 white>Welcome!</h3>
+            <ion-card>
+              <ion-card-content background-white>
+                <ion-item>
+                  <ion-input type="text" formControlName="username" placeholder="Enter your username"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-input type="password" formControlName="password" placeholder="Enter your password"></ion-input>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+            <ion-label white padding>Forgot you password?</ion-label>
+            <ion-row>
               <ion-col col-12 text-center>
-                <button gradient-button color-1 ion-button icon-end  [disabled]="formLogin.invalid" type="submit" color="black">
-                    Login
-                  </button>
+                <button gradient-button color-1 ion-button icon-end [disabled]="formLogin.invalid" type="submit"
+                  color="black">
+                  Login
+                </button>
               </ion-col>
             </ion-row>
           </ion-col>
-        </ion-row>  
+        </ion-row>
       </form>
-<ion-row>
-    <ion-col  col-12 text-center>
+    </block-ui>
+
+    <ion-row>
+      <ion-col col-12 text-center>
         <ion-label white padding no-margin>Are you new user?</ion-label>
       </ion-col>
-</ion-row>
-      <ion-row>
-          <ion-col  col-12 text-center>
-              <button gradient-button color-2 ion-button icon-end transparent no-margin [routerLink]="['/register']" type="submit" color="black">
-                Sing Up
-                </button>
-            </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 text-center>
+        <button gradient-button color-2 ion-button icon-end transparent no-margin [routerLink]="['/register']"
+          type="submit" color="black">
+          Sing Up
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

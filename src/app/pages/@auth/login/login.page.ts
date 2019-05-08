@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../providers/auth.service';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-login',
@@ -9,11 +11,13 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+  @BlockUI() blockUI: NgBlockUI;
   formLogin: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
     public authservice: AuthService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private router: Router
     ){
       
     }
@@ -35,14 +39,14 @@ export class LoginPage implements OnInit {
   onSubmit(form) {
     console.log("aqui llegando", form)
     if (this.formLogin.valid) {
+      this.blockUI.start();
       this.authservice.login(form.username, form.password)
       .then(async res => {
         if (res.status === 'success') {
-          const toast = await this.toastController.create({
-            message: 'Successfully .',
-            duration: 3000
-          });
-          toast.present();
+          setTimeout(() => {
+            this.blockUI.stop();
+            this.router.navigate(['/wallets']); 
+          }, 2500);
           this.formLogin.reset();
           // this.authProvider
           //   .setSelectedAccount(form.email, form.password)

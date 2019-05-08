@@ -1,12 +1,22 @@
-
+<!-- 
 <ion-header>
   <ion-toolbar>
-    <!-- <ion-navbar transparent></ion-navbar> -->
+    <ion-col col-6>
+        <img src="assets/imgs/back-arrow-white.svg" icon-back>
+    </ion-col>
+      <ion-col col-6>
+          <img src="assets/imgs/shell-proximax-white.svg" icon-add>
+      </ion-col>
+      
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+<div toolbar-background>
+  <p>ssssss</p>
 
-<ion-content>
-  <ion-grid background>
+</div>
+
+<ion-content transparent>
+  <ion-grid transparent>
       <form [formGroup]="formReg" (ngSubmit)="onRegister(formReg.value)"> 
       <ion-row>
         <ion-col buttons padding-top-2 col-12 text-center>
