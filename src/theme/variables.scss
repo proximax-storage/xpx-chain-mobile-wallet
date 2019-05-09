@@ -76,6 +76,10 @@
   --ion-color-light-tint: #f5f6f9;
 }
 
+[x] {
+  --background:var(--ion-background-color,transparent !important);
+}
+
 [background] {
   background: url('../assets/imgs/background.jpg')
   no-repeat;
@@ -112,7 +116,7 @@
 
 // pendiente por usar
 [toolbar-background]{
-  background-color: #0d0c0cbd !important;
+  background-color: #0d0c0c61 !important;
 }
 // 
 
@@ -151,13 +155,13 @@
 }
 
 [gradient-button] {
-  width: 200px;
+  width: 150px;
   font-size: 16px;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
-  margin: 10px;
-  height: 48px;
+  margin: 0px;
+  height: 38px;
   /* text-align: center; */
   /* border: none; */
   // background-size: 300% 100%;
@@ -182,8 +186,8 @@
 
 [icon-add] {
   width: 10% !important;
-  // display: block;
-  // margin: auto;
+  display: block;
+  margin: auto;
 }
 
 [icon-back] {

@@ -1,17 +1,18 @@
 
 
-<ion-content>
+<ion-content >
       <ion-grid background>
           <img src="assets/imgs/shell-proximax-white.svg" icon>
-          <!-- [formGroup]="formLogin" (ngSubmit)="onSubmit(formLogin.value)" -->
-          <form >
+
+          <!-- Wallet -->
+          <form *ngIf="wallet==true">
               <ion-row>
-                <ion-col buttons padding col-12 text-center>
+                <ion-col  padding size="12" text-center>
                   <h3 white>Wallets</h3>
                   <ion-card>
                     <ion-card-content background-black-trans>
                       <div>
-                        <img src="assets/imgs/create-add-new-white.svg" icon-add>
+                        <img src="assets/imgs/create-add-new-white.svg" icon-add (click)="createWallet()">
                         <h1 white>Create new wallet</h1>
 
                       </div>
@@ -22,6 +23,73 @@
                 </ion-col>
               </ion-row>
             </form>
+<!--  Create new wallets -->
+            <form *ngIf="create==true" [formGroup]="formWallets" (ngSubmit)="onSubmit(formWallets.value)">
+                <ion-col  padding size="12" text-center>
+                <h3 white >Create new wallets</h3>
+              </ion-col>
+                <ion-row>
+                    <ion-col size="3" text-center>
+                          <img src="assets/imgs/select-colour-card-green.svg">
+                    </ion-col>
+                    <ion-col size="3" text-center>
+                              <img  src="assets/imgs/select-colour-card-orange.svg">
+                      </ion-col>
+                      <ion-col size="3" text-center>
+                                <img  src="assets/imgs/select-colour-card-blue.svg">
+                        </ion-col>
+                        <ion-col size="3" text-center>
+                                  <img  src="assets/imgs/select-colour-card-yellow.svg">
+                          </ion-col>
+                  </ion-row>
+                    <ion-row>
+                  <ion-col size="12" text-center>
+                    <ion-card>
+                      <ion-card-content background-white>
+                            <ion-item>
+                                <ion-input type="text"  formControlName="walletname" placeholder="Enter a wallet name"></ion-input>
+                              </ion-item>  
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col  size="12" text-center>
+                      <p white>Do you wanna import import assets to your new wallet?</p>
+                      <ion-checkbox color="dark"  formControlName="checkbox" (click)="updateCucumber($event)" ></ion-checkbox>
+                      
+                  </ion-col>
+
+
+
+                  <ion-col *ngIf="checkbox==true" size="12" text-center>
+                      <ion-card>
+                        <ion-card-content background-white>
+                              <ion-item>
+                                  <ion-input type="text"  formControlName="privateKey" placeholder="Enter you private key"></ion-input>
+                                </ion-item>  
+                        </ion-card-content>
+                      </ion-card>
+                    </ion-col>
+
+                </ion-row>
+
+                
+                <ion-row>
+                    <ion-col *ngIf="checkbox==true" size="12" text-center>
+                        <button gradient-button color-1 ion-button icon-end  type="submit"
+                          color="black" [disabled]="formWallets.invalid || formWallets.checkbox==true || formWallets.privateKey==true" >
+                          Import
+                        </button>
+                      </ion-col>
+                    <ion-col *ngIf="checkbox!=true" size="12" text-center>
+                      <button gradient-button color-1 ion-button icon-end  type="submit"
+                        color="black" [disabled]="formWallets.invalid">
+                        Create
+                      </button>
+                    </ion-col>
+                  </ion-row>
+              </form>
+
+
       </ion-grid>
 
 </ion-content>

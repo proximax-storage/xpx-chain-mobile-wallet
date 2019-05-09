@@ -1,9 +1,7 @@
-<ion-header no-border>
-  <!-- <ion-navbar transparent></ion-navbar> -->
-</ion-header>
+
 <ion-content fullscreen>
   <ion-grid background>
-    <block-ui>
+    
       <form [formGroup]="formLogin" (ngSubmit)="onSubmit(formLogin.value)">
         <ion-row>
           <ion-col buttons padding-top col-12 text-center>
@@ -35,7 +33,6 @@
           </ion-col>
         </ion-row>
       </form>
-    </block-ui>
 
     <ion-row>
       <ion-col col-12 text-center>
@@ -44,7 +41,7 @@
     </ion-row>
     <ion-row>
       <ion-col col-12 text-center>
-        <button gradient-button color-2 ion-button icon-end transparent no-margin [routerLink]="['/register']"
+        <button gradient-button color-2 ion-button icon-end transparent no-margin (click)="itemSelected()"
           type="submit" color="black">
           Sing Up
         </button>

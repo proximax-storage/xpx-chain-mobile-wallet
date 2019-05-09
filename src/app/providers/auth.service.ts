@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import findIndex from 'lodash/findIndex';
+import { BehaviorSubject, Observable } from 'rxjs';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  logged = false;
+  isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.logged);
+  isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
+
   constructor(
     private storage: Storage
-  ) { 
+  ) {
     console.log('Hello AuthProvider Provider');
   }
 
@@ -23,7 +29,7 @@ export class AuthService {
   //  * @param password { string } The password of the user
   //  */
 
-  register(firstname:string, lastname:string, username: string, password: string) {
+  register(firstname: string, lastname: string, username: string, password: string) {
     return this.storage
       .get('accounts')
       .then(data => {
@@ -39,6 +45,7 @@ export class AuthService {
           password: password
         };
         accounts.push(accountFromInput);
+
         return this.storage.set('accounts', accounts);
       });
   }
@@ -49,13 +56,13 @@ export class AuthService {
   //  * @param password { string } The password of the user
   //  */
   login(
-    username: string,
-    password: string
+    usernameP: string,
+    passwordP: string
   ): Promise<{ status: string; message: string }> {
     return this.storage.get('accounts').then(data => {
       const accountFromInput = {
-        username: username,
-        password: password
+        username: usernameP,
+        password: passwordP
       };
       const ACCOUNTS = data ? data : [];
 
@@ -63,26 +70,43 @@ export class AuthService {
         status: '',
         message: ''
       };
-      let accountExists = findIndex(ACCOUNTS, accountFromInput);
-      console.log("Accounts", ACCOUNTS);
-      console.log("accountExists", accountExists);
+      const accountExists = findIndex(ACCOUNTS, accountFromInput);
+      console.log('Accounts', ACCOUNTS);
+      console.log('accountExists', accountExists);
 
       if (accountExists === -1) {
         response = {
           status: 'failed',
           message:
-            "It looks like there's something wrong with your username of password you entered. Please try again."
+            'It looks like there\'s something wrong with your username of password you entered. Please try again.'
         };
       } else {
         response = {
           status: 'success',
-          message: "You've successfully logged in."
+          message: 'You\'ve successfully logged in.'
         };
-      }
 
-      return response;
+        this.setLogged(true);
+        this.storage.set('isLoggedIn', true);
+      }
+      return this.storage.set('isLoggedIn', true), response;
     });
   }
 
 
+  setLogged(params: any) {
+    this.logged = params;
+    this.isLoggedSubject.next(this.logged);
+  }
+
+
+  getIsLogged() {
+    return this.isLogged$;
+  }
+
+
+  logout(): Promise<any> {
+    this.setLogged(false);
+    return this.storage.set('isLoggedIn', false);
+  }
 }
