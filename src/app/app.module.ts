@@ -19,8 +19,8 @@ import { IonicStorageModule } from '@ionic/storage';
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     IonicStorageModule.forRoot({
-      name: '__movile_wallet',
-      driverOrder: ['indexeddb', 'sqlite', 'websql']
+      name: '__movile_wallet'
+      // driverOrder: ['indexeddb', 'sqlite', 'websql']
     })
   ],
   providers: [

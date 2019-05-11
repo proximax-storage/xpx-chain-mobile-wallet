@@ -29,7 +29,7 @@ export class AuthService {
   //  * @param password { string } The password of the user
   //  */
 
-  register(firstname: string, lastname: string, username: string, password: string) {
+  register(firstnameU: string, lastnameU: string, usernameU: string, passwordU: string) {
     return this.storage
       .get('accounts')
       .then(data => {
@@ -38,15 +38,15 @@ export class AuthService {
         return ACCOUNTS;
       })
       .then((accounts: any[]) => {
-        const accountFromInput = {
-          firstname: firstname,
-          lastname: lastname,
-          username: username,
-          password: password
+        const accountFromInputU = {
+          firstname: firstnameU,
+          lastname: lastnameU,
+          username: usernameU,
+          password: passwordU
         };
-        accounts.push(accountFromInput);
+        accounts.push(accountFromInputU);
 
-        return this.storage.set('accounts', accounts);
+        return this.storage.set('accounts', accounts), this.storage.set('pin', accountFromInputU.password);
       });
   }
 
@@ -70,6 +70,7 @@ export class AuthService {
         status: '',
         message: ''
       };
+      console.log('accountFromInput', accountFromInput);
       const accountExists = findIndex(ACCOUNTS, accountFromInput);
       console.log('Accounts', ACCOUNTS);
       console.log('accountExists', accountExists);
@@ -87,9 +88,10 @@ export class AuthService {
         };
 
         this.setLogged(true);
-        this.storage.set('isLoggedIn', true);
+        // this.storage.set('isLoggedIn', true);
+        this.storage.set('pin', accountFromInput.password);
       }
-      return this.storage.set('isLoggedIn', true), response;
+      return  response;
     });
   }
 
@@ -107,6 +109,6 @@ export class AuthService {
 
   logout(): Promise<any> {
     this.setLogged(false);
-    return this.storage.set('isLoggedIn', false);
+    return this.storage.set('isLoggedIn', false), this.storage.set('pin', '00');
   }
 }

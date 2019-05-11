@@ -76,16 +76,52 @@
   --ion-color-light-tint: #f5f6f9;
 }
 
-[x] {
-  --background:var(--ion-background-color,transparent !important);
+ion-content {
+  --background: transparent !important;
+  --color: var(--ion-text-color,#000);
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --keyboard-offset: 0px;
+  --offset-top: 0px;
+  --offset-bottom: 0px;
+  --overflow: auto;
+  display: block;
+  position: relative;
+  -ms-flex: 1;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0!important;
+  padding: 0!important;
+  font-family: var(--ion-font-family,inherit);
+  contain: size style;
 }
+
+// ion-menu{
+//   --width: 304px;
+//   --min-width: auto;
+//   --max-width: auto;
+//   --height: 100%;
+//   --min-height: auto;
+//   --max-height: auto;
+//   --background: #0d0c0c8a !important;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   bottom: 0;
+//   display: none;
+//   position: absolute;
+//   contain: strict;
+// }
 
 [background] {
   background: url('../assets/imgs/background.jpg')
   no-repeat;
   background-position: center;
   background-size: cover;
-  height: 100%;
+  height: auto;
   width: auto;
 }
 
@@ -98,16 +134,20 @@
     height: auto;
     width: auto;
   }
+
+  [padding-top]{
+    padding-top: 16px !important;
+  }
 }
 
 [gradient-button][color-1] {
-  background-image: linear-gradient(
-    to right,
-    #052733,
-    #052733,
-    #052733,
-    #052733
-  );
+    background-image: linear-gradient(
+      to right,
+      #052733,
+      #052733,
+      #052733,
+      #052733
+    );
 }
 
 [gradient-button][color-2] {
@@ -134,6 +174,51 @@
 
 [background-black-trans]{
   background: #0c0c0c82;
+}
+[background-blue]{
+  background: url('../assets/imgs/select-colour-card-blue.svg') no-repeat;
+  // background: #18a5cf no-repeat;
+  background-position: center;
+  background-size: cover;
+  height:vauto;
+  width: auto;
+}
+[background-orange]{
+  background: url('../assets/imgs/select-colour-card-orange.svg') no-repeat;
+  // background: #f36016 no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: auto;
+  width: auto;
+}
+
+[background-green]{
+  // background-image: url('../assets/imgs/select-colour-card-green.svg') no-repeat;
+  background-color: #14b6ac;
+  // background: #14b6ac no-repeat;
+  // background-position: center;
+  // background-size: cover;
+  // height: auto;
+  // width: auto;
+}
+
+[background-green-img]{
+  background-image: url('../assets/imgs/select-colour-card-green.svg') no-repeat;
+  // background-color: #14b6ac;
+  // background: #14b6ac no-repeat;
+  // background-position: center;
+  // background-size: cover;
+  // height: auto;
+  // width: auto;
+}
+
+[background-yellow]{
+  // background: url('../assets/imgs/select-colour-card-yellow.svg') no-repeat;
+  background: #f4a91c no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: auto;
+  width: auto;
 }
 
 [white]{

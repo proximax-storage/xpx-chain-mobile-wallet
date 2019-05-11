@@ -43,6 +43,7 @@ export class LoginPage implements OnInit {
     if (this.formLogin.valid) {
       this.authservice.login(form.username, form.password)
         .then(async res => {
+          console.log('exitoso', res)
           if (res.status === 'success') {
             console.log('exitoso')
             this.router.navigate(['/wallets']);

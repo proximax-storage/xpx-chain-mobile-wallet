@@ -37,17 +37,10 @@ export class AppComponent implements OnDestroy {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      // this.initGetRoot();
-      // this.ver();
+      this.initGetRoot();
       this.loguer();
     });
   }
-
-  // ver(){
-  //   let shadow = elementRef.attachShadow({mode: 'closed'});
-  //   let el = document.querySelector("ion-content")['style'];
-  //   console.log("......................", el)
-  // }
 
   ngOnDestroy() {
     this.subscriptions.forEach(element => {
@@ -68,25 +61,11 @@ export class AppComponent implements OnDestroy {
   }
 
   initGetRoot() {
-    return Promise.all([
-      this.storage.get('isLoggedIn'),
-    ]).then(results => {
-      this.isLoggedIn = results[0];
-
-      // if (isFirstAppOpen) {
-      //   return 'OnboardingPage';
-      // } else if (isLoggedIn) {
-      //   return 'TabsPage';
-      // } else {
-      //   return 'WelcomePage';
-      // }
       if (this.isLoggedIn) {
         return this.router.navigate(['/wallets']);
-        //  this.isLoggedIn;
       } else {
         return this.router.navigate(['/login']);
       }
-    });
   }
 
   logout() {

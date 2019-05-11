@@ -1,16 +1,16 @@
 
 
 <ion-content >
-      <ion-grid background>
+      <ion-grid >
           <img src="assets/imgs/shell-proximax-white.svg" icon>
 
           <!-- Wallet -->
           <form *ngIf="wallet==true">
               <ion-row>
-                <ion-col  padding size="12" text-center>
+                <ion-col size="12" text-center>
                   <h3 white>Wallets</h3>
-                  <ion-card>
-                    <ion-card-content background-black-trans>
+                  <ion-card background-black-trans>
+                    <ion-card-content>
                       <div>
                         <img src="assets/imgs/create-add-new-white.svg" icon-add (click)="createWallet()">
                         <h1 white>Create new wallet</h1>
@@ -22,10 +22,28 @@
                 
                 </ion-col>
               </ion-row>
+              <ion-row >
+                  <ion-col  *ngFor="let item of wallets" size="12" (click)="openWallet(item)">
+                    <ion-card background-orange>
+                      <!-- <a href="">
+                          <img src="assets/imgs/select-colour-card-green.svg" (click)="createWallet()">
+                      </a> -->
+                      <ion-card-content > 
+                        
+                        <h3 white><strong>{{item.name}}</strong></h3>
+                        <span style="font-size: 12px;" white>{{item.address}}</span>
+                        <h4 white>USD. valor</h4>
+  
+                      </ion-card-content>
+                    </ion-card>
+                  
+                  </ion-col>
+                  
+                </ion-row>
             </form>
 <!--  Create new wallets -->
             <form *ngIf="create==true" [formGroup]="formWallets" (ngSubmit)="onSubmit(formWallets.value)">
-                <ion-col  padding size="12" text-center>
+                <ion-col size="12" text-center>
                 <h3 white >Create new wallets</h3>
               </ion-col>
                 <ion-row>
