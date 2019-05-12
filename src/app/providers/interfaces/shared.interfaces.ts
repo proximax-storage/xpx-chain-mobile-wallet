@@ -9,7 +9,7 @@ export interface walletInterface {
 }
 
 export interface WalletAccountInterface {
-    name: string,
+    name: string;
     accounts: object;
 }
 

@@ -1,0 +1,105 @@
+<ion-header toolbar-background>
+  <ion-toolbar color="transparent">
+    <ion-buttons slot="start" white>
+      <ion-back-button defaultHref="/wallets"></ion-back-button>
+    </ion-buttons>
+    <ion-title><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-grid text-center white >
+    <!-- <ion-col size="12" text-center> -->
+      <h3 >Transactions</h3>
+
+      <h1> USD 80.00 </h1>
+
+      <ion-card>
+        <ion-item>
+          <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
+          <ion-label>
+            XPX <br>
+              <p>Proximax</p>
+          </ion-label>
+          <ion-label slot="end">
+              0.0087s XPX  
+          </ion-label>
+        </ion-item>
+      </ion-card>
+
+      <ion-card background-yellow>
+          <ion-card-content white text-center>
+            <strong > Wallet 1</strong>
+          </ion-card-content>
+        </ion-card>
+        <p  >SDNVVHWC5ZS52JD6CJYSKCQNCORDHGLUVKLUJPH3</p>
+
+      <ion-card background-white>
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="floating">Amount</ion-label>
+                <ion-input type="text" ></ion-input>
+              </ion-item>
+              <p>USD 0.00</p>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating"></ion-label>
+                <ion-select>
+                    <ion-select-option value="" selected>Selecc</ion-select-option>
+                  <ion-select-option value="xpx" >XPX</ion-select-option>
+                  <ion-select-option value="xem">XEM</ion-select-option>
+                  <ion-select-option value="xar" >XAR</ion-select-option>
+                  <ion-select-option value="nxps">NPXS</ion-select-option>
+                  <ion-select-option value="stf">STF</ion-select-option>
+                  <ion-select-option value="btc">BTC</ion-select-option>
+                  <ion-select-option value="eth">ETH</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+
+
+      <ion-card background-white>
+          <ion-card-content>
+            <ion-row>
+                <ion-col size="12">
+                <ion-item>
+                    <ion-input type="text" placeholder="Wallet address"></ion-input>
+                    <ion-icon name="information-circle" slot="end"></ion-icon>
+                  </ion-item>
+                </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+
+
+      <ion-card background-white>
+          <ion-card-content>
+            <ion-row>
+                <ion-col size="12">
+                <ion-item>
+                    <ion-textarea placeholder="Mensaje (optional)"></ion-textarea>
+                  </ion-item>
+                </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-row>
+            <ion-col size="12" text-center>
+                <button gradient-button color-1 ion-button icon-end type="submit" color="black">
+                  Send
+                </button>
+              </ion-col>
+        </ion-row>
+
+    <!-- </ion-col> -->
+  </ion-grid>
+</ion-content>

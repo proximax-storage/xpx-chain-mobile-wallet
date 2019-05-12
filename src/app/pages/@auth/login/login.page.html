@@ -23,11 +23,14 @@
             </ion-card>
             <ion-label white padding>Forgot you password?</ion-label>
             <ion-row>
-              <ion-col col-12 text-center>
-                <button gradient-button color-1 ion-button icon-end [disabled]="formLogin.invalid" type="submit"
-                  color="black">
-                  Login
+              <ion-col  buttons padding col-12 text-center>
+                  <!-- <ion-button expand="block" gradient-button color-1 ion-button icon-end  [disabled]="formLogin.invalid" type="submit"
+                  color="black" routerDirection="root"> Login  -->
+                <button  expand="block" gradient-button color-1 ion-button icon-end [disabled]="formLogin.invalid" type="submit"
+                  color="black" routerDirection="root">
+                  Login 
                 </button>
+              <!-- </ion-button> -->
               </ion-col>
             </ion-row>
           </ion-col>
@@ -41,7 +44,11 @@
     </ion-row>
     <ion-row>
       <ion-col col-12 text-center>
-        <button gradient-button color-2 ion-button icon-end transparent no-margin (click)="itemSelected()"
+          <!-- <ion-button expand="block" gradient-button color-2  transparent no-margin routerLink="/register"  color="black" routerDirection="forward">
+            Sing Up
+          </ion-button> -->
+
+        <button expand="block" gradient-button color-2 ion-button icon-end transparent no-margin  routerLink="/register" routerDirection="root"
           type="submit" color="black">
           Sing Up
         </button>

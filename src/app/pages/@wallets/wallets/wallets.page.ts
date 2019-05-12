@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import {  WalletService} from '../../../providers/wallet.service';
-import { environment } from '../../../../environments/environment'
-import { Wallet } from 'proximax-nem2-sdk';
+// import { environment } from '../../../../environments/environment';
+// import { Wallet } from 'proximax-nem2-sdk';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { DepFlags } from '@angular/core/src/view';
 
 @Component({
   selector: 'app-wallets',
@@ -11,24 +14,23 @@ import { Wallet } from 'proximax-nem2-sdk';
   styleUrls: ['./wallets.page.scss'],
 })
 export class WalletsPage implements OnInit {
-  formWallets: FormGroup;
-  wallet: boolean;
-  create: boolean;
-  checkbox: boolean;
-  private: boolean;
+  // formWallets: FormGroup;
+  // wallet: boolean;
+  // create: boolean;
+  // checkbox: boolean;
+  // private: boolean;
   wallets: any;
   constructor(
-    public formBuilder: FormBuilder,
-    private storage: Storage
+    private storage: Storage,
+    private nav: NavController
     ) { }
 
     check = [
       { val: '', isChecked: false }
     ];
   ngOnInit() {
-    this.createForm();
-    this.wallet = true;
-    this.checkbox = false;
+    // this.createForm();
+    // this.checkbox = false;
     this.selectWallet();
     // this.wallets = [
     //   {
@@ -68,113 +70,114 @@ export class WalletsPage implements OnInit {
   }
 
   
-  createForm() {
-    this.formWallets = this.formBuilder.group({
-      // img1: [''],
-      // img2: [''],
-      // img3: [''],
-      // img4: [''],
-      walletname: ['', Validators.required],
-      checkbox: [false],
-      privateKey: [''],
-    });
-  }
+  // createForm() {
+  //   this.formWallets = this.formBuilder.group({
+  //     // img1: [''],
+  //     // img2: [''],
+  //     // img3: [''],
+  //     // img4: [''],
+  //     walletname: ['', Validators.required],
+  //     checkbox: [false],
+  //     privateKey: [''],
+  //   });
+  // }
 
-  createWallet() {
-    this.createForm();
-    this.wallet = false;
-    this.create = true;
-    console.log('create new wallet');
-  }
+  // createWallet() {
+  //   // this.createForm();
+  //   // this.wallet = false;
+  //   // this.create = true;
+  //   this.nav.navigateForward(`/wallet-create`);
+  //   console.log('create new wallet');
+  // }
 
-  onSubmit(form) {
+  // onSubmit(form) {
 
-    this.storage.get('pin').then((val) => {
-      const pin = val;
-      const password = WalletService.createPassword(pin);
-      if ( form.checkbox === true ) {
-        const decrip = WalletService.decryptPrivateKey(password, '6250f592f723fc61f914b2da4ccd2912b72ee74dec86769f76b0bfc506c98bd1477e015f27491a325259b9de208262d9', '0C07B4B25A335020F27A9C5D3A95E751');
-        console.log('.....................encryptedKey', decrip);
-        const walletPrivatekey = WalletService.createAccountFromPrivateKey(form.walletname, password, decrip, environment.network);
-        console.log('.....................', walletPrivatekey);
-        const walletGenerate = [{
-          name: walletPrivatekey.name,
-          schema: walletPrivatekey.schema,
-          address: walletPrivatekey.address['address'],
-          encryptedKey: walletPrivatekey.encryptedPrivateKey['encryptedKey'],
-          iv: walletPrivatekey.encryptedPrivateKey['iv']
-        }];
-        this.storage.get('wallets').then((wallet) => {
-          if( wallet === null ) {
-            console.log('........... sin push unique' );
-            this.storage.set('wallets', walletGenerate);
-            this.selectWallet();
-          } else {
-            const walletGenerate1 = {
-              name: walletPrivatekey.name,
-              schema: walletPrivatekey.schema,
-              address: walletPrivatekey.address['address'],
-              encryptedKey: walletPrivatekey.encryptedPrivateKey['encryptedKey'],
-              iv: walletPrivatekey.encryptedPrivateKey['iv']
-            };
-            console.log('...........push' );
-            wallet.push(walletGenerate1);
-            this.selectWallet();
-            this.storage.set('wallets', wallet);
-          }
+  //   this.storage.get('pin').then((val) => {
+  //     const pin = val;
+  //     const password = WalletService.createPassword(pin);
+  //     if ( form.checkbox === true ) {
+  //       const decrip = WalletService.decryptPrivateKey(password, '6250f592f723fc61f914b2da4ccd2912b72ee74dec86769f76b0bfc506c98bd1477e015f27491a325259b9de208262d9', '0C07B4B25A335020F27A9C5D3A95E751');
+  //       console.log('.....................encryptedKey', decrip);
+  //       const walletPrivatekey = WalletService.createAccountFromPrivateKey(form.walletname, password, decrip, environment.network);
+  //       console.log('.....................', walletPrivatekey);
+  //       const walletGenerate = [{
+  //         name: walletPrivatekey.name,
+  //         schema: walletPrivatekey.schema,
+  //         address: walletPrivatekey.address['address'],
+  //         encryptedKey: walletPrivatekey.encryptedPrivateKey['encryptedKey'],
+  //         iv: walletPrivatekey.encryptedPrivateKey['iv']
+  //       }];
+  //       this.storage.get('wallets').then((wallet) => {
+  //         if( wallet === null ) {
+  //           console.log('........... sin push unique' );
+  //           this.storage.set('wallets', walletGenerate);
+  //           this.selectWallet();
+  //         } else {
+  //           const walletGenerate1 = {
+  //             name: walletPrivatekey.name,
+  //             schema: walletPrivatekey.schema,
+  //             address: walletPrivatekey.address['address'],
+  //             encryptedKey: walletPrivatekey.encryptedPrivateKey['encryptedKey'],
+  //             iv: walletPrivatekey.encryptedPrivateKey['iv']
+  //           };
+  //           console.log('...........push' );
+  //           wallet.push(walletGenerate1);
+  //           this.selectWallet();
+  //           this.storage.set('wallets', wallet);
+  //         }
          
-        });
-        this.wallet = true;
-        this.create = false;
-        this.formWallets.reset();
-        // console.log('se llama la funcion inportar cuenta', form.privateKey);
-      } else {
-        const walletSimple = WalletService.createSimpleWallet(form.walletname, password, environment.network);
-        // console.log('..............walletSimple addres.', walletSimple.address['address']);
+  //       });
+  //       this.wallet = true;
+  //       this.create = false;
+  //       this.formWallets.reset();
+  //       // console.log('se llama la funcion inportar cuenta', form.privateKey);
+  //     } else {
+  //       const walletSimple = WalletService.createSimpleWallet(form.walletname, password, environment.network);
+  //       // console.log('..............walletSimple addres.', walletSimple.address['address']);
 
-        const walletGenerayte = [{
-          name: walletSimple.name,
-          schema: walletSimple.schema,
-          address: walletSimple.address['address'],
-          encryptedKey: walletSimple.encryptedPrivateKey['encryptedKey'],
-          iv: walletSimple.encryptedPrivateKey['iv']
-        }];
-        // console.log('....................walletSimple convertida.', walletGenerayte);
-        this.storage.get('wallets').then((wallet) => {
-          console.log('retona', wallet);
-          // JSON.parse(wallet);
-          if( wallet === null ) {
-            console.log('........... sin push unique' );
-            this.storage.set('wallets', walletGenerayte);
-            this.selectWallet();
-          } else {
-            const walletGenerayte1 = {
-              name: walletSimple.name,
-              schema: walletSimple.schema,
-              address: walletSimple.address['address'],
-              encryptedKey: walletSimple.encryptedPrivateKey['encryptedKey'],
-              iv: walletSimple.encryptedPrivateKey['iv']
-            };
-            console.log('...........push' );
-            wallet.push(walletGenerayte1);
-            this.selectWallet();
-            this.storage.set('wallets', wallet);
-          }
+  //       const walletGenerayte = [{
+  //         name: walletSimple.name,
+  //         schema: walletSimple.schema,
+  //         address: walletSimple.address['address'],
+  //         encryptedKey: walletSimple.encryptedPrivateKey['encryptedKey'],
+  //         iv: walletSimple.encryptedPrivateKey['iv']
+  //       }];
+  //       // console.log('....................walletSimple convertida.', walletGenerayte);
+  //       this.storage.get('wallets').then((wallet) => {
+  //         console.log('retona', wallet);
+  //         // JSON.parse(wallet);
+  //         if( wallet === null ) {
+  //           console.log('........... sin push unique' );
+  //           this.storage.set('wallets', walletGenerayte);
+  //           this.selectWallet();
+  //         } else {
+  //           const walletGenerayte1 = {
+  //             name: walletSimple.name,
+  //             schema: walletSimple.schema,
+  //             address: walletSimple.address['address'],
+  //             encryptedKey: walletSimple.encryptedPrivateKey['encryptedKey'],
+  //             iv: walletSimple.encryptedPrivateKey['iv']
+  //           };
+  //           console.log('...........push' );
+  //           wallet.push(walletGenerayte1);
+  //           this.selectWallet();
+  //           this.storage.set('wallets', wallet);
+  //         }
          
-        });
+  //       });
 
-        // this.selectWallet();
-        // const encryptedKey = walletSimple['encryptedPrivateKey'].encryptedKey;
-        // const iv = walletSimple['encryptedPrivateKey'].iv;
-        // console.log('.....................encryptedKey', encryptedKey);
-        // console.log('.....................encryptedKey', iv);
-        this.wallet = true;
-        this.create = false;
-        this.formWallets.reset({});
-        console.log('se crea la cuenta nueva');
-      }
-    });
-  }
+  //       // this.selectWallet();
+  //       // const encryptedKey = walletSimple['encryptedPrivateKey'].encryptedKey;
+  //       // const iv = walletSimple['encryptedPrivateKey'].iv;
+  //       // console.log('.....................encryptedKey', encryptedKey);
+  //       // console.log('.....................encryptedKey', iv);
+  //       this.wallet = true;
+  //       this.create = false;
+  //       this.formWallets.reset({});
+  //       console.log('se crea la cuenta nueva');
+  //     }
+  //   });
+  // }
 
 selectWallet() {
   this.storage.get('wallets').then((val) => { 
@@ -183,18 +186,28 @@ selectWallet() {
   });
 }
 
-  updateCucumber(e) {
-    console.log('eeeeeeeeee', e.target.checked);
-    this.checkbox = !this.checkbox;
-    if ( this.checkbox === false ) {
-      console.log('limpieza');
-    } else {
-      this.private = true;
-    }
-  }
+  // updateCucumber(e) {
+  //   console.log('eeeeeeeeee', e.target.checked);
+  //   this.checkbox = !this.checkbox;
+  //   if ( this.checkbox === false ) {
+  //     console.log('limpieza');
+  //   } else {
+  //     this.private = true;
+  //   }
+  // }
 
 
-  openWallet(valor){
+  openWallet(valor) {
     console.log('is open wallet', valor);
+    
+    // const detail = {
+    //   name: valor.name,
+    //   address: valor.addres,
+    //   encryptedKey: valor.encryptedKey,
+    //   iv: valor.iv,
+    //   schema: valor.schema
+    // }
+    this.nav.navigateForward(`/wallet-detail`);
+    // this.router.navigate(['/wallet-detail', valor]);
   }
 }

@@ -37,7 +37,7 @@ export class AppComponent implements OnDestroy {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.initGetRoot();
+      // this.initGetRoot();
       this.loguer();
     });
   }

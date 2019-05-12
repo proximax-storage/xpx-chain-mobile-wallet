@@ -259,6 +259,14 @@ ion-content {
   text-align: center !important;
 }
 
+[text-left] {
+  text-align: left !important;
+}
+
+[text-right] {
+  text-align: right !important;
+}
+
 [logo] {
   width: 60%;
 }
@@ -271,8 +279,7 @@ ion-content {
 
 [icon-add] {
   width: 10% !important;
-  display: block;
-  margin: auto;
+  
 }
 
 [icon-back] {
