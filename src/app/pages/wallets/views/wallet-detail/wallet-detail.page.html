@@ -56,8 +56,8 @@
 
 
         <ion-row>
-          <ion-col *ngIf="mosaics== true" size="12" text-center>
-            <ion-card background-white>
+          <ion-col *ngIf="mosaics== true" size="12" text-center >
+            <ion-card background-white (click)="mosaicswallets()">
                   <ion-item>
                       <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
                       <ion-label>
@@ -100,7 +100,7 @@
 
           <ion-col *ngIf="transaction== true" size="12">
             <ion-card background-white>
-                    <ion-item >
+                    <ion-item (click)="infoTransaction()">
                         <ion-icon size="10" src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
                         <ion-label>
                           0.00980256 <br>

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../providers/auth.service';
+import { AuthService } from '../../service/auth.service';
 import { ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -15,14 +15,11 @@ export class LoginPage implements OnInit {
     public formBuilder: FormBuilder,
     public authservice: AuthService,
     public toastController: ToastController,
-    private router: Router
+    private nav: NavController
   ) {
 
   }
-
-
-
-
+  
   ngOnInit() {
     this.createForm();
   }
@@ -35,7 +32,7 @@ export class LoginPage implements OnInit {
   }
 
   itemSelected() {
-    this.router.navigate(['/register']);
+    this.nav.navigateRoot(`/register`);
   }
 
   onSubmit(form) {
@@ -46,7 +43,7 @@ export class LoginPage implements OnInit {
           console.log('exitoso', res)
           if (res.status === 'success') {
             console.log('exitoso')
-            this.router.navigate(['/wallets']);
+            this.nav.navigateRoot(['/wallets']);
             this.formLogin.reset();
           } else {
             const toast = await this.toastController.create({

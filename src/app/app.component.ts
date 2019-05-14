@@ -1,12 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { MenuController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+// import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
-import { AuthService } from './providers/auth.service';
+import { AuthService } from './pages/auth/service/auth.service';
+import { NodeService } from '../shared/service/node.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,7 +15,7 @@ import { Observable } from 'rxjs';
   templateUrl: 'app.component.html'
 })
 export class AppComponent implements OnDestroy {
-
+  user: string;
   isLoggedIn = false;
   subscriptions: any = [
     'isLogged'
@@ -26,17 +27,21 @@ export class AppComponent implements OnDestroy {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private menu: MenuController,
-    private storage: Storage,
+    // private storage: Storage,
     private router: Router,
+    private nav: NavController,
     public authService: AuthService,
+    private nodeService: NodeService
   ) {
     this.initializeApp();
+    
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.nodeService.initNode();
       // this.initGetRoot();
       this.loguer();
     });
@@ -50,13 +55,15 @@ export class AppComponent implements OnDestroy {
     });
   }
 
-
+  
   loguer() {
     this.subscriptions.isLogged = this.authService.getIsLogged();
     this.subscriptions.isLogged.subscribe(
       response => {
         console.log('logueado', response);
         this.isLoggedIn = response;
+        this.user = this.authService.user;
+        console.log('this.user', this.user);
       });
   }
 
@@ -71,12 +78,17 @@ export class AppComponent implements OnDestroy {
   logout() {
     this.authService.logout();
     this.menu.enable(true, 'custom');
-    return this.router.navigate(['/login']);
-
-
+    this.menu.close('custom');
+    return this.nav.navigateRoot(`/login`);
   }
+
   openCustom() {
     this.menu.enable(true, 'custom');
     this.menu.open('custom');
+  }
+
+  closeCustom() {
+    // this.menu.enable(true, 'custom');
+    this.menu.close('custom');
   }
 }

@@ -1,0 +1,108 @@
+import { Injectable } from '@angular/core';
+import { commonInterface, walletInterface } from './interfaces/shared.interfaces';
+import { environment } from '../../environments/environment';
+import { crypto } from 'proximax-nem2-library';
+import {
+  Listener,
+  Password,
+  SimpleWallet,
+  Account,
+  Address,
+  AccountHttp,
+  MosaicHttp,
+  NamespaceHttp,
+  MosaicService,
+  MosaicAmountView,
+  Transaction,
+  PublicAccount,
+  QueryParams,
+  AccountInfo,
+  NetworkType,
+  TransactionHttp,
+  TransferTransaction,
+  Deadline,
+  PlainMessage,
+  SignedTransaction,
+  TransactionAnnounceResponse,
+  Mosaic,
+  MosaicId,
+  UInt64,
+  TransactionStatusError,
+  TransactionStatus,
+  MosaicInfo,
+  NamespaceId,
+  NamespaceInfo,
+  RegisterNamespaceTransaction,
+  MosaicDefinitionTransaction,
+  MosaicProperties,
+  MosaicSupplyChangeTransaction,
+  NamespaceService,
+  MosaicView
+  
+  } from 'proximax-nem2-sdk';
+  import { Observable } from 'rxjs';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProximaxProvider {
+  accountHttp: AccountHttp;
+  mosaicService: MosaicService;
+  url: any;
+
+
+  constructor() { }
+
+createPassword(value) {
+    const password = new Password(value)
+    return password;
+  }
+
+createSimpleWallet(name: string, password: Password, network: number) {
+    return SimpleWallet.create(name, password, network);
+
+  }
+
+createAccountFromPrivateKey(nameWallet: string, password: Password, privateKey: string, network: number): SimpleWallet {
+    return SimpleWallet.createFromPrivateKey(nameWallet, password, privateKey, network);
+  }
+
+decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
+    const common: commonInterface = {
+      password: password.value,
+      privateKey: ''
+    };
+
+    const wallet: walletInterface = {
+      encrypted: encryptedKey,
+      iv: iv,
+    };
+
+    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    return common.privateKey;
+  }
+
+  getAccountInfo(address: Address): Observable<AccountInfo> {
+      console.log('llega a provider', address);
+      return this.accountHttp.getAccountInfo(address);
+  }
+
+  getBalance(address: Address): Observable<MosaicAmountView[]> {
+    return this.mosaicService.mosaicsAmountViewFromAddress(address);
+  }
+
+  createFromRawAddress(address: string): Address {
+    return Address.createFromRawAddress(address);
+  }
+
+
+  initInstances(url: string) {
+    // console.log('instances', url)
+    this.url = `${environment.protocol}://${url}`;
+    this.accountHttp = new AccountHttp(this.url);
+    console.log('........url', this.url);
+    console.log('........accountHttp', this.accountHttp);
+  }
+
+}

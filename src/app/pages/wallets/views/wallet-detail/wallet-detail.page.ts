@@ -13,7 +13,6 @@ export class WalletDetailPage implements OnInit {
   transaction: boolean;
   mosaics: boolean;
   constructor(
-    private activatedRoute: ActivatedRoute,
     private nav: NavController
   ) { }
 
@@ -24,7 +23,7 @@ export class WalletDetailPage implements OnInit {
   }
 
   segmentChanged(ev: any) {
-    let segment = ev.detail.value;
+    const segment = ev.detail.value;
     console.log('Segment changed', segment);
     if ( segment === 'mosaics') {
       this.mosaics = true;
@@ -44,12 +43,23 @@ export class WalletDetailPage implements OnInit {
 
   sendwallets() {
     console.log('Send changed');
-    this.nav.navigateForward(`/wallet-send`);
+    this.nav.navigateRoot(`/wallet-send`);
   }
 
   recivedwallets() {
     console.log('Recived changed');
-    this.nav.navigateForward(`/wallet-receive`);
+    this.nav.navigateRoot(`/wallet-receive`);
+  }
+
+  mosaicswallets() {
+    console.log('Recived changed');
+    this.nav.navigateRoot(`/wallet-mosaics`);
+
+  }
+
+  infoTransaction() {
+    console.log('information')
+    this.nav.navigateRoot(`/transaction-info`);
   }
 
 }

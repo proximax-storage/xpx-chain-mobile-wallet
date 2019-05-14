@@ -13,6 +13,8 @@ export class AuthService {
   isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.logged);
   isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
 
+  user: string;
+
   constructor(
     private storage: Storage
   ) {
@@ -86,8 +88,8 @@ export class AuthService {
           status: 'success',
           message: 'You\'ve successfully logged in.'
         };
-
-        this.setLogged(true);
+        this.user = usernameP;
+        this.setLogged(true, this.user);
         // this.storage.set('isLoggedIn', true);
         this.storage.set('pin', accountFromInput.password);
       }
@@ -96,7 +98,7 @@ export class AuthService {
   }
 
 
-  setLogged(params: any) {
+  setLogged(params: any, user:any) {
     this.logged = params;
     this.isLoggedSubject.next(this.logged);
   }
@@ -108,7 +110,9 @@ export class AuthService {
 
 
   logout(): Promise<any> {
-    this.setLogged(false);
+    this.user = '';
+    console.log('limoio', this.user)
+    this.setLogged(false, this.user);
     return this.storage.set('isLoggedIn', false), this.storage.set('pin', '00');
   }
 }

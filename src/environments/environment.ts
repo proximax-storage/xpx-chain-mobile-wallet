@@ -5,8 +5,11 @@ import { NetworkType } from 'proximax-nem2-sdk'
 
 export const environment = {
   production: false,
-  network : NetworkType.MIJIN_TEST
-  
+  network : NetworkType.MIJIN_TEST,
+  nameKeyNodeStorage: `proximax-movil-wallet-nodes`,
+  protocol: `http`,
+  protocolWs: `ws`,
+  nodeDefault: 'bctestnet1.xpxsirius.io:3000'
 };
 
 /*

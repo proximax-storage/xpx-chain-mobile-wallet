@@ -1,6 +1,10 @@
-
-
-<ion-content >
+  <!-- <ion-buttons *ngIf="isLoggedIn==true" slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios hydrated" (Click)="openCustom()">
+  
+  </ion-buttons> -->
+  <ion-menu-button white class="ios button ion-activatable hydrated"></ion-menu-button>
+  <ion-content >
+  
+  
       <ion-grid >
           <img src="assets/imgs/shell-proximax-white.svg" icon>
 
@@ -14,18 +18,13 @@
                         <div text-center>
                           <img style="margin: auto;" src="assets/imgs/create-add-new-white.svg" icon-add routerLink="/wallet-create" routerDirection="root" >
                           <h1 white>Create new wallet</h1>
-  
                         </div>
   
                       </ion-card-content>
                     </ion-card>
 
                     <ion-card *ngFor="let item of wallets" (click)="openWallet(item)" background-orange>
-                      <!-- <a href="">
-                          <img src="assets/imgs/select-colour-card-green.svg" (click)="createWallet()">
-                      </a> -->
                       <ion-card-content > 
-                        
                         <h3 white><strong>{{item.name}}</strong></h3>
                         <span style="font-size: 12px;" white>{{item.address}}</span>
                         <h4 white>USD. valor</h4>

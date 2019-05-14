@@ -1,27 +1,26 @@
 <ion-app background>
-    <ion-buttons *ngIf="isLoggedIn==true" slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios hydrated" (Click)="openCustom()">
+    <!-- <ion-buttons *ngIf="isLoggedIn==true" slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios hydrated" (Click)="openCustom()">
         <ion-menu-button white class="ios button ion-activatable hydrated"></ion-menu-button>
         
-      </ion-buttons>
-      
+      </ion-buttons> -->
+      <!-- <app-menu></app-menu> -->
 
-        
-        <ion-menu side="start" menuId="custom">
-            <br>
-            <ion-toolbar>
-              <ion-title>Hi {{ isLoggedUser }}</ion-title>
-            </ion-toolbar>
-          <ion-content >
-            <ion-list>
-              <ion-item [routerLink]="['/wallets']">Wallets</ion-item>
-              <ion-item>Services</ion-item>
-              <ion-item>Setting</ion-item>
-              <ion-item>Notifications</ion-item>
-              <ion-item>Account</ion-item>
-              <ion-item (click)="logout()">Sing Out</ion-item>
-            </ion-list>
-          </ion-content>
-        </ion-menu>
-
-  <ion-router-outlet main></ion-router-outlet>
+          <ion-menu side="start" menuId="custom">
+              <br>
+              <ion-toolbar>
+                <ion-title>Hi {{ user }}</ion-title>
+              </ion-toolbar>
+            <ion-content >
+              <ion-list>
+                <ion-item (click)="closeCustom()" [routerLink]="['/wallets']">Wallets</ion-item>
+                <ion-item (click)="closeCustom()" >Services</ion-item>
+                <ion-item (click)="closeCustom()" >Setting</ion-item>
+                <ion-item (click)="closeCustom()" >Notifications</ion-item>
+                <ion-item (click)="closeCustom()" >Account</ion-item>
+                <ion-item (click)="logout()">Sing Out</ion-item>
+              </ion-list>
+            </ion-content>
+          </ion-menu>
+  
+    <ion-router-outlet main></ion-router-outlet>
 </ion-app>
