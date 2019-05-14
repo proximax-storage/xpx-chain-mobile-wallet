@@ -5,7 +5,7 @@ import { NetworkType } from 'proximax-nem2-sdk'
 
 export const environment = {
   production: false,
-  network : NetworkType.MIJIN_TEST,
+  network : NetworkType.TEST_NET,
   nameKeyNodeStorage: `proximax-movil-wallet-nodes`,
   protocol: `http`,
   protocolWs: `ws`,
@@ -20,3 +20,4 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// tsjs-xpx-catapult-sdk
