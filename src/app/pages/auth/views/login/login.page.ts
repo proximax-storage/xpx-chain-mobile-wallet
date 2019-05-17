@@ -48,7 +48,6 @@ export class LoginPage implements OnInit {
           } else {
             const toast = await this.toastController.create({
               message: 'incorrect user or password.',
-              position: 'top',
               duration: 3000
             });
             toast.present();
@@ -60,7 +59,6 @@ export class LoginPage implements OnInit {
 
           const toast = await this.toastController.create({
             message: 'unexpected error',
-            position: 'top',
             duration: 3000
           });
           toast.present();

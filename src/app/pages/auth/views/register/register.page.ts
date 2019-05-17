@@ -44,7 +44,6 @@ export class RegisterPage implements OnInit {
         console.log("registrado con exito toast")
         const toast = await this.toastController.create({
           message: 'Successfully registered user.',
-          position: 'top',
           duration: 3000
         });
         toast.present();

@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
-// import {  ProximaxProvider} from '../../../../providers/proximax.provider';
+import { NavController, ToastController } from '@ionic/angular';
 import { WalletService } from '../../service/wallet.service';
 import { AuthService } from '../../../auth/service/auth.service';
 import { first } from 'rxjs/operators';
-// import { from } from 'rxjs';
 
 @Component({
   selector: 'app-wallets',
@@ -17,21 +14,20 @@ export class WalletsPage implements OnInit {
 
   wallets: any=[];
   user: string;
-  arrcuenta: any;
+  params: { name: any; address: any; amount: any; mosaics: any; };
   constructor(
     private storage: Storage,
     private nav: NavController,
     public walletService: WalletService,
     public authService: AuthService,
+    public toastController: ToastController,
   ) { }
 
   check = [
     { val: '', isChecked: false }
   ];
   ngOnInit() {
-
     this.selectWallet();
-
   }
 
   selectWallet() {
@@ -40,28 +36,42 @@ export class WalletsPage implements OnInit {
     this.storage.get('wallets'.concat(this.user)).then(async (val) => {
       const arr = val;
       arr.forEach(element => {
-        
         const myAddress = element.address;
         console.log('direcciones', myAddress);
         this.walletService.getAccountInfo(myAddress).pipe(first()).subscribe(
           next => {
-            console.log('...................nex', next);
-            this.wallets[myAddress] = next;
+              console.log('nex................', next)
+            // const sup = next['mosaics'][0]['amount']['higher']
+            const valor = next['mosaics'][0]['amount'].compact()
+            const amount = this.walletService.amountFormatterSimple(valor);
 
-            // this.arrcuenta.push(this.wallets)
+            // const mosaicshigher= next['mosaics'][0]['id']['id']['higher']
+            // const mosaicslower= next['mosaics'][0]['id']['id']['lower']
 
-            console.log('walet info', this.wallets);
+
+
+            const valores = {
+              name: element.name,
+              address: next['address']['address'],
+              amount: amount,
+              mosaics: next['mosaics'][0]['id']['id'].toHex() 
+            };
+            console.log('valores valores', valores);
+            this.wallets.push(valores);
+            // console.log('walet info', this.wallets);
           }, error => {
-            // this.wallets = val;
-            this.wallets[myAddress] = [];
+            const valores = {
+              name: element.name,
+              schema: element.schema,
+              address: element.address,
+              encryptedKey: element.encryptedKey,
+              iv: element.iv
+            };
+            this.wallets.push(valores);
             console.log('te dio un error, posibles causas!', this.wallets);
           }
         );
-
       });
-
-      console.log('cuentaaaa', val[0].address);
-
     }, reason => {
       console.log('es un error');
     });
@@ -78,16 +88,26 @@ export class WalletsPage implements OnInit {
   // }
 
 
-  openWallet(valor) {
-    console.log('is open wallet', valor);
-    // const detail = {
-    //   name: valor.name,
-    //   address: valor.addres,
-    //   encryptedKey: valor.encryptedKey,
-    //   iv: valor.iv,
-    //   schema: valor.schema
+  async openWallet(valor) {
+    
+    this.params = {
+      name: valor.name,
+      address: valor.address,
+      amount: valor.amount,
+      mosaics: valor.mosaics
+    };
+    // if(valor === undefined){
+    //   console.log('is open wallet', valor);
+    //   console.log('WALLET SON TRANSACCION')
+    //   const toast = await this.toastController.create({
+    //     message: 'the account has no transactions.',
+    //     duration: 3000
+    //   });
+    //   toast.present();
+    // } else {
+      console.log('is open wallet', valor);
+      console.log('is open wallet', valor['mosaics']);
+      this.nav.navigateRoot(`/wallet-detail`);
     // }
-    this.nav.navigateRoot(`/wallet-detail`);
-    // this.router.navigate(['/wallet-detail', valor]);
   }
 }

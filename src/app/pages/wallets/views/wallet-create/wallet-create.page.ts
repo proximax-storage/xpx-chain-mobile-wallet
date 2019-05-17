@@ -56,7 +56,7 @@ export class WalletCreatePage implements OnInit {
           const walletGenerate = [{
             name: walletPrivatekey.name,
             schema: walletPrivatekey.schema,
-            address: walletPrivatekey.address['address'],
+            address: walletPrivatekey.address['address'].pretty(),
             encryptedKey: walletPrivatekey.encryptedPrivateKey['encryptedKey'],
             iv: walletPrivatekey.encryptedPrivateKey['iv']
           }];

@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: 'login', loadChildren: './pages/auth/views/login/login.module#LoginPageModule' },
   { path: 'register', loadChildren: './pages/auth/views/register/register.module#RegisterPageModule' },
   { path: 'wallets', loadChildren: './pages/wallets/views/wallets/wallets.module#WalletsPageModule' },
-  { path: 'wallet-detail', loadChildren: './pages/wallets/views/wallet-detail/wallet-detail.module#WalletDetailPageModule' },
+  { path: 'wallet-detail:data', loadChildren: './pages/wallets/views/wallet-detail/wallet-detail.module#WalletDetailPageModule' },
   { path: 'wallet-send', loadChildren: './pages/wallets/views/wallet-send/wallet-send.module#WalletSendPageModule' },
   { path: 'wallet-create', loadChildren: './pages/wallets/views/wallet-create/wallet-create.module#WalletCreatePageModule' },
   { path: 'wallet-receive', loadChildren: './pages/wallets/views/wallet-receive/wallet-receive.module#WalletReceivePageModule' },

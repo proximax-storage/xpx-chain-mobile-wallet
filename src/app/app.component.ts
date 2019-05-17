@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
 import { AuthService } from './pages/auth/service/auth.service';
 import { NodeService } from '../shared/service/node.service';
 import { Observable } from 'rxjs';
+// import {
+//   Account, NetworkType
+// } from 'tsjs-xpx-catapult-sdk';
 
 @Component({
   selector: 'app-root',
@@ -31,9 +34,10 @@ export class AppComponent implements OnDestroy {
     private router: Router,
     private nav: NavController,
     public authService: AuthService,
-    private nodeService: NodeService
+    private nodeService: NodeService,
   ) {
     this.initializeApp();
+    // this.sdk();
     
   }
 
@@ -42,7 +46,7 @@ export class AppComponent implements OnDestroy {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.nodeService.initNode();
-      // this.initGetRoot();
+      this.initGetRoot();
       this.loguer();
     });
   }
@@ -55,6 +59,11 @@ export class AppComponent implements OnDestroy {
     });
   }
 
+  // sdk(){
+  //   const account = Account.generateNewAccount(NetworkType.TEST_NET);
+
+  //   console.log('Your new account address is:', account.address.pretty(), 'and its private key', account.privateKey);
+  // }
   
   loguer() {
     this.subscriptions.isLogged = this.authService.getIsLogged();

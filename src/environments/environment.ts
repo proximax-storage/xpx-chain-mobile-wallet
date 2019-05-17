@@ -1,7 +1,9 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-import { NetworkType } from 'proximax-nem2-sdk'
+// import { NetworkType } from 'proximax-nem2-sdk'
+import { NetworkType } from 'tsjs-xpx-catapult-sdk';
+
 
 export const environment = {
   production: false,
@@ -9,7 +11,7 @@ export const environment = {
   nameKeyNodeStorage: `proximax-movil-wallet-nodes`,
   protocol: `http`,
   protocolWs: `ws`,
-  nodeDefault: 'bctestnet1.xpxsirius.io:3000'
+  nodeDefault: 'bcstage1.xpxsirius.io:3000'
 };
 
 /*
