@@ -36,12 +36,9 @@ export class RegisterPage implements OnInit {
   }
 
    onRegister(form) {
-    console.log("aqui llegando", form)
     if (this.formReg.valid) {
-      console.log("aqui valido")
       this.authservice.register(form.firstname, form.lastname, form.username, form.password)
       .then(async _ => {
-        console.log("registrado con exito toast")
         const toast = await this.toastController.create({
           message: 'Successfully registered user.',
           duration: 3000

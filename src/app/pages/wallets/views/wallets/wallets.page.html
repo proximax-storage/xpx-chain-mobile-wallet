@@ -23,7 +23,7 @@
                       </ion-card-content>
                     </ion-card>
 
-                    <ion-card *ngFor="let item of wallets" (click)="openWallet(item)" background-orange>
+                    <ion-card *ngFor="let item of wallets" (click)="openWallet(item)"  background-orange>
                       <ion-card-content > 
                           <span *ngIf="item.val"white>{{item.mosaics}}</span>
                         <h3 white><strong>{{item.name}}</strong></h3>

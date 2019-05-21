@@ -1,8 +1,8 @@
-import { NetworkType } from 'proximax-nem2-sdk'
+import { NetworkType } from 'tsjs-xpx-catapult-sdk'
 
 export const environment = {
   production: true,
-  network : NetworkType.MIJIN_TEST,
+  network : NetworkType.TEST_NET,
   nameKeyNodeStorage: `proximax-movil-wallet-nodes`,
   protocol: `http`,
   protocolWs: `ws`,

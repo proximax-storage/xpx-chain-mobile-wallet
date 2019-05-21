@@ -90,12 +90,12 @@ export class WalletsPage implements OnInit {
 
   async openWallet(valor) {
     
-    this.params = {
-      name: valor.name,
-      address: valor.address,
-      amount: valor.amount,
-      mosaics: valor.mosaics
-    };
+    // const params = {
+    //   name: valor.name,
+    //   address: valor.address,
+    //   amount: valor.amount,
+    //   mosaics: valor.mosaics
+    // };
     // if(valor === undefined){
     //   console.log('is open wallet', valor);
     //   console.log('WALLET SON TRANSACCION')
@@ -106,8 +106,7 @@ export class WalletsPage implements OnInit {
     //   toast.present();
     // } else {
       console.log('is open wallet', valor);
-      console.log('is open wallet', valor['mosaics']);
-      this.nav.navigateRoot(`/wallet-detail`);
+      this.nav.navigateRoot(['/wallet-detail/', JSON.stringify(valor)]);
     // }
   }
 }

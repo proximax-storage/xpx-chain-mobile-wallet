@@ -8,18 +8,22 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./wallet-detail.page.scss'],
 })
 export class WalletDetailPage implements OnInit {
-  id: any;
   information: boolean;
   transaction: boolean;
   mosaics: boolean;
+  data: string;
+  wallet: any;
   constructor(
-    private nav: NavController
+    private nav: NavController,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.mosaics = true;
-    // this.id = this.activatedRoute.snapshot.paramMap.get('Myid');
-    // console.log('data recibida ....', Object.values(this.id));
+    this.data = this.activatedRoute.snapshot.paramMap.get('data');
+    this.wallet = JSON.parse(this.data)
+    
+    console.log('data recibida ....', JSON.parse(this.data));
   }
 
   segmentChanged(ev: any) {
@@ -43,7 +47,7 @@ export class WalletDetailPage implements OnInit {
 
   sendwallets() {
     console.log('Send changed');
-    this.nav.navigateRoot(`/wallet-send`);
+    this.nav.navigateRoot(['/wallet-send', this.data]);
   }
 
   recivedwallets() {
@@ -51,11 +55,11 @@ export class WalletDetailPage implements OnInit {
     this.nav.navigateRoot(`/wallet-receive`);
   }
 
-  mosaicswallets() {
-    console.log('Recived changed');
-    this.nav.navigateRoot(`/wallet-mosaics`);
+  // mosaicswallets() {
+  //   console.log('Recived changed');
+  //   this.nav.navigateRoot(`/wallet-mosaics`);
 
-  }
+  // }
 
   infoTransaction() {
     console.log('information')

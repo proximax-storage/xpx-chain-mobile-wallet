@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { commonInterface, walletInterface } from './interfaces/shared.interfaces';
 import { environment } from '../../environments/environment';
-import { crypto } from 'proximax-nem2-library';
+import { crypto } from 'js-xpx-catapult-library';
 import {
   Listener,
   Password,
@@ -39,17 +39,25 @@ import {
   NamespaceService,
   MosaicView
   
-  } from 'proximax-nem2-sdk';
+  } from 'tsjs-xpx-catapult-sdk';
   import { Observable } from 'rxjs';
+  import { MosaicXPXInterface } from '../pages/wallets/interfaces/transaction.interface'
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProximaxProvider {
+
+
   accountHttp: AccountHttp;
   mosaicService: MosaicService;
   url: any;
+  mosaicXpx: MosaicXPXInterface = {
+    mosaic: "prx:xpx",
+    mosaicId: "d423931bd268d1f4",
+    divisibility: 6
+  };
 
 
   constructor() { }
@@ -96,6 +104,9 @@ decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string 
     return Address.createFromRawAddress(address);
   }
 
+  getPublicAccountFromPrivateKey(privateKey: string, net: NetworkType): PublicAccount {
+    return Account.createFromPrivateKey(privateKey, net).publicAccount;
+  }
 
   initInstances(url: string) {
     // console.log('instances', url)
@@ -105,4 +116,7 @@ decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string 
     console.log('........accountHttp', this.accountHttp);
   }
 
+  checkAddress(privateKey: string, net: NetworkType, address: string): boolean {
+    return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
+  }
 }

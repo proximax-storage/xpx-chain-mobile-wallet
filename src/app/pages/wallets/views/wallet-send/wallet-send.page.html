@@ -10,6 +10,7 @@
 
 <ion-content>
   <ion-grid text-center white >
+    <form [formGroup]="formSend" (ngSubmit)="onSubmit(formSend.value)">
     <!-- <ion-col size="12" text-center> -->
       <h3 >Transactions</h3>
 
@@ -19,44 +20,39 @@
         <ion-item>
           <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
           <ion-label>
-            XPX <br>
-              <p>Proximax</p>
+              {{ mosaic.name }} <br>
+              <p> {{ mosaic.label }}</p>
           </ion-label>
-          <ion-label slot="end">
-              0.0087s XPX  
+          <ion-label *ngIf='wallet.amount' slot="end">
+              {{ wallet.amount}} XPX  
+          </ion-label>
+          <ion-label *ngIf='!wallet.amount' slot="end">
+              0.000000 XPX  
           </ion-label>
         </ion-item>
       </ion-card>
 
       <ion-card background-yellow>
           <ion-card-content white text-center>
-            <strong > Wallet 1</strong>
+            <strong > {{ wallet.name }}</strong>
           </ion-card-content>
         </ion-card>
-        <p  >SDNVVHWC5ZS52JD6CJYSKCQNCORDHGLUVKLUJPH3</p>
+        <p  >{{ wallet.address}}</p>
 
       <ion-card background-white>
         <ion-card-content>
           <ion-row>
             <ion-col size="6">
               <ion-item>
-                <ion-label position="floating">Amount</ion-label>
-                <ion-input type="text" ></ion-input>
+                <ion-label position="floating"></ion-label>
+                <ion-input type="text" formControlName="amount" placeholder="Amount"></ion-input>
               </ion-item>
-              <p>USD 0.00</p>
             </ion-col>
-            <ion-col>
+            <ion-col size="6">
               <ion-item>
                 <ion-label position="floating"></ion-label>
                 <ion-select>
-                    <ion-select-option value="" selected>Selecc</ion-select-option>
-                  <ion-select-option value="xpx" >XPX</ion-select-option>
-                  <ion-select-option value="xem">XEM</ion-select-option>
-                  <ion-select-option value="xar" >XAR</ion-select-option>
-                  <ion-select-option value="nxps">NPXS</ion-select-option>
-                  <ion-select-option value="stf">STF</ion-select-option>
-                  <ion-select-option value="btc">BTC</ion-select-option>
-                  <ion-select-option value="eth">ETH</ion-select-option>
+                    <ion-select-option *ngFor="let mosaic of mosaicsSelect" selected > {{ mosaic.label }}</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
@@ -64,13 +60,12 @@
         </ion-card-content>
       </ion-card>
 
-
       <ion-card background-white>
           <ion-card-content>
             <ion-row>
                 <ion-col size="12">
                 <ion-item>
-                    <ion-input type="text" placeholder="Wallet address"></ion-input>
+                    <ion-input type="text" formControlName="acountRecipient" placeholder="Wallet address"></ion-input>
                     <ion-icon name="information-circle" slot="end"></ion-icon>
                   </ion-item>
                 </ion-col>
@@ -85,12 +80,25 @@
             <ion-row>
                 <ion-col size="12">
                 <ion-item>
-                    <ion-textarea placeholder="Mensaje (optional)"></ion-textarea>
+                    <ion-textarea  formControlName="message" placeholder="Message (optional)"></ion-textarea>
                   </ion-item>
                 </ion-col>
             </ion-row>
           </ion-card-content>
         </ion-card>
+
+        <ion-card background-white>
+            <ion-card-content>
+              <ion-row>
+                  <ion-col size="12">
+                  <ion-item>
+                      <ion-input type="Password" formControlName="password" placeholder="Password"></ion-input>
+                      <!-- <ion-icon name="information-circle" slot="end"></ion-icon> -->
+                    </ion-item>
+                  </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
 
         <ion-row>
             <ion-col size="12" text-center>
@@ -101,5 +109,6 @@
         </ion-row>
 
     <!-- </ion-col> -->
+  </form>
   </ion-grid>
 </ion-content>

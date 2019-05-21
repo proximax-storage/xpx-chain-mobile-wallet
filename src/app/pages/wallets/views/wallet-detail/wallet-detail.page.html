@@ -16,12 +16,14 @@
         <h3 white>Wallets</h3>
         <ion-card background-yellow>
           <ion-card-content white>
-            <strong> Wallet 1</strong>
+            <strong>{{this.wallet['name']}}</strong>
           </ion-card-content>
         </ion-card>
-        <span white>SDNVVHWC5ZS52JD6CJYSKCQNCORDHGLUVKLUJPH3</span>
+        <span white>{{this.wallet.address}}</span>
+        <h1 *ngIf="this.wallet.amount" white>{{this.wallet.amount}} xpx</h1>
+        <h1 *ngIf="!this.wallet.amount" white>0.000000 xpx</h1>
 
-        <h1 white>USD 389.09</h1>
+
       </ion-col>
       <ion-col size="6" text-center>
         <button gradient-button color-1 ion-button icon-end type="submit" color="black" (click)="sendwallets()">
