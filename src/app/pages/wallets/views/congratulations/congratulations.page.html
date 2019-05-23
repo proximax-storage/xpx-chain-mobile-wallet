@@ -1,0 +1,64 @@
+<ion-header toolbar-background>
+  <ion-toolbar color="transparent">
+      <ion-buttons slot="start" white>
+          <ion-back-button defaultHref="/wallet-create"></ion-back-button>
+        </ion-buttons>
+    <ion-title ><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+        <ion-col size="12" text-center>
+            <h3 white>Congratulations</h3>
+            <p *ngIf="import !== true "white>Your wallet has created successfully.</p>
+            <p *ngIf="import === true "white>Your wallet has been imported successfully.</p>
+           
+        
+          </ion-col>
+          <ion-col>
+              <ion-card background-white>
+                <ion-card-content>
+
+                      <div class="row mt-3px">
+                          <div class="col-10 col-md-10 col-lg-11">
+                            <span >Address: </span>
+                            <span >{{address}}</span>
+                          </div>
+                          <div >
+                              <ion-icon ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(address)" ></ion-icon>
+                          </div>
+                        </div>
+
+                        <ion-col  size="12" text-center>
+                            <button *ngIf="!show" gradient-button color-1 ion-button icon-end  type="submit"
+                              color="black"  (click)="showPrivateKey()">
+                              Show your private key
+                            </button>
+                            <button *ngIf="show" gradient-button color-1 ion-button icon-end  type="submit"
+                              color="black"  (click)="showPrivateKey()">
+                              Hide your private key
+                            </button>
+                          </ion-col>
+
+                        <div *ngIf="show" class="row mt-3px">
+                            <div class="col-10 col-md-10 col-lg-11">
+                              <span >Private key: </span>
+                              <span >{{privatekey}}</span>
+                            </div>
+                            <div >
+                                <ion-icon ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(privatekey)" ></ion-icon>
+                            </div>
+                          </div>
+
+                </ion-card-content>
+
+                
+  
+              </ion-card>
+          </ion-col>
+      
+    </ion-row>
+  </ion-grid>
+</ion-content>

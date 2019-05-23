@@ -203,44 +203,34 @@ ion-segment-button {
 [background-black-trans]{
   background: #0c0c0c82;
 }
-[background-blue]{
-  background: url('../assets/imgs/select-colour-card-blue.svg') no-repeat;
-  // background: #18a5cf no-repeat;
+.background-blue {
+  // background: url('../assets/imgs/select-colour-card-blue.svg') no-repeat;
+  background: #18a5cf no-repeat;
   background-position: center;
   background-size: cover;
   height:vauto;
   width: auto;
 }
-[background-orange]{
-  background: url('../assets/imgs/select-colour-card-orange.svg') no-repeat;
-  // background: #f36016 no-repeat;
+.background-orange {
+  // background: url('../assets/imgs/select-colour-card-orange.svg') no-repeat;
+  background: #f36016 no-repeat;
   background-position: center;
   background-size: cover;
   height: auto;
   width: auto;
 }
 
-[background-green]{
+.background-green {
   // background-image: url('../assets/imgs/select-colour-card-green.svg') no-repeat;
   background-color: #14b6ac;
-  // background: #14b6ac no-repeat;
-  // background-position: center;
-  // background-size: cover;
-  // height: auto;
-  // width: auto;
+  background: #14b6ac no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: auto;
+  width: auto;
 }
 
-[background-green-img]{
-  background-image: url('../assets/imgs/select-colour-card-green.svg') no-repeat;
-  // background-color: #14b6ac;
-  // background: #14b6ac no-repeat;
-  // background-position: center;
-  // background-size: cover;
-  // height: auto;
-  // width: auto;
-}
-
-[background-yellow]{
+.background-yellow {
   // background: url('../assets/imgs/select-colour-card-yellow.svg') no-repeat;
   background: #f4a91c no-repeat;
   background-position: center;

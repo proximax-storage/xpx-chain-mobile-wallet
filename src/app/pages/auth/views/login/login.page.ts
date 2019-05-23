@@ -11,6 +11,10 @@ import { NavController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   formLogin: FormGroup;
+  emailPattern = '^([\\w\\.\\-]{3,39})@[\\w]{2,39}(\\.[\\w]{2,3})+$';
+  alfaPattern = '^[a-zA-ZáéíóúÁÉÍÓÚ\\-\']+$';
+  alfaNumberPattern = '^[a-zA-Z0-9]+$';
+  numberPattern = '^[0-9]+$';
   constructor(
     public formBuilder: FormBuilder,
     public authservice: AuthService,
@@ -26,8 +30,8 @@ export class LoginPage implements OnInit {
 
   createForm() {
     this.formLogin = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]]
     });
   }
 
@@ -36,13 +40,10 @@ export class LoginPage implements OnInit {
   }
 
   onSubmit(form) {
-    console.log('aqui llegando', form);
     if (this.formLogin.valid) {
       this.authservice.login(form.username, form.password)
         .then(async res => {
-          console.log('exitoso', res)
           if (res.status === 'success') {
-            console.log('exitoso')
             this.nav.navigateRoot(['/wallets']);
             this.formLogin.reset();
           } else {

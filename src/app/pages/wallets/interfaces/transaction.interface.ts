@@ -11,9 +11,8 @@ export interface TransactionsInterface {
   isRemitent: boolean;
 }
 
-
 export interface MosaicXPXInterface {
-  mosaic: "prx:xpx",
-  mosaicId: "d423931bd268d1f4",
+  mosaic: "prx.xpx",
+  mosaicId: "0dc67fbe1cad29e3",
   divisibility: 6
 }

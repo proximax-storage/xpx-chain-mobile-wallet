@@ -40,31 +40,30 @@ export class WalletsPage implements OnInit {
         console.log('direcciones', myAddress);
         this.walletService.getAccountInfo(myAddress).pipe(first()).subscribe(
           next => {
-              console.log('nex................', next)
-            // const sup = next['mosaics'][0]['amount']['higher']
             const valor = next['mosaics'][0]['amount'].compact()
             const amount = this.walletService.amountFormatterSimple(valor);
-
-            // const mosaicshigher= next['mosaics'][0]['id']['id']['higher']
-            // const mosaicslower= next['mosaics'][0]['id']['id']['lower']
-
-
-
             const valores = {
+              style: element.style,
               name: element.name,
               address: next['address']['address'],
+              algo: element.algo,
+              network: next['address']['networkType'],
               amount: amount,
-              mosaics: next['mosaics'][0]['id']['id'].toHex() 
+              mosaics: next['mosaics'][0]['id']['id'].toHex(),
+              encrypted: element.encrypted,
+              iv: element.iv
             };
             console.log('valores valores', valores);
             this.wallets.push(valores);
             // console.log('walet info', this.wallets);
           }, error => {
             const valores = {
+              style: element.style,
               name: element.name,
               schema: element.schema,
               address: element.address,
-              encryptedKey: element.encryptedKey,
+              algo: element.algo,
+              encrypted: element.encrypted,
               iv: element.iv
             };
             this.wallets.push(valores);
@@ -89,7 +88,7 @@ export class WalletsPage implements OnInit {
 
 
   async openWallet(valor) {
-    
+    this.walletService.use(valor, false);
     // const params = {
     //   name: valor.name,
     //   address: valor.address,
@@ -105,8 +104,8 @@ export class WalletsPage implements OnInit {
     //   });
     //   toast.present();
     // } else {
-      console.log('is open wallet', valor);
-      this.nav.navigateRoot(['/wallet-detail/', JSON.stringify(valor)]);
+      // console.log('is open wallet', valor);
+      this.nav.navigateRoot(['/wallet-detail']);
     // }
   }
 }

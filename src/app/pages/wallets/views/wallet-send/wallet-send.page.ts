@@ -29,8 +29,10 @@ export class WalletSendPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.data = this.activatedRoute.snapshot.paramMap.get('data');
-    this.wallet = JSON.parse(this.data)
+    // this.data = this.activatedRoute.snapshot.paramMap.get('data');
+    // this.wallet = JSON.parse(this.data)
+    this.wallet = this.walletService.current;
+    console.log(this.wallet)
     this.namemosaics(this.wallet['mosaics']);
     this.createForm();
 
@@ -42,7 +44,7 @@ export class WalletSendPage implements OnInit {
         disabled: true
       },
       {
-        value: this.proximaxProvider.mosaicXpx.mosaic,
+        value: this.proximaxProvider.mosaicXpx.mosaicId,
         label: this.proximaxProvider.mosaicXpx.mosaic,
         selected: false,
         disabled: false
@@ -53,7 +55,7 @@ export class WalletSendPage implements OnInit {
 
   createForm() {
     this.formSend = this.formBuilder.group({
-      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaic,Validators.required],
+      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaicId,Validators.required],
       amount: ['', Validators.required],
       acountRecipient: ['', Validators.required],
       message: ['', Validators.required],
@@ -90,11 +92,11 @@ export class WalletSendPage implements OnInit {
         const amount = form.amount;
         const message =  form.message;
         const password = form.password
-        const node = form.mosaicsSelect;
+        const mosaic = form.mosaicsSelect;
 
         const common = { password: password };
 
-        console.log('acountRecipient ', acountRecipient +' amount ' + amount +' message ' + message +' password ' + password +' node ' + node +' common ' + common)
+        console.log('acountRecipient ', acountRecipient +' amount ' + amount +' message ' + message +' password ' + password +' node ' + mosaic +' common ' + common)
         console.log('common', JSON.stringify(common))
         if (this.walletService.decrypt(common)) {
           console.log('decrypt ')
@@ -104,7 +106,7 @@ export class WalletSendPage implements OnInit {
             message,
             amount,
             this.walletService.network,
-            node
+            mosaic
           );
           rspBuildSend.transactionHttp
           .announce(rspBuildSend.signedTransaction)

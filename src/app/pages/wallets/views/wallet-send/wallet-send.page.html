@@ -1,7 +1,7 @@
 <ion-header toolbar-background>
   <ion-toolbar color="transparent">
     <ion-buttons slot="start" white>
-      <ion-back-button defaultHref="/wallets"></ion-back-button>
+      <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
     </ion-buttons>
     <ion-title><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
   </ion-toolbar>
@@ -32,7 +32,7 @@
         </ion-item>
       </ion-card>
 
-      <ion-card background-yellow>
+      <ion-card class="{{wallet.style}}">
           <ion-card-content white text-center>
             <strong > {{ wallet.name }}</strong>
           </ion-card-content>

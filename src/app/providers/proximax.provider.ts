@@ -52,10 +52,18 @@ export class ProximaxProvider {
 
   accountHttp: AccountHttp;
   mosaicService: MosaicService;
+  infoMosaic: MosaicInfo;
+  transactionHttp: TransactionHttp;
+  websocketIsOpen = false;
+  connectionWs: Listener;
+  mosaicHttp: MosaicHttp;
+  namespaceHttp: NamespaceHttp;
+  namespaceService: NamespaceService;
+  transactionStatusError: TransactionStatusError;
   url: any;
   mosaicXpx: MosaicXPXInterface = {
-    mosaic: "prx:xpx",
-    mosaicId: "d423931bd268d1f4",
+    mosaic: 'prx.xpx',
+    mosaicId: '0dc67fbe1cad29e3',
     divisibility: 6
   };
 
@@ -96,6 +104,10 @@ decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string 
       return this.accountHttp.getAccountInfo(address);
   }
 
+  getAllTransactionsFromAccount(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
+    return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));
+  }
+
   getBalance(address: Address): Observable<MosaicAmountView[]> {
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
   }
@@ -112,6 +124,11 @@ decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string 
     // console.log('instances', url)
     this.url = `${environment.protocol}://${url}`;
     this.accountHttp = new AccountHttp(this.url);
+    this.mosaicHttp = new MosaicHttp(this.url);
+    this.namespaceHttp = new NamespaceHttp(this.url);
+    this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
+    this.namespaceService = new NamespaceService(this.namespaceHttp);
+    this.transactionHttp = new TransactionHttp(this.url);
     console.log('........url', this.url);
     console.log('........accountHttp', this.accountHttp);
   }
