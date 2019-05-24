@@ -61,7 +61,6 @@ export class WalletCreatePage implements OnInit {
   }
 
   onSubmit(form) {
-    console.log(form)
     this.user = this.authService.user;
     this.storage.get('pin').then(async (val) => {
 
@@ -72,53 +71,30 @@ export class WalletCreatePage implements OnInit {
           console.log('datos de forms', form);
           if (form.checkbox === true) {
             if (form.privateKey !== '' || form.privateKey !== null || form.privateKey !== undefined) {
-              // console.log('.....................vacio');
-              // const decrip = this.proximaxProvider.decryptPrivateKey(password, form.privateKey, '9199A395E1F36C8F8E90A5862EA48231');
-              // console.log('.....................encryptedKey', decrip);
               const walletPrivatekey = this.walletService.createAccountFromPrivateKey(form.img, form.walletname, password, form.privateKey, environment.network)
-              console.log('.....................', walletPrivatekey);
               if (wallet === null) {
-                console.log('........... sin push unique');
                 this.storage.set('wallets'.concat(this.user), [walletPrivatekey]);
               } else {
-                console.log('...........push', walletPrivatekey);
                 wallet.push(walletPrivatekey);
                 this.storage.set('wallets'.concat(this.user), wallet);
               }
               this.formWallets.reset();
-              // this.formWallets.patchValue({
-              //   checkbox:false,
-              //   img: '',
-              //   walletname: '',
-              //   password: '',
-              //   privateKey: ''
-              // })
               this.walletService.use(walletPrivatekey, true);
               this.nav.navigateRoot(['/congratulations']);
+              console.log('se importa una cuenta nueva');
               
             } else {
               console.log('.....................errrrorrrrrr');
             }
           } else {
             const walletSimple = this.walletService.createSimpleWallet(form.img, form.walletname, password, environment.network);
-            console.log('.............walletSimple', walletSimple);
-            console.log('retona', wallet);
             if (wallet === null) {
-              console.log('........... sin push unique');
               this.storage.set('wallets'.concat(this.user), [walletSimple]);
             } else {
               wallet.push(walletSimple);
-              console.log('...........push', walletSimple);
               this.storage.set('wallets'.concat(this.user), wallet);
             }
             this.formWallets.reset({});
-            // this.formWallets.patchValue({
-            //   checkbox:false,
-            //   img: '',
-            //   walletname: '',
-            //   password: '',
-            //   privateKey: ''
-            // })
             this.walletService.use(walletSimple, false);
             this.nav.navigateRoot(['/congratulations']);
             console.log('se crea la cuenta nueva');

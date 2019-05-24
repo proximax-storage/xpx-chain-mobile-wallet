@@ -1,39 +1,161 @@
 <ion-header toolbar-background>
-    <ion-toolbar color="transparent">
-      <ion-buttons slot="start" white>
-        <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
-      </ion-buttons>
-      <ion-title><img src="assets/imgs/shell-proximax-white.svg" icon-add ></ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="transparent">
+    <ion-buttons slot="start" white>
+      <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
+    </ion-buttons>
+    <ion-title><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
-    <ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" white text-center>
+        <h3>Transaction Info</h3>
+        <ion-card>
+          <ion-item>
+            <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
+            <ion-label>
+              XPX <br>
+              <p>Proximax</p>
+            </ion-label>
+            <ion-label slot="end">
+              0.0087s XPX
+            </ion-label>
+          </ion-item>
+        </ion-card>
 
-        <ion-row>
-            <ion-col size="12" white text-center>
-              <h3 >Transaction Info</h3>
-              <ion-card>
-                <ion-item>
-                  <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
-                  <ion-label>
-                    XPX <br>
-                      <p>Proximax</p>
-                  </ion-label>
-                  <ion-label slot="end">
-                      0.0087s XPX  
-                  </ion-label>
-                </ion-item>
-              </ion-card>
-    
-              <ion-card background-yellow>
-                <ion-card-content white>
-                  <strong> Wallet 1</strong>
-                </ion-card-content>
-              </ion-card>
-              <span white>SDNVVHWC5ZS52JD6CJYSKCQNCORDHGLUVKLUJPH3</span>
-            </ion-col>
-          </ion-row>
+        <!-- <ion-card class="{{wallet.style}}">
+          <ion-card-content white>
+            <strong>{{wallet.name}}</strong>
+          </ion-card-content>
+        </ion-card>
+        <span white>{{wallet.address}}</span> -->
+      </ion-col>
+    </ion-row>
 
-    </ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-card background-white>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="4">
+                <strong>Type</strong>
+              </ion-col>
+              <ion-col size="8">
+                <ion-label>
+                  {{ detail.nameType }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card background-white>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="4">
+                <strong>From</strong>
+              </ion-col>
+              <ion-col size="8">
+                <ion-label>
+                  {{ detail['sender']['address'].address }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card background-white>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="4">
+                <strong>To</strong>
+              </ion-col>
+              <ion-col size="8">
+                <ion-label>
+                  {{ detail['recipient'].address }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content background-white>
+            <ion-row>
+              <ion-col size="2">
+                <strong>Fee</strong>
+              </ion-col>
+              <ion-col size="10">
+                <ion-label>
+                  {{ detail.fee}} (XPX)
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content background-white>
+            <ion-row>
+              <ion-col size="3">
+                <strong>Signer</strong>
+              </ion-col>
+              <ion-col size="9">
+                <ion-label>
+                  {{ detail['data']['signer'].publicKey}}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content background-white>
+            <ion-row>
+              <ion-col size="4">
+                <strong>Signature</strong>
+              </ion-col>
+              <ion-col size="8">
+                <ion-label>
+                  {{ detail['data'].signature}}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content background-white>
+            <ion-row>
+              <ion-col size="4">
+                <strong>message</strong>
+              </ion-col>
+              <ion-col size="8">
+                <ion-label>
+                  {{ detail['data']['message'].payload }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card background-white>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="2">
+                <strong>Date</strong>
+              </ion-col>
+              <ion-col size="10">
+                <ion-label>
+                  {{ detail.timestamp }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

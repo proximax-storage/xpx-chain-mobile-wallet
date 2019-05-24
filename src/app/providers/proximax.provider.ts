@@ -100,7 +100,6 @@ decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string 
   }
 
   getAccountInfo(address: Address): Observable<AccountInfo> {
-      console.log('llega a provider', address);
       return this.accountHttp.getAccountInfo(address);
   }
 

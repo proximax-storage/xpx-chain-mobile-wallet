@@ -14,7 +14,7 @@ export class WalletsPage implements OnInit {
 
   wallets: any=[];
   user: string;
-  params: { name: any; address: any; amount: any; mosaics: any; };
+ 
   constructor(
     private storage: Storage,
     private nav: NavController,
@@ -23,9 +23,6 @@ export class WalletsPage implements OnInit {
     public toastController: ToastController,
   ) { }
 
-  check = [
-    { val: '', isChecked: false }
-  ];
   ngOnInit() {
     this.selectWallet();
   }
@@ -37,7 +34,6 @@ export class WalletsPage implements OnInit {
       const arr = val;
       arr.forEach(element => {
         const myAddress = element.address;
-        console.log('direcciones', myAddress);
         this.walletService.getAccountInfo(myAddress).pipe(first()).subscribe(
           next => {
             const valor = next['mosaics'][0]['amount'].compact()
@@ -53,9 +49,7 @@ export class WalletsPage implements OnInit {
               encrypted: element.encrypted,
               iv: element.iv
             };
-            console.log('valores valores', valores);
             this.wallets.push(valores);
-            // console.log('walet info', this.wallets);
           }, error => {
             const valores = {
               style: element.style,
@@ -64,48 +58,21 @@ export class WalletsPage implements OnInit {
               address: element.address,
               algo: element.algo,
               encrypted: element.encrypted,
-              iv: element.iv
+              iv: element.iv,
+              network: element.network
             };
             this.wallets.push(valores);
-            console.log('te dio un error, posibles causas!', this.wallets);
+            console.log('te dio un error,  posibles causas !' , this.wallets);
           }
         );
       });
     }, reason => {
-      console.log('es un error');
+      console.log('es un error', reason);
     });
   }
 
-  // updateCucumber(e) {
-  //   console.log('eeeeeeeeee', e.target.checked);
-  //   this.checkbox = !this.checkbox;
-  //   if ( this.checkbox === false ) {
-  //     console.log('limpieza');
-  //   } else {
-  //     this.private = true;
-  //   }
-  // }
-
-
   async openWallet(valor) {
     this.walletService.use(valor, false);
-    // const params = {
-    //   name: valor.name,
-    //   address: valor.address,
-    //   amount: valor.amount,
-    //   mosaics: valor.mosaics
-    // };
-    // if(valor === undefined){
-    //   console.log('is open wallet', valor);
-    //   console.log('WALLET SON TRANSACCION')
-    //   const toast = await this.toastController.create({
-    //     message: 'the account has no transactions.',
-    //     duration: 3000
-    //   });
-    //   toast.present();
-    // } else {
-      // console.log('is open wallet', valor);
       this.nav.navigateRoot(['/wallet-detail']);
-    // }
   }
 }

@@ -1,5 +1,4 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { WalletService } from '../../service/wallet.service'
@@ -15,23 +14,19 @@ export class WalletDetailPage implements OnInit {
   information: boolean;
   transaction: boolean;
   mosaics: boolean;
-  data: string;
   wallet: any;
   transactions: any[];
+  publicKey: string;
   constructor(
     private nav: NavController,
     private storage: Storage,
-    private activatedRoute: ActivatedRoute,
     private walletService: WalletService,
     private proximaxProvider: ProximaxProvider,
   ) { }
 
   ngOnInit() {
     this.mosaics = true;
-    // this.data = this.activatedRoute.snapshot.paramMap.get('data');
-    // this.wallet = JSON.parse(this.data)
     this.wallet = this.walletService.current;
-    console.log('data recibida ....',  this.wallet);
     this.selectAllTransaction(this.wallet);
   }
 
@@ -58,8 +53,8 @@ export class WalletDetailPage implements OnInit {
     this.storage.get('pin').then(async (val) => {
     const password = this.proximaxProvider.createPassword(val);
     const PrivateKey = this.proximaxProvider.decryptPrivateKey(password, data.encrypted, data.iv);
-    const publicAccount = this.walletService.getPublicAccountFromPrivateKey(PrivateKey, environment.network)
-    console.log('adress', publicAccount)
+    const publicAccount = this.walletService.getPublicAccountFromPrivateKey(PrivateKey, environment.network);
+    this.publicKey = publicAccount.publicKey
     this.walletService.getAllTransactionsFromAccount(publicAccount).subscribe(
       response =>{
         const data = [];
@@ -67,12 +62,9 @@ export class WalletDetailPage implements OnInit {
           data.push(this.walletService.buidTansaction(element));
         });
         this.transactions = data
-        console.log('data', this.transactions)
-        
-
       }
     );
-    // console.log('transaction from address', transaction)
+    console.log('transaction from address', this.transaction)
   });
   }
 
@@ -92,8 +84,9 @@ export class WalletDetailPage implements OnInit {
 
   // }
 
-  infoTransaction() {
-    console.log('information')
+  infoTransaction(info) {
+    console.log('Recived changed');
+    this.walletService.transactionDetail(info);
     this.nav.navigateRoot(`/transaction-info`);
   }
 

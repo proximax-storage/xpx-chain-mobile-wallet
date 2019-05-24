@@ -42,7 +42,5 @@ export class CongratulationsPage implements OnInit {
 
   showPrivateKey() {
     this.show = !this.show;
-    console.log(this.show);
-
   }
 }

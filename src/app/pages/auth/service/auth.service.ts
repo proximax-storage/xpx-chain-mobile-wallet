@@ -12,13 +12,10 @@ export class AuthService {
   logged = false;
   isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.logged);
   isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
-
   user: string;
-
   constructor(
     private storage: Storage
   ) {
-    console.log('Hello AuthProvider Provider');
   }
 
 

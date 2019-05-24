@@ -40,6 +40,8 @@ export class WalletService {
   amount: any;
   algo: string;
   import: any;
+  detailTransaction: any;
+
   arraTypeTransaction = {
     transfer: {
       id: TransactionType.TRANSFER,
@@ -82,10 +84,6 @@ export class WalletService {
     //   name: "Secret proof"
     // }
   };
- 
-
-
-
 
   constructor(
     private proximaxProvider: ProximaxProvider,
@@ -93,7 +91,6 @@ export class WalletService {
   ) { }
 
   use(wallet: any, variable: any) {
-    console.log("service", wallet)
     if (!wallet) {
       console.log('Error', '¡you can not set anything like the current wallet!');
       return false;
@@ -104,49 +101,36 @@ export class WalletService {
 
     // newwork
     this.network = wallet.network;
-    
     // amount
     this.amount = wallet.amount;
-
     // encryptedKey
     this.encrypted = wallet.encrypted;
-
      // iv
     this.iv = wallet.iv;
-
     // mosaics
     this.mosaics = wallet.mosaics;
-
     // nameWallet
     this.nameWallet = wallet.name;
-
     // style
     this.style = wallet.style
-
       // algo
     this.algo = wallet.algo;
-
     // wallet data
     this.current = wallet;
-
-    
     return true;
   }
 
-
+  transactionDetail(transaction: any) {
+    this.detailTransaction = transaction;
+  }
 
   getAccountInfo(address) {
-    
     const addres = this.proximaxProvider.createFromRawAddress(address);
-    // console.log('llegando al service', addres);
     return this.proximaxProvider.getAccountInfo(addres)
   }
 
-
   createAccountFromPrivateKey(img, name, password, privateKey, network) {
-
     const account = this.proximaxProvider.createAccountFromPrivateKey(name, password, privateKey, network);
-      console.log('acoun ', account)
     const ImportWallet = {
       name: account.name,
       schema: account.schema,
@@ -154,7 +138,8 @@ export class WalletService {
       address: account.address['address'],
       algo:'pass:bip32',
       encrypted: account.encryptedPrivateKey['encryptedKey'],
-      iv: account.encryptedPrivateKey['iv']
+      iv: account.encryptedPrivateKey['iv'],
+      network: account.network
     };
     return ImportWallet;
   }
@@ -168,16 +153,13 @@ export class WalletService {
       address: walletSimple.address['address'],
       algo:'pass:bip32',
       encrypted: walletSimple.encryptedPrivateKey['encryptedKey'],
-      iv: walletSimple.encryptedPrivateKey['iv']
+      iv: walletSimple.encryptedPrivateKey['iv'],
+      network: walletSimple.network
     };
-
     return SimpleWallet;
   }
 
-
     getPublicAccountFromPrivateKey(privatekey, network) {
-      console.log('privatekey', privatekey)
-      console.log('network', network)
       const AccountFromPrivateKey = this.proximaxProvider.getPublicAccountFromPrivateKey(privatekey, network)
       return AccountFromPrivateKey;
     }
@@ -201,7 +183,6 @@ export class WalletService {
       const keyType = Object.keys(this.arraTypeTransaction).find(elm => this.arraTypeTransaction[elm].id === transaction.type);
       let recipientRentalFeeSink = '';
       if (transaction["mosaics"] !== undefined) {
-        // console.log("Este tipo de transaccion tiene mosaico");
       } else {
         if (transaction.type === this.arraTypeTransaction.registerNameSpace.id) {
           recipientRentalFeeSink = this.namespaceRentalFeeSink.address_public_test;
@@ -214,7 +195,6 @@ export class WalletService {
           recipientRentalFeeSink = "XXXXX-XXXXX-XXXXXX";
         }
       }
-  
       return {
         data: transaction,
         nameType: this.arraTypeTransaction[keyType].name,
@@ -233,30 +213,22 @@ export class WalletService {
         ).toUTCString();
       }
 
-      
 decrypt(common: any, account: any = '', algo: any = '', network: any = '') {
-  console.log('llega al descrip')
       const acct = account || this.current;
       const net = network || this.network;
       const alg = algo || this.algo;
       // Try to generate or decrypt key
-  
-      console.log('llega al descrip common', common)
-      console.log('llega al descrip acct', acct)
-      console.log('llega al descrip alg', alg)
+      
       if (!crypto.passwordToPrivatekey(common, acct, alg)) {
-
         setTimeout(() => {
           console.log('Error Invalid password')
           // this.sharedService.showError('Error', '¡Invalid password!');
         }, 500);
         return false;
       }
-      console.log('paso cripto')
       if (common.isHW) {
         return true;
       }
-      console.log('common.isHW')
       if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address)) {
         setTimeout(() => {
           console.log('Error Invalid password')
@@ -267,7 +239,6 @@ decrypt(common: any, account: any = '', algo: any = '', network: any = '') {
   
       //Get public account from private key
       this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
-      console.log('public acount', this.publicAccount)
       return true;
     }
 
@@ -295,7 +266,6 @@ decrypt(common: any, account: any = '', algo: any = '', network: any = '') {
       network: NetworkType,
       mosaic: string | number[]
     ) {
-      console.log('mosaic', mosaic)
       const recipientAddress = this.proximaxProvider.createFromRawAddress(recipient);
       const transferTransaction = TransferTransaction.create(Deadline.create(5), recipientAddress,
         [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount)))], PlainMessage.create(message), network

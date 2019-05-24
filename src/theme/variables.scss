@@ -168,16 +168,6 @@ ion-segment-button {
   }
 }
 
-[gradient-button][color-1] {
-    background-image: linear-gradient(
-      to right,
-      #052733,
-      #052733,
-      #052733,
-      #052733
-    );
-}
-
 [gradient-button][color-2] {
   color: yellow
 }
@@ -257,6 +247,22 @@ ion-segment-button {
   outline: none;
 }
 
+[gradient-button2] {
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  margin: 0px;
+  height: 38px;
+  /* text-align: center; */
+  /* border: none; */
+  // background-size: 300% 100%;
+  border-radius: 32px;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
 [gradient-button] {
   width: 150px;
   font-size: 16px;
@@ -273,6 +279,15 @@ ion-segment-button {
   transition: all 0.4s ease-in-out;
 }
 
+[color-1] {
+  background-image: linear-gradient(
+    to right,
+    #052733,
+    #052733,
+    #052733,
+    #052733
+  );
+}
 [text-center] {
   text-align: center !important;
 }

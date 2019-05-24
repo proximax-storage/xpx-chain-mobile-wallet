@@ -80,24 +80,17 @@ export class WalletSendPage implements OnInit {
   }
 
   onSubmit(form) {
-    console.log('llegando al function');
     // if (this.formSend.invalid) {
-      console.log('formSend valid');
     this.storage.get('pin').then(async (val) => {
-      console.log('pin store', val)
-      console.log('pin form', form.password)
       if(val === form.password) {
-        console.log('valido')
+        console.log(' pin valido')
         const acountRecipient = form.acountRecipient;
         const amount = form.amount;
         const message =  form.message;
         const password = form.password
         const mosaic = form.mosaicsSelect;
-
         const common = { password: password };
 
-        console.log('acountRecipient ', acountRecipient +' amount ' + amount +' message ' + message +' password ' + password +' node ' + mosaic +' common ' + common)
-        console.log('common', JSON.stringify(common))
         if (this.walletService.decrypt(common)) {
           console.log('decrypt ')
           const rspBuildSend = this.walletService.buildToSendTransfer(
@@ -117,7 +110,7 @@ export class WalletSendPage implements OnInit {
                 duration: 3000
               });
               toast.present();
-              // this.cleanForm();
+              this.formSend.reset();
             },
             async err => {
               const toast = await this.toastController.create({
@@ -125,9 +118,6 @@ export class WalletSendPage implements OnInit {
                 duration: 3000
               });
               toast.present();
-              // this.cleanForm();
-              // this.sharedService.showError("Error", err);
-              // console.error(err);
             }
           );
         }
