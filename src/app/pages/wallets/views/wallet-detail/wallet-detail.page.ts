@@ -62,9 +62,10 @@ export class WalletDetailPage implements OnInit {
           data.push(this.walletService.buidTansaction(element));
         });
         this.transactions = data
+        console.log('transaction from address', this.transactions)
       }
     );
-    console.log('transaction from address', this.transaction)
+   
   });
   }
 

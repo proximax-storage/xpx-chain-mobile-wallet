@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { ToastController } from '@ionic/angular';
 import { WalletService } from '../../service/wallet.service'
 import { ProximaxProvider } from 'src/app/providers/proximax.provider';
 
@@ -17,6 +18,7 @@ export class CongratulationsPage implements OnInit {
 
   constructor(
     private storage: Storage,
+    public toastController: ToastController,
     public walletService: WalletService,
     private proximaxProvider: ProximaxProvider,
   ) { }
@@ -36,8 +38,12 @@ export class CongratulationsPage implements OnInit {
     });
   }
   
-  copyMessage(copi) {
-    console.log('copied', copi)
+  async copyMessage(valor, type) {
+    const toast = await this.toastController.create({
+      message: 'Copied '+ `${type}`,
+      duration: 3000
+    });
+    toast.present();
   }
 
   showPrivateKey() {

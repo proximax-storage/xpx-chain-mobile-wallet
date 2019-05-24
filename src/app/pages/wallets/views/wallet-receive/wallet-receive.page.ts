@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import { WalletService } from '../../service/wallet.service';
 
 @Component({
@@ -11,18 +12,23 @@ export class WalletReceivePage implements OnInit {
 
   constructor(
     private walletService: WalletService,
+    public toastController: ToastController,
   ) { }
 
   ngOnInit() {
     this.wallet = this.walletService.current;
   }
 
-  copyAddress(address) {
-    console.log('copiando address', address)
+  async copyAddress(address) {
+    const toast = await this.toastController.create({
+      message: 'Copied address.',
+      duration: 3000
+    });
+    toast.present();
   }
 
   shareAddress(address) {
-    console.log('compartiendo address', address)
+ 
   }
 
 }
