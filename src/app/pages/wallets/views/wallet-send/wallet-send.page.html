@@ -3,41 +3,38 @@
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
     </ion-buttons>
-    <ion-title><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
+    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
-  <ion-grid text-center white >
+  <ion-grid text-center white>
     <form [formGroup]="formSend" (ngSubmit)="onSubmit(formSend.value)">
-    <!-- <ion-col size="12" text-center> -->
-      <h3 >Transactions</h3>
-
+      <!-- <ion-col size="12" text-center> -->
+      <h3>Transactions</h3>
       <h1> USD 80.00 </h1>
-
       <ion-card>
         <ion-item>
-          <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
+          <ion-icon src="assets/imgs/shield-proximax-colour.svg" slot="start"></ion-icon>
           <ion-label>
-              {{ mosaic.name }} <br>
-              <p> {{ mosaic.label }}</p>
+            {{ mosaic.name }} <br>
+            <p> {{ mosaic.label }}</p>
           </ion-label>
           <ion-label *ngIf='wallet.amount' slot="end">
-              {{ wallet.amount}} XPX  
+            {{ wallet.amount}} XPX
           </ion-label>
           <ion-label *ngIf='!wallet.amount' slot="end">
-              0.000000 XPX  
+            0.000000 XPX
           </ion-label>
         </ion-item>
       </ion-card>
 
       <ion-card class="{{wallet.style}}">
-          <ion-card-content white text-center>
-            <strong > {{ wallet.name }}</strong>
-          </ion-card-content>
-        </ion-card>
-        <p  >{{ wallet.address}}</p>
+        <ion-card-content white text-center>
+          <strong> {{ wallet.name }}</strong>
+        </ion-card-content>
+      </ion-card>
+      <p>{{ wallet.address}}</p>
 
       <ion-card background-white>
         <ion-card-content>
@@ -52,7 +49,8 @@
               <ion-item>
                 <ion-label position="floating"></ion-label>
                 <ion-select>
-                    <ion-select-option *ngFor="let mosaic of mosaicsSelect" selected > {{ mosaic.label }}</ion-select-option>
+                  <ion-select-option *ngFor="let mosaic of mosaicsSelect" selected> {{ mosaic.label }}
+                  </ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
@@ -61,54 +59,51 @@
       </ion-card>
 
       <ion-card background-white>
-          <ion-card-content>
-            <ion-row>
-                <ion-col size="12">
-                <ion-item>
-                    <ion-input type="text" formControlName="acountRecipient" placeholder="Wallet address"></ion-input>
-                    <ion-icon name="information-circle" slot="end"></ion-icon>
-                  </ion-item>
-                </ion-col>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
-
-
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-input type="text" formControlName="acountRecipient" placeholder="Wallet address"></ion-input>
+                <!-- <ion-icon name="information-circle" slot="end"></ion-icon> -->
+                <ion-icon src="assets/imgs/wallet-address-light-gray.svg" slot="end"></ion-icon>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
 
       <ion-card background-white>
-          <ion-card-content>
-            <ion-row>
-                <ion-col size="12">
-                <ion-item>
-                    <ion-textarea  formControlName="message" placeholder="Message (optional)"></ion-textarea>
-                  </ion-item>
-                </ion-col>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-textarea formControlName="message" placeholder="Message (optional)"></ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
 
-        <ion-card background-white>
-            <ion-card-content>
-              <ion-row>
-                  <ion-col size="12">
-                  <ion-item>
-                      <ion-input type="Password" formControlName="password" placeholder="Password"></ion-input>
-                      <!-- <ion-icon name="information-circle" slot="end"></ion-icon> -->
-                    </ion-item>
-                  </ion-col>
-              </ion-row>
-            </ion-card-content>
-          </ion-card>
+      <ion-card background-white>
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-input type="Password" formControlName="password" placeholder="Password"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
 
-        <ion-row>
-            <ion-col size="12" text-center>
-                <button gradient-button color-1 ion-button icon-end type="submit" color="black">
-                  Send
-                </button>
-              </ion-col>
-        </ion-row>
+      <ion-row>
+        <ion-col size="12" text-center>
+          <button gradient-button color-1 ion-button icon-end type="submit" color="black">
+            Send
+          </button>
+        </ion-col>
+      </ion-row>
 
-    <!-- </ion-col> -->
-  </form>
+    </form>
   </ion-grid>
 </ion-content>

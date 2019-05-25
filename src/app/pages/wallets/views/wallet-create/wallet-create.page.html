@@ -1,82 +1,81 @@
 <ion-header toolbar-background>
-    <ion-toolbar color="transparent">
-        <ion-buttons slot="start" white>
-            <ion-back-button defaultHref="/wallets"></ion-back-button>
-          </ion-buttons>
-      <ion-title ><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="transparent">
+    <ion-buttons slot="start" white>
+      <ion-back-button defaultHref="/wallets"></ion-back-button>
+    </ion-buttons>
+    <div>
+        <img src="assets/imgs/shield-proximax-white.svg" icon-add>
+    </div>
+    
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
-    <ion-grid>
-        <form [formGroup]="formWallets" (ngSubmit)="onSubmit(formWallets.value)">
-            <ion-col size="12" text-center>
-            <h3 white >Create new wallets</h3>
-          </ion-col>
-            <ion-row >
-                <ion-col size="3" text-center>
-                      <img src="assets/imgs/select-colour-card-green.svg" (click)="addImg(1)">
-                </ion-col>
-                <ion-col size="3" text-center>
-                          <img  src="assets/imgs/select-colour-card-orange.svg" (click)="addImg(2)">
-                  </ion-col>
-                  <ion-col size="3" text-center>
-                            <img  src="assets/imgs/select-colour-card-blue.svg" (click)="addImg(3)">
-                    </ion-col>
-                    <ion-col size="3" text-center>
-                              <img  src="assets/imgs/select-colour-card-yellow.svg" (click)="addImg(4)">
-                      </ion-col>
-                      <ion-input type="text" style="visibility: hidden;" formControlName="img" ></ion-input>
-              </ion-row>
-                <ion-row>
-              <ion-col size="12" text-center>
-                <ion-card>
-                  <ion-card-content background-white>
-                        <ion-item>
-                            <ion-input type="text"  formControlName="walletname" placeholder="Enter a wallet name"></ion-input>
-                          </ion-item> 
-                          <ion-item>
-                            <ion-input type="password"  formControlName="password" placeholder="Enter a wallet password"></ion-input>
-                          </ion-item> 
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-              <ion-col  size="12" text-center>
-                  <p white>Do you wanna import import assets to your new wallet?</p>
-                  <ion-checkbox color="dark"  formControlName="checkbox" (click)="updateCucumber($event)" ></ion-checkbox>
-                  
-              </ion-col>
+  <ion-grid>
+    <form [formGroup]="formWallets" (ngSubmit)="onSubmit(formWallets.value)">
+      <ion-col size="12" text-center>
+        <h3 white>Create new wallets</h3>
+      </ion-col>
+      <ion-row>
+        <ion-col size="3" text-center>
+            <!--  -->
+          <img [class]='n1' src="assets/imgs/select-colour-card-green.svg" (click)="addImg(1)">
+        </ion-col>
+        <ion-col size="3" text-center>
+          <img [class]='n2' src="assets/imgs/select-colour-card-orange.svg" (click)="addImg(2)">
+        </ion-col>
+        <ion-col size="3" text-center>
+          <img [class]='n3' src="assets/imgs/select-colour-card-blue.svg" (click)="addImg(3)">
+        </ion-col>
+        <ion-col size="3" text-center>
+          <img [class]='n4' src="assets/imgs/select-colour-card-yellow.svg" (click)="addImg(4)">
+        </ion-col>
+        <ion-input type="text" style="visibility: hidden;" formControlName="img"></ion-input>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" text-center>
+          <ion-card>
+            <ion-card-content background-white>
+              <ion-item>
+                <ion-input type="text" formControlName="walletname" placeholder="Enter a wallet name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="password" formControlName="password" placeholder="Enter a wallet password"></ion-input>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" text-center>
+          <p white>Do you wanna import import assets to your new wallet?</p>
+          <ion-checkbox color="dark" formControlName="checkbox" (click)="updateCucumber($event)"></ion-checkbox>
+        </ion-col>
 
+        <ion-col *ngIf="checkbox==true" size="12" text-center>
+          <ion-card>
+            <ion-card-content background-white>
+              <ion-item>
+                <ion-input type="text" formControlName="privateKey" placeholder="Enter you private key"></ion-input>
+                <ion-icon src="assets/imgs/scan-qr-code-green-light.svg" slot="end" (click)="scanqr()"></ion-icon>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
 
-
-              <ion-col *ngIf="checkbox==true" size="12" text-center>
-                  <ion-card>
-                    <ion-card-content background-white>
-                          <ion-item>
-                              <ion-input type="text"  formControlName="privateKey" placeholder="Enter you private key"></ion-input>
-                            </ion-item>  
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-
-            </ion-row>
-
-            
-            <ion-row>
-                <ion-col *ngIf="checkbox==true" size="12" text-center>
-                    <button gradient-button color-1 ion-button icon-end  type="submit"
-                      color="black" [disabled]="formWallets.invalid || formWallets.checkbox==true || formWallets.privateKey==true" >
-                      Import
-                    </button>
-                  </ion-col>
-                <ion-col *ngIf="checkbox!=true" size="12" text-center>
-                  <button gradient-button color-1 ion-button icon-end  type="submit"
-                    color="black" [disabled]="formWallets.invalid">
-                    Create
-                  </button>
-                </ion-col>
-              </ion-row>
-          </form>
-
-    </ion-grid>
+      <ion-row>
+        <ion-col *ngIf="checkbox==true" size="12" text-center>
+          <button gradient-button color-1 ion-button icon-end type="submit" color="black"
+            [disabled]="formWallets.invalid || formWallets.checkbox==true || formWallets.privateKey==true">
+            Import
+          </button>
+        </ion-col>
+        <ion-col *ngIf="checkbox!=true" size="12" text-center>
+          <button gradient-button color-1 ion-button icon-end type="submit" color="black"
+            [disabled]="formWallets.invalid">
+            Create
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
 </ion-content>

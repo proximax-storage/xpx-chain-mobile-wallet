@@ -13,6 +13,7 @@ export class AuthService {
   isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.logged);
   isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
   user: string;
+  pin: string;
   constructor(
     private storage: Storage
   ) {
@@ -28,7 +29,7 @@ export class AuthService {
   //  * @param password { string } The password of the user
   //  */
 
-  register(firstnameU: string, lastnameU: string, usernameU: string, passwordU: string) {
+  register(firstname: string, lastname: string, username: string, password: string) {
     return this.storage
       .get('accounts')
       .then(data => {
@@ -38,10 +39,10 @@ export class AuthService {
       })
       .then((accounts: any[]) => {
         const accountFromInputU = {
-          firstname: firstnameU,
-          lastname: lastnameU,
-          username: usernameU,
-          password: passwordU
+          firstname: firstname,
+          lastname: lastname,
+          username: username,
+          password: password
         };
         accounts.push(accountFromInputU);
 
@@ -83,9 +84,10 @@ export class AuthService {
           message: 'You\'ve successfully logged in.'
         };
         this.user = usernameP;
+        this.pin = passwordP;
         this.setLogged(true, this.user);
         // this.storage.set('isLoggedIn', true);
-        this.storage.set('pin', accountFromInput.password);
+        this.storage.set('pin', this.pin);
       }
       return  response;
     });

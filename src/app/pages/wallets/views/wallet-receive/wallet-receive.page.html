@@ -1,44 +1,43 @@
 <ion-header toolbar-background>
   <ion-toolbar color="transparent">
-      <ion-buttons slot="start" white>
-          <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
-        </ion-buttons>
-    <ion-title ><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
+    <ion-buttons slot="start" white>
+      <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
+    </ion-buttons>
+    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
-    <ion-grid text-center white >
-        <h3 >Transactions</h3>
-      
-        <ion-card class="{{wallet.style}}">
-            <ion-card-content white>
-              <strong>{{wallet.name}}</strong>
-            </ion-card-content>
-          </ion-card>
+  <ion-grid text-center white>
+    <h3>Transactions</h3>
+    <ion-card class="{{wallet.style}}">
+      <ion-card-content white>
+        <strong>{{wallet.name}}</strong>
+      </ion-card-content>
+    </ion-card>
 
-          <h1>Receive</h1>
-          <img src="assets/icon/qr-code.png" style="max-width: 60%;">
-          
-          <p>Address</p>
-          <ion-card background-white >
-              <ion-card-content>
-                <strong>{{wallet.address}}</strong>
-              </ion-card-content>
-            </ion-card>
-          
-          
-          <ion-col size="6" text-center>
-            <button gradient-button color-1 ion-button icon-end type="submit" color="black" (click)="copyAddress(wallet.address)">
-              Copy
-            </button>
-          </ion-col>
-          <ion-col size="6" text-center>
-            <button gradient-button color-1 ion-button icon-end type="submit" color="black" (click)="shareAddress(wallet.address)">
-              Share
-            </button>
-          </ion-col>
-          <br><br><br>
-    </ion-grid>
+    <h1>Receive</h1>
+    <ngx-qrcode [qrc-value]="createdCode"></ngx-qrcode>
+
+    <p>Address</p>
+    <ion-card background-white>
+      <ion-card-content>
+        <strong>{{wallet.address}}</strong>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-col size="6" text-center>
+      <button gradient-button color-1 ion-button icon-end type="submit" color="black"
+        (click)="copyAddress(wallet.address)">
+        Copy
+      </button>
+    </ion-col>
+    <ion-col size="6" text-center>
+      <button gradient-button color-1 ion-button icon-end type="submit" color="black"
+        (click)="shareAddress(wallet.address)">
+        Share
+      </button>
+    </ion-col>
+    <br><br><br>
+  </ion-grid>
 </ion-content>

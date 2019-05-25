@@ -5,7 +5,6 @@ import { Storage } from '@ionic/storage';
 import { ToastController } from '@ionic/angular';
 import { ProximaxProvider } from '../../../../providers/proximax.provider';
 import { WalletService } from '../../service/wallet.service'
-import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-wallet-send',
@@ -16,7 +15,7 @@ export class WalletSendPage implements OnInit {
   formSend: FormGroup;
   data: any;
   wallet: any;
-  mosaic: { name: string; label: string; id: string;};
+  mosaic: { name: string; label: string; id: string; };
   mosaicsSelect: any;
 
   constructor(
@@ -29,8 +28,6 @@ export class WalletSendPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.data = this.activatedRoute.snapshot.paramMap.get('data');
-    // this.wallet = JSON.parse(this.data)
     this.wallet = this.walletService.current;
     console.log(this.wallet)
     this.namemosaics(this.wallet['mosaics']);
@@ -55,7 +52,7 @@ export class WalletSendPage implements OnInit {
 
   createForm() {
     this.formSend = this.formBuilder.group({
-      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaicId,Validators.required],
+      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaicId, Validators.required],
       amount: ['', Validators.required],
       acountRecipient: ['', Validators.required],
       message: ['', Validators.required],
@@ -70,7 +67,7 @@ export class WalletSendPage implements OnInit {
         label: 'Proximax',
         id: '0dc67fbe1cad29e3'
       }
-    }else{
+    } else {
       this.mosaic = {
         name: 'undefined',
         label: 'undefined',
@@ -82,11 +79,11 @@ export class WalletSendPage implements OnInit {
   onSubmit(form) {
     // if (this.formSend.invalid) {
     this.storage.get('pin').then(async (val) => {
-      if(val === form.password) {
+      if (val === form.password) {
         console.log(' pin valido')
         const acountRecipient = form.acountRecipient;
         const amount = form.amount;
-        const message =  form.message;
+        const message = form.message;
         const password = form.password
         const mosaic = form.mosaicsSelect;
         const common = { password: password };
@@ -102,24 +99,24 @@ export class WalletSendPage implements OnInit {
             mosaic
           );
           rspBuildSend.transactionHttp
-          .announce(rspBuildSend.signedTransaction)
-          .subscribe(
-            async rsp => {
-              const toast = await this.toastController.create({
-                message: 'Congratulations, Transaction sent.',
-                duration: 3000
-              });
-              toast.present();
-              this.formSend.reset();
-            },
-            async err => {
-              const toast = await this.toastController.create({
-                message: 'Error '.concat(err),
-                duration: 3000
-              });
-              toast.present();
-            }
-          );
+            .announce(rspBuildSend.signedTransaction)
+            .subscribe(
+              async rsp => {
+                const toast = await this.toastController.create({
+                  message: 'Congratulations, Transaction sent.',
+                  duration: 3000
+                });
+                toast.present();
+                this.formSend.reset();
+              },
+              async err => {
+                const toast = await this.toastController.create({
+                  message: 'Error '.concat(err),
+                  duration: 3000
+                });
+                toast.present();
+              }
+            );
         }
         console.log(form)
       } else {
@@ -130,7 +127,5 @@ export class WalletSendPage implements OnInit {
         toast.present();
       }
     })
-  // }
-}
-
+  }
 }

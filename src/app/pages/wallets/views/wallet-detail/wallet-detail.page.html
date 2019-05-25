@@ -1,16 +1,14 @@
 <ion-header toolbar-background>
-    <ion-toolbar color="transparent">
-        <ion-buttons slot="start" white>
-            <ion-back-button defaultHref="/wallets"></ion-back-button>
-          </ion-buttons>
-      <ion-title ><img src="assets/imgs/shell-proximax-white.svg" icon-add></ion-title>
-    </ion-toolbar>
-  </ion-header>
-
+  <ion-toolbar color="transparent">
+    <ion-buttons slot="start" white>
+      <ion-back-button defaultHref="/wallets"></ion-back-button>
+    </ion-buttons>
+    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <ion-grid>
-
     <ion-row>
       <ion-col size="12" text-center>
         <h3 white>Wallets</h3>
@@ -22,8 +20,6 @@
         <span white>{{wallet.address}}</span>
         <h1 *ngIf="this.wallet.amount" white>{{wallet.amount}} xpx</h1>
         <h1 *ngIf="!this.wallet.amount" white>0.000000 xpx</h1>
-
-
       </ion-col>
       <ion-col size="6" text-center>
         <button gradient-button color-1 ion-button icon-end type="submit" color="black" (click)="sendwallets()">
@@ -37,13 +33,8 @@
       </ion-col>
     </ion-row>
 
-
     <ion-row>
       <ion-col size="12" text-center>
-
-
-        <!-- Segment with secondary color -->
-
         <ion-segment (ionChange)="segmentChanged($event)" color="dark" value="mosaics">
           <ion-segment-button value="mosaics">
             <ion-label>Mosaics</ion-label>
@@ -56,95 +47,93 @@
           </ion-segment-button>
         </ion-segment>
 
-
         <ion-row>
-          <ion-col *ngIf="mosaics== true" size="12" text-center >
-            <ion-card background-white (click)="mosaicswallets()">
-                  <ion-item>
-                      <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
-                      <ion-label>
-                        XPX <br>
-                         <p>Proximax</p>
-                      </ion-label>
-                      <!-- <ion-icon name="information-circle" size="large" slot="end"> </ion-icon> -->
-                      <ion-label slot="end">
-                          0.0087s XPX  <p>USD 80.00</p>
-                      </ion-label>
-                    </ion-item>
+          <ion-col *ngIf="mosaics== true" size="12" text-center>
+            <ion-card background-white>
+              <ion-item>
+                <ion-icon src="assets/imgs/shield-proximax-colour.svg" slot="start"></ion-icon>
+                <ion-label>
+                  XPX <br>
+                  <p>Proximax</p>
+                </ion-label>
+                <ion-label slot="end">
+                  0.0087s XPX <p>USD 80.00</p>
+                </ion-label>
+              </ion-item>
             </ion-card>
             <ion-card background-white>
-                <ion-item>
-                    <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
-                    <ion-label>
-                      XPX <br>
-                      <p>Proximax </p>
-                    </ion-label>
-                    <!-- <ion-icon name="information-circle" size="large" slot="end"> </ion-icon> -->
-                    <ion-label slot="end">
-                        0.0087s XPX <p>USD 80.00</p>
-                    </ion-label>
-                  </ion-item>
-          </ion-card>
-          <ion-card background-white>
               <ion-item>
-                  <ion-icon src="assets/imgs/shell-proximax-colour.svg" slot="start"></ion-icon>
-                  <ion-label>
-                    XPX <br>
-                    <p>Proximax</p>
-                  </ion-label>
-                  <!-- <ion-icon name="information-circle" size="large" slot="end"> </ion-icon> -->
-                  <ion-label slot="end">
-                      0.0087s XPX <p>USD 80.00</p>
-                  </ion-label>
-                </ion-item>
-        </ion-card>
+                <ion-icon src="assets/imgs/shield-proximax-colour.svg" slot="start"></ion-icon>
+                <ion-label>
+                  XPX <br>
+                  <p>Proximax </p>
+                </ion-label>
+                <ion-label slot="end">
+                  0.0087s XPX <p>USD 80.00</p>
+                </ion-label>
+              </ion-item>
+            </ion-card>
+            <ion-card background-white>
+              <ion-item>
+                <ion-icon src="assets/imgs/shield-proximax-colour.svg" slot="start"></ion-icon>
+                <ion-label>
+                  XPX <br>
+                  <p>Proximax</p>
+                </ion-label>
+                <ion-label slot="end">
+                  0.0087s XPX <p>USD 80.00</p>
+                </ion-label>
+              </ion-item>
+            </ion-card>
           </ion-col>
 
           <ion-col *ngIf="transaction== true" size="12">
             <ion-card background-white *ngFor="let item of transactions">
-                <ion-row (click)="infoTransaction(item)">
-                    <ion-col size="1">
-                      <ion-label>
-                        <img src="assets/imgs/shell-proximax-colour.svg" width="60%" height="60%">
-                      </ion-label>
-                    </ion-col>
-                    <ion-col size="5">
-                      <ion-label>
-                          {{item.timestamp}}
-                      </ion-label>
-                    </ion-col>
-                    <ion-col size="1">
-                        <ion-label>
-                            <img *ngIf="item.isRemitent== false" src="assets/imgs/send-arrow-black.svg" width="60%" height="60%">
-                            <img *ngIf="item.isRemitent== true" src="assets/imgs/receive-arrow-black.svg" width="60%" height="60%">
-                      </ion-label>
-                    </ion-col>
-                    <ion-col size="5">
-                        <ion-label>
-                          {{item.nameType}}  <p>Confirmed</p>
-                        </ion-label>
-                    </ion-col>
-                  </ion-row>
+              <ion-row (click)="infoTransaction(item)">
+                <ion-col size="1">
+                  <ion-label>
+                    <img src="assets/imgs/shield-proximax-colour.svg" width="60%" height="60%">
+                  </ion-label>
+                </ion-col>
+                <ion-col size="5">
+                  <ion-label>
+                    {{item.timestamp}}
+                  </ion-label>
+                </ion-col>
+                <ion-col size="1">
+                  <ion-label>
+                    <img *ngIf="item.isRemitent== false" src="assets/imgs/send-arrow-black.svg" width="60%"
+                      height="60%">
+                    <img *ngIf="item.isRemitent== true" src="assets/imgs/receive-arrow-black.svg" width="60%"
+                      height="60%">
+                  </ion-label>
+                </ion-col>
+                <ion-col size="5">
+                  <ion-label>
+                    {{item.nameType}} <p>Confirmed</p>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
             </ion-card>
           </ion-col>
 
           <ion-col *ngIf="information== true" size="12">
-              <ion-card background-white>
-                <ion-card-content>
-                    <ion-row (click)="infoTransaction()">
-                        <ion-col size="3">
-                          <ion-label>
-                              Public Key
-                          </ion-label>
-                        </ion-col>
-                        <ion-col size="9">
-                            <ion-label>
-                                {{publicKey}}
-                          </ion-label>
-                        </ion-col>
-                      </ion-row>
-                </ion-card-content>
-              </ion-card>
+            <ion-card background-white>
+              <ion-card-content>
+                <ion-row (click)="infoTransaction()">
+                  <ion-col size="3">
+                    <ion-label>
+                      Public Key
+                    </ion-label>
+                  </ion-col>
+                  <ion-col size="9">
+                    <ion-label>
+                      {{publicKey}}
+                    </ion-label>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
 
             <ion-row>
               <ion-col size="12" text-center>
@@ -174,5 +163,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

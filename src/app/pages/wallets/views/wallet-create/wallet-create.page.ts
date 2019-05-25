@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { ProximaxProvider } from '../../../../providers/proximax.provider';
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../auth/service/auth.service';
@@ -19,11 +20,16 @@ export class WalletCreatePage implements OnInit {
   imgen: string;
   alfaNumberPattern = '^[a-zA-Z0-9 ]+$';
   numberPattern = '^[0-9]+$';
+  n1: string;
+  n2: string;
+  n3: string;
+  n4: string;
   constructor(
     public formBuilder: FormBuilder,
     private storage: Storage,
     public toastController: ToastController,
     private nav: NavController,
+    private qrScanner: QRScanner,
     private proximaxProvider: ProximaxProvider,
     public authService: AuthService,
     public walletService: WalletService,
@@ -31,23 +37,25 @@ export class WalletCreatePage implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    // this.checkbox = false;
   }
 
   addImg(val) {
     if (val === 1) {
-      this.imgen = 'background-green'
+      this.imgen = 'background-green';
+      this.n1 = 'activate'; this.n2 = ''; this.n3 = ''; this.n4 = '';
     } else if (val === 2) {
       this.imgen = 'background-orange'
+      this.n1 = ''; this.n2 = 'activate'; this.n3 = ''; this.n4 = '';
     } else if (val === 3) {
       this.imgen = 'background-blue'
+      this.n1 = ''; this.n2 = ''; this.n3 = 'activate'; this.n4 = '';
     } else {
       this.imgen = 'background-yellow'
+      this.n1 = ''; this.n2 = ''; this.n3 = ''; this.n4 = 'activate';
     }
     this.formWallets.patchValue({
-      img:this.imgen
+      img: this.imgen
     })
-    console.log('img', this.imgen)
   }
 
   createForm() {
@@ -82,7 +90,7 @@ export class WalletCreatePage implements OnInit {
               this.walletService.use(walletPrivatekey, true);
               this.nav.navigateRoot(['/congratulations']);
               console.log('se importa una cuenta nueva');
-              
+
             } else {
               console.log('.....................errrrorrrrrr');
             }
@@ -116,5 +124,33 @@ export class WalletCreatePage implements OnInit {
     if (this.checkbox === false) {
       console.log('limpieza');
     }
+  }
+
+  scanqr() {
+    console.log('scan Qr');
+    // Optionally request the permission early
+    this.qrScanner.prepare()
+      .then((status: QRScannerStatus) => {
+        if (status.authorized) {
+          // camera permission was granted
+
+
+          // start scanning
+          let scanSub = this.qrScanner.scan().subscribe((text: string) => {
+            console.log('Scanned something', text);
+
+            this.qrScanner.hide(); // hide camera preview
+            scanSub.unsubscribe(); // stop scanning
+          });
+          this.qrScanner.show();
+        } else if (status.denied) {
+          // camera permission was permanently denied
+          // you must use QRScanner.openSettings() method to guide the user to the settings page
+          // then they can grant the permission from there
+        } else {
+          // permission was denied, but not permanently. You can ask for permission again at a later time.
+        }
+      })
+      .catch((e: any) => console.log('Error is', e));
   }
 }
