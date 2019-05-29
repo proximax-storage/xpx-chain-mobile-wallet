@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ProximaxProvider } from '../../../providers/proximax.provider'
-import { 
-  NetworkType, 
+import {
+  NetworkType,
   PublicAccount,
   UInt64,
   TransferTransaction,
@@ -13,13 +13,14 @@ import {
   Deadline,
   PlainMessage,
   Transaction,
- } from "tsjs-xpx-catapult-sdk";
+} from "tsjs-xpx-catapult-sdk";
 import { crypto } from 'js-xpx-catapult-library';
 import { environment } from '../../../../environments/environment'
 import { NodeService } from '../../../../shared/service/node.service'
 import { TransactionsInterface } from '../interfaces/transaction.interface'
 
 import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,9 @@ export class WalletService {
   algo: string;
   import: any;
   detailTransaction: any;
+  wallets: any = [];
+  amountw: string;
+  mosaicsW: any;
 
   arraTypeTransaction = {
     transfer: {
@@ -85,6 +89,7 @@ export class WalletService {
     // }
   };
 
+
   constructor(
     private proximaxProvider: ProximaxProvider,
     private nodeService: NodeService,
@@ -105,19 +110,24 @@ export class WalletService {
     this.amount = wallet.amount;
     // encryptedKey
     this.encrypted = wallet.encrypted;
-     // iv
+    // iv
     this.iv = wallet.iv;
     // mosaics
-    this.mosaics = wallet.mosaics;
+    this.mosaics = wallet;
     // nameWallet
     this.nameWallet = wallet.name;
     // style
     this.style = wallet.style
-      // algo
+    // algo
     this.algo = wallet.algo;
     // wallet data
     this.current = wallet;
     return true;
+  }
+
+  mosaicsFormWallet(mosaics) {
+  // Mosaics of an address already with formats.
+  this.mosaicsW = mosaics;
   }
 
   transactionDetail(transaction: any) {
@@ -136,7 +146,7 @@ export class WalletService {
       schema: account.schema,
       style: img,
       address: account.address['address'],
-      algo:'pass:bip32',
+      algo: 'pass:bip32',
       encrypted: account.encryptedPrivateKey['encryptedKey'],
       iv: account.encryptedPrivateKey['iv'],
       network: account.network
@@ -151,7 +161,7 @@ export class WalletService {
       schema: walletSimple.schema,
       style: img,
       address: walletSimple.address['address'],
-      algo:'pass:bip32',
+      algo: 'pass:bip32',
       encrypted: walletSimple.encryptedPrivateKey['encryptedKey'],
       iv: walletSimple.encryptedPrivateKey['iv'],
       network: walletSimple.network
@@ -159,125 +169,176 @@ export class WalletService {
     return SimpleWallet;
   }
 
-    getPublicAccountFromPrivateKey(privatekey, network) {
-      const AccountFromPrivateKey = this.proximaxProvider.getPublicAccountFromPrivateKey(privatekey, network)
-      return AccountFromPrivateKey;
-    }
+  getPublicAccountFromPrivateKey(privatekey, network) {
+    const AccountFromPrivateKey = this.proximaxProvider.getPublicAccountFromPrivateKey(privatekey, network)
+    return AccountFromPrivateKey;
+  }
 
-    getAllTransactionsFromAccount(publicAccount): Observable<Transaction[]> { 
-      const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount)
-      return transaction;
-    }
-    formatterAmount(amount: number, divisibility: number) {
-      const amountDivisibility = Number(amount / Math.pow(10, divisibility));
-      return (amountDivisibility).toLocaleString('en-us', { minimumFractionDigits: divisibility });
-    }
-  
-    amountFormatterSimple(amount: Number) {
-      const amountDivisibility = Number(amount) / Math.pow(10, 6);
-      return (amountDivisibility).toLocaleString('en-us', { minimumFractionDigits: 6 });
-      }
+  getAllTransactionsFromAccount(publicAccount): Observable<Transaction[]> {
+    const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount)
+    return transaction;
+  }
+  formatterAmount(amount: number, divisibility: number) {
+    const amountDivisibility = Number(amount / Math.pow(10, divisibility));
+    return (amountDivisibility).toLocaleString('en-us', { minimumFractionDigits: divisibility });
+  }
 
-  
-    buidTansaction(transaction: Transaction): TransactionsInterface {
-      const keyType = Object.keys(this.arraTypeTransaction).find(elm => this.arraTypeTransaction[elm].id === transaction.type);
-      let recipientRentalFeeSink = '';
-      if (transaction["mosaics"] !== undefined) {
+  amountFormatterSimple(amount: Number) {
+    const amountDivisibility = Number(amount) / Math.pow(10, 6);
+    return (amountDivisibility).toLocaleString('en-us', { minimumFractionDigits: 6 });
+  }
+
+
+  buidTansaction(transaction: Transaction): TransactionsInterface {
+    const keyType = Object.keys(this.arraTypeTransaction).find(elm => this.arraTypeTransaction[elm].id === transaction.type);
+    let recipientRentalFeeSink = '';
+    if (transaction["mosaics"] !== undefined) {
+    } else {
+      if (transaction.type === this.arraTypeTransaction.registerNameSpace.id) {
+        recipientRentalFeeSink = this.namespaceRentalFeeSink.address_public_test;
+      } else if (
+        transaction.type === this.arraTypeTransaction.mosaicDefinition.id ||
+        transaction.type === this.arraTypeTransaction.mosaicSupplyChange.id
+      ) {
+        recipientRentalFeeSink = this.mosaicRentalFeeSink.address_public_test;
       } else {
-        if (transaction.type === this.arraTypeTransaction.registerNameSpace.id) {
-          recipientRentalFeeSink = this.namespaceRentalFeeSink.address_public_test;
-        } else if (
-          transaction.type === this.arraTypeTransaction.mosaicDefinition.id ||
-          transaction.type === this.arraTypeTransaction.mosaicSupplyChange.id
-        ) {
-          recipientRentalFeeSink = this.mosaicRentalFeeSink.address_public_test;
-        } else {
-          recipientRentalFeeSink = "XXXXX-XXXXX-XXXXXX";
-        }
-      }
-      return {
-        data: transaction,
-        nameType: this.arraTypeTransaction[keyType].name,
-        timestamp: this.dateFormat(transaction.deadline),
-        fee: this.amountFormatterSimple(transaction.maxFee.compact()),
-        sender: transaction.signer,
-        recipientRentalFeeSink: recipientRentalFeeSink,
-        recipient: (transaction['recipient'] !== undefined) ? transaction['recipient'] : null,
-        isRemitent: (transaction['recipient'] !== undefined) ? this.address.pretty() === transaction["recipient"].pretty() : false
+        recipientRentalFeeSink = "XXXXX-XXXXX-XXXXXX";
       }
     }
+    return {
+      data: transaction,
+      nameType: this.arraTypeTransaction[keyType].name,
+      timestamp: this.dateFormat(transaction.deadline),
+      fee: this.amountFormatterSimple(transaction.maxFee.compact()),
+      sender: transaction.signer,
+      recipientRentalFeeSink: recipientRentalFeeSink,
+      recipient: (transaction['recipient'] !== undefined) ? transaction['recipient'] : null,
+      isRemitent: (transaction['recipient'] !== undefined) ? this.address.pretty() === transaction["recipient"].pretty() : false
+    }
+  }
 
-      dateFormat(deadline: Deadline) {
-        return new Date(
-          deadline.value.toString() + Deadline.timestampNemesisBlock * 1000
-        ).toUTCString();
-      }
+  dateFormat(deadline: Deadline) {
+    return new Date(
+      deadline.value.toString() + Deadline.timestampNemesisBlock * 1000
+    ).toUTCString();
+  }
 
-decrypt(common: any, account: any = '', algo: any = '', network: any = '') {
-      const acct = account || this.current;
-      const net = network || this.network;
-      const alg = algo || this.algo;
-      // Try to generate or decrypt key
-      
-      if (!crypto.passwordToPrivatekey(common, acct, alg)) {
-        setTimeout(() => {
-          console.log('Error Invalid password')
-          // this.sharedService.showError('Error', '¡Invalid password!');
-        }, 500);
-        return false;
-      }
-      if (common.isHW) {
-        return true;
-      }
-      if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address)) {
-        setTimeout(() => {
-          console.log('Error Invalid password')
-          // this.sharedService.showError('Error', '¡Invalid password!');
-        }, 500);
-        return false;
-      }
-  
-      //Get public account from private key
-      this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
+  walletFormatList(arr) {
+    this.wallets = [];
+    arr.forEach(element => {
+      const myAddress = element.address;
+      this.getAccountInfo(myAddress).pipe(first()).subscribe(
+        next => {
+          const mosai = next['mosaics'];
+          for (const m in mosai) {
+            if (mosai[m].id.toHex() === '0dc67fbe1cad29e3') {
+              const valor = mosai[m].amount.compact()
+              this.amountw = this.amountFormatterSimple(valor);
+              console.log(`amount.`, this.amountw);
+            }
+          }
+          const valores = {
+            style: element.style,
+            name: element.name,
+            address: next['address']['address'],
+            algo: element.algo,
+            network: next['address']['networkType'],
+            amount: this.amountw,
+            mosaics: next['mosaics'],
+            encrypted: element.encrypted,
+            iv: element.iv
+          };
+          this.wallets.push(valores);
+          console.log('this.wallets', this.wallets)
+        }, error => {
+          const valores = {
+            style: element.style,
+            name: element.name,
+            schema: element.schema,
+            address: element.address,
+            algo: element.algo,
+            encrypted: element.encrypted,
+            iv: element.iv,
+            network: element.network
+          };
+          this.wallets.push(valores);
+          console.log('te dio un error,  posibles causas !', this.wallets);
+        }
+      );
+      return this.wallets;
+    });
+  }
+
+  getMosaicNames(mosaicId) {
+    const mosaicIds = this.proximaxProvider.getMosaicNames(mosaicId);
+    return mosaicIds;
+
+  }
+  decrypt(common: any, account: any = '', algo: any = '', network: any = '') {
+    const acct = account || this.current;
+    const net = network || this.network;
+    const alg = algo || this.algo;
+    // Try to generate or decrypt key
+
+    if (!crypto.passwordToPrivatekey(common, acct, alg)) {
+      setTimeout(() => {
+        console.log('Error Invalid password')
+        // this.sharedService.showError('Error', '¡Invalid password!');
+      }, 500);
+      return false;
+    }
+    if (common.isHW) {
       return true;
     }
-
-    isPrivateKeyValid(privateKey: any) {
-      if (privateKey.length !== 64 && privateKey.length !== 66) {
-        console.error('Private key length must be 64 or 66 characters !');
-        return false;
-      } else if (!this.isHexadecimal(privateKey)) {
-        console.error('Private key must be hexadecimal only !');
-        return false;
-      } else {
-        return true;
-      }
+    if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address)) {
+      setTimeout(() => {
+        console.log('Error Invalid password')
+        // this.sharedService.showError('Error', '¡Invalid password!');
+      }, 500);
+      return false;
     }
 
-    isHexadecimal(str: { match: (arg0: string) => any; }) {
-      return str.match('^(0x|0X)?[a-fA-F0-9]+$') !== null;
-    }
+    //Get public account from private key
+    this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
+    return true;
+  }
 
-    buildToSendTransfer(
-      common: { password?: any; privateKey?: any },
-      recipient: string,
-      message: string,
-      amount: any,
-      network: NetworkType,
-      mosaic: string | number[]
-    ) {
-      const recipientAddress = this.proximaxProvider.createFromRawAddress(recipient);
-      const transferTransaction = TransferTransaction.create(Deadline.create(5), recipientAddress,
-        [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount)))], PlainMessage.create(message), network
-      );
-      const account = Account.createFromPrivateKey(common.privateKey, network);
-      const signedTransaction = account.sign(transferTransaction)
-      const transactionHttp = new TransactionHttp(
-        environment.protocol + "://" + `${this.nodeService.getNodeSelected()}`
-      );
-      return {
-        signedTransaction: signedTransaction,
-        transactionHttp: this.proximaxProvider.transactionHttp
-      };
+  isPrivateKeyValid(privateKey: any) {
+    if (privateKey.length !== 64 && privateKey.length !== 66) {
+      console.error('Private key length must be 64 or 66 characters !');
+      return false;
+    } else if (!this.isHexadecimal(privateKey)) {
+      console.error('Private key must be hexadecimal only !');
+      return false;
+    } else {
+      return true;
     }
+  }
+
+  isHexadecimal(str: { match: (arg0: string) => any; }) {
+    return str.match('^(0x|0X)?[a-fA-F0-9]+$') !== null;
+  }
+
+  buildToSendTransfer(
+    common: { password?: any; privateKey?: any },
+    recipient: string,
+    message: string,
+    amount: any,
+    network: NetworkType,
+    mosaic: string | number[]
+  ) {
+    const recipientAddress = this.proximaxProvider.createFromRawAddress(recipient);
+    const transferTransaction = TransferTransaction.create(Deadline.create(5), recipientAddress,
+      [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount)))], PlainMessage.create(message), network
+    );
+    const account = Account.createFromPrivateKey(common.privateKey, network);
+    const signedTransaction = account.sign(transferTransaction)
+    const transactionHttp = new TransactionHttp(
+      environment.protocol + "://" + `${this.nodeService.getNodeSelected()}`
+    );
+    return {
+      signedTransaction: signedTransaction,
+      transactionHttp: this.proximaxProvider.transactionHttp
+    };
+  }
 }

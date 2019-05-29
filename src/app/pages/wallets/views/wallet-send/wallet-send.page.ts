@@ -17,6 +17,9 @@ export class WalletSendPage implements OnInit {
   wallet: any;
   mosaic: { name: string; label: string; id: string; };
   mosaicsSelect: any;
+  mosaics: any;
+  cardMosaics: any;
+  show: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -29,36 +32,62 @@ export class WalletSendPage implements OnInit {
 
   ngOnInit() {
     this.wallet = this.walletService.current;
-    console.log(this.wallet)
-    this.namemosaics(this.wallet['mosaics']);
-    this.createForm();
-
+    this.show = false;
     this.mosaicsSelect = [
       {
         value: "0",
         label: "Select mosaic",
         selected: true,
         disabled: true
-      },
-      {
-        value: this.proximaxProvider.mosaicXpx.mosaicId,
-        label: this.proximaxProvider.mosaicXpx.mosaic,
-        selected: false,
-        disabled: false
       }
     ];
-    // console.log('data recibida ....', this.wallet);
+
+    this.cardMosaics = [{
+      name: "",
+      mosaicId: "",
+      amount: ""
+    }]
+    this.mosaics = this.walletService.mosaicsW;
+    this.namemosaics(this.mosaics);
+    this.mosaicsTransfer(this.mosaics);
+    this.createForm();
+
   }
 
   createForm() {
     this.formSend = this.formBuilder.group({
-      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaicId, Validators.required],
+      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaicId],
       amount: ['', Validators.required],
       acountRecipient: ['', Validators.required],
       message: ['', Validators.required],
       password: ['', Validators.required],
 
     });
+  }
+
+  mosaicsTransfer(mosaics) {
+    for (const m in mosaics) {
+      const nameMosaic = (mosaics[m].name.length > 0) ? mosaics[m].name[0] : mosaics[m].mosaicId;
+      this.mosaicsSelect.push({
+        label: nameMosaic,
+        value: mosaics[m].mosaicId,
+        selected: false,
+        disabled: false
+      });
+      console.log('naes. ', this.mosaicsSelect)
+    }
+  }
+
+  onChangeMosaic(e) {
+
+    const valor = this.mosaics;
+    for (const m in valor) {
+    if(valor[m].name[0] === e.trim() || valor[m].mosaicId === e.trim()) {
+      this.cardMosaics =  valor[m];
+      this.show = true;
+    }
+    }
+    console.log('.............this.cardMosaics', this.cardMosaics)
   }
   namemosaics(mosaic) {
     if (mosaic === '0dc67fbe1cad29e3') {

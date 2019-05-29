@@ -12,23 +12,24 @@
     <form [formGroup]="formSend" (ngSubmit)="onSubmit(formSend.value)">
       <!-- <ion-col size="12" text-center> -->
       <h3>Transactions</h3>
+      <div *ngIf="show">
       <h1> USD 80.00 </h1>
       <ion-card>
         <ion-item>
           <ion-icon src="assets/imgs/shield-proximax-colour.svg" slot="start"></ion-icon>
           <ion-label>
-            {{ mosaic.name }} <br>
-            <p> {{ mosaic.label }}</p>
+            {{ cardMosaics.name }} <br>
+            <p> {{ cardMosaics.mosaicId }}</p>
           </ion-label>
           <ion-label *ngIf='wallet.amount' slot="end">
-            {{ wallet.amount}} XPX
+            {{ cardMosaics.amount}} <ion-label >XPX</ion-label> 
           </ion-label>
           <ion-label *ngIf='!wallet.amount' slot="end">
             0.000000 XPX
           </ion-label>
         </ion-item>
       </ion-card>
-
+    </div>
       <ion-card class="{{wallet.style}}">
         <ion-card-content white text-center>
           <strong> {{ wallet.name }}</strong>
@@ -48,8 +49,8 @@
             <ion-col size="6">
               <ion-item>
                 <ion-label position="floating"></ion-label>
-                <ion-select>
-                  <ion-select-option *ngFor="let mosaic of mosaicsSelect" selected> {{ mosaic.label }}
+                <ion-select (ionChange)="onChangeMosaic($event.target.value)" >
+                  <ion-select-option  *ngFor="let mosaic of mosaicsSelect" selected > {{ mosaic.label }} 
                   </ion-select-option>
                 </ion-select>
               </ion-item>

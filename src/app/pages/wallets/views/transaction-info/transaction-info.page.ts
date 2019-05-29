@@ -17,9 +17,20 @@ export class TransactionInfoPage implements OnInit {
   ngOnInit() {
     this.detail = this.walletService.detailTransaction;
     this.wallet = this.walletService.current;
-
+    this.distributed(this.detail);
     // console.log('in the component', this.wallet)
     // console.log('in the component', this.detail)
   }
 
+
+  distributed(detail) {
+    if (detail['data'].type === 16718) {
+      console.log('registra name space')
+    } else if (detail['data'].type === 16724) {
+      console.log('es transfer')
+    }else {
+      console.log('es otra')
+    }
+    detail['data'].type 
+  }
 }

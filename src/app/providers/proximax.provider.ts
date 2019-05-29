@@ -37,11 +37,12 @@ import {
   MosaicProperties,
   MosaicSupplyChangeTransaction,
   NamespaceService,
-  MosaicView
+  MosaicView,
   
   } from 'tsjs-xpx-catapult-sdk';
   import { Observable } from 'rxjs';
   import { MosaicXPXInterface } from '../pages/wallets/interfaces/transaction.interface'
+import { MosaicNames } from 'tsjs-xpx-catapult-sdk/dist/src/model/mosaic/MosaicNames';
 
 
 @Injectable({
@@ -119,6 +120,10 @@ decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string 
     return Account.createFromPrivateKey(privateKey, net).publicAccount;
   }
 
+  getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
+    return this.mosaicHttp.getMosaicNames(mosaicIds);
+  }
+  
   initInstances(url: string) {
     // console.log('instances', url)
     this.url = `${environment.protocol}://${url}`;

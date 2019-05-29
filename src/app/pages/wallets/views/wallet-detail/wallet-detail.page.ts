@@ -11,62 +11,88 @@ import { environment } from '../../../../../environments/environment'
   styleUrls: ['./wallet-detail.page.scss'],
 })
 export class WalletDetailPage implements OnInit {
-  information: boolean;
-  transaction: boolean;
-  mosaics: boolean;
+  segmentInformation: boolean;
+  segmentTransaction: boolean;
+  segmentMosaic: boolean;
   wallet: any;
   transactions: any[];
   publicKey: string;
+  mosaics: any;
   constructor(
     private nav: NavController,
     private storage: Storage,
     private walletService: WalletService,
-    private proximaxProvider: ProximaxProvider,
+    private proximaxProvider: ProximaxProvider
   ) { }
 
   ngOnInit() {
-    this.mosaics = true;
+    this.segmentMosaic = true;
     this.wallet = this.walletService.current;
     this.selectAllTransaction(this.wallet);
+    this.selectMosaics(this.wallet.mosaics);
   }
 
   segmentChanged(ev: any) {
     const segment = ev.detail.value;
     console.log('Segment changed', segment);
-    if ( segment === 'mosaics') {
-      this.mosaics = true;
-      this.transaction = false;
-      this.information = false;
-    } else if (segment === 'transaction') {
-      this.transaction = true;
-      this.mosaics = false;
-      this.information = false;
+    if (segment === 'segmentMosaic') {
+      this.segmentMosaic = true;
+      this.segmentTransaction = false;
+      this.segmentInformation = false;
+    } else if (segment === 'segmentTransaction') {
+      this.segmentTransaction = true;
+      this.segmentMosaic = false;
+      this.segmentInformation = false;
     } else {
-      this.information = true;
-      this.transaction = false;
-      this.mosaics = false;
+      this.segmentMosaic = false;
+      this.segmentTransaction = false;
+      this.segmentInformation = true;
     }
-
   }
 
   selectAllTransaction(data) {
     this.storage.get('pin').then(async (val) => {
-    const password = this.proximaxProvider.createPassword(val);
-    const PrivateKey = this.proximaxProvider.decryptPrivateKey(password, data.encrypted, data.iv);
-    const publicAccount = this.walletService.getPublicAccountFromPrivateKey(PrivateKey, environment.network);
-    this.publicKey = publicAccount.publicKey
-    this.walletService.getAllTransactionsFromAccount(publicAccount).subscribe(
-      response =>{
-        const data = [];
+      const password = this.proximaxProvider.createPassword(val);
+      const PrivateKey = this.proximaxProvider.decryptPrivateKey(password, data.encrypted, data.iv);
+      const publicAccount = this.walletService.getPublicAccountFromPrivateKey(PrivateKey, environment.network);
+      this.publicKey = publicAccount.publicKey
+      this.walletService.getAllTransactionsFromAccount(publicAccount).subscribe(
+        response => {
+          const data = [];
+          response.forEach(element => {
+            data.push(this.walletService.buidTansaction(element));
+          });
+          this.transactions = data
+          console.log('transaction from address', this.transactions)
+        }
+      );
+
+    });
+  }
+
+  selectMosaics(data) {
+    const datos = data.map(element => {
+      return element.id;
+    })
+    this.walletService.getMosaicNames(datos).subscribe(
+      response => {
+        this.mosaics = [];
         response.forEach(element => {
-          data.push(this.walletService.buidTansaction(element));
+          data.forEach(element2 => {
+            if (element.mosaicId.toHex() === element2.id.toHex()) {
+              let valores = {
+                mosaicId: element.mosaicId.id.toHex(),
+                name: element.names,
+                amount: this.walletService.amountFormatterSimple(element2.amount.compact())
+              }
+              this.mosaics.push(valores)
+            }
+          });
         });
-        this.transactions = data
-        console.log('transaction from address', this.transactions)
+        console.log('xxxxxxx', this.mosaics)
+        this.walletService.mosaicsFormWallet(this.mosaics);
       }
     );
-   
-  });
   }
 
   sendwallets() {
@@ -79,16 +105,9 @@ export class WalletDetailPage implements OnInit {
     this.nav.navigateRoot(`/wallet-receive`);
   }
 
-  // mosaicswallets() {
-  //   console.log('Recived changed');
-  //   this.nav.navigateRoot(`/wallet-mosaics`);
-
-  // }
-
   infoTransaction(info) {
-    console.log('Recived changed');
+    console.log('Recived changed', info);
     this.walletService.transactionDetail(info);
     this.nav.navigateRoot(`/transaction-info`);
   }
-
 }
