@@ -14,21 +14,25 @@
       <h3>Transactions</h3>
       <div *ngIf="show">
       <h1> USD 80.00 </h1>
-      <ion-card>
-        <ion-item>
-          <ion-icon src="assets/imgs/shield-proximax-colour.svg" slot="start"></ion-icon>
-          <ion-label>
-            {{ cardMosaics.name }} <br>
-            <p> {{ cardMosaics.mosaicId }}</p>
-          </ion-label>
-          <ion-label *ngIf='wallet.amount' slot="end">
-            {{ cardMosaics.amount}} <ion-label >XPX</ion-label> 
-          </ion-label>
-          <ion-label *ngIf='!wallet.amount' slot="end">
-            0.000000 XPX
-          </ion-label>
-        </ion-item>
-      </ion-card>
+      <ion-card background-white>
+        <div imagenClass2>
+            <img src="assets/imgs/shield-proximax-colour.svg" style="width:6%">
+          </div>
+        <ion-row style="display: flex;
+        flex-direction: initial;">
+            <ion-col size="6">
+              {{cardMosaics.name}}
+                <p style="text-indent:1.2em;">{{cardMosaics.mosaicId}}</p>
+            </ion-col>
+            <ion-col size="6">
+              <ion-label>
+                  <br>
+                  {{cardMosaics.amount}}
+                  <ion-label *ngIf="cardMosaics.name == 'prx.xpx' || cardMosaics.name == 'prx.storage'"> xpx</ion-label>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+    </ion-card>
     </div>
       <ion-card class="{{wallet.style}}">
         <ion-card-content white text-center>

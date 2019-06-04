@@ -25,19 +25,38 @@ export class WalletsPage implements OnInit {
 
   ngOnInit() {
     this.selectWallet();
+    // this.getWalletsStore();
   }
+
+  // getWalletsStore() {
+  //   this.user = this.authService.user;
+  //   this.storage.get('wallets'.concat(this.user)).then((data) => {
+      
+  //     this.wallets = data;
+  //     console.log('.....store wallets', this.wallets);
+      
+  //   });
+  // }
 
   selectWallet() {
     this.user = this.authService.user;
     console.log(this.user)
-    this.storage.get('wallets'.concat(this.user)).then(async (val) => {
+    this.storage.get('wallets'.concat(this.user)).then( (val) => {
       const arr = val;
+      if(arr){
+      console.log('arrarrarrarrarr', arr);
       this.walletService.walletFormatList(arr);
       this.wallets = this.walletService.wallets
       console.log('formatformat', this.wallets);
+      // this.getWalletsStore();
+    }
     }, reason => {
       console.log('es un error', reason);
     });
+  }
+
+  async create() {
+    this.nav.navigateRoot(['/wallet-create']);
   }
 
   async openWallet(valor) {

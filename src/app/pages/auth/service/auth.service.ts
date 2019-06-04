@@ -41,7 +41,7 @@ export class AuthService {
         const accountFromInputU = {
           firstname: firstname,
           lastname: lastname,
-          username: username,
+          username: username.toLowerCase(),
           password: password
         };
         accounts.push(accountFromInputU);
@@ -61,9 +61,10 @@ export class AuthService {
   ): Promise<{ status: string; message: string }> {
     return this.storage.get('accounts').then(data => {
       const accountFromInput = {
-        username: usernameP,
+        username: usernameP.toLowerCase(),
         password: passwordP
       };
+      console.log('accountFromInput ', accountFromInput)
       const ACCOUNTS = data ? data : [];
 
       let response: { status: string; message: string } = {
@@ -83,13 +84,14 @@ export class AuthService {
           status: 'success',
           message: 'You\'ve successfully logged in.'
         };
-        this.user = usernameP;
+        this.user = usernameP.toLowerCase();
         this.pin = passwordP;
         this.setLogged(true, this.user);
         // this.storage.set('isLoggedIn', true);
         this.storage.set('pin', this.pin);
       }
-      return  response;
+      
+      return response;
     });
   }
 

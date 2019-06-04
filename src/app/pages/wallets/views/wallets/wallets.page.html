@@ -10,11 +10,12 @@
             <ion-card-content>
               <div text-center >
                 <img style="margin: auto;" src="assets/imgs/create-add-new-white.svg" icon-add
-                  routerLink="/wallet-create" routerDirection="root">
+                  (click)="create()">
                 <h1 white>Create new wallet</h1>
               </div>
             </ion-card-content>
           </ion-card>
+
           <ion-card class="{{item.style}}" *ngFor="let item of wallets" (click)="openWallet(item)">
               <div imagenClass>
                   <img src="assets/imgs/shield-background-cards.svg" style="width:30%">
@@ -28,6 +29,7 @@
               <h4 *ngIf="!item.amount" white>0.000000 xpx</h4>
             </ion-card-content>
           </ion-card>
+          
         </ion-col>
       </ion-row>
     </form>

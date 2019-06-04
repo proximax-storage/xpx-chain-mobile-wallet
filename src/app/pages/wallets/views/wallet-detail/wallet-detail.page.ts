@@ -18,6 +18,8 @@ export class WalletDetailPage implements OnInit {
   transactions: any[];
   publicKey: string;
   mosaics: any;
+  wall: any;
+  mosaic: any[];
   constructor(
     private nav: NavController,
     private storage: Storage,
@@ -28,8 +30,11 @@ export class WalletDetailPage implements OnInit {
   ngOnInit() {
     this.segmentMosaic = true;
     this.wallet = this.walletService.current;
+    this.getMisaicsStore();
+    // this.getTansaction()
     this.selectAllTransaction(this.wallet);
     this.selectMosaics(this.wallet.mosaics);
+    
   }
 
   segmentChanged(ev: any) {
@@ -50,6 +55,15 @@ export class WalletDetailPage implements OnInit {
     }
   }
 
+  // getTansaction() {
+  //   this.wall = this.walletService.address.address;
+  //   console.log('.....this.wall', this.wall);
+  //   this.storage.get('transactions'.concat(this.wall)).then((data) => {
+  //     console.log('.....store transactions', data);
+  //     this.transactions = data;
+  //   });
+  // }
+
   selectAllTransaction(data) {
     this.storage.get('pin').then(async (val) => {
       const password = this.proximaxProvider.createPassword(val);
@@ -60,23 +74,37 @@ export class WalletDetailPage implements OnInit {
         response => {
           const data = [];
           response.forEach(element => {
+            // console.log('element', element)
             data.push(this.walletService.buidTansaction(element));
           });
           this.transactions = data
-          console.log('transaction from address', this.transactions)
+          // console.log('transaction from address', this.transactions)
         }
       );
+      // this.storage.set('transactions'.concat(this.wall), this.transactions)
+    });
+  }
 
+  getMisaicsStore() {
+    // console.log('.....getMisaicsStorel');
+    this.wall = this.walletService.address.address;
+    // console.log('.....this.wall', this.wall);
+    this.storage.get('mosaics'.concat(this.wall)).then((mosaic) => {
+      // console.log('.....store mosaic', mosaic);
+      this.mosaics = mosaic;
     });
   }
 
   selectMosaics(data) {
+    if (data){
     const datos = data.map(element => {
       return element.id;
     })
+    this.mosaic = [];
+    this.wall = this.walletService.address.address; 
+        // console.log('yyyyyyyyy', this.mosaic)
     this.walletService.getMosaicNames(datos).subscribe(
       response => {
-        this.mosaics = [];
         response.forEach(element => {
           data.forEach(element2 => {
             if (element.mosaicId.toHex() === element2.id.toHex()) {
@@ -85,14 +113,30 @@ export class WalletDetailPage implements OnInit {
                 name: element.names,
                 amount: this.walletService.amountFormatterSimple(element2.amount.compact())
               }
-              this.mosaics.push(valores)
+              
+              this.mosaic.push(valores)
+
+              this.storage.get('mosaics').then(val => {
+                let storagem = val;
+                if (val.mosaicId != null && val.mosaicId != element.mosaicId.toHex()) {
+                  storagem.push(valores)
+                  this.storage.set('mosaics', storagem)
+                }
+              })
             }
           });
+        
         });
-        console.log('xxxxxxx', this.mosaics)
-        this.walletService.mosaicsFormWallet(this.mosaics);
-      }
-    );
+        
+        this.storage.set('mosaics', this.mosaic)
+        this.mosaics = this.mosaic
+        
+        // console.log('xxxxxxx', this.mosaic)
+        // this.walletService.mosaicsFormWallet(this.mosaics,);
+      }, error => {
+        console.log('xxxxxxx', error)
+      });
+    }
   }
 
   sendwallets() {
@@ -106,7 +150,7 @@ export class WalletDetailPage implements OnInit {
   }
 
   infoTransaction(info) {
-    console.log('Recived changed', info);
+    // console.log('Recived changed',JSON.stringify(info));
     this.walletService.transactionDetail(info);
     this.nav.navigateRoot(`/transaction-info`);
   }

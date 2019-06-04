@@ -52,12 +52,9 @@ export class LoginPage implements OnInit {
               duration: 3000
             });
             toast.present();
-
-
           }
         })
         .catch(async err => {
-
           const toast = await this.toastController.create({
             message: 'unexpected error',
             duration: 3000
@@ -65,7 +62,5 @@ export class LoginPage implements OnInit {
           toast.present();
         });
     }
-
   }
-
 }

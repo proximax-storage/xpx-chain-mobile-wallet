@@ -39,6 +39,12 @@ export class WalletSendPage implements OnInit {
         label: "Select mosaic",
         selected: true,
         disabled: true
+      },
+      {
+        value: this.proximaxProvider.mosaicXpx.mosaicId,
+        label: this.proximaxProvider.mosaicXpx.mosaic,
+        selected: false,
+        disabled: false
       }
     ];
 
@@ -47,17 +53,20 @@ export class WalletSendPage implements OnInit {
       mosaicId: "",
       amount: ""
     }]
-    this.mosaics = this.walletService.mosaicsW;
+    this.mosaics = this.walletService.mosaics;
+
+    console.log('........',this.mosaicsSelect )
     this.namemosaics(this.mosaics);
-    this.mosaicsTransfer(this.mosaics);
+    // this.mosaicsTransfer(this.mosaics);
+    this.selectMosaics(this.mosaics )
     this.createForm();
 
   }
 
   createForm() {
     this.formSend = this.formBuilder.group({
-      mosaicsSelect: [this.proximaxProvider.mosaicXpx.mosaicId],
-      amount: ['', Validators.required],
+      mosaicsSelect: [''],
+      amount: [''],
       acountRecipient: ['', Validators.required],
       message: ['', Validators.required],
       password: ['', Validators.required],
@@ -68,26 +77,61 @@ export class WalletSendPage implements OnInit {
   mosaicsTransfer(mosaics) {
     for (const m in mosaics) {
       const nameMosaic = (mosaics[m].name.length > 0) ? mosaics[m].name[0] : mosaics[m].mosaicId;
-      this.mosaicsSelect.push({
-        label: nameMosaic,
-        value: mosaics[m].mosaicId,
-        selected: false,
-        disabled: false
-      });
-      console.log('naes. ', this.mosaicsSelect)
+      if(mosaics[m].mosaicId != this.proximaxProvider.mosaicXpx.mosaicId ){
+        this.mosaicsSelect.push({
+          label: nameMosaic,
+          value: mosaics[m].mosaicId,
+          selected: false,
+          disabled: false
+        });
+      }
+      // console.log('naes. ', this.mosaicsSelect)
     }
+  }
+  selectMosaics(data) {
+    if (data){
+    const datos = data.map(element => {
+      return element.id;
+    })
+    this.walletService.getMosaicNames(datos).subscribe(
+      response => {
+        this.mosaics = [];
+        response.forEach(element => {
+          data.forEach(element2 => {
+            if (element.mosaicId.toHex() === element2.id.toHex()) {
+              let valores = {
+                mosaicId: element.mosaicId.id.toHex(),
+                name: element.names,
+                amount: this.walletService.amountFormatterSimple(element2.amount.compact())
+              }
+              this.mosaics.push(valores)
+            }
+          });
+        });
+        console.log('xxxxxxx', this.mosaics)
+        this.mosaicsTransfer(this.mosaics);
+      }
+      
+    );
+  }
   }
 
   onChangeMosaic(e) {
-
+    console.log('............. mostrar e', e)
     const valor = this.mosaics;
     for (const m in valor) {
     if(valor[m].name[0] === e.trim() || valor[m].mosaicId === e.trim()) {
       this.cardMosaics =  valor[m];
       this.show = true;
+      console.log('............. mostrar true')
     }
     }
-    console.log('.............this.cardMosaics', this.cardMosaics)
+    if(e.trim() === 'Select mosaic') {
+      this.show = false;
+    }
+    this.formSend.patchValue({
+      mosaicsSelect: this.cardMosaics.mosaicId
+    })
   }
   namemosaics(mosaic) {
     if (mosaic === '0dc67fbe1cad29e3') {

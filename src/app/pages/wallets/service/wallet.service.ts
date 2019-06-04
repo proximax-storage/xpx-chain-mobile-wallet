@@ -45,6 +45,7 @@ export class WalletService {
   wallets: any = [];
   amountw: string;
   mosaicsW: any;
+  show: any;
 
   arraTypeTransaction = {
     transfer: {
@@ -75,10 +76,14 @@ export class WalletService {
       id: TransactionType.AGGREGATE_BONDED,
       name: "Aggregate bonded"
     },
-    // lock: {
-    //   id: TransactionType.LOCK,
-    //   name: "Lock"
-    // },
+    mosaicsAlias: {
+      id:TransactionType.MOSAIC_ALIAS,
+      name: "Mosaics Alias"
+    },
+    lock: {
+      id: TransactionType.LOCK,
+      name: "Lock"
+    },
     secretLock: {
       id: TransactionType.SECRET_LOCK,
       name: "Secret lock"
@@ -88,14 +93,18 @@ export class WalletService {
     //   name: "Secret proof"
     // }
   };
+  
 
 
   constructor(
     private proximaxProvider: ProximaxProvider,
     private nodeService: NodeService,
-  ) { }
+  ) { 
+    this.mosaics = [];
+  }
 
   use(wallet: any, variable: any) {
+    console.log('wallet.mosaic', wallet.mosaics)
     if (!wallet) {
       console.log('Error', '¡you can not set anything like the current wallet!');
       return false;
@@ -113,7 +122,7 @@ export class WalletService {
     // iv
     this.iv = wallet.iv;
     // mosaics
-    this.mosaics = wallet;
+    this.mosaics = wallet.mosaics;
     // nameWallet
     this.nameWallet = wallet.name;
     // style
@@ -125,10 +134,11 @@ export class WalletService {
     return true;
   }
 
-  mosaicsFormWallet(mosaics) {
-  // Mosaics of an address already with formats.
-  this.mosaicsW = mosaics;
-  }
+  // mosaicsFormWallet(mosaics: any, show: any) {
+  // // Mosaics of an address already with formats.
+  // this.mosaicsW = mosaics;
+  // this.show = show;
+  // }
 
   transactionDetail(transaction: any) {
     this.detailTransaction = transaction;
@@ -230,13 +240,21 @@ export class WalletService {
       this.getAccountInfo(myAddress).pipe(first()).subscribe(
         next => {
           const mosai = next['mosaics'];
+          console.log('mosaibcos .....', mosai.length )
+          if(mosai.length > 0) {
+            this.amountw = ''
+          }
           for (const m in mosai) {
+            console.log('m .....1', mosai[m].id.toHex())
+            
             if (mosai[m].id.toHex() === '0dc67fbe1cad29e3') {
+              console.log('m ....2.', mosai[m].id.toHex())
               const valor = mosai[m].amount.compact()
               this.amountw = this.amountFormatterSimple(valor);
               console.log(`amount.`, this.amountw);
             }
           }
+          
           const valores = {
             style: element.style,
             name: element.name,
@@ -317,6 +335,15 @@ export class WalletService {
 
   isHexadecimal(str: { match: (arg0: string) => any; }) {
     return str.match('^(0x|0X)?[a-fA-F0-9]+$') !== null;
+  }
+
+  formatNumberMilesThousands(numero: number) {
+    return numero
+      .toString()
+      .replace(
+        /((?!^)|(?:^|.*?[^\d.,])\d{1,3})(\d{3})(?=(?:\d{3})*(?!\d))/gy,
+        "$1,$2"
+      );
   }
 
   buildToSendTransfer(

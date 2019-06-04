@@ -78,7 +78,7 @@ export class WalletCreatePage implements OnInit {
         this.storage.get('wallets'.concat(this.user)).then((wallet) => {
           console.log('datos de forms', form);
           if (form.checkbox === true) {
-            if (form.privateKey !== '' || form.privateKey !== null || form.privateKey !== undefined) {
+            if (form.privateKey !== '' && form.privateKey !== null && form.privateKey !== undefined) {
               const walletPrivatekey = this.walletService.createAccountFromPrivateKey(form.img, form.walletname, password, form.privateKey, environment.network)
               if (wallet === null) {
                 this.storage.set('wallets'.concat(this.user), [walletPrivatekey]);
