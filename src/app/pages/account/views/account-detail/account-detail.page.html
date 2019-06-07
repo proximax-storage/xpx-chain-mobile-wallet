@@ -1,0 +1,78 @@
+<ion-header toolbar-background>
+    <ion-toolbar color="transparent">
+      <ion-buttons slot="start" white>
+        <ion-back-button defaultHref="/wallets"></ion-back-button>
+      </ion-buttons>
+      <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+  <ion-grid>
+    <form [formGroup]="formAccount">
+      <ion-row>
+        <ion-col size="12">
+          <h3 white text-center>Account</h3>
+          <ion-card background-white>
+            <ion-card-content>
+              <ion-item>
+                  <ion-label position="floating">Address</ion-label>
+                  <ion-input style="font-size: 14px;" type="text" readonly formControlName="address"></ion-input>
+                  <ion-icon  ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(address, 'Address')" slot="end"></ion-icon>
+                </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card background-white>
+            <ion-card-content>
+              <ion-item>
+                  <ion-label position="floating">Public key</ion-label>
+                <ion-input style="font-size: 14px;" type="text" readonly formControlName="publicKey"></ion-input>
+                <ion-icon ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(publicKey, 'Public key')" slot="end"></ion-icon>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card class="background-orange">
+            <ion-card-content>
+              <p white>Your private key holds all the power of your account.
+                It is a priority to make sure it is stored safely somewhere offline.</p>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card background-white *ngIf='showPasword'>
+            <ion-card-content>
+              <ion-item>
+                  <ion-label position="floating">Password</ion-label>
+                <ion-input style="font-size: 14px;" type="password" formControlName="password"></ion-input>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card background-white *ngIf='showPrivate'>
+            <ion-card-content>
+              <ion-item>
+                  <ion-label position="floating">Private Key</ion-label>
+                <ion-input style="font-size: 14px;" type="text" readonly formControlName="privateKey"></ion-input>
+                <ion-icon ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(privateKey, 'Private Key')" slot="end"></ion-icon>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-row>
+            <ion-col size="12" text-center>
+              <button *ngIf='showPasword' gradient-button2 color-1 ion-button icon-end type="submit" color="black"
+                (click)="showPrivateKey(formAccount.value)">
+                Show your private key
+              </button>
+              <button *ngIf='showPrivate' gradient-button2 color-1 ion-button icon-end type="submit" color="black"
+                (click)="hidePrivateKey()">
+                Hide your private key
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+</ion-content>

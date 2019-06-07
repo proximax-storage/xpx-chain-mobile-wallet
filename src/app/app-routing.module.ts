@@ -12,6 +12,8 @@ const routes: Routes = [
   { path: 'wallet-receive', loadChildren: './pages/wallets/views/wallet-receive/wallet-receive.module#WalletReceivePageModule' },
   { path: 'transaction-info', loadChildren: './pages/wallets/views/transaction-info/transaction-info.module#TransactionInfoPageModule' },
   { path: 'congratulations', loadChildren: './pages/wallets/views/congratulations/congratulations.module#CongratulationsPageModule' },
+  { path: 'list-account', loadChildren: './pages/account/views/list-account/list-account.module#ListAccountPageModule' },
+  { path: 'account-detail', loadChildren: './pages/account/views/account-detail/account-detail.module#AccountDetailPageModule' },
 ];
 
 @NgModule({

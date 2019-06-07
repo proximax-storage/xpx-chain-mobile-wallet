@@ -104,7 +104,6 @@ export class WalletService {
   }
 
   use(wallet: any, variable: any) {
-    console.log('wallet.mosaic', wallet.mosaics)
     if (!wallet) {
       console.log('Error', '¡you can not set anything like the current wallet!');
       return false;

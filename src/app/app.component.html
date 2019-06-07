@@ -12,11 +12,11 @@
               </ion-toolbar>
             <ion-content >
               <ion-list>
-                <ion-item (click)="closeCustom()" [routerLink]="['/wallets']">Wallets</ion-item>
+                <ion-item (click)="closeCustom()" [routerLink]="['/wallets']" routerDirection="root">Wallets</ion-item>
                 <ion-item (click)="closeCustom()" >Services</ion-item>
                 <ion-item (click)="closeCustom()" >Setting</ion-item>
                 <ion-item (click)="closeCustom()" >Notifications</ion-item>
-                <ion-item (click)="closeCustom()" >Account</ion-item>
+                <ion-item (click)="closeCustom()" [routerLink]="['/list-account']" routerDirection="root">Account</ion-item>
                 <ion-item (click)="logout()">Sing Out</ion-item>
               </ion-list>
             </ion-content>
