@@ -1,9 +1,15 @@
 <ion-header toolbar-background>
-  <ion-toolbar color="transparent">
+  <ion-toolbar color="transparent" [class.show-background]="showToolbar">
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/wallets"></ion-back-button>
     </ion-buttons>
-    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
+    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <img slot="icon-only" src="assets/imgs/user-account-white.png">
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -34,7 +40,7 @@
     </ion-row>
 
     <ion-row>
-      <ion-col size="12" text-center>
+      <ion-col size="12">
         <ion-segment (ionChange)="segmentChanged($event)" color="light" value="segmentMosaic">
           <ion-segment-button value="segmentMosaic">
             <ion-label>Mosaics</ion-label>
@@ -49,25 +55,25 @@
 
         <ion-row>
           <ion-col *ngIf="segmentMosaic" size="12" text-center>
-              <ion-card background-white *ngFor="let item of mosaics">
-                  <div imagenClass2>
-                      <img src="assets/imgs/shield-proximax-colour.svg" style="width:6%">
-                    </div>
-                  <ion-row style="display: flex;
+            <ion-card background-white *ngFor="let item of mosaics">
+              <div imagenClass2>
+                <img src="assets/imgs/shield-proximax-colour.svg" style="width:6%">
+              </div>
+              <ion-row style="display: flex;
                   flex-direction: initial;">
-                      <ion-col size="6">
-                        {{item.name}}
-                          <p style="text-indent:1.2em;">{{item.mosaicId}}</p>
-                      </ion-col>
-                      <ion-col size="6">
-                        <ion-label>
-                            <br>
-                            {{item.amount}}
-                            <ion-label *ngIf="item.name == 'prx.xpx' || item.name == 'prx.storage'"> xpx</ion-label>
-                        </ion-label>
-                      </ion-col>
-                    </ion-row>
-              </ion-card>
+                <ion-col size="6">
+                  {{item.name}}
+                  <p style="text-indent:1.2em;">{{item.mosaicId}}</p>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-label>
+                    <br>
+                    {{item.amount}}
+                    <ion-label *ngIf="item.name == 'prx.xpx' || item.name == 'prx.storage'"> xpx</ion-label>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-card>
           </ion-col>
 
           <ion-col *ngIf="segmentTransaction" size="12">
@@ -103,18 +109,34 @@
           <ion-col *ngIf="segmentInformation" size="12">
             <ion-card background-white>
               <ion-card-content>
-                <ion-row>
-                  <ion-col size="3">
-                    <ion-label>
-                      Public Key
-                    </ion-label>
-                  </ion-col>
-                  <ion-col size="9">
-                    <ion-label>
-                      {{publicKey}}
-                    </ion-label>
-                  </ion-col>
-                </ion-row>
+                <form [formGroup]="formAccount">
+                  <ion-row>
+                    <ion-col size="12">
+
+                      <ion-item>
+                        <ion-label position="floating">Public key</ion-label>
+                        <ion-textarea style="font-size: 14px;" rows="3" type="text" readonly
+                          formControlName="publicKey"></ion-textarea>
+                        <ion-icon ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(publicKey, 'Public key')"
+                          slot="end"></ion-icon>
+                      </ion-item>
+
+                      <ion-item *ngIf='showPasword'>
+                        <ion-label position="floating">Private Key</ion-label>
+                        <ion-input style="font-size: 11px;" type="password" formControlName="password"></ion-input>
+                        <ion-icon name="unlock" slot="end" (click)="showPrivateKey(formAccount.value)"></ion-icon>
+                      </ion-item>
+
+                      <ion-item *ngIf='!showPasword'>
+                        <ion-label position="floating">Private Key</ion-label>
+                        <ion-textarea style="font-size: 14px;" type="text" rows="3" readonly
+                          formControlName="privateKey"></ion-textarea>
+                        <ion-icon ios="ios-clipboard" md="md-clipboard" (click)="copyMessage(privateKey, 'Private Key')"
+                          slot="end"></ion-icon>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </form>
               </ion-card-content>
             </ion-card>
 

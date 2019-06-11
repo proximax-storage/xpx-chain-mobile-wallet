@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { WalletService } from '../../service/wallet.service'
 import { ProximaxProvider } from 'src/app/providers/proximax.provider';
 import { environment } from '../../../../../environments/environment'
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -11,6 +13,7 @@ import { environment } from '../../../../../environments/environment'
   styleUrls: ['./wallet-detail.page.scss'],
 })
 export class WalletDetailPage implements OnInit {
+  formAccount: FormGroup;
   segmentInformation: boolean;
   segmentTransaction: boolean;
   segmentMosaic: boolean;
@@ -20,14 +23,23 @@ export class WalletDetailPage implements OnInit {
   mosaics: any;
   wall: any;
   mosaic: any[];
+  privateKey: string;
+  alfaNumberPattern = '^[a-zA-Z0-9]+$';
+  showPasword: boolean;
+  password: any;
   constructor(
     private nav: NavController,
     private storage: Storage,
+    public toastController: ToastController,
+    private clipboardService: ClipboardService,
+    public formBuilder: FormBuilder,
     private walletService: WalletService,
     private proximaxProvider: ProximaxProvider
   ) { }
 
   ngOnInit() {
+    this.showPasword = true;
+    this.createForm()
     this.segmentMosaic = true;
     this.wallet = this.walletService.current;
     this.getMisaicsStore();
@@ -37,6 +49,14 @@ export class WalletDetailPage implements OnInit {
     
   }
 
+  createForm() {
+    this.formAccount = this.formBuilder.group({
+      publicKey: [this.publicKey],
+      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      privateKey: [this.privateKey]
+    });
+  }
+
   segmentChanged(ev: any) {
     const segment = ev.detail.value;
     console.log('Segment changed', segment);
@@ -44,32 +64,71 @@ export class WalletDetailPage implements OnInit {
       this.segmentMosaic = true;
       this.segmentTransaction = false;
       this.segmentInformation = false;
+      this.showPasword = true;
+      this.formAccount.patchValue({
+        password:'',
+      });
     } else if (segment === 'segmentTransaction') {
       this.segmentTransaction = true;
       this.segmentMosaic = false;
       this.segmentInformation = false;
+      this.showPasword = true;
+      this.formAccount.patchValue({
+        password:'',
+      });
     } else {
       this.segmentMosaic = false;
       this.segmentTransaction = false;
       this.segmentInformation = true;
     }
   }
+  async showPrivateKey(form) {
+    if (form.password == '') {
+      const toast = await this.toastController.create({
+        message: 'Password required',
+        duration: 3000
+      });
+      toast.present();
+    } else {
+     if(form.password === this.password ){
+      this.formAccount.patchValue({
+        privateKey: this.privateKey.toUpperCase()
+      })
+      this.showPasword = false;
+      } else {
+        const toast = await this.toastController.create({
+          message: 'wrong password',
+          duration: 3000
+        });
+        toast.present();
+      }  
+    }
+  }
+  
+  async copyMessage(valor, type) {
+    this.clipboardService.copyFromContent(valor);
+    const toast = await this.toastController.create({
+      message: 'Copied '+ `${type}`,
+      duration: 3000
+    });
+    toast.present();
+  }
 
-  // getTansaction() {
-  //   this.wall = this.walletService.address.address;
-  //   console.log('.....this.wall', this.wall);
-  //   this.storage.get('transactions'.concat(this.wall)).then((data) => {
-  //     console.log('.....store transactions', data);
-  //     this.transactions = data;
-  //   });
-  // }
 
   selectAllTransaction(data) {
     this.storage.get('pin').then(async (val) => {
+      this.password = val;
       const password = this.proximaxProvider.createPassword(val);
       const PrivateKey = this.proximaxProvider.decryptPrivateKey(password, data.encrypted, data.iv);
+      this.privateKey = PrivateKey
+      // this.formAccount.patchValue({
+      //   privateKey: this.privateKey
+      // })
       const publicAccount = this.walletService.getPublicAccountFromPrivateKey(PrivateKey, environment.network);
       this.publicKey = publicAccount.publicKey
+      this.formAccount.patchValue({
+        publicKey: this.publicKey
+      })
       this.walletService.getAllTransactionsFromAccount(publicAccount).subscribe(
         response => {
           const data = [];

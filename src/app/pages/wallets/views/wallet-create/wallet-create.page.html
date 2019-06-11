@@ -1,14 +1,17 @@
+
 <ion-header toolbar-background>
-  <ion-toolbar color="transparent">
-    <ion-buttons slot="start" white>
-      <ion-back-button defaultHref="/wallets"></ion-back-button>
-    </ion-buttons>
-    <div>
-        <img src="assets/imgs/shield-proximax-white.svg" icon-add>
-    </div>
-    
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar color="transparent" [class.show-background]="showToolbar">
+      <ion-buttons slot="start" white>
+          <ion-back-button defaultHref="/wallets"></ion-back-button>
+      </ion-buttons>
+      <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important"></ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+            <img slot="icon-only" src="assets/imgs/user-account-white.png">
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content>
   <ion-grid>

@@ -1,9 +1,15 @@
 <ion-header toolbar-background>
-  <ion-toolbar color="transparent">
+  <ion-toolbar color="transparent" [class.show-background]="showToolbar">
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
     </ion-buttons>
-    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
+    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <img slot="icon-only" src="assets/imgs/user-account-white.png">
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -33,8 +39,7 @@
       </button>
     </ion-col>
     <ion-col size="6" text-center>
-      <button gradient-button color-1 ion-button icon-end type="submit" color="black"
-        (click)="shared()">
+      <button gradient-button color-1 ion-button icon-end type="submit" color="black" (click)="shared()">
         Share
       </button>
     </ion-col>

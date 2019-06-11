@@ -36,7 +36,8 @@ export class CongratulationsPage implements OnInit {
       this.wallet = this.walletService.current;
       this.address = this.wallet.address;
       this.import = this.walletService.import;
-      this.privatekey = this.proximaxProvider.decryptPrivateKey(password, this.wallet.encrypted , this.wallet.iv);
+      const privatekey = this.proximaxProvider.decryptPrivateKey(password, this.wallet.encrypted , this.wallet.iv);
+      this.privatekey = privatekey.toUpperCase()
     });
   }
   

@@ -1,9 +1,15 @@
 <ion-header toolbar-background>
-  <ion-toolbar color="transparent">
+  <ion-toolbar color="transparent" [class.show-background]="showToolbar">
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
     </ion-buttons>
-    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
+    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <img slot="icon-only" src="assets/imgs/user-account-white.png">
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -12,12 +18,12 @@
     <ion-row>
       <ion-col size="12" white text-center>
         <h3>Transaction Info</h3>
-        <ion-card background-white *ngIf="showT"> 
+        <ion-card background-white *ngIf="showT">
           <ion-row>
             <ion-col size="2">
               <br>
               <ion-label>
-                <img src="assets/imgs/shield-proximax-colour.svg"  width="50%" height="50%" >
+                <img src="assets/imgs/shield-proximax-colour.svg" width="50%" height="50%">
               </ion-label>
             </ion-col>
             <ion-col size="5">
@@ -53,36 +59,36 @@
         </ion-card>
 
         <ion-card background-white *ngIf="showN">
-            <ion-card-content>
-              <ion-row>
-                <ion-col size="2">
-                  <strong font-size>Name</strong>
-                </ion-col>
-                <ion-col size="10">
-                  <ion-label font-size>
-                    {{ detail['data'].namespaceName }}
-                  </ion-label>
-                </ion-col>
-              </ion-row>
-            </ion-card-content>
-          </ion-card>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="2">
+                <strong font-size>Name</strong>
+              </ion-col>
+              <ion-col size="10">
+                <ion-label font-size>
+                  {{ detail['data'].namespaceName }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
 
-          <ion-card background-white *ngIf="showN">
-              <ion-card-content>
-                <ion-row>
-                  <ion-col size="2">
-                    <strong font-size>Id</strong>
-                  </ion-col>
-                  <ion-col size="10">
-                    <ion-label font-size>
-                      {{ detail['data']['namespaceId'].id.toHex() }}
-                    </ion-label>
-                  </ion-col>
-                </ion-row>
-              </ion-card-content>
-            </ion-card>
+        <ion-card background-white *ngIf="showN">
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="2">
+                <strong font-size>Id</strong>
+              </ion-col>
+              <ion-col size="10">
+                <ion-label font-size>
+                  {{ detail['data']['namespaceId'].id.toHex() }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
 
-        <ion-card background-white >
+        <ion-card background-white>
           <ion-card-content>
             <ion-row>
               <ion-col size="2">
@@ -113,19 +119,19 @@
           </ion-card-content>
         </ion-card>
         <ion-card background-white *ngIf="showN || showL">
-            <ion-card-content>
-              <ion-row>
-                <ion-col size="2">
-                  <strong font-size>To</strong>
-                </ion-col>
-                <ion-col size="10">
-                  <ion-label font-size>
-                    {{ detail.recipientRentalFeeSink }}
-                  </ion-label>
-                </ion-col>
-              </ion-row>
-            </ion-card-content>
-          </ion-card>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="2">
+                <strong font-size>To</strong>
+              </ion-col>
+              <ion-col size="10">
+                <ion-label font-size>
+                  {{ detail.recipientRentalFeeSink }}
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
 
 
         <ion-card>
@@ -174,7 +180,7 @@
         </ion-card>
 
         <ion-card background-white>
-          <ion-card-content >
+          <ion-card-content>
             <ion-row>
               <ion-col size="2">
                 <strong font-size>hash</strong>
@@ -189,7 +195,7 @@
         </ion-card>
 
         <ion-card background-white *ngIf="showT">
-          <ion-card-content >
+          <ion-card-content>
             <ion-row>
               <ion-col size="2">
                 <strong font-size>message</strong>
