@@ -99,6 +99,20 @@ ion-content {
   contain: size style;
 }
 
+.header-ios ion-toolbar:last-child {
+  --border-width: 0 0 0px !important;
+}
+.header-md:after {
+  left: 0;
+  bottom: -8px;
+  background-position: left 0 top 0;
+  position: fixed;
+  width: 100%;
+  height: 8px;
+  background-repeat: repeat-x;
+  content: "";
+}
+
 ion-segment-button {
   --padding-top: 0;
   --padding-end: 16px;
@@ -113,6 +127,11 @@ ion-segment-button {
   letter-spacing: .06em;
   line-height: 40px;
   text-transform: none !important;
+}
+
+ion-title {
+  font-size: 17px !important;
+  text-align: center !important;
 }
 
 .item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
@@ -172,19 +191,10 @@ ion-segment-button {
   }
 }
 
-[gradient-button][color-2] {
-  color: yellow
-}
-
 // pendiente por usar
 [toolbar-background]{
   background-color: #0d0c0c61 !important;
 }
-// 
-
-// [padding-top]{
-//   padding-top: 110px ;
-// }
 
 [padding-top-2]{
   padding-top: 20px !important;
@@ -260,24 +270,8 @@ ion-segment-button {
   outline: none;
 }
 
-[gradient-button2] {
-  width: 200px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  margin: 0px;
-  height: 38px;
-  /* text-align: center; */
-  /* border: none; */
-  // background-size: 300% 100%;
-  border-radius: 32px;
-  -webkit-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
-}
-
 [gradient-button] {
-  width: 150px;
+  width: 250px;
   font-size: 16px;
   font-weight: 600;
   color: #fff;
@@ -301,7 +295,22 @@ ion-segment-button {
     #052733
   );
 }
+[color-2] {
+  color: yellow
+}
+[color-3] {
+  background-image: linear-gradient(
+    to right,
+    #f36016,
+    #f36016,
+    #f36016,
+    #f36016
+  );
+}
 
+[color-4] {
+  color: #052733 !important;
+}
 .activate {
   border-radius: 10px;
   border: 3px solid #052733;
@@ -319,18 +328,22 @@ ion-segment-button {
 }
 
 [logo] {
-  width: 60%;
-}
-
-[icon] {
-  width: 8%;
-  display: block;
-  margin: auto;
+  width: 60% !important;
 }
 
 [icon-add] {
   width: 10% !important;
   
+}
+
+[icon-scan] {
+  width: 20% !important;
+  
+}
+[icon-addreess] {
+  width: 40% !important;
+  display: block;
+  margin: auto;
 }
 
 [icon-back] {
