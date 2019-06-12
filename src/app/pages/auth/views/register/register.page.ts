@@ -29,12 +29,12 @@ export class RegisterPage implements OnInit {
 
   createForm() {
     this.formReg = this.formBuilder.group({
-      firstname: ['', [Validators.required, Validators.pattern(this.alfaPattern), Validators.minLength(3), Validators.maxLength(15)]],
-      lastname: ['', [Validators.required, Validators.pattern(this.alfaPattern), Validators.minLength(3), Validators.maxLength(15)]],
-      emailaddres: ['', [Validators.required, Validators.pattern(this.emailPattern), Validators.minLength(10), Validators.maxLength(20)]],
+      firstname: ['', [Validators.required, Validators.pattern(this.alfaPattern), Validators.minLength(3), Validators.maxLength(30)]],
+      lastname: ['', [Validators.required, Validators.pattern(this.alfaPattern), Validators.minLength(3), Validators.maxLength(30)]],
+      // emailaddres: ['', [Validators.required, Validators.pattern(this.emailPattern), Validators.minLength(10), Validators.maxLength(20)]],
       username: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(3), Validators.maxLength(10)]],
-      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(9), Validators.maxLength(15)]],
-      confirmpassword: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(9), Validators.maxLength(15)]]
+      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(8), Validators.maxLength(30)]],
+      confirmpassword: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(8), Validators.maxLength(30)]]
       // passwords: this.formBuilder.group({
       //   password: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
       //   confirmpassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],

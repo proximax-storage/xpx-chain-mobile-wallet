@@ -1,9 +1,15 @@
 <ion-header toolbar-background>
-  <ion-toolbar color="transparent">
+  <ion-toolbar color="transparent" [class.show-background]="showToolbar">
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/login"></ion-back-button>
     </ion-buttons>
-    <ion-title><img src="assets/imgs/shield-proximax-white.svg" icon-add></ion-title>
+    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <img slot="icon-only" src="assets/imgs/user-account-white.png">
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,23 +19,32 @@
       <ion-row>
         <ion-col buttons padding-top-2 col-12 text-center>
           <h3 white>New User</h3>
-          <ion-card>
-            <ion-card-content background-white>
+          <ion-card background-white>
+            <ion-card-content>
               <ion-item>
-                <ion-input type="text" formControlName="firstname" placeholder="First name" ></ion-input>
-                
+                <ion-input type="text" formControlName="firstname" placeholder="First name"></ion-input>
+
               </ion-item>
               <ion-item *ngIf="formReg.get('firstname').errors && formReg.get('firstname').dirty">
-                  <p color="danger" ion-text *ngIf="formReg.get('firstname').hasError('required')">This field is required</p>
-                  <p color="danger" ion-text *ngIf="formReg.get('firstname').hasError('minlength')">Min of 5 characters</p>
-                  <p color="danger" ion-text *ngIf="formReg.get('firstname').hasError('maxlength')">Max of 10 characters</p>
-                </ion-item>
+                <p color="danger" ion-text *ngIf="formReg.get('firstname').hasError('required')">This field is required
+                </p>
+                <p color="danger" ion-text *ngIf="formReg.get('firstname').hasError('minlength')">Min of 5 characters
+                </p>
+                <p color="danger" ion-text *ngIf="formReg.get('firstname').hasError('maxlength')">Max of 10 characters
+                </p>
+              </ion-item>
               <ion-item>
                 <ion-input type="text" formControlName="lastname" placeholder="Last name"></ion-input>
               </ion-item>
-              <ion-item>
+
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card background-white>
+            <ion-card-content>
+              <!-- <ion-item>
                 <ion-input type="text" formControlName="emailaddres" placeholder="Enter your email addres"></ion-input>
-              </ion-item>
+              </ion-item> -->
               <ion-item>
                 <ion-input type="text" formControlName="username" placeholder="Enter a username"></ion-input>
               </ion-item>
@@ -37,7 +52,7 @@
                 <ion-input type="password" formControlName="password" placeholder="Enter a password"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-input type="password" formControlName="confirmpassword" placeholder="Confirm your password" >
+                <ion-input type="password" formControlName="confirmpassword" placeholder="Confirm your password">
                 </ion-input>
               </ion-item>
             </ion-card-content>
