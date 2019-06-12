@@ -4,18 +4,16 @@ import { Storage } from '@ionic/storage';
 import { AuthService } from 'src/app/pages/auth/service/auth.service';
 import { AddressBookService } from '../../service/address-book.service';
 
-
 @Component({
   selector: 'app-address-book',
   templateUrl: './address-book.page.html',
   styleUrls: ['./address-book.page.scss'],
 })
+
 export class AddressBookPage implements OnInit {
   showcreate: boolean;
   showList: boolean;
   contacts: any;
-
-
   constructor(
     private nav: NavController,
     private storage: Storage,
@@ -43,7 +41,6 @@ export class AddressBookPage implements OnInit {
   }
 
   openContact(data) {
-    console.log('edit contact', data)
     this.adressBookService.use(data)
     this.nav.navigateRoot(`/edit-contact`);
   }

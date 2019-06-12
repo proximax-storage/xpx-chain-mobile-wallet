@@ -8,7 +8,6 @@ import { AuthService } from 'src/app/pages/auth/service/auth.service';
 export class AddressBookService {
   contact: any;
   show: any;
-
   constructor(
     private storage: Storage,
     public authservice: AuthService,
@@ -24,7 +23,6 @@ export class AddressBookService {
       .get('contacts'.concat(user))
       .then(data => {
         const CONTACTS = data ? data : [];
-        console.log('... data', CONTACTS)
         return CONTACTS;
       })
       .then((contacts: any[]) => {
@@ -33,9 +31,7 @@ export class AddressBookService {
           address: address.toUpperCase(),
           usertelegram: usertelegram
         };
-        console.log('... contact', contact)
         contacts.push(contact);
-        console.log('... this.contacts', contacts)
         return this.storage.set('contacts'.concat(user), contacts);
       });
   }

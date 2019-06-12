@@ -1,8 +1,19 @@
-<ion-menu-button white class="ios button ion-activatable hydrated"></ion-menu-button>
+<ion-header >
+    <ion-toolbar color="transparent" [class.show-background]="showToolbar">
+      <ion-buttons slot="start" white>
+          <ion-menu-button white class="ios button ion-activatable hydrated"></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" icon-add [routerLink]="['/wallets']" routerDirection="root"></ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+            <img slot="icon-only" src="assets/imgs/user-account-white.png" [routerLink]="['/account']" routerDirection="root">
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content>
   <ion-grid>
-    <img src="assets/imgs/shield-proximax-white.svg" icon>
     <ion-card background-white >
         <ion-row (click)="addresBook()">
           <ion-col size="2">
