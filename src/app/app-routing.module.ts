@@ -12,8 +12,11 @@ const routes: Routes = [
   { path: 'wallet-receive', loadChildren: './pages/wallets/views/wallet-receive/wallet-receive.module#WalletReceivePageModule' },
   { path: 'transaction-info', loadChildren: './pages/wallets/views/transaction-info/transaction-info.module#TransactionInfoPageModule' },
   { path: 'congratulations', loadChildren: './pages/wallets/views/congratulations/congratulations.module#CongratulationsPageModule' },
-  { path: 'list-account', loadChildren: './pages/account/views/list-account/list-account.module#ListAccountPageModule' },
-  { path: 'account-detail', loadChildren: './pages/account/views/account-detail/account-detail.module#AccountDetailPageModule' },
+  { path: 'account', loadChildren: './pages/account/views/account/account.module#AccountPageModule' },
+  { path: 'service', loadChildren: './pages/services/views/service/service.module#ServicePageModule' },  
+  { path: 'address-book', loadChildren: './pages/services/views/address-book/address-book.module#AddressBookPageModule' },
+  { path: 'add-contact', loadChildren: './pages/services/views/add-contact/add-contact.module#AddContactPageModule' },
+  { path: 'edit-contact', loadChildren: './pages/services/views/edit-contact/edit-contact.module#EditContactPageModule' },
 ];
 
 @NgModule({

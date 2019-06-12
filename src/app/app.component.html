@@ -13,10 +13,10 @@
             <ion-content >
               <ion-list>
                 <ion-item (click)="closeCustom()" [routerLink]="['/wallets']" routerDirection="root">Wallets</ion-item>
-                <ion-item (click)="closeCustom()" >Services</ion-item>
+                <ion-item (click)="closeCustom()" [routerLink]="['/service']" routerDirection="root">Services</ion-item>
                 <ion-item (click)="closeCustom()" >Setting</ion-item>
                 <ion-item (click)="closeCustom()" >Notifications</ion-item>
-                <ion-item (click)="closeCustom()" [routerLink]="['/list-account']" routerDirection="root">Account</ion-item>
+                <ion-item (click)="closeCustom()" [routerLink]="['/account']" routerDirection="root">Account</ion-item>
                 <ion-item (click)="logout()">Sing Out</ion-item>
               </ion-list>
             </ion-content>
