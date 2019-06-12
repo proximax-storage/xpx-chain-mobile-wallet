@@ -3,13 +3,12 @@
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/wallets"></ion-back-button>
     </ion-buttons>
-    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important">
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <img slot="icon-only" src="assets/imgs/user-account-white.png">
-      </ion-button>
-    </ion-buttons>
+    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" icon-add [routerLink]="['/wallets']" routerDirection="root"></ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+            <img slot="icon-only" src="assets/imgs/user-account-white.png" [routerLink]="['/account']" routerDirection="root">
+        </ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -158,7 +157,7 @@
 
             <ion-row>
               <ion-col size="12" text-center>
-                <button gradient-button color-1 ion-button icon-end type="submit" color="black">
+                <button gradient-button color-3 ion-button icon-end type="submit" color="black">
                   Delete
                 </button>
               </ion-col>

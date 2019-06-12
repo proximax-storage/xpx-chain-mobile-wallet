@@ -3,13 +3,12 @@
     <ion-buttons slot="start" white>
       <ion-back-button defaultHref="/wallet-detail"></ion-back-button>
     </ion-buttons>
-    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" style="width: 15% !important">
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <img slot="icon-only" src="assets/imgs/user-account-white.png">
-      </ion-button>
-    </ion-buttons>
+    <ion-title class="center"><img src="assets/imgs/shield-proximax-white.svg" icon-add [routerLink]="['/wallets']" routerDirection="root"></ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+            <img slot="icon-only" src="assets/imgs/user-account-white.png" [routerLink]="['/account']" routerDirection="root">
+        </ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

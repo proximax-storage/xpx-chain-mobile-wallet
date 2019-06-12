@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { ProximaxProvider } from '../../../../providers/proximax.provider';
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../auth/service/auth.service';
@@ -29,7 +28,6 @@ export class WalletCreatePage implements OnInit {
     private storage: Storage,
     public toastController: ToastController,
     private nav: NavController,
-    private qrScanner: QRScanner,
     private proximaxProvider: ProximaxProvider,
     public authService: AuthService,
     public walletService: WalletService,
@@ -129,28 +127,6 @@ export class WalletCreatePage implements OnInit {
   scanqr() {
     console.log('scan Qr');
     // Optionally request the permission early
-    this.qrScanner.prepare()
-      .then((status: QRScannerStatus) => {
-        if (status.authorized) {
-          // camera permission was granted
 
-
-          // start scanning
-          let scanSub = this.qrScanner.scan().subscribe((text: string) => {
-            console.log('Scanned something', text);
-
-            this.qrScanner.hide(); // hide camera preview
-            scanSub.unsubscribe(); // stop scanning
-          });
-          this.qrScanner.show();
-        } else if (status.denied) {
-          // camera permission was permanently denied
-          // you must use QRScanner.openSettings() method to guide the user to the settings page
-          // then they can grant the permission from there
-        } else {
-          // permission was denied, but not permanently. You can ask for permission again at a later time.
-        }
-      })
-      .catch((e: any) => console.log('Error is', e));
   }
 }
