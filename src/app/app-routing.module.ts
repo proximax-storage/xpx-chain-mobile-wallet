@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'address-book', loadChildren: './pages/services/views/address-book/address-book.module#AddressBookPageModule' },
   { path: 'add-contact', loadChildren: './pages/services/views/add-contact/add-contact.module#AddContactPageModule' },
   { path: 'edit-contact', loadChildren: './pages/services/views/edit-contact/edit-contact.module#EditContactPageModule' },
+  { path: 'edit-user', loadChildren: './pages/account/views/edit-user/edit-user.module#EditUserPageModule' },
 ];
 
 @NgModule({

@@ -14,12 +14,17 @@ export class AuthService {
   isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
   user: string;
   pin: string;
+  dataUser: any;
+  otrosUser: any;
   constructor(
     private storage: Storage
   ) {
   }
 
-
+  userData(data, otros) {
+    this.dataUser = data
+    this.otrosUser = otros
+  }
   //   /**
   //  * Register new user.
   //  * @param firstname { string } The name of the user
@@ -34,7 +39,6 @@ export class AuthService {
       .get('accounts')
       .then(data => {
         const ACCOUNTS = data ? data : [];
-
         return ACCOUNTS;
       })
       .then((accounts: any[]) => {
@@ -45,7 +49,6 @@ export class AuthService {
           password: password
         };
         accounts.push(accountFromInputU);
-
         return this.storage.set('accounts', accounts), this.storage.set('pin', accountFromInputU.password);
       });
   }
@@ -64,9 +67,7 @@ export class AuthService {
         username: usernameP.toLowerCase(),
         password: passwordP
       };
-      console.log('accountFromInput ', accountFromInput)
       const ACCOUNTS = data ? data : [];
-
       let response: { status: string; message: string } = {
         status: '',
         message: ''
@@ -87,25 +88,20 @@ export class AuthService {
         this.user = usernameP.toLowerCase();
         this.pin = passwordP;
         this.setLogged(true, this.user);
-        // this.storage.set('isLoggedIn', true);
         this.storage.set('pin', this.pin);
       }
-      
       return response;
     });
   }
 
-
-  setLogged(params: any, user:any) {
+  setLogged(params: any, user: any) {
     this.logged = params;
     this.isLoggedSubject.next(this.logged);
   }
 
-
   getIsLogged() {
     return this.isLogged$;
   }
-
 
   logout(): Promise<any> {
     this.user = '';
