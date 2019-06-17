@@ -14,6 +14,7 @@ export class LoginPage implements OnInit {
   emailPattern = '^([\\w\\.\\-]{3,39})@[\\w]{2,39}(\\.[\\w]{2,3})+$';
   alfaPattern = '^[a-zA-ZáéíóúÁÉÍÓÚ\\-\']+$';
   alfaNumberPattern = '^[a-zA-Z0-9]+$';
+  alfaNumberPatternP = '^[a-zA-Z0-9 *#$.&]+$';
   numberPattern = '^[0-9]+$';
   constructor(
     public formBuilder: FormBuilder,
@@ -31,7 +32,7 @@ export class LoginPage implements OnInit {
   createForm() {
     this.formLogin = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]],
-      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]]
+      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPatternP)]]
     });
   }
 

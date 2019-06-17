@@ -20,7 +20,7 @@ export class AddContactPage implements OnInit {
     private nav: NavController,
     private barcodeScanner: BarcodeScanner,
     public addressBookService: AddressBookService,
-    
+
   ) { }
 
   ngOnInit() {
@@ -41,23 +41,28 @@ export class AddContactPage implements OnInit {
       this.formAddContact.patchValue({
         address: address
       })
-     }).catch(err => {
-         console.log('Error', err);
-     });
+    }).catch(err => {
+      console.log('Error', err);
+    });
 
   }
 
+  cancel() {
+    this.nav.navigateRoot(`/address-book`);
+  }
+
   onAdd(form) {
-    this.addressBookService.addContact(form.name, form.address, form.usertelegram)
-    .then(async _ => {
-      const toast = await this.toastController.create({
-        message: 'Successfully registered contact.',
-        duration: 3000
-      });
-      toast.present();
-      this.formAddContact.reset();
-      this.nav.navigateRoot(`/address-book`);
-    });
-    
+    if (this.formAddContact.valid) {
+      this.addressBookService.addContact(form.name, form.address, form.usertelegram)
+        .then(async _ => {
+          const toast = await this.toastController.create({
+            message: 'Successfully registered contact.',
+            duration: 3000
+          });
+          toast.present();
+          this.formAddContact.reset();
+          this.nav.navigateRoot(`/address-book`);
+        });
+    }
   }
 }

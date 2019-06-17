@@ -57,9 +57,9 @@ export class EditContactPage implements OnInit {
       this.formEditContact.patchValue({
         address: address
       })
-     }).catch(err => {
-         console.log('Error', err);
-     });
+    }).catch(err => {
+      console.log('Error', err);
+    });
 
   }
   getContactStore() {
@@ -68,14 +68,20 @@ export class EditContactPage implements OnInit {
     });
   }
 
-  async onEdit(form) {
-    this.contactosStore.push(form)
-    this.storage.set('contacts'.concat(this.user), this.contactosStore)
-    const toast = await this.toastController.create({
-      message: 'Successfully registered contact.',
-      duration: 3000
-    });
-    toast.present();
+  cancel() {
     this.nav.navigateRoot(`/address-book`);
+  }
+
+  async onEdit(form) {
+    if (this.formEditContact.valid) {
+      this.contactosStore.push(form)
+      this.storage.set('contacts'.concat(this.user), this.contactosStore)
+      const toast = await this.toastController.create({
+        message: 'Successfully edited contact.',
+        duration: 3000
+      });
+      toast.present();
+      this.nav.navigateRoot(`/address-book`);
+    }
   }
 }

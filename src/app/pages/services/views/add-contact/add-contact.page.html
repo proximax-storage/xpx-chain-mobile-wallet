@@ -46,18 +46,19 @@
           </ion-row>
           <ion-row>
               <ion-col  text-center>
-                  <button gradient-button color-1 ion-button icon-end [disabled]="formAddContact.invalid" type="submit"
-                    color="black">
-                    Save
-                  </button>
-                </ion-col>
-                <ion-col  text-center>
-                    <button gradient-button color-3 ion-button icon-end type="submit"
-                      color="black">
-                      Cancel
-                    </button>
-                  </ion-col>
+                <button gradient-button color-1 ion-button icon-end [disabled]="formAddContact.invalid" type="submit"
+                  color="black">
+                  Save
+                </button>
+              </ion-col>
           </ion-row>
         </form>
+        <ion-row>
+          <ion-col text-center>
+            <button gradient-button color-3 ion-button icon-end type="submit" color="black" (click)="cancel()">
+              Cancel
+          </button>
+          </ion-col>
+        </ion-row>
     </ion-grid>
 </ion-content>

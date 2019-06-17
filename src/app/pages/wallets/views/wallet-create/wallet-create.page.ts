@@ -18,6 +18,7 @@ export class WalletCreatePage implements OnInit {
   user: string;
   imgen: string;
   alfaNumberPattern = '^[a-zA-Z0-9 ]+$';
+  alfaNumberPatternP  = '^[a-zA-Z0-9 *#$.&]+$';
   numberPattern = '^[0-9]+$';
   n1: string;
   n2: string;
@@ -60,7 +61,7 @@ export class WalletCreatePage implements OnInit {
     this.formWallets = this.formBuilder.group({
       img: ['', [Validators.required]],
       walletname: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]],
-      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPatternP)]],
       checkbox: [false],
       privateKey: ['', [Validators.pattern(this.alfaNumberPattern)]],
     });

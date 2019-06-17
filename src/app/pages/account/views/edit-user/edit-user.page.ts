@@ -28,7 +28,6 @@ export class EditUserPage implements OnInit {
     public authservice: AuthService
   ) { }
 
-
   ngOnInit() {
     this.userservice = this.authservice.user
     this.dataUser = this.authservice.dataUser
@@ -48,23 +47,24 @@ export class EditUserPage implements OnInit {
   }
 
   async onEditar(form) {
-    if(form.oldpassword === this.dataUser.password){
-      if(form.newpassword === form.confirmnewpassword) {
-        const user ={
-          firstname: form.firstname,
-          lastname: form.lastname,
-          username: form.username,
-          password: form.newpassword,
+    if (form.oldpassword === this.dataUser.password) {
+      if (form.newpassword === form.confirmnewpassword) {
+        if (this.formEditUser.valid) {
+          const user = {
+            firstname: form.firstname,
+            lastname: form.lastname,
+            username: form.username,
+            password: form.newpassword,
+          }
+          this.otrosUser.push(user)
+          this.storage.set('accounts', this.otrosUser), this.storage.set('pin', form.newpassword);
+          const toast = await this.toastController.create({
+            message: "Successfully modified user.",
+            duration: 3000
+          });
+          toast.present();
+          this.nav.navigateRoot(['/account'])
         }
-        
-        this.otrosUser.push(user)
-        this.storage.set('accounts', this.otrosUser), this.storage.set('pin', form.newpassword);
-        const toast = await this.toastController.create({
-          message: "modificado exitoso.",
-          duration: 3000
-        });
-        toast.present();
-        this.nav.navigateRoot(['/account'])
       } else {
         const toast = await this.toastController.create({
           message: "Password doesn't match.",
@@ -74,12 +74,10 @@ export class EditUserPage implements OnInit {
       }
     } else {
       const toast = await this.toastController.create({
-        message: 'incorrect user or password.',
+        message: 'Your password is required',
         duration: 3000
       });
       toast.present();
     }
-    
   }
-
 }

@@ -24,7 +24,7 @@ export class WalletDetailPage implements OnInit {
   wall: any;
   mosaic: any[];
   privateKey: string;
-  alfaNumberPattern = '^[a-zA-Z0-9]+$';
+  alfaNumberPattern  = '^[a-zA-Z0-9 *#$.&]+$';
   showPasword: boolean;
   password: any;
   constructor(

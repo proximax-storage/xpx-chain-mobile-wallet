@@ -14,6 +14,7 @@ export class RegisterPage implements OnInit {
   emailPattern = '^([\\w\\.\\-]{3,39})@[\\w]{2,39}(\\.[\\w]{2,3})+$';
   alfaPattern = '^[a-zA-ZáéíóúÁÉÍÓÚ\\-\' ]+$';
   alfaNumberPattern = '^[a-zA-Z0-9]+$';
+  alfaNumberPatternP = '^[a-zA-Z0-9 *#$.&]+$';
   numberPattern = '^[0-9]+$';
   constructor(
     public formBuilder: FormBuilder,
@@ -33,12 +34,9 @@ export class RegisterPage implements OnInit {
       lastname: ['', [Validators.required, Validators.pattern(this.alfaPattern), Validators.minLength(3), Validators.maxLength(30)]],
       // emailaddres: ['', [Validators.required, Validators.pattern(this.emailPattern), Validators.minLength(10), Validators.maxLength(20)]],
       username: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(3), Validators.maxLength(10)]],
-      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(8), Validators.maxLength(30)]],
-      confirmpassword: ['', [Validators.required, Validators.pattern(this.alfaNumberPattern), Validators.minLength(8), Validators.maxLength(30)]]
-      // passwords: this.formBuilder.group({
-      //   password: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
-      //   confirmpassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
-      // })
+      password: ['', [Validators.required, Validators.pattern(this.alfaNumberPatternP), Validators.minLength(8), Validators.maxLength(30)]],
+      confirmpassword: ['', [Validators.required, Validators.pattern(this.alfaNumberPatternP), Validators.minLength(8), Validators.maxLength(30)]]
+
     });
   }
 
