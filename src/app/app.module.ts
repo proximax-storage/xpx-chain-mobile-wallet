@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { ToastProvider } from './providers/toast/toast.provider';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +31,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SocialSharing,
-    BarcodeScanner
+    BarcodeScanner,
+    ToastProvider
   ],
   bootstrap: [AppComponent]
 })

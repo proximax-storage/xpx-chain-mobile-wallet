@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { WalletService } from '../../service/wallet.service';
 import { AuthService } from '../../../auth/service/auth.service';
 import { first } from 'rxjs/operators';
@@ -20,7 +20,6 @@ export class WalletsPage implements OnInit {
     private nav: NavController,
     public walletService: WalletService,
     public authService: AuthService,
-    public toastController: ToastController,
   ) { }
 
   ngOnInit() {
@@ -44,7 +43,6 @@ export class WalletsPage implements OnInit {
     this.storage.get('wallets'.concat(this.user)).then( (val) => {
       const arr = val;
       if(arr){
-      console.log('arrarrarrarrarr', arr);
       this.walletService.walletFormatList(arr);
       this.wallets = this.walletService.wallets
       console.log('formatformat', this.wallets);

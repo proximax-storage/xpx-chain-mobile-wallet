@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { ProximaxProvider } from '../../../../providers/proximax.provider';
+import { ProximaxProvider } from '../../../../providers/sdk/proximax.provider';
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../auth/service/auth.service';
 import { WalletService } from '../../service/wallet.service'
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
+
 
 @Component({
   selector: 'app-wallet-create',
@@ -27,11 +29,11 @@ export class WalletCreatePage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     private storage: Storage,
-    public toastController: ToastController,
     private nav: NavController,
     private proximaxProvider: ProximaxProvider,
     public authService: AuthService,
     public walletService: WalletService,
+    private toastProvider: ToastProvider
   ) { }
 
   ngOnInit() {
@@ -108,11 +110,7 @@ export class WalletCreatePage implements OnInit {
           }
         });
       } else {
-        const toast = await this.toastController.create({
-          message: 'Incorrect password.',
-          duration: 3000
-        });
-        toast.present();
+        this.toastProvider.showToast('Incorrect password.')
       }
     });
   }

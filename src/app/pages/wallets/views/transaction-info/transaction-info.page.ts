@@ -58,7 +58,7 @@ export class TransactionInfoPage implements OnInit {
   getMosaicsStore() {
     // const mosaicsL = this.detail['data']['transaction'].mosaicId
     const mosaicsT = this.detail['data']['mosaics'][0].id.toHex()
-    console.log('........ mosaics', mosaicsT)
+    // console.log('........ mosaics', mosaicsT)
     // console.log('........ mosaics', mosaicsL)
   this.storage.get('mosaics').then(m => {
     // console.log(m)

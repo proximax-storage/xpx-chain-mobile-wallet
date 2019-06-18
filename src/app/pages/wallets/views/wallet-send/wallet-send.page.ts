@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { ToastController } from '@ionic/angular';
-import { ProximaxProvider } from '../../../../providers/proximax.provider';
+import { ProximaxProvider } from '../../../../providers/sdk/proximax.provider';
 import { WalletService } from '../../service/wallet.service'
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-wallet-send',
@@ -25,9 +25,9 @@ export class WalletSendPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     public formBuilder: FormBuilder,
     private storage: Storage,
-    public toastController: ToastController,
     private proximaxProvider: ProximaxProvider,
     private walletService: WalletService,
+    private toastProvider: ToastProvider
   ) { }
 
   ngOnInit() {
@@ -150,7 +150,7 @@ export class WalletSendPage implements OnInit {
   }
 
   onSubmit(form) {
-    // if (this.formSend.invalid) {
+    if (this.formSend.valid) {
     this.storage.get('pin').then(async (val) => {
       if (val === form.password) {
         console.log(' pin valido')
@@ -174,31 +174,20 @@ export class WalletSendPage implements OnInit {
           rspBuildSend.transactionHttp
             .announce(rspBuildSend.signedTransaction)
             .subscribe(
-              async rsp => {
-                const toast = await this.toastController.create({
-                  message: 'Congratulations, Transaction sent.',
-                  duration: 3000
-                });
-                toast.present();
+              rsp => {
+                this.toastProvider.showToast('Transaction sent.')
                 this.formSend.reset();
               },
               async err => {
-                const toast = await this.toastController.create({
-                  message: 'Error '.concat(err),
-                  duration: 3000
-                });
-                toast.present();
+                this.toastProvider.showToast('Error '.concat(err))
               }
             );
         }
         console.log(form)
       } else {
-        const toast = await this.toastController.create({
-          message: 'Incorrect password.',
-          duration: 3000
-        });
-        toast.present();
+        this.toastProvider.showToast('incorrect information. Try again.')
       }
     })
   }
+} 
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProximaxProvider } from '../../../providers/proximax.provider'
+import { ProximaxProvider } from '../../../providers/sdk/proximax.provider'
 import {
   NetworkType,
   PublicAccount,

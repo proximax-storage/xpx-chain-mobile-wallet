@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
 import { ClipboardService } from 'ngx-clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { WalletService } from '../../service/wallet.service';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-wallet-receive',
@@ -19,9 +19,9 @@ export class WalletReceivePage implements OnInit {
 
   constructor(
     private walletService: WalletService,
-    public toastController: ToastController,
     private clipboardService: ClipboardService,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private toastProvider: ToastProvider
   ) { }
 
   ngOnInit() {
@@ -35,11 +35,7 @@ export class WalletReceivePage implements OnInit {
   }
   async copyAddress(address) {
     this.clipboardService.copyFromContent(address);
-    const toast = await this.toastController.create({
-      message: 'Copied address.',
-      duration: 3000
-    });
-    toast.present();
+    this.toastProvider.showToast('Copied address.')
   }
 
   shared() {

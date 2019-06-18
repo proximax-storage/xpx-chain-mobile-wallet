@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
-import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public authservice: AuthService,
-    public toastController: ToastController,
+    private toastProvider: ToastProvider,
     private nav: NavController
   ) {
 
@@ -43,24 +43,18 @@ export class LoginPage implements OnInit {
   onSubmit(form) {
     if (this.formLogin.valid) {
       this.authservice.login(form.username, form.password)
-        .then(async res => {
+        .then(res => {
+          console.log('res', res)
           if (res.status === 'success') {
+            this.toastProvider.showToast(res.message)
             this.nav.navigateRoot(['/wallets']);
             this.formLogin.reset();
           } else {
-            const toast = await this.toastController.create({
-              message: 'incorrect user or password.',
-              duration: 3000
-            });
-            toast.present();
+            this.toastProvider.showToast(res.message)
           }
         })
-        .catch(async err => {
-          const toast = await this.toastController.create({
-            message: 'unexpected error',
-            duration: 3000
-          });
-          toast.present();
+        .catch( err => {
+          this.toastProvider.showToast(err)
         });
     }
   }

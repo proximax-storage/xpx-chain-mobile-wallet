@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 // import { SharedService } from '../../shared/services/shared.service';
-import { ProximaxProvider } from '../../app/providers/proximax.provider';
+import { ProximaxProvider } from '../../app/providers/sdk/proximax.provider';
 import * as data from '../../assets/json/node.json';
 
 

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthService } from 'src/app/pages/auth/service/auth.service';
 import { AddressBookService } from '../../service/address-book.service';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-edit-contact',
@@ -26,11 +27,11 @@ export class EditContactPage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public addressBookService: AddressBookService,
-    public toastController: ToastController,
     private nav: NavController,
     private barcodeScanner: BarcodeScanner,
     private storage: Storage,
-    public authservice: AuthService
+    public authservice: AuthService,
+    private toastProvider: ToastProvider
   ) { }
 
   ngOnInit() {
@@ -76,11 +77,7 @@ export class EditContactPage implements OnInit {
     if (this.formEditContact.valid) {
       this.contactosStore.push(form)
       this.storage.set('contacts'.concat(this.user), this.contactosStore)
-      const toast = await this.toastController.create({
-        message: 'Successfully edited contact.',
-        duration: 3000
-      });
-      toast.present();
+      this.toastProvider.showToast('Successfully edited contact.')
       this.nav.navigateRoot(`/address-book`);
     }
   }

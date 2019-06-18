@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { AddressBookService } from '../../service/address-book.service';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-add-contact',
@@ -16,10 +17,10 @@ export class AddContactPage implements OnInit {
   userTelegram = '^[a-zA-Z0-9@]+$';
   constructor(
     public formBuilder: FormBuilder,
-    public toastController: ToastController,
     private nav: NavController,
     private barcodeScanner: BarcodeScanner,
     public addressBookService: AddressBookService,
+    private toastProvider: ToastProvider
 
   ) { }
 
@@ -54,12 +55,8 @@ export class AddContactPage implements OnInit {
   onAdd(form) {
     if (this.formAddContact.valid) {
       this.addressBookService.addContact(form.name, form.address, form.usertelegram)
-        .then(async _ => {
-          const toast = await this.toastController.create({
-            message: 'Successfully registered contact.',
-            duration: 3000
-          });
-          toast.present();
+        .then(_ => {
+          this.toastProvider.showToast('Successfully registered contact.')
           this.formAddContact.reset();
           this.nav.navigateRoot(`/address-book`);
         });

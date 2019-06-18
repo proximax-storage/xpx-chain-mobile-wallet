@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AuthService } from 'src/app/pages/auth/service/auth.service';
-import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-edit-user',
@@ -22,7 +22,7 @@ export class EditUserPage implements OnInit {
   otrosUser: any;
   constructor(
     public formBuilder: FormBuilder,
-    public toastController: ToastController,
+    private toastProvider: ToastProvider,
     private nav: NavController,
     private storage: Storage,
     public authservice: AuthService
@@ -58,26 +58,14 @@ export class EditUserPage implements OnInit {
           }
           this.otrosUser.push(user)
           this.storage.set('accounts', this.otrosUser), this.storage.set('pin', form.newpassword);
-          const toast = await this.toastController.create({
-            message: "Successfully modified user.",
-            duration: 3000
-          });
-          toast.present();
+          this.toastProvider.showToast('Successfully modified user.')
           this.nav.navigateRoot(['/account'])
         }
       } else {
-        const toast = await this.toastController.create({
-          message: "Password doesn't match.",
-          duration: 3000
-        });
-        toast.present();
+        this.toastProvider.showToast("Password doesn't match.")
       }
     } else {
-      const toast = await this.toastController.create({
-        message: 'Your password is required',
-        duration: 3000
-      });
-      toast.present();
+      this.toastProvider.showToast('Your password is required.')
     }
   }
 }

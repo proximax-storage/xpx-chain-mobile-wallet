@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
-import { ToastController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-register',
@@ -19,8 +20,8 @@ export class RegisterPage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public authservice: AuthService,
-    public toastController: ToastController,
-    private nav: NavController
+    private nav: NavController,
+    private toastProvider: ToastProvider
   ) {
   }
 
@@ -44,21 +45,17 @@ export class RegisterPage implements OnInit {
     if (this.formReg.valid) {
       if (form.password === form.confirmpassword) {
         this.authservice.register(form.firstname, form.lastname, form.username, form.password)
-          .then(async _ => {
-            const toast = await this.toastController.create({
-              message: 'Successfully registered user.',
-              duration: 3000
-            });
-            toast.present();
-            this.formReg.reset();
-            this.nav.navigateRoot(`/login`);
+          .then(async status => {
+            if(status === "duplicate") {
+              this.toastProvider.showToast('user already exist. Please try again.')
+            } else {
+              this.toastProvider.showToast('Successfully registered user.')
+              this.formReg.reset();
+              this.nav.navigateRoot(`/login`);
+            }
           });
       } else {
-        const toast = await this.toastController.create({
-          message: "Password doesn't match.",
-          duration: 3000
-        });
-        toast.present();
+        this.toastProvider.showToast("Password doesn't match.")
       }
     }
   }

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { WalletService } from '../../service/wallet.service'
-import { ProximaxProvider } from 'src/app/providers/proximax.provider';
+import { ProximaxProvider } from 'src/app/providers/sdk/proximax.provider';
 import { environment } from '../../../../../environments/environment'
 import { ClipboardService } from 'ngx-clipboard';
+import { ToastProvider } from 'src/app/providers/toast/toast.provider';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -30,11 +31,11 @@ export class WalletDetailPage implements OnInit {
   constructor(
     private nav: NavController,
     private storage: Storage,
-    public toastController: ToastController,
     private clipboardService: ClipboardService,
     public formBuilder: FormBuilder,
     private walletService: WalletService,
-    private proximaxProvider: ProximaxProvider
+    private proximaxProvider: ProximaxProvider,
+    private toastProvider: ToastProvider
   ) { }
 
   ngOnInit() {
@@ -82,13 +83,9 @@ export class WalletDetailPage implements OnInit {
       this.segmentInformation = true;
     }
   }
-  async showPrivateKey(form) {
+   showPrivateKey(form) {
     if (form.password == '') {
-      const toast = await this.toastController.create({
-        message: 'Password required',
-        duration: 3000
-      });
-      toast.present();
+      this.toastProvider.showToast('Password required. Please try again.')
     } else {
      if(form.password === this.password ){
       this.formAccount.patchValue({
@@ -96,27 +93,19 @@ export class WalletDetailPage implements OnInit {
       })
       this.showPasword = false;
       } else {
-        const toast = await this.toastController.create({
-          message: 'wrong password',
-          duration: 3000
-        });
-        toast.present();
+        this.toastProvider.showToast('incorrect information. Try again.')
+
       }  
     }
   }
   
-  async copyMessage(valor, type) {
+   copyMessage(valor, type) {
     this.clipboardService.copyFromContent(valor);
-    const toast = await this.toastController.create({
-      message: 'Copied '+ `${type}`,
-      duration: 3000
-    });
-    toast.present();
+    this.toastProvider.showToast('Copied '+ `${type}`)
   }
 
-
   selectAllTransaction(data) {
-    this.storage.get('pin').then(async (val) => {
+    this.storage.get('pin').then(val => {
       this.password = val;
       const password = this.proximaxProvider.createPassword(val);
       const PrivateKey = this.proximaxProvider.decryptPrivateKey(password, data.encrypted, data.iv);

@@ -42,6 +42,19 @@ export class AuthService {
         return ACCOUNTS;
       })
       .then((accounts: any[]) => {
+
+        let foundAccount = accounts.filter( account => {
+					console.log("LOG: register -> foundAccount", foundAccount);
+          return account.username.includes(username.toLowerCase())
+       });
+
+       if(foundAccount.length > 0) {
+         // duplicate account
+        //  alert("Duplicate account");
+        console.log("duplicate");
+         return "duplicate"
+
+       } else {
         const accountFromInputU = {
           firstname: firstname,
           lastname: lastname,
@@ -50,6 +63,7 @@ export class AuthService {
         };
         accounts.push(accountFromInputU);
         return this.storage.set('accounts', accounts), this.storage.set('pin', accountFromInputU.password);
+       }
       });
   }
 
@@ -77,9 +91,9 @@ export class AuthService {
       if (accountExists === -1) {
         response = {
           status: 'failed',
-          message:
-            'It looks like there\'s something wrong with your username of password you entered. Please try again.'
+          message: 'incorrect user or password. Please try again.'
         };
+        console.log('service', accountExists)
       } else {
         response = {
           status: 'success',
