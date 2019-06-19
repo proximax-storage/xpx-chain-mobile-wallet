@@ -7,6 +7,9 @@ import { ProximaxProvider } from 'src/app/providers/sdk/proximax.provider';
 import { environment } from '../../../../../environments/environment'
 import { ClipboardService } from 'ngx-clipboard';
 import { ToastProvider } from 'src/app/providers/toast/toast.provider';
+import { AuthService } from 'src/app/pages/auth/service/auth.service';
+import { AlertProvider } from 'src/app/providers/alert/alert.provider';
+
 
 @Component({
   selector: 'app-wallet-detail',
@@ -28,6 +31,12 @@ export class WalletDetailPage implements OnInit {
   alfaNumberPattern  = '^[a-zA-Z0-9 *#$.&]+$';
   showPasword: boolean;
   password: any;
+  user: string;
+  walletStore: any;
+  deleteIn = false;
+  subscriptions: any = [
+    'delete'
+  ];
   constructor(
     private nav: NavController,
     private storage: Storage,
@@ -35,15 +44,19 @@ export class WalletDetailPage implements OnInit {
     public formBuilder: FormBuilder,
     private walletService: WalletService,
     private proximaxProvider: ProximaxProvider,
-    private toastProvider: ToastProvider
+    private toastProvider: ToastProvider,
+    private alertProvider: AlertProvider,
+    public authservice: AuthService,
   ) { }
 
   ngOnInit() {
     this.showPasword = true;
-    this.createForm()
     this.segmentMosaic = true;
     this.wallet = this.walletService.current;
+    this.user = this.authservice.user;
+    this.createForm()
     this.getMisaicsStore();
+    this.getWalletStore();
     // this.getTansaction()
     this.selectAllTransaction(this.wallet);
     this.selectMosaics(this.wallet.mosaics);
@@ -179,8 +192,6 @@ export class WalletDetailPage implements OnInit {
         this.storage.set('mosaics', this.mosaic)
         this.mosaics = this.mosaic
         
-        // console.log('xxxxxxx', this.mosaic)
-        // this.walletService.mosaicsFormWallet(this.mosaics,);
       }, error => {
         console.log('xxxxxxx', error)
       });
@@ -198,8 +209,35 @@ export class WalletDetailPage implements OnInit {
   }
 
   infoTransaction(info) {
-    // console.log('Recived changed',JSON.stringify(info));
     this.walletService.transactionDetail(info);
     this.nav.navigateRoot(`/transaction-info`);
+  }
+
+  getWalletStore() {
+    this.storage.get('wallets'.concat(this.user)).then(async (wallets) => {
+      this.walletStore = wallets.filter(element => element.address !==  this.wallet.address)
+    });
+  }
+
+  delete() {
+    const header = 'You are about to delete ' + `${this.wallet.name}` + ' wallet!'
+    const message = 'Continuing this action will delete the wallet from your account and it cannot be undone. Please make sure you backup your wallet first so that you can recover it anytime.'
+    this.alertProvider.show(header, message)
+    this.deleted()
+  }
+
+  deleted() {
+    this.subscriptions.delete = this.alertProvider.getDelete();
+    this.subscriptions.delete.subscribe(
+      response => {
+        this.deleteIn = response;
+        if (this.deleteIn) {
+          this.storage.set('wallets'.concat(this.user), this.walletStore)
+          this.nav.navigateRoot(`/wallets`);
+          this.alertProvider.setDelete(false);
+        } else {
+          console.log('Cancel');
+        }
+      });
   }
 }
