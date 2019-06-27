@@ -11,7 +11,7 @@ import { NodeService } from '../shared/service/node.service';
 import { Observable } from 'rxjs';
 // import {
 //   Account, NetworkType
-// } from 'tsjs-xpx-catapult-sdk';
+// } from 'tsjs-xpx-chain-sdk';
 
 @Component({
   selector: 'app-root',

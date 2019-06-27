@@ -20,6 +20,6 @@ export class ServicePage implements OnInit {
   }
 
   supportMiltisig() {
-
+    this.nav.navigateRoot(['/multisign-support']);
   }
 }

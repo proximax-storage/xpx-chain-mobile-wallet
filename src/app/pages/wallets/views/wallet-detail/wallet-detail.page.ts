@@ -46,14 +46,14 @@ export class WalletDetailPage implements OnInit {
     private proximaxProvider: ProximaxProvider,
     private toastProvider: ToastProvider,
     private alertProvider: AlertProvider,
-    public authservice: AuthService,
+    public authService: AuthService,
   ) { }
 
   ngOnInit() {
     this.showPasword = true;
     this.segmentMosaic = true;
     this.wallet = this.walletService.current;
-    this.user = this.authservice.user;
+    this.user = this.authService.user;
     this.createForm()
     this.getMisaicsStore();
     this.getWalletStore();
@@ -118,9 +118,8 @@ export class WalletDetailPage implements OnInit {
   }
 
   selectAllTransaction(data) {
-    this.storage.get('pin').then(val => {
-      this.password = val;
-      const password = this.proximaxProvider.createPassword(val);
+      this.password = this.authService.pin
+      const password = this.proximaxProvider.createPassword(this.password);
       const PrivateKey = this.proximaxProvider.decryptPrivateKey(password, data.encrypted, data.iv);
       this.privateKey = PrivateKey
       // this.formAccount.patchValue({
@@ -143,7 +142,6 @@ export class WalletDetailPage implements OnInit {
         }
       );
       // this.storage.set('transactions'.concat(this.wall), this.transactions)
-    });
   }
 
   getMisaicsStore() {

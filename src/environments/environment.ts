@@ -2,7 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 // import { NetworkType } from 'proximax-nem2-sdk'
-import { NetworkType } from 'tsjs-xpx-catapult-sdk';
+import { NetworkType } from 'tsjs-xpx-chain-sdk';
 
 
 export const environment = {
@@ -31,4 +31,4 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
-// tsjs-xpx-catapult-sdk
+// tsjs-xpx-chain-sdk

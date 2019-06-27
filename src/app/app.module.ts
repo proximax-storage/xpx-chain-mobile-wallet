@@ -12,6 +12,8 @@ import { IonicStorageModule } from '@ionic/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { ToastProvider } from './providers/toast/toast.provider';
+import { AlertProvider } from './providers/alert/alert.provider';
+import { StorageProvider } from 'src/app/providers/storage/storage.provider';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +34,9 @@ import { ToastProvider } from './providers/toast/toast.provider';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SocialSharing,
     BarcodeScanner,
-    ToastProvider
+    ToastProvider,
+    AlertProvider,
+    StorageProvider
   ],
   bootstrap: [AppComponent]
 })

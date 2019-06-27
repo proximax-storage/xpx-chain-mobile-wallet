@@ -41,11 +41,11 @@ export class RegisterPage implements OnInit {
     });
   }
 
-  async onRegister(form) {
+  onRegister(form) {
     if (this.formReg.valid) {
       if (form.password === form.confirmpassword) {
         this.authservice.register(form.firstname, form.lastname, form.username, form.password)
-          .then(async status => {
+          .then(status => {
             if(status === "duplicate") {
               this.toastProvider.showToast('user already exist. Please try again.')
             } else {

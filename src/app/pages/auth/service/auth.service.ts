@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import { BehaviorSubject, Observable } from 'rxjs';
+import * as BcryptJS from "bcryptjs";
 
 
 
@@ -44,14 +46,10 @@ export class AuthService {
       .then((accounts: any[]) => {
 
         let foundAccount = accounts.filter( account => {
-					console.log("LOG: register -> foundAccount", foundAccount);
           return account.username.includes(username.toLowerCase())
        });
 
        if(foundAccount.length > 0) {
-         // duplicate account
-        //  alert("Duplicate account");
-        console.log("duplicate");
          return "duplicate"
 
        } else {
@@ -59,10 +57,10 @@ export class AuthService {
           firstname: firstname,
           lastname: lastname,
           username: username.toLowerCase(),
-          password: password
+          password: BcryptJS.hashSync(password, 8)
         };
         accounts.push(accountFromInputU);
-        return this.storage.set('accounts', accounts), this.storage.set('pin', accountFromInputU.password);
+        return this.storage.set('accounts', accounts);
        }
       });
   }
@@ -83,26 +81,26 @@ export class AuthService {
       };
       const ACCOUNTS = data ? data : [];
       let response: { status: string; message: string } = {
-        status: '',
+        status: 'success',
         message: ''
       };
-      const accountExists = findIndex(ACCOUNTS, accountFromInput);
+      let existingAccount = find(ACCOUNTS, (accounts) => { return accounts.username == accountFromInput.username; });
 
-      if (accountExists === -1) {
-        response = {
-          status: 'failed',
-          message: 'incorrect user or password. Please try again.'
-        };
-        console.log('service', accountExists)
-      } else {
+      if(BcryptJS.compareSync(accountFromInput.password, existingAccount.password)) {
         response = {
           status: 'success',
-          message: 'You\'ve successfully logged in.'
+          message: "You've successfully logged in."
         };
         this.user = usernameP.toLowerCase();
-        this.pin = passwordP;
         this.setLogged(true, this.user);
-        this.storage.set('pin', this.pin);
+        this.pin = accountFromInput.password;
+      }
+      else {
+        response = {
+          status: 'failed',
+          message:
+            "Invalid username or password. Please try again."
+        };
       }
       return response;
     });
@@ -119,8 +117,8 @@ export class AuthService {
 
   logout(): Promise<any> {
     this.user = '';
-    console.log('limoio', this.user)
     this.setLogged(false, this.user);
-    return this.storage.set('isLoggedIn', false), this.storage.set('pin', '00');
+    this.pin = '';
+    return this.storage.set('pin', null);
   }
 }

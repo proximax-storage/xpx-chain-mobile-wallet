@@ -1,7 +1,5 @@
 {
   "name": "xpx-catapult-mobile-wallet",
-  "integrations": {
-    "cordova": {}
-  },
+  "integrations": {},
   "type": "angular"
 }

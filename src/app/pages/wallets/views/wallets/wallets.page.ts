@@ -39,7 +39,7 @@ export class WalletsPage implements OnInit {
 
   selectWallet() {
     this.user = this.authService.user;
-    console.log(this.user)
+    console.log("user", this.user)
     this.storage.get('wallets'.concat(this.user)).then( (val) => {
       const arr = val;
       if(arr){

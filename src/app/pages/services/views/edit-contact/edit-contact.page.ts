@@ -23,6 +23,7 @@ export class EditContactPage implements OnInit {
   user: any;
   contactosStore: any;
   usertelegram: any;
+  exists: any;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -65,7 +66,8 @@ export class EditContactPage implements OnInit {
   }
   getContactStore() {
     this.storage.get('contacts'.concat(this.user)).then(async (contact) => {
-      this.contactosStore = contact.filter(element => element.usertelegram !== this.usertelegram)
+      this.contactosStore = contact.filter(element => element.address !== this.address)
+      console.log('contactosStore', this.contactosStore)
     });
   }
 
@@ -73,12 +75,27 @@ export class EditContactPage implements OnInit {
     this.nav.navigateRoot(`/address-book`);
   }
 
-  async onEdit(form) {
+  onEdit(form) {
     if (this.formEditContact.valid) {
-      this.contactosStore.push(form)
-      this.storage.set('contacts'.concat(this.user), this.contactosStore)
-      this.toastProvider.showToast('Successfully edited contact.')
-      this.nav.navigateRoot(`/address-book`);
+      if (this.contactosStore) {
+        for (var i = 0; i < this.contactosStore.length; i++) {
+          if (this.contactosStore[i].address === form.address) {
+            this.exists = true;
+            break;
+          } else {
+            this.exists = false;
+          }
+        }
+          if (this.exists) {
+            this.toastProvider.showToast('contact already exist. Please try again.')
+          } else {
+            this.contactosStore.push(form)
+            this.storage.set('contacts'.concat(this.user), this.contactosStore)
+            this.toastProvider.showToast('Successfully edited contact.')
+            this.nav.navigateRoot(`/address-book`);
+          }
+        
+      }
     }
   }
 }

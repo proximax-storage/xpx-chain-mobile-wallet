@@ -5,6 +5,8 @@ import { Storage } from '@ionic/storage';
 import { ProximaxProvider } from '../../../../providers/sdk/proximax.provider';
 import { WalletService } from '../../service/wallet.service'
 import { ToastProvider } from 'src/app/providers/toast/toast.provider';
+import { StorageProvider } from 'src/app/providers/storage/storage.provider';
+import { AuthService } from 'src/app/pages/auth/service/auth.service';
 
 @Component({
   selector: 'app-wallet-send',
@@ -27,7 +29,8 @@ export class WalletSendPage implements OnInit {
     private storage: Storage,
     private proximaxProvider: ProximaxProvider,
     private walletService: WalletService,
-    private toastProvider: ToastProvider
+    private toastProvider: ToastProvider,
+    private storageProvider: StorageProvider
   ) { }
 
   ngOnInit() {
@@ -55,10 +58,10 @@ export class WalletSendPage implements OnInit {
     }]
     this.mosaics = this.walletService.mosaics;
 
-    console.log('........',this.mosaicsSelect )
+    console.log('........', this.mosaicsSelect)
     this.namemosaics(this.mosaics);
     // this.mosaicsTransfer(this.mosaics);
-    this.selectMosaics(this.mosaics )
+    this.selectMosaics(this.mosaics)
     this.createForm();
 
   }
@@ -77,7 +80,7 @@ export class WalletSendPage implements OnInit {
   mosaicsTransfer(mosaics) {
     for (const m in mosaics) {
       const nameMosaic = (mosaics[m].name.length > 0) ? mosaics[m].name[0] : mosaics[m].mosaicId;
-      if(mosaics[m].mosaicId != this.proximaxProvider.mosaicXpx.mosaicId ){
+      if (mosaics[m].mosaicId != this.proximaxProvider.mosaicXpx.mosaicId) {
         this.mosaicsSelect.push({
           label: nameMosaic,
           value: mosaics[m].mosaicId,
@@ -89,44 +92,44 @@ export class WalletSendPage implements OnInit {
     }
   }
   selectMosaics(data) {
-    if (data){
-    const datos = data.map(element => {
-      return element.id;
-    })
-    this.walletService.getMosaicNames(datos).subscribe(
-      response => {
-        this.mosaics = [];
-        response.forEach(element => {
-          data.forEach(element2 => {
-            if (element.mosaicId.toHex() === element2.id.toHex()) {
-              let valores = {
-                mosaicId: element.mosaicId.id.toHex(),
-                name: element.names,
-                amount: this.walletService.amountFormatterSimple(element2.amount.compact())
+    if (data) {
+      const datos = data.map(element => {
+        return element.id;
+      })
+      this.walletService.getMosaicNames(datos).subscribe(
+        response => {
+          this.mosaics = [];
+          response.forEach(element => {
+            data.forEach(element2 => {
+              if (element.mosaicId.toHex() === element2.id.toHex()) {
+                let valores = {
+                  mosaicId: element.mosaicId.id.toHex(),
+                  name: element.names,
+                  amount: this.walletService.amountFormatterSimple(element2.amount.compact())
+                }
+                this.mosaics.push(valores)
               }
-              this.mosaics.push(valores)
-            }
+            });
           });
-        });
-        console.log('xxxxxxx', this.mosaics)
-        this.mosaicsTransfer(this.mosaics);
-      }
-      
-    );
-  }
+          console.log('xxxxxxx', this.mosaics)
+          this.mosaicsTransfer(this.mosaics);
+        }
+
+      );
+    }
   }
 
   onChangeMosaic(e) {
     console.log('............. mostrar e', e)
     const valor = this.mosaics;
     for (const m in valor) {
-    if(valor[m].name[0] === e.trim() || valor[m].mosaicId === e.trim()) {
-      this.cardMosaics =  valor[m];
-      this.show = true;
-      console.log('............. mostrar true')
+      if (valor[m].name[0] === e.trim() || valor[m].mosaicId === e.trim()) {
+        this.cardMosaics = valor[m];
+        this.show = true;
+        console.log('............. mostrar true')
+      }
     }
-    }
-    if(e.trim() === 'Select mosaic') {
+    if (e.trim() === 'Select mosaic') {
       this.show = false;
     }
     this.formSend.patchValue({
@@ -151,43 +154,43 @@ export class WalletSendPage implements OnInit {
 
   onSubmit(form) {
     if (this.formSend.valid) {
-    this.storage.get('pin').then(async (val) => {
-      if (val === form.password) {
-        console.log(' pin valido')
-        const acountRecipient = form.acountRecipient;
-        const amount = form.amount;
-        const message = form.message;
-        const password = form.password
-        const mosaic = form.mosaicsSelect;
-        const common = { password: password };
+      this.storageProvider.validatePaswword(form.password).then(status => {
 
-        if (this.walletService.decrypt(common)) {
-          console.log('decrypt ')
-          const rspBuildSend = this.walletService.buildToSendTransfer(
-            common,
-            acountRecipient,
-            message,
-            amount,
-            this.walletService.network,
-            mosaic
-          );
-          rspBuildSend.transactionHttp
-            .announce(rspBuildSend.signedTransaction)
-            .subscribe(
-              rsp => {
-                this.toastProvider.showToast('Transaction sent.')
-                this.formSend.reset();
-              },
-              async err => {
-                this.toastProvider.showToast('Error '.concat(err))
-              }
+        if (status.status === "success") {
+          const acountRecipient = form.acountRecipient;
+          const amount = form.amount;
+          const message = form.message;
+          const password = status.password
+          const mosaic = form.mosaicsSelect;
+          const common = { password: password };
+
+          if (this.walletService.decrypt(common)) {
+            console.log('decrypt ')
+            const rspBuildSend = this.walletService.buildToSendTransfer(
+              common,
+              acountRecipient,
+              message,
+              amount,
+              this.walletService.network,
+              mosaic
             );
+            rspBuildSend.transactionHttp
+              .announce(rspBuildSend.signedTransaction)
+              .subscribe(
+                rsp => {
+                  this.toastProvider.showToast('Transaction sent.')
+                  this.formSend.reset();
+                },
+                async err => {
+                  this.toastProvider.showToast('Error '.concat(err))
+                }
+              );
+          }
+          console.log(form)
+        } else {
+          this.toastProvider.showToast('incorrect information. Try again.')
         }
-        console.log(form)
-      } else {
-        this.toastProvider.showToast('incorrect information. Try again.')
-      }
-    })
+      })
+    }
   }
-} 
 }

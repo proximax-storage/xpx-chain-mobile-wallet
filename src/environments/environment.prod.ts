@@ -1,4 +1,4 @@
-import { NetworkType } from 'tsjs-xpx-catapult-sdk'
+import { NetworkType } from 'tsjs-xpx-chain-sdk'
 
 export const environment = {
   production: true,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
 import { environment } from '../../../environments/environment';
-import { crypto } from 'js-xpx-catapult-library';
+import { crypto } from 'js-xpx-chain-library';
 import {
   Listener,
   Password,
@@ -39,10 +39,10 @@ import {
   NamespaceService,
   MosaicView,
   
-  } from 'tsjs-xpx-catapult-sdk';
+  } from 'tsjs-xpx-chain-sdk';
   import { Observable } from 'rxjs';
   import { MosaicXPXInterface } from '../../pages/wallets/interfaces/transaction.interface'
-import { MosaicNames } from 'tsjs-xpx-catapult-sdk/dist/src/model/mosaic/MosaicNames';
+import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
 
 @Injectable({

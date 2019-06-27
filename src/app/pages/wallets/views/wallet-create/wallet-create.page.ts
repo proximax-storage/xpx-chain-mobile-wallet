@@ -7,6 +7,7 @@ import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../auth/service/auth.service';
 import { WalletService } from '../../service/wallet.service'
 import { ToastProvider } from 'src/app/providers/toast/toast.provider';
+import { StorageProvider } from 'src/app/providers/storage/storage.provider';
 
 
 @Component({
@@ -20,20 +21,23 @@ export class WalletCreatePage implements OnInit {
   user: string;
   imgen: string;
   alfaNumberPattern = '^[a-zA-Z0-9 ]+$';
-  alfaNumberPatternP  = '^[a-zA-Z0-9 *#$.&]+$';
+  alfaNumberPatternP = '^[a-zA-Z0-9 *#$.&]+$';
   numberPattern = '^[0-9]+$';
   n1: string;
   n2: string;
   n3: string;
   n4: string;
+  exists: boolean;
   constructor(
     public formBuilder: FormBuilder,
     private storage: Storage,
     private nav: NavController,
     private proximaxProvider: ProximaxProvider,
-    public authService: AuthService,
     public walletService: WalletService,
-    private toastProvider: ToastProvider
+    private toastProvider: ToastProvider,
+    private storageProvider: StorageProvider,
+    public authService: AuthService,
+    
   ) { }
 
   ngOnInit() {
@@ -71,15 +75,30 @@ export class WalletCreatePage implements OnInit {
 
   onSubmit(form) {
     this.user = this.authService.user;
-    this.storage.get('pin').then(async (val) => {
+   this.storageProvider.validatePaswword(form.password).then(status => {
+    console.log('este providers', status)
 
-      if (val === form.password) {
-        const pin = val;
-        const password = this.proximaxProvider.createPassword(pin);
-        this.storage.get('wallets'.concat(this.user)).then((wallet) => {
-          console.log('datos de forms', form);
+    if (status.status === "success") {
+      const pin = status.password
+      const password = this.proximaxProvider.createPassword(pin);
+      this.storage.get('wallets'.concat(this.user)).then((wallet) => {
+        
+        if(wallet){
+          for (var i = 0; i < wallet.length; i++) {
+            if (wallet[i].name === form.walletname) {
+              this.exists = true;
+              break;
+            } else {
+              this.exists = false;
+            }
+          }
+        }
+        
+        if (this.exists) {
+          this.toastProvider.showToast('Wallet name already exist. Please choose a new one.')
+        } else {
           if (form.checkbox === true) {
-            if (form.privateKey !== '' && form.privateKey !== null && form.privateKey !== undefined) {
+            if (form.privateKey !== '' || form.privateKey !== null || form.privateKey !== undefined) {
               const walletPrivatekey = this.walletService.createAccountFromPrivateKey(form.img, form.walletname, password, form.privateKey, environment.network)
               if (wallet === null) {
                 this.storage.set('wallets'.concat(this.user), [walletPrivatekey]);
@@ -90,8 +109,6 @@ export class WalletCreatePage implements OnInit {
               this.formWallets.reset();
               this.walletService.use(walletPrivatekey, true);
               this.nav.navigateRoot(['/congratulations']);
-              console.log('se importa una cuenta nueva');
-
             } else {
               console.log('.....................errrrorrrrrr');
             }
@@ -106,13 +123,13 @@ export class WalletCreatePage implements OnInit {
             this.formWallets.reset({});
             this.walletService.use(walletSimple, false);
             this.nav.navigateRoot(['/congratulations']);
-            console.log('se crea la cuenta nueva');
           }
-        });
-      } else {
-        this.toastProvider.showToast('Incorrect password.')
-      }
-    });
+        }
+      });
+    } else {
+      this.toastProvider.showToast('Incorrect password.')
+    }
+   })
   }
 
   updateCucumber(e) {

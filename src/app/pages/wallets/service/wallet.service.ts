@@ -13,8 +13,8 @@ import {
   Deadline,
   PlainMessage,
   Transaction,
-} from "tsjs-xpx-catapult-sdk";
-import { crypto } from 'js-xpx-catapult-library';
+} from "tsjs-xpx-chain-sdk";
+import { crypto } from 'js-xpx-chain-library';
 import { environment } from '../../../../environments/environment'
 import { NodeService } from '../../../../shared/service/node.service'
 import { TransactionsInterface } from '../interfaces/transaction.interface'
@@ -233,6 +233,7 @@ export class WalletService {
   }
 
   walletFormatList(arr) {
+    console.log(arr)
     this.wallets = [];
     arr.forEach(element => {
       const myAddress = element.address;

@@ -55,10 +55,14 @@ export class AddContactPage implements OnInit {
   onAdd(form) {
     if (this.formAddContact.valid) {
       this.addressBookService.addContact(form.name, form.address, form.usertelegram)
-        .then(_ => {
+        .then(status => {
+          if(status === "duplicate") {
+            this.toastProvider.showToast('contact already exist. Please try again.')
+          } else {
           this.toastProvider.showToast('Successfully registered contact.')
           this.formAddContact.reset();
           this.nav.navigateRoot(`/address-book`);
+          }
         });
     }
   }
