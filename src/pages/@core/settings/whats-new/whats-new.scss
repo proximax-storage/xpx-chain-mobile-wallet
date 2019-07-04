@@ -1,0 +1,56 @@
+page-whats-new {
+
+    ul[release-notes]{
+    list-style-type: none;
+    padding-left: 8px;
+    }
+
+    div#timeline_container{
+
+        // border:2px solid #999;
+        padding: 0 2em 0 2em;
+        width: 100%;
+        display:inline-block;
+        
+      }
+      ul#timeline{
+        margin:0;padding:0;
+        position:relative;
+        top:0;left:0;
+       
+        &:before{
+          position:absolute;
+          top:1.5rem;
+          left:0;
+          width:1.3px;
+          height:97%;
+          background:#ccc;
+          content:' ';
+          display:inline-block;
+          z-index:-1;
+        }
+        
+        li{
+          list-style:none;
+          padding:1.5em 0 1.5em 2em;
+          
+          &:before{
+            width:0.72em;
+            height:0.72em;
+            display:inline-block;
+            background:#777;
+            content:' ';
+            margin-left:-2.45em;
+            margin-right:1.4em;
+            border-radius:50%;
+            border:2px solid #E4E6EE;
+            outline:4px solid transparent;
+            -moz-outline-radius:2em;
+            z-index:5;
+            
+            position:relative;
+            top:0.15em;left:0;
+          }
+        }
+      }
+}

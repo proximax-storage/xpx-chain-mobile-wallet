@@ -1,0 +1,197 @@
+<!--
+  Generated template for the TransactionListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+      <span ion-text color="black">{{walletName }}</span>
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="black">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <section wallets>
+
+      <ion-card balance>
+        <ion-card-content>
+          <br>
+
+          <h1 color="dark" text-center> ≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h1>
+          <!-- <h2 color="dark"  text-center>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2> -->
+
+            <ion-list transparent-items>
+                <ion-item *ngIf="currentWallet" (click)="copy(currentWallet.address.plain())">
+                    <ion-icon name='ios-copy-outline' item-end></ion-icon>
+                    <p text-justify  *ngIf="currentWallet">{{ currentWallet?.address.plain() }} </p>
+                </ion-item>
+              </ion-list>
+              <button gradient-button quarter-width color-5 medium (click)="moreDetails()">
+                  {{"WALLETS.MORE_DETAILS" | translate}}
+              </button>
+        </ion-card-content>
+      </ion-card>
+
+      
+  </section>
+
+
+
+</ion-header>
+
+<ion-content background>
+  <!-- Skeleton loader -->
+  <ion-list transparent-items *ngIf="isLoading">
+    <h2 padding *ngIf="!showEmptyMessage">{{"WALLETS.TRANSACTIONS" | translate}}</h2>
+
+    <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
+      <skeleton-loader></skeleton-loader>
+  </ion-card>
+  <ion-card no-border>
+    <ion-item text-center>
+      <ion-spinner name="dots"></ion-spinner>
+    </ion-item>
+  </ion-card>
+  </ion-list>
+  <!-- ./Skeleton loader -->
+
+  <!-- Transactions -->
+  <ion-list transparent-items *ngIf="!isLoading">
+    <h2 padding *ngIf="!showEmptyMessage">{{"WALLETS.TRANSACTIONS" | translate}}</h2>
+
+    <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash;"
+      (click)="gotoTransactionDetail(transaction)">
+      <!-- if importance transfer -->
+      <importance-transfer-transaction *ngIf="transaction.type == TransactionTypes.IMPORTANCE_TRANSFER"
+        [tx]="transaction"></importance-transfer-transaction>
+
+      <!-- if mosaic definition -->
+      <mosaic-definition-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_DEFINITION_CREATION"
+        [tx]="transaction"></mosaic-definition-transaction>
+
+      <!-- if mosaic supply change -->
+      <mosaic-supply-change-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE"
+        [tx]="transaction"></mosaic-supply-change-transaction>
+
+      <!-- if multisig transaction  -->
+      <multisig-transaction *ngIf="transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
+      </multisig-transaction>
+
+      <!-- if multisig aggregate modification  -->
+      <multisig-aggregate-modification-transaction
+        *ngIf="transaction.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="transaction">
+      </multisig-aggregate-modification-transaction>
+
+      <!-- if provision namespace  -->
+      <provision-namespace-transaction *ngIf="transaction.type == TransactionTypes.PROVISION_NAMESPACE"
+        [tx]="transaction"></provision-namespace-transaction>
+
+      <!-- if transfer  -->
+      <transfer-transaction *ngIf="transaction.type == TransactionTypes.TRANSFER" [tx]="transaction" [owner]="currentWallet.address">
+      </transfer-transaction>
+    </ion-card>
+
+    <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
+      (click)="gotoTransactionDetail(transaction)">
+      <!-- if importance transfer -->
+      <importance-transfer-transaction *ngIf="transaction.type == TransactionTypes.IMPORTANCE_TRANSFER"
+        [tx]="transaction"></importance-transfer-transaction>
+
+      <!-- if mosaic definition -->
+      <mosaic-definition-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_DEFINITION_CREATION"
+        [tx]="transaction"></mosaic-definition-transaction>
+
+      <!-- if mosaic supply change -->
+      <mosaic-supply-change-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE"
+        [tx]="transaction"></mosaic-supply-change-transaction>
+
+      <!-- if multisig transaction  -->
+      <multisig-transaction *ngIf="transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
+      </multisig-transaction>
+
+      <!-- if multisig aggregate modification  -->
+      <multisig-aggregate-modification-transaction
+        *ngIf="transaction.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="transaction">
+      </multisig-aggregate-modification-transaction>
+
+      <!-- if provision namespace  -->
+      <provision-namespace-transaction *ngIf="transaction.type == TransactionTypes.PROVISION_NAMESPACE"
+        [tx]="transaction"></provision-namespace-transaction>
+
+      <!-- if transfer  -->
+      <transfer-transaction *ngIf="transaction.type == TransactionTypes.TRANSFER" [tx]="transaction" [owner]="currentWallet.address">
+      </transfer-transaction>
+    </ion-card>
+
+  </ion-list>
+  <!-- ./Transactions -->
+
+  <!-- Infinite scroll -->
+  <!-- <ion-infinite-scroll *ngIf="!showEmptyMessage"  (ionInfinite)="doInfinite($event)" threshold="100px">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more transactions...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+  <!-- ./Infinite scroll -->
+
+  <ion-grid padding empty *ngIf="showEmptyMessage" reduce-margin-top>
+    <ion-row padding>
+      <ion-col>
+        <img quarter-width [src]="App.STICKERS.SORRY">
+        <!-- 
+            <h4 ion-text color="blackgreen" text-wrap>
+              No transactions yet
+            </h4> -->
+
+        <h6 ion-text color="grey" text-wrap>
+          <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
+        </h6>
+
+        <!-- <p text-wrap>
+              Start by sending mosaics to your new wallet
+            </p> -->
+
+        <!-- 
+            <h6 ion-text color="blackgreen" text-wrap>
+              Start by sending mosaics to your new wallet
+            </h6> -->
+        <!--     
+            <button gradient-button color-5 color="black" (click)="showReceiveModal()">
+              Topup now
+            </button> -->
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid normal>
+      <ion-row>
+        <ion-col>
+          <button (click)="showReceiveModal()" gradient-button full color-5 ion-button icon-start no-margin>
+            <ion-icon name="arrow-round-down"></ion-icon>
+            {{"WALLETS.RECEIVE" | translate}}
+          </button>
+        </ion-col>
+        <ion-col>
+          <button (click)="showSendModal()" gradient-button full color-5 ion-button icon-end no-margin>
+              {{"WALLETS.SEND" | translate}}
+            <ion-icon name="arrow-round-up"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>
+
+<ng-template #loading>
+  <ion-spinner name="dots"></ion-spinner>
+</ng-template>

@@ -1,0 +1,7 @@
+ion-spinner.spinner * {
+  stroke: color($colors, dark);
+}
+
+ion-spinner.spinner[name="dots"] * {
+  fill: color($colors, dark);
+}

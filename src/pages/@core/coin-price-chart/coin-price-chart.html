@@ -1,0 +1,443 @@
+<!--
+  Generated template for the CoinPriceChartPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+
+  <ion-navbar transparent no-border-bottom>
+    <ion-title *ngIf="selectedCoin">
+      <span text-uppercase ion-text color="black">
+        {{ selectedCoin.name }} ({{ selectedCoin.symbol }})
+      </span>
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="black">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar mode='md' transparent no-margin no-border-top>
+    <ion-segment mode='md' [(ngModel)]="selectedSegment" color="dark">
+      <ion-segment-button value='transactions' checked>
+        {{"WALLETS.TRANSACTIONS" | translate}}
+      </ion-segment-button>
+      <ion-segment-button value='priceChart' (ionSelect)="select('24H');content.resize()">
+        {{"WALLETS.DETAIL.PRICE_CHART" | translate}}
+      </ion-segment-button>
+      <ion-segment-button value='info' (ionSelect)="content.resize()">
+        {{"WALLETS.DETAIL.INFO" | translate}}
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <section *ngIf="selectedSegment=='transactions'">
+
+
+    <ion-card balance>
+        <ion-card-content>
+          <br>
+
+          <h1 color="dark" text-center> {{(mosaicAmount? mosaicAmount:0) | number : '1.6-6'}} <sup text-uppercase>{{mosaicId}}</sup></h1>
+          <h2 color="dark"  text-center>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
+
+            <ion-list transparent-items>
+                <!-- <ion-item *ngIf="currentWallet" (click)="copy(currentWallet.address.plain())">
+                    <ion-icon name='ios-cash-outline' item-start></ion-icon>
+                    1,000,000.00 XPX
+                    <h2>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</h2>
+                </ion-item> -->
+
+                <!-- <ion-item *ngIf="currentWallet" (click)="copy(currentWallet.address.plain())">
+                    <ion-icon name='logo-usd' item-start></ion-icon>
+                    
+                    <span>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</span>
+                </ion-item> -->
+
+                <ion-item *ngIf="currentWallet" (click)="copy(currentWallet.address.plain())">
+                    <ion-icon name='ios-copy-outline' item-end></ion-icon>
+                    <p text-justify  *ngIf="currentWallet">{{ currentWallet?.address.plain() }} </p>
+                </ion-item>
+              </ion-list>
+        </ion-card-content>
+      </ion-card>
+  </section>
+
+
+
+</ion-header>
+
+<ion-content background [ngClass]="(selectedSegment=='transactions')?'big-margin-top':''">
+
+  
+
+  <!-- Transactions -->
+  <div *ngIf="selectedSegment=='transactions'">
+
+    <!-- Skeleton loader -->
+    <ion-list transparent-items *ngIf="isLoading">
+      <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
+        <skeleton-loader></skeleton-loader>
+    </ion-card>
+    <ion-card no-border>
+      <ion-item text-center>
+        <ion-spinner name="dots"></ion-spinner>
+      </ion-item>
+    </ion-card>
+    </ion-list>
+    <!-- ./Skeleton loader -->
+
+    <!-- Transactions -->
+    <ion-list transparent-items *ngIf="!isLoading">
+
+        <ion-card  no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash;"
+        (click)="gotoTransactionDetail(transaction)">
+        <!-- if importance transfer -->
+        <importance-transfer-transaction *ngIf="transaction.type == TransactionTypes.IMPORTANCE_TRANSFER"
+          [tx]="transaction"></importance-transfer-transaction>
+
+        <!-- if mosaic definition -->
+        <mosaic-definition-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_DEFINITION_CREATION"
+          [tx]="transaction"></mosaic-definition-transaction>
+
+        <!-- if mosaic supply change -->
+        <mosaic-supply-change-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE"
+          [tx]="transaction"></mosaic-supply-change-transaction>
+
+        <!-- if multisig transaction  -->
+        <multisig-transaction *ngIf="mosaicId != 'xem' && transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
+        </multisig-transaction>
+
+        <multisig-transaction-filter *ngIf="mosaicId == 'xem' &&  transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
+          </multisig-transaction-filter>
+
+        <!-- if multisig aggregate modification  -->
+        <multisig-aggregate-modification-transaction
+          *ngIf="transaction.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="transaction">
+        </multisig-aggregate-modification-transaction>
+
+        <!-- if provision namespace  -->
+        <provision-namespace-transaction *ngIf="transaction.type == TransactionTypes.PROVISION_NAMESPACE"
+          [tx]="transaction"></provision-namespace-transaction>
+
+        <!-- if transfer  -->
+        <transfer-transaction-filter *ngIf="transaction.type == TransactionTypes.TRANSFER" [tx]="transaction" [mosaicId]="mosaicId" [owner]="currentWallet.address">
+        </transfer-transaction-filter>
+      </ion-card>
+
+      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
+        (click)="gotoTransactionDetail(transaction)">
+        <!-- if importance transfer -->
+        <importance-transfer-transaction *ngIf="transaction.type == TransactionTypes.IMPORTANCE_TRANSFER"
+          [tx]="transaction"></importance-transfer-transaction>
+
+        <!-- if mosaic definition -->
+        <mosaic-definition-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_DEFINITION_CREATION"
+          [tx]="transaction"></mosaic-definition-transaction>
+
+        <!-- if mosaic supply change -->
+        <mosaic-supply-change-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE"
+          [tx]="transaction"></mosaic-supply-change-transaction>
+
+        <!-- if multisig transaction  -->
+        <multisig-transaction *ngIf="mosaicId != 'xem' && transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
+          </multisig-transaction>
+  
+        <!-- if multisig transaction && xem is selected -->
+        <multisig-transaction-filter *ngIf="mosaicId == 'xem' &&  transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
+        </multisig-transaction-filter>
+
+        <!-- if multisig aggregate modification  -->
+        <multisig-aggregate-modification-transaction
+          *ngIf="transaction.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="transaction">
+        </multisig-aggregate-modification-transaction>
+
+        <!-- if provision namespace  -->
+        <provision-namespace-transaction *ngIf="transaction.type == TransactionTypes.PROVISION_NAMESPACE"
+          [tx]="transaction"></provision-namespace-transaction>
+
+        <!-- if transfer  -->
+        <transfer-transaction-filter *ngIf="transaction.type == TransactionTypes.TRANSFER" [tx]="transaction" [mosaicId]="mosaicId" [owner]="currentWallet.address">
+        </transfer-transaction-filter>
+      </ion-card>
+
+    </ion-list>
+    <!-- ./Transactions -->
+
+    <!-- Infinite scroll -->
+    <!-- <ion-infinite-scroll (ionInfinite)="doInfinite()">
+      <ion-infinite-scroll-content loadingSpinner="dots" loadingText="Loading more transactions">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll> -->
+    <!-- ./Infinite scroll -->
+
+    <ion-grid padding empty *ngIf="showEmptyMessage" reduce-margin-top>
+      <ion-row padding>
+        <ion-row>
+          <ion-col>
+            <p>
+            </p>
+          </ion-col>
+        </ion-row>
+        <br><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <ion-col>
+          <img quarter-width [src]="App.STICKERS.SORRY">
+          <h6 ion-text color="grey" text-wrap>
+            <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
+          </h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Price Chart -->
+  <div class="" *ngIf="selectedSegment=='priceChart'">
+      <section text-center>
+        <h1 price ion-text color="black" *ngIf="selectedCoin.market_data">
+          {{ selectedCoin.market_data.current_price.usd | currency: 'USD': 'symbol': '1.2-6' }}</h1>
+        <!-- 24h -->
+        <button gradient-button tiny width-auto no-margin
+          [attr.color-5]="selectedCoin.market_data.market_cap_change_percentage_24h > 0 ? true : null"
+          [attr.color-2]="selectedCoin.market_data.market_cap_change_percentage_24h < 0 ? true : null"
+          *ngIf="selectedCoin.market_data && selectedDuration.label == '24H'">
+          {{ selectedCoin.market_data.market_cap_change_percentage_24h | number: '1.1-1' }}%
+        </button>
+        <!-- 7D -->
+        <button gradient-button tiny width-auto no-margin
+          [attr.color-5]="selectedCoin.market_data.price_change_percentage_7d > 0 ? true : null"
+          [attr.color-2]="selectedCoin.market_data.price_change_percentage_7d < 0 ? true : null"
+          *ngIf="selectedCoin.market_data  && selectedDuration.label == '7D'">
+          {{ selectedCoin.market_data.price_change_percentage_7d_in_currency.usd | number: '1.1-1' }}%
+        </button>
+        <!-- 14D -->
+        <button gradient-button tiny width-auto no-margin
+          [attr.color-5]="selectedCoin.market_data.price_change_percentage_14d > 0 ? true : null"
+          [attr.color-2]="selectedCoin.market_data.price_change_percentage_14d < 0 ? true : null"
+          *ngIf="selectedCoin.market_data && selectedDuration.label == '14D'">
+          {{ selectedCoin.market_data.price_change_percentage_14d_in_currency.usd | number: '1.1-1' }}%
+        </button>
+        <!-- 30D -->
+        <button gradient-button tiny width-auto no-margin
+          [attr.color-5]="selectedCoin.market_data.price_change_percentage_30d > 0 ? true : null"
+          [attr.color-2]="selectedCoin.market_data.price_change_percentage_30d < 0 ? true : null"
+          *ngIf="selectedCoin.market_data  && selectedDuration.label == '30D'">
+          {{ selectedCoin.market_data.price_change_percentage_30d_in_currency.usd | number: '1.1-1' }}%
+        </button>
+        <!-- 6M -->
+        <button gradient-button tiny width-auto no-margin
+          [attr.color-5]="selectedCoin.market_data.price_change_percentage_200d > 0 ? true : null"
+          [attr.color-2]="selectedCoin.market_data.price_change_percentage_200d < 0 ? true : null"
+          *ngIf="selectedCoin.market_data && selectedDuration.label == '6M'">
+          {{ selectedCoin.market_data.price_change_percentage_200d_in_currency.usd | number: '1.1-1' }}%
+        </button>
+  
+      </section>
+  
+      <section id="container"></section>
+  
+      <ion-grid normal>
+        <ion-row justify-content-center>
+          <ion-col text-center *ngFor="let duration of durations" (click)="select(duration)">
+            <button gradient-button no-margin width-auto tiny (click)="select(duration)"
+              [attr.color-6]="selectedDuration.value === duration.value ? true : null"
+              [attr.color-5]="selectedDuration.value !== duration.value ? true : null">
+              {{ duration.label }}
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  
+      <ion-list transparent-items>
+        <h2 margin-left ion-text color="dark">{{"WALLETS.DETAIL.STATS" | translate}}</h2>
+        <ion-card>
+          <ion-item>
+            <p item-left ion-text color="dark">{{"WALLETS.DETAIL.MARKET_RANK" | translate}}</p>
+            <ion-badge item-end *ngIf="selectedCoin.market_data; else loading">
+              #{{ selectedCoin.market_cap_rank }}
+            </ion-badge>
+          </ion-item>
+        </ion-card>
+  
+        <ion-card>
+          <ion-item>
+            <p item-left ion-text color="dark">{{"WALLETS.DETAIL.MARKET_CAP" | translate}}</p>
+            <h3 item-right *ngIf="selectedCoin.market_data; else loading">
+              ${{ selectedCoin.market_data.market_cap.usd | shortNum }}
+            </h3>
+  
+          </ion-item>
+        </ion-card>
+  
+        <ion-card>
+          <ion-item>
+            <p item-left ion-text color="dark">{{"WALLETS.DETAIL.TRADING_VOLUME" | translate}}</p>
+            <h3 item-right *ngIf="selectedCoin.market_data; else loading">
+              ${{ selectedCoin.market_data.total_volume.usd | shortNum }}
+            </h3>
+  
+          </ion-item>
+        </ion-card>
+  
+        <ion-card>
+          <ion-item>
+            <p item-left ion-text color="dark">{{"WALLETS.DETAIL.24H_HIGH" | translate}}</p>
+            <ion-badge item-end *ngIf="selectedCoin.market_data; else loading">
+              {{ selectedCoin.market_data.high_24h.usd | currency: 'USD': 'symbol': '1.2-4' }}
+            </ion-badge>
+          </ion-item>
+        </ion-card>
+  
+        <ion-card>
+          <ion-item>
+            <p item-left ion-text color="dark">{{"WALLETS.DETAIL.24H_LOW" | translate}}</p>
+            <ion-badge item-end *ngIf="selectedCoin.market_data; else loading">
+              {{ selectedCoin.market_data.low_24h.usd | currency: 'USD': 'symbol': '1.2-4' }}
+            </ion-badge>
+          </ion-item>
+        </ion-card>
+  
+  
+  
+        <ion-card>
+          <ion-item tooltip="Total supply is the number of coins in existence." positionV="top" arrow>
+            <p ion-text color="dark">{{"WALLETS.DETAIL.CIRCULATING" | translate}}</p>
+            <h3 item-right *ngIf="selectedCoin.market_data; else loading">
+              {{ selectedCoin.market_data.circulating_supply | shortNum }}
+              <span text-uppercase>
+                {{ selectedCoin.symbol }}
+              </span>
+            </h3>
+          </ion-item>
+        </ion-card>
+  
+        <ion-card>
+          <ion-item tooltip="Total supply is the number of coins in existence." positionV="top" arrow>
+            <p ion-text color="dark">{{"WALLETS.DETAIL.TOTAL_SUPPLY" | translate}}</p>
+            <h3 item-right *ngIf="selectedCoin.market_data; else loading">
+              {{ selectedCoin.market_data.total_supply | shortNum }}
+              <span text-uppercase>
+                {{ selectedCoin.symbol }}
+              </span>
+            </h3>
+          </ion-item>
+        </ion-card>
+  
+      </ion-list>
+    </div>
+
+  <!-- Info -->
+  <div class="" *ngIf="selectedSegment=='info'">
+
+    <ion-list transparent-items>
+      <h2 margin-left ion-text color="dark">{{"WALLETS.DETAIL.INFO" | translate}}</h2>
+      <ion-card>
+        <ion-item>
+          <p item-left ion-text color="dark">{{"WALLETS.DETAIL.HOME_PAGE" | translate}}</p>
+          <h3 text-wrap (click)="openLink(selectedCoin.links.homepage[0])" item-end *ngIf="selectedCoin; else loading">
+            {{ selectedCoin.links.homepage[0] }}
+          </h3>
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-item>
+          <p item-left ion-text color="dark">{{"WALLETS.DETAIL.ANNOUNCEMENT" | translate}}</p>
+          <h3 text-wrap (click)="openLink(selectedCoin.links.announcement_url[0])" item-end
+            *ngIf="selectedCoin; else loading">
+            {{ selectedCoin.links.announcement_url[0] | ngXtruncate: 20 : '...'}}
+          </h3>
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-item>
+          <p item-left ion-text color="dark">{{"WALLETS.DETAIL.EXPLORER" | translate}}</p>
+          <h3 (click)="openLink(selectedCoin.links.blockchain_site[0])" item-end *ngIf="selectedCoin; else loading">
+            {{ selectedCoin.links.blockchain_site[0] | ngXtruncate: 20 : '...'}}
+          </h3>
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-item>
+          <p item-left ion-text color="dark">{{"WALLETS.DETAIL.GENESIS_DATE" | translate}}</p>
+          <h3 item-end *ngIf="selectedCoin; else loading">
+            {{ selectedCoin.genesis_date | date:'MMM dd, yyyy'}}
+          </h3>
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-item (click)="openLink('https:facebook.com/'+selectedCoin.links.facebook_username)">
+          <ion-icon item-start item-left name="logo-facebook"></ion-icon>
+          <p item-left ion-text color="dark">{{"WALLETS.DETAIL.FACEBOOK" | translate}}</p>
+          <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-item (click)="openLink('https:twitter.com/'+ selectedCoin.links.twitter_screen_name)">
+          <ion-icon item-start item-left name="logo-twitter"></ion-icon>
+          <p item-left ion-text color="dark">{{"WALLETS.DETAIL.TWITTER" | translate}}</p>
+          <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-item (click)="openLink('https:t.me/'+selectedCoin.links.telegram_channel_identifier)">
+          <ion-icon item-start item-left name="paper-plane"></ion-icon>
+          <p item-left ion-text color="dark">{{"SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM" | translate}}</p>
+          <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+        </ion-item>
+      </ion-card>
+    </ion-list>
+
+
+    <ion-card (click)="readMore(selectedCoin.description['en'].length)">
+      <ion-item>
+        <p text-wrap text-justify-start *ngIf="selectedCoin.description; else loading">
+          {{ selectedCoin.description['en'] | ngXtruncate: descriptionLength : '...' }}</p>
+      </ion-item>
+    </ion-card>
+
+  </div>
+
+
+
+
+</ion-content>
+
+<ion-footer *ngIf="selectedSegment=='transactions'" no-border>
+  <ion-toolbar>
+    <ion-grid normal>
+      <ion-row>
+        <ion-col>
+          <button (click)="showReceiveModal()" gradient-button full color-5 ion-button icon-start no-margin>
+            <ion-icon name="arrow-round-down"></ion-icon>
+            {{"WALLETS.RECEIVE" | translate}}
+          </button>
+        </ion-col>
+        <ion-col>
+          <button (click)="showSendModal()" gradient-button full color-5 ion-button icon-end no-margin>
+            {{"WALLETS.SEND" | translate}}
+            <ion-icon name="arrow-round-up"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>
+
+<ng-template #loading>
+  <ion-spinner name="dots"></ion-spinner>
+</ng-template>

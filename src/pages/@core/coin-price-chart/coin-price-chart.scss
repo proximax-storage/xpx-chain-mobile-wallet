@@ -1,0 +1,66 @@
+page-coin-price-chart {
+  #container {
+    display: block;
+    width: 100%;
+    height: 300px;
+  }
+  [price] {
+    font-size: 4rem;
+  }
+
+  // .toolbar-title-ios {
+  //   margin-top: 1em;
+  //   font-size: 2rem;
+  // }
+
+  .bar-button {
+    font-size: 1.8rem;
+  }
+
+  .item p{
+    font-size: 1.4rem;
+    line-height: 2.2rem;
+    color: color($colors, dark);
+  }
+
+  h2 {
+    margin-top: 1rem;
+    font-size: 2rem;
+  }
+
+  .list>.item-block:first-child {
+    border-top: none !important;
+  }
+
+  .list>.item-block:last-child {
+    border-bottom: none !important;
+  }
+
+  ion-list[big-margin-top] {
+    // margin-top: 1rem !important;
+  }
+
+  ion-grid[reduce-margin-top] {
+    margin-top: -6em
+  }
+
+  .big-margin-top {
+     > .scroll-content{
+      margin-top: 265px !important;
+    }
+  }
+
+}
+
+tooltip-box {
+  background: linear-gradient(45deg, darken(color($colors, secondary), 0.3), color($colors, primary));
+  box-shadow: 0 8px 8px 1px transparentize(color($colors, black), 0.9);
+  border-radius: 4rem;
+}
+
+.has-arrow.arrow-bottom:before {
+  border-top: 5px solid color($colors, secondary) !important;
+}
+
+
+

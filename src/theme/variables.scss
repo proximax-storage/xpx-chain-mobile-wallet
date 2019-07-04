@@ -1,359 +1,131 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
-/** Ionic CSS Variables **/
-:root {
-  /** primary **/
-  --ion-color-primary: #3880ff;
-  --ion-color-primary-rgb: 56, 128, 255;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #3171e0;
-  --ion-color-primary-tint: #4c8dff;
+// Font path is used to include ionicons,
+// roboto, and noto sans fonts
+$font-path: "../assets/fonts";
 
-  /** secondary **/
-  --ion-color-secondary: #0cd1e8;
-  --ion-color-secondary-rgb: 12, 209, 232;
-  --ion-color-secondary-contrast: #ffffff;
-  --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #0bb8cc;
-  --ion-color-secondary-tint: #24d6ea;
 
-  /** tertiary **/
-  --ion-color-tertiary: #7044ff;
-  --ion-color-tertiary-rgb: 112, 68, 255;
-  --ion-color-tertiary-contrast: #ffffff;
-  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-  --ion-color-tertiary-shade: #633ce0;
-  --ion-color-tertiary-tint: #7e57ff;
+// The app direction is used to include
+// rtl styles in your app. For more info, please see:
+// http://ionicframework.com/docs/theming/rtl-support/
+$app-direction: ltr;
 
-  /** success **/
-  --ion-color-success: #10dc60;
-  --ion-color-success-rgb: 16, 220, 96;
-  --ion-color-success-contrast: #ffffff;
-  --ion-color-success-contrast-rgb: 255, 255, 255;
-  --ion-color-success-shade: #0ec254;
-  --ion-color-success-tint: #28e070;
 
-  /** warning **/
-  --ion-color-warning: #ffce00;
-  --ion-color-warning-rgb: 255, 206, 0;
-  --ion-color-warning-contrast: #ffffff;
-  --ion-color-warning-contrast-rgb: 255, 255, 255;
-  --ion-color-warning-shade: #e0b500;
-  --ion-color-warning-tint: #ffd31a;
+@import "ionic.globals";
 
-  /** danger **/
-  --ion-color-danger: #f04141;
-  --ion-color-danger-rgb: 245, 61, 61;
-  --ion-color-danger-contrast: #ffffff;
-  --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #d33939;
-  --ion-color-danger-tint: #f25454;
 
-  /** dark **/
-  --ion-color-dark: #222428;
-  --ion-color-dark-rgb: 34, 34, 34;
-  --ion-color-dark-contrast: #ffffff;
-  --ion-color-dark-contrast-rgb: 255, 255, 255;
-  --ion-color-dark-shade: #1e2023;
-  --ion-color-dark-tint: #383a3e;
+// Shared Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass variables found in Ionic's source scss files.
+// To view all the possible Ionic variables, see:
+// http://ionicframework.com/docs/theming/overriding-ionic-variables/
 
-  /** medium **/
-  --ion-color-medium: #989aa2;
-  --ion-color-medium-rgb: 152, 154, 162;
-  --ion-color-medium-contrast: #ffffff;
-  --ion-color-medium-contrast-rgb: 255, 255, 255;
-  --ion-color-medium-shade: #86888f;
-  --ion-color-medium-tint: #a2a4ab;
 
-  /** light **/
-  --ion-color-light: #f4f5f8;
-  --ion-color-light-rgb: 244, 244, 244;
-  --ion-color-light-contrast: #000000;
-  --ion-color-light-contrast-rgb: 0, 0, 0;
-  --ion-color-light-shade: #d7d8da;
-  --ion-color-light-tint: #f5f6f9;
-}
 
-ion-content {
-  --background: transparent !important;
-  --color: var(--ion-text-color,#000);
-  --padding-top: 0px;
-  --padding-bottom: 0px;
-  --padding-start: 0px;
-  --padding-end: 0px;
-  --keyboard-offset: 0px;
-  --offset-top: 0px;
-  --offset-bottom: 0px;
-  --overflow: auto;
-  display: block;
-  position: relative;
-  -ms-flex: 1;
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  margin: 0!important;
-  padding: 0!important;
-  font-family: var(--ion-font-family,inherit);
-  contain: size style;
-}
 
-.header-ios ion-toolbar:last-child {
-  --border-width: 0 0 0px !important;
-}
-.header-md:after {
-  left: 0;
-  bottom: -8px;
-  background-position: left 0 top 0;
-  position: fixed;
-  width: 100%;
-  height: 8px;
-  background-repeat: repeat-x;
-  content: "";
-}
+// Named Color Variables
+// --------------------------------------------------
+// Named colors makes it easy to reuse colors on various components.
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
 
-ion-segment-button {
-  --padding-top: 0;
-  --padding-end: 16px;
-  --padding-bottom: 0;
-  --padding-start: 16px;
-  --transition: color 0.15s linear 0s,opacity 0.15s linear 0s;
-  // min-width: 90px;
-  // max-width: 360px;
-  // min-height: 48px;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: .06em;
-  line-height: 40px;
-  text-transform: none !important;
-}
 
-ion-title {
-  font-size: 17px !important;
-  text-align: center !important;
-}
+$colors: (primary: #005277,
+secondary: #43BDB5,
+trinary: #c1f5ec,
+danger: #d41a1a,
+light: #E4E6EE,
+dark: #1b2d37,
+black : #111111,
+white: #FFFFFF,
+bg: #EFEFEF,
+grey: #666666,
+success: #00735f,
 
-.item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
-  --color: initial;
-  display: block;
-  color: var(--color);
-  font-family: var(--ion-font-family,inherit);
-  font-size: inherit;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: initial !important;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.ion-padding-top, [padding-top] { 
-  --padding-top: var(--ion-padding, 150px) !important;
-  padding-top: var(--ion-padding, 150px) !important;
-}
-// ion-menu{
-//   --width: 304px;
-//   --min-width: auto;
-//   --max-width: auto;
-//   --height: 100%;
-//   --min-height: auto;
-//   --max-height: auto;
-//   --background: #0d0c0c8a !important;
-//   left: 0;
-//   right: 0;
-//   top: 0;
-//   bottom: 0;
-//   display: none;
-//   position: absolute;
-//   contain: strict;
-// }
+darkgreen: #b2e1d9,
+tabbgcolor: #17abda,
+gothic: #708A9C,
+puerto-rico-green: #43BDB5
 
-[background] {
-  background: url('../assets/imgs/background.jpg')
-  no-repeat;
-  background-position: center;
-  background-size: cover;
-  height: auto;
-  width: auto;
-}
+);
 
-@media (max-height: 400px) {
-  [background] {
-    background: url('../assets/imgs/background.jpg')
-    no-repeat;
-    background-position: center;
-    background-size: cover;
-    height: auto;
-    width: auto;
-  }
 
-  [padding-top]{
-    padding-top: 16px !important;
+// App iOS Variables
+// --------------------------------------------------
+// iOS only Sass variables can go here
+.ios {
+  ion-fab[fab-button-center] {
+    button[gradient-button] {
+      bottom: 7vh;
+    }
   }
 }
 
-// pendiente por usar
-[toolbar-background]{
-  background-color: #0d0c0c61 !important;
+
+
+// App Material Design Variables
+// --------------------------------------------------
+// Material Design only Sass variables can go here
+.md {
+  ion-fab[fab-button-center] {
+    button[gradient-button] {
+      bottom: 5vh;
+    }
+  }
 }
 
-[padding-top-2]{
-  padding-top: 20px !important;
+
+
+// App Windows Variables
+// --------------------------------------------------
+// Windows only Sass variables can go here
+
+
+
+
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+
+@import "ionic.theme.default";
+
+// color of placeholder for input[text]
+$text-input-placeholder-color: lighten(color($colors, grey), 20%);
+
+.ios,
+.md {
+  @import "dark/main";
 }
 
-[background-white]{
-  background: white
+// Fix for overlapping back button in status bar (iPhone XS above)
+.ios {
+  body {
+    padding: env(safe-area-inset-top, 30px) env(safe-area-inset-right, 30px) env(safe-area-inset-bottom, 30px) env(safe-area-inset-left, 30px);
+  }
+
 }
 
-[background-black-trans]{
-  background: #0c0c0c82;
-}
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/ionicons/
 
-[imagenClass] {
-  position: absolute;
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  height: 100%; 
-}
+@import "ionicons";
 
-[imagenClass2] {
-  position: absolute;
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  height: 100%;
-}
 
-.background-blue {
-  display: flex;
-  flex-direction: column;
-  background: #18a5cf no-repeat;
-}
-.background-orange {
-  display: flex;
-  flex-direction: column;
-  background: #f36016 no-repeat;
-}
+// Fonts
+// --------------------------------------------------
 
-.background-green {
-  display: flex;
-  flex-direction: column;
-  background: #14b6ac no-repeat;
- 
-}
+// @import "roboto";
+// @import "noto-sans";
 
-.background-yellow {
-  display: flex;
-  flex-direction: column;
-  background: #f4a91c no-repeat;
-}
 
-[white]{
-  color: white;
-}
-
-[font-size] {
-  font-size: 13px !important;
-}
-
-[transparent]{
-  background-color: transparent;
-  color: transparent;
-}
-
-[gradient-button]:hover {
-  background-position: 100% 0;
-  transition: all 0.4s ease-in-out;
-}
-
-[gradient-button]:focus {
-  outline: none;
-}
-
-[gradient-button] {
-  width: 250px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  margin: 0px;
-  height: 38px;
-  /* text-align: center; */
-  /* border: none; */
-  // background-size: 300% 100%;
-  border-radius: 32px;
-  -webkit-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
-}
-
-[color-1] {
-  background-image: linear-gradient(
-    to right,
-    #052733,
-    #052733,
-    #052733,
-    #052733
-  );
-}
-[color-2] {
-  color: yellow
-}
-[color-3] {
-  background-image: linear-gradient(
-    to right,
-    #f36016,
-    #f36016,
-    #f36016,
-    #f36016
-  );
-}
-
-[color-4] {
-  color: #052733 !important;
-}
-.activate {
-  border-radius: 10px;
-  border: 3px solid #052733;
-}
-[text-center] {
-  text-align: center !important;
-}
-
-[text-left] {
-  text-align: left !important;
-}
-
-[text-right] {
-  text-align: right !important;
-}
-
-[logo] {
-  width: 60% !important;
-}
-
-[icon-add] {
-  width: 10% !important;
-  
-}
-
-[icon-scan] {
-  width: 20% !important;
-  
-}
-[icon-addreess] {
-  width: 40% !important;
-  display: block;
-  margin: auto;
-}
-
-[icon-editEuser] {
-  width: 20% !important;
-  display: block;
-  margin: auto;
-}
-
-[icon-back] {
-  width: 5% !important;
-}
 
 

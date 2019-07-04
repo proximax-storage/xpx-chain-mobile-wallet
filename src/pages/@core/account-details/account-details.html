@@ -1,0 +1,72 @@
+<!--
+  Generated template for the AccountDetailsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+
+<modal-header [title]="'Account Details'"></modal-header>
+
+
+</ion-header>
+
+<ion-content background>
+    <ion-grid>
+      <ion-row>
+  
+        <ion-col buttons padding col-12 text-center>
+
+
+
+            <ion-item transparent padding>
+              <ion-label stacked>Username</ion-label>
+              <ion-input disabled  type="text" placeholder="blacksaber001" value="jonpecson"></ion-input>
+            </ion-item>
+  
+            <ion-item transparent padding>
+              <ion-label stacked>Current Password</ion-label>
+              <ion-input disabled type="password" placeholder="Enter your password" value="jonpecson"></ion-input>
+            </ion-item>
+
+            
+          <button (click)="switchToEditMode()" gradient-button color-5 ion-button icon-end no-margin color="black">
+              Edit
+              <ion-icon name="md-create"></ion-icon>
+            </button>
+
+
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+            <div *ngIf="editMode">
+                <br> &nbsp; <br>
+                <br> &nbsp; <br>
+
+
+
+
+            <ion-item transparent padding>
+                <ion-label stacked>Username</ion-label>
+                <ion-input formControlName="newUsername" type="text" placeholder="blacksaber001"></ion-input>
+              </ion-item>
+    
+
+          <ion-item transparent padding>
+              <ion-label stacked>New Password</ion-label>
+              <ion-input formControlName="newPassword" type="password" placeholder="Enter your password"></ion-input>
+            </ion-item>
+                <br> &nbsp; <br>
+                <br> &nbsp; <br>
+
+          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formGroup.invalid" type="submit" color="black">
+              Save
+            </button>
+            </div>
+          </form>
+        </ion-col>
+  
+        <ion-col col-12></ion-col>
+        <ion-col col-12></ion-col>
+        <ion-col col-12></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>

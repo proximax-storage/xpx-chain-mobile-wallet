@@ -1,0 +1,203 @@
+/*
+ * Credits to Muhammed ERDEM from Gradient Button Hover.
+ * https://codepen.io/JavaScriptJunkie/pen/pPRooV.
+ */
+
+[gradient-button] {
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  margin: 20px;
+  height: 48px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+
+  border-radius: 32px;
+  transition: all 0.4s ease-in-out;
+}
+
+[gradient-button][pill] {
+  width: 24px;
+  height: 24px;
+  font-size: 1.2rem;
+  margin: 0;
+  margin-bottom: 0.1rem;
+
+  ion-icon {
+    color:white !important;
+  }
+}
+
+[width-auto] {
+  width: auto !important;
+}
+
+[gradient-button][no-margin] {
+  margin: 0;
+}
+
+[gradient-button][small-margin] {
+  margin: 8px;
+}
+
+[gradient-button][full] {
+  width: 100%;
+  height: 48px;
+}
+
+[gradient-button][medium] {
+  width: 90%;
+  height: 48px;
+}
+
+[gradient-button][half] {
+  width: 50%;
+  height: 48px;
+}
+
+[gradient-button][small] {
+  width: 64px;
+  height: 48px;
+}
+
+[gradient-button][tiny] {
+  width: 48px;
+  height: 31px;
+  font-size: 14px;
+}
+
+[gradient-button][circle] {
+  width: 48px;
+  height: 48px;
+}
+[gradient-button][circle-small] {
+  width: 40px;
+  height: 40px;
+}
+
+[gradient-button][inline-block] {
+  display: inline-block;
+}
+
+[gradient-button]:hover {
+  background-position: 100% 0;
+  transition: all 0.4s ease-in-out;
+}
+
+[gradient-button]:focus {
+  outline: none;
+}
+
+[gradient-button][color-1] {
+  background-image: linear-gradient(
+    to right,
+    #00735f,
+    #00735f,
+    #00735f,
+    #00735f
+  );
+  box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+}
+[gradient-button][color-2] {
+  background-image: linear-gradient(
+    to right,
+    #f5ce62,
+    #e43603,
+    #fa7199,
+    #e85a19
+  );
+  // box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
+}
+[gradient-button][color-3] {
+  background-image: linear-gradient(
+    to right,
+    #667eea,
+    #764ba2,
+    #6b8dd6,
+    #8e37d7
+  );
+  box-shadow: 0 4px 15px 0 rgba(116, 79, 168, 0.75);
+}
+[gradient-button][color-4] {
+  background-image: linear-gradient(
+    to right,
+    #fc6076,
+    #ff9a44,
+    #ef9d43,
+    #e75516
+  );
+  // box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
+}
+[gradient-button][color-5] {
+  background-image: linear-gradient(
+    to right,
+    #1F6B86,
+    #008C9B,
+    #00AD9F,
+    #56CB93
+  );
+  // box-shadow: 0 2px 12px 0  rgba(0, 173, 159, .65)
+}
+[gradient-button][color-6] {
+  background-image: linear-gradient(
+    to right,
+    #2EBECC,
+    #2FCFC4,
+    #58DEB3,
+    #89EB9B
+  );
+  // box-shadow: 0 2px 12px 0 rgba(47, 207, 196, .65);
+}
+[gradient-button][color-7] {
+  background-image: linear-gradient(
+    to right,
+    #6253e1,
+    #852d91,
+    #a3a1ff,
+    #f24645
+  );
+  box-shadow: 0 4px 15px 0 rgba(126, 52, 161, 0.75);
+}
+[gradient-button][color-8] {
+  background-image: linear-gradient(
+    to right,
+    #29323c,
+    #485563,
+    #2b5876,
+    #4e4376
+  );
+  box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+}
+[gradient-button][color-9] {
+  background-image: linear-gradient(
+    to right,
+    #25aae1,
+    #4481eb,
+    #04befe,
+    #3f86ed
+  );
+  box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+[gradient-button][color-10] {
+  background-image: linear-gradient(
+    to right,
+    #ed6ea0,
+    #ec8c69,
+    #f7186a,
+    #fbb03b
+  );
+  box-shadow: 0 4px 15px 0 rgba(236, 116, 149, 0.75);
+}
+[gradient-button][color-11] {
+  background-image: linear-gradient(
+    to right,
+    #eb3941,
+    #f15e64,
+    #e14e53,
+    #e2373f
+  );
+  box-shadow: 0 5px 15px rgba(242, 97, 103, 0.4);
+}

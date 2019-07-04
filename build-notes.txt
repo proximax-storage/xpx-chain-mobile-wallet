@@ -1,0 +1,17 @@
+password: 
+eqhwBDirdso*
+
+keytool -genkey -v -keystore proximax.keystore -alias proximax_keystore -keyalg RSA -keysize 2048 -validity 10000 
+
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore proximax.keystore android-release-unsigned.apk proximax_keystore
+zipalign -v 4 android-release-unsigned.apk myProtectedApp.apk  
+
+
+Windows: CMD
+ionic cordova build android --prod --release  && jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore proximax.keystore "C:\Users\User\Code\2019\wallet\proximax-nem-wpro\platforms\android\app\build\outputs\apk\release\app-release-unsigned.apk" proximax_keystore -storepass "eqhwBDirdso*" && zipalign -v 4 "C:\Users\User\Code\2019\wallet\proximax-nem-wpro\platforms\android\app\build\outputs\apk\release\app-release-unsigned.apk" "C:\Users\User\Code\2019\wallet\proximax-nem-wpro\platforms\android\app\build\outputs\apk\release\proximax_v2.0.0-build.91.apk"  
+explorer C:\Users\User\Code\2019\wallet\proximax-nem-wpro\platforms\android\app\build\outputs\apk\release\
+
+Decimal Keyboard Support
+cordova plugin add --save cordova-plugin-decimal-key
+npm i cordova-plugin-ios-decimal-keyboard

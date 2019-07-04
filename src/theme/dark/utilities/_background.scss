@@ -1,0 +1,59 @@
+[background] {
+  // background: linear-gradient(
+  //     transparentize(color($colors, bg),1), color($colors, bg)
+  //   ),
+    // url('../assets/imgs/proximax-bg.jpg')
+    // no-repeat;
+
+  background: color($colors, white);
+  background-position: center !important;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+    display: block !important;
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    opacity: 1;
+    margin-bottom: 0px !important;
+  [transparent] {
+    color: color($colors, dark);
+    background: transparent;
+
+    .item-inner {
+      border-bottom: 1px solid color($colors, dark);
+    }
+
+    ion-label {
+      color: color($colors, dark);
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+  }
+
+  ion-grid[logo]{
+
+    &,
+    ion-row {
+      height: 10% !important;
+      width: 100%;
+      ion-col{
+        padding: 16px;
+        padding: 16px;
+      }
+    }
+  }
+
+  ion-grid:not([normal]) {
+    &,
+    ion-row {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  ion-row {
+    align-items: center;
+  }
+}

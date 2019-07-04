@@ -1,0 +1,58 @@
+<ion-card-header no-padding>
+  <ion-item>
+    <img logo-small item-left [src]="App.LOGO.NEM">
+    <h2 ion-text color="black">XEM</h2>
+    <p ion-text color="black">
+      <small>
+        NEM
+      </small>
+    </p>
+
+    <section text-right item-right>
+      <h2 ion-text color="danger">- {{ tx.fee | formatXEM }} </h2>
+ 
+            <p float-right ion-text color="black">
+                {{ tx.timeWindow.timeStamp.toString() | timeago }}
+              </p>
+
+    </section>
+  </ion-item>
+
+  <ion-item transaction-status>
+      <section item-left>
+        <p float-left ion-text color="black" *ngIf="tx.isConfirmed()">
+          <small>Multisig Account Modification</small>
+        </p>
+      </section>
+  
+      <section item-right>
+        <p float-right ion-text color="success" *ngIf="tx.isConfirmed()">
+          <small>Confirmed</small>
+        </p>
+  
+        <p float-right ion-text color="danger" *ngIf="!tx.isConfirmed()">
+          <small>
+  
+              Unconfirmed
+          </small>
+        </p>
+      </section>
+    </ion-item>
+
+
+</ion-card-header>
+
+
+
+<ion-card-content line no-padding>
+  <ion-item cosigners *ngFor="let modification of tx.modifications;">
+    <section text-wrap *ngIf="modification.action === 1">
+      <p  ion-text color="success">{{ modification.cosignatoryAccount.address.pretty() }}</p>
+      <p small ion-text>Added as a cosigner</p>
+    </section>
+    <section text-wrap *ngIf="modification.action === 2">
+      <p  ion-text color="danger">{{ modification.cosignatoryAccount.address.pretty() }}</p>
+      <p small ion-text>Removed cosigner</p>
+    </section>
+  </ion-item>
+</ion-card-content>

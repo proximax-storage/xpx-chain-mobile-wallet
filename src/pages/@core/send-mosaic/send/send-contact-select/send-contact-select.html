@@ -1,0 +1,56 @@
+<!--
+  Generated template for the SendContactSelectPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!-- <ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+      <span text-capitalize ion-text color="black">{{ title }}</span>
+    </ion-title>
+  </ion-navbar>
+
+</ion-header> -->
+
+
+<ion-content background>
+  <ion-grid empty *ngIf="contacts && !contacts.length">
+    <ion-row>
+      <ion-col>
+        <img quarter-width [src]="App.STICKERS.SORRY">
+
+        <p color="grey" text-wrap>
+          <strong>
+            {{"APP.EMPTY.CONTACT" | translate}}
+          </strong>
+        </p>
+
+        <button gradient-button color-5 (click)="showAddContactPrompt()">
+          {{"SERVICES.ADDRESS_BOOK.ADD_CONTACT" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list transparent-items *ngIf="contacts && contacts.length">
+    <ion-card no-margin-bottom [attr.selected]="selectedContact.address === contact.address ? true : null"
+      *ngFor="let contact of contacts" (click)="onSelect(contact);onSubmit()">
+      <ion-item text-wrap>
+        <img item-left logo-small [src]="App.USER">
+
+        <h2 ion-text color="black">{{ contact.name }}</h2>
+        <p small ion-text color="black">{{ contact.address }}</p>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+</ion-content>
+
+<!-- <ion-footer no-border>
+  <ion-toolbar transparent text-center padding-bottom>
+    <button gradient-button  color-5 type="submit" color="black" (click)="onSubmit()">
+      Save
+    </button>
+  </ion-toolbar>
+</ion-footer> -->

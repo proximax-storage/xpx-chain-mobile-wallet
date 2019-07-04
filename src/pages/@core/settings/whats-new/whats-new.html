@@ -1,0 +1,118 @@
+<!--
+  Generated template for the WhatsNewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header no-border>
+
+    <ion-navbar transparent>
+      <ion-title>
+        <span ion-text color="black">Changelog</span>
+      </ion-title>
+  
+      <ion-buttons end>
+        <button ion-button icon-only (click)="dismiss()"  color="black">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+  
+  </ion-header>
+
+
+<ion-content  fullscreen padding>
+
+  <h2 text-center>ProximaX Wallet 2.0</h2>
+
+    <div id="timeline_container">
+        <ul id="timeline">
+
+            <li><strong>v2.0.0-build.92 (May 29, 2019)</strong>
+              <p>🐛fix: auto select language based on device language</p>
+              <p>🐛fix: reset pin translation</p>
+              <p>🐛fix: fix russian translation</p>
+              <p>🐛fix: fix broken translation text for Chinese users</p>
+              <p>♻️refactor: dutch translations/p>
+            </li>
+
+            <li><strong>v1.0.0-build.90 (May 24, 2019)</strong>
+              <p>🐛fix: remove unresponsive nodes</p>
+              <p>🐛fix: wallet details empty message is not displayed</p>
+              <p>🐛fix: (1) spanish-in edit wallet page, wallet name is displayed as xxx, (2) korean - in edit wallet
+                  page, wallet name is displayed as xxx, (3) korean - invalid username and password prompt is not
+                  translated, (4) korean - empty contact address not translated, (5) edit wallet page, "Done" button
+                  should be renamed to "Save";  remove period in "...wallet."</p>
+            </li>
+
+            <li><strong>v0.2.1-beta.86 (May 23, 2019)</strong>
+              <p>🐛fix: validate amount field in send mosaic page.</p>
+              <p>🐛fix: invalid username or password prompt is displayed twice when hitting enter key</p>
+              <p>🐛fix: scanning a QR code in import will redirect to PIN entry page</p>
+              <p>🐛fix: disable hardware back key in pin code page</p>
+              <p>🐛fix:  title in pin code page</p>
+              <p>🐛fix: misspelled words</p>
+              <p>🐛fix: fix missing XEM transaction</p>
+              <p>♻️refactor: switched to alice 7 node as default</p>
+            </li>
+
+            <li><strong>v0.2.1-beta.84 (May 21, 2019)</strong>
+              <p>🐛fix: prevent pin code validation after changing a language</p>
+              <p>🐛fix: remove multisig transactions of other mosaics in xem mosaic details</p>
+              <p>🐛fix: import wallet button text, transaction sorting, reate wallet button text</p>
+              <p>🐛fix: change blockheight text to node</p>
+              <p>🐛fix: skip validation when pressing enter in signup and login page.</p>
+            </li>
+
+            <li><strong>v0.2.1-beta.82 (May 20, 2019)</strong>
+              <p>♻️refactor:multilanguage translation for supported languages</p>
+              <p>🐛fix:header issue (wallet backup option page)</p>
+              <p>🐛fix:header issue (node list page)</p>
+              <p>🐛fix:loading issue (home)</p>
+              <p>🐛fix:multilanguage translation in select contact page</p>
+            </li>
+
+          <li><strong>v0.2.1-beta.81 (May 17, 2019)</strong>
+            <p>♻️refactor:there are instances that notification count will show up again even after reading all articles.</p>
+            <p>♻️refactor:create wallet and import wallet pages should use the same card visuals.</p>
+            <p>🐛fix:misspelled words in the app.</p>
+            <p>🐛fix:in login/signup page, return key can toggle the view/hide password.</p>
+            <p>🐛fix:no limit after comma/period even if mosaics can support up to 6 divisibility only.</p>
+            <p>♻️refactor:remove the 0 placeholder in the amount field when it is active.</p>
+            <p>♻️refactor:optimize loading of transactions.</p>
+            <p>♻️refactor:remove unsupported mosaics.</p>
+            <p>🐛fix: character keyboard in android.</p>
+            <p>🐛refactor: css media rules for tablet.</p>
+            <p>🐛fix: issues on node settings.</p>
+            <p>🐛fix: after qrscan the PIN code shows up; when you go to node page then close the app, the PIN code doesn't show again.</p>
+            <p>🐛fix:when the user repoen the app after logging out, it will redirect to the login page.</p>
+            <p>🐛fix:14D graph issue.</p>
+            <p>🐛fix:duplicate account issue.</p>
+            <p>♻️refactor: invalid username or password message.</p>
+          </li>
+
+          <li><strong>v0.1.4-beta.76 (May 2, 2019)</strong>
+            <p>♻️refactor: remove checking of address when entering address in send page.</p>
+            <p>♻️refactor: show error message when camera is disabled.</p>
+            <p>♻️refactor: enhance error message for send mosaic confirmation page.</p>
+            <p>♻️refactor: convert node list popup to modal.</p>
+            <p>✨feat: what's new section.</p>
+            <p>✨feat: switching node capability.</p>
+            <p>♻️refactor: unable to create new wallet after some time.</p>
+            <p>🐛fix: unable to import wallet with exactly 8 character password.</p>
+            <p>♻️refactor: enhance error message for importing wallet page.</p>
+            <p>♻️refactor: remove back button in export wallet page.</p>
+            <p>🐛fix: notification issues(iOS).</p>
+            <p>✨feat: decimal keyboard (iOS).</p>
+            <p>🐛fix: send mosaic confirmation page.</p>
+            <p>🐛fix: remove tx type for normal wallets.</p>
+            <p>✨feat: add mosaic details for xar and sft.</p>
+            <p>✨feat: enable opening of social media links.</p>
+        </li>
+        </ul>
+      </div>
+
+  
+
+</ion-content>

@@ -1,0 +1,92 @@
+<!--
+  Generated template for the NodeListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+
+    <ion-navbar transparent>
+      <ion-title>
+        <span ion-text color="black">{{"SETTINGS.NODES" | translate}}</span>
+      </ion-title>
+  
+      <ion-buttons end>
+        <button ion-button icon-only (click)="dismiss()" color="black">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+  
+  </ion-header>
+
+<ion-content>
+
+
+
+  <ion-list transparent-items>
+
+    <ion-card>
+      <ion-card-content no-padding>
+        <ion-list transparent-items>
+            <!-- <h6 padding black>
+                Nodes are distributed across a widespread network and carry out a variety of tasks such as maintaining the a copy of a blockchain records and to process transactions.
+            </h6> -->
+
+          <!-- <h6 padding black>
+               <strong> Please be aware that switching to an invalid custom node will cause instability to the app.</strong>
+             </h6> -->
+           
+          <ion-item>
+            <!-- <ion-icon name='ios-cash-outline' item-start></ion-icon> -->
+            <strong>{{"SETTINGS.NODES.BLOCKHEIGHT" | translate}}:</strong>
+            <span>{{ blockHeight }}</span>
+          </ion-item>
+
+          <ion-item>
+            <!-- <ion-icon name='ios-paper-outline' item-start></ion-icon> -->
+            <strong>{{"SETTINGS.NODES.ACTIVE" | translate}}:</strong>
+            <span>{{ currentNode }}</span>
+          </ion-item>
+
+          <ion-item select-node no-lines>
+            <ion-label ion-text color="black"><strong>{{"SETTINGS.NODES" | translate}}:</strong></ion-label>
+            <ion-select (ionChange)="onChange()" [(ngModel)]="selectedNode" [selectOptions]="{
+                  title: 'SETTINGS.NODES.SELECT' | translate,
+                  subTitle: ''        
+                }" placeholder="{{'SETTINGS.NODES.SELECT' | translate}}">
+              <ion-option [value]="nodeInfo.endpoint" *ngFor="let nodeInfo of nodes" >{{ nodeInfo.name }}</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+
+          <ion-item no-lines>
+            <ion-label ion-text color="black"><strong>{{"SETTINGS.NODES.CUSTOM" | translate}}:</strong></ion-label>
+            <ion-input type="text" formControlName="ipAddress"
+              placeholder="{{'SETTINGS.NODES.CUSTOM_IP' | translate}}"></ion-input>
+            <button clear item-right ion-button icon-only type="submit" [disabled]="formGroup.invalid">
+              <ion-icon color="white" name="ios-add-circle-outline"></ion-icon>
+            </button>
+          </ion-item>
+
+        </form>
+
+        <!-- <h6 padding danger>
+            <i>Please be aware that switching to an invalid custom node will cause instability to the app.</i>
+         </h6> -->
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <ion-row>
+      <ion-col col-12 text-center>
+        <button half-width gradient-button color-5 ion-button icon-end no-margin color="black" (click)="dismiss()">
+          {{"WALLETS.BUTTON.DONE" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+
+</ion-content>
+

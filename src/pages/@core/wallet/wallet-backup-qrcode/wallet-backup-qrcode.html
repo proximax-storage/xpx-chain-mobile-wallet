@@ -1,0 +1,86 @@
+<!--
+  Generated template for the WalletBackupQrcodePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+      <span ion-text color="black">{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE" | translate}}</span>
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="black">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content fullscreen background>
+  <ion-list transparent-items>
+    <ion-grid>
+
+      <ion-row justify-content-between align-items-center>
+        <ion-col col-12>
+          <div text-center>
+            <h4> <strong>{{ walletName }}</strong> </h4>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-12 text-center>
+
+          <ngx-kjua text-center fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="350" [mPosX]="50" [mPosY]="50"
+            [mSize]="10" [fontcolor]="'#005E62'" [mode]="'label'" [render]="'label'" [label]="'ProximaX'"
+            [back]="'#fff'"
+            [text]="QRData">
+          </ngx-kjua>
+
+          <section *ngIf="!privateKey" text-center>
+            <ion-spinner name="dots"></ion-spinner>
+          </section>
+
+          <ion-card (click)="copy()">
+            <ion-item>
+              <ion-icon item-left name="ios-key-outline"></ion-icon>
+              <p text-wrap *ngIf="privateKey">{{ privateKey }}</p>
+
+              <section text-center>
+                <ion-spinner *ngIf="!privateKey"></ion-spinner>
+              </section>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row justify-content-between align-items-center>
+        <ion-col col-12>
+          <div padding>
+            <h4 color="grey">{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE.BACKUP_WALLET" | translate}}</h4>
+            <ol>
+              <li>
+                {{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE.BACKUP_WALLET.CONTENT1" | translate}}
+              </li>
+              <br>
+              <li>
+                {{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE.BACKUP_WALLET.CONTENT2" | translate}}
+              </li>
+            </ol>
+            <h4 color="grey">{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE.RESTORE_WALLET" | translate}}</h4>
+            <ol>
+              <li>{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE.RESTORE_WALLET.CONTENT1" | translate}}</li>
+              <br>
+              <li>{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE.RESTORE_WALLET.CONTENT2" | translate}}</li>
+            </ol>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>

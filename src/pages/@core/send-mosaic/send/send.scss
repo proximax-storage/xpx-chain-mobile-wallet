@@ -1,0 +1,115 @@
+page-send {
+  ion-input {
+    color: color($colors, dark);
+  }
+
+  [amount] {
+    ion-label {
+      margin: 8px 0;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      font-size: 3.5rem;
+      font-family: $font-family-base;
+      background: transparent;
+      border: 0;
+      // color: transparent;
+      // text-shadow: 0 0 0 #000;
+      text-align: center !important;
+
+      &:focus,
+      &:active {
+        outline: 0px;
+      }
+    }
+  }
+
+  ion-card[amount] {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    // margin-top: -2rem;
+  }
+
+  ion-item[mosaic] {
+    margin-bottom: -4px;
+    margin-top: 1px;
+    margin-left: -6px;
+  }
+
+  // ion-icon:not([item-left]) {
+  //   color: color($colors, dark) !important;
+  // }
+
+
+  ion-item h2 {
+    font-size: 1.6rem !important;
+
+  }
+
+  [padding] h2:first-child {
+    margin-top:0 !important;
+  }
+
+  section[title] {
+    h2 {
+      // margin-top: -2.3rem !important;
+      color: #000 !important;
+      font-size: 1.9rem !important;
+      margin-bottom: -2rem;
+    }
+  }
+
+  section[total] {
+    h2 {
+      margin-top: -2rem !important;
+      color: #6d6d6d !important;
+      font-size: 1.8rem !important;
+      margin-bottom: 4rem;
+    }
+  }
+
+
+
+
+  .list .item-inner {
+    border-bottom: none !important;
+  }
+
+  .item-block .item-inner {
+    border-bottom: none !important;
+  }
+
+  // End - Multisig select
+  ion-label[title] {
+    font-size: 1.8rem !important;
+    color: #000 !important;
+  }
+
+  // Select contact
+  ion-select {
+    max-width: 100%;
+  }
+
+  .select {
+    padding: 11px 13px 11px 16px;
+  }
+
+  ion-item[select-contact] {
+    margin-bottom: -16px;
+  }
+
+  .select .select-icon .select-icon-inner {
+    left: 7px;
+    top: 64%;
+  }
+
+  .select-text {
+    font-size: 1.4rem !important;
+  }
+
+  
+
+}

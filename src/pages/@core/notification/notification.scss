@@ -1,0 +1,28 @@
+page-notification {
+    .card p {
+        margin: 0px 0px 9px;
+        font-size: 1.4rem;
+        color: #666;
+    }
+    .card h2 {
+        margin: 7px 0;
+        font-size: 2rem;
+        font-weight: normal;
+    }
+
+    .item-inner{
+        border-bottom: none !important;
+      }
+
+      ion-content {
+        margin-top: none;
+        ion-refresher {
+          margin-top: 3em;
+        }
+      }
+      
+      ion-content.has-refresher > .scroll-content {
+        border-top: none !important;
+      }
+
+}

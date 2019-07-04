@@ -1,0 +1,65 @@
+<!--
+  Generated template for the NotificationPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!-- <ion-header>
+
+  <ion-navbar>
+    <ion-title>notification</ion-title>
+  </ion-navbar>
+
+</ion-header> -->
+
+
+<ion-content background>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-round-up" refreshingSpinner="ios">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list title transparent>
+    <ion-item transparent>
+      <h2 padding-left title color="dark">
+        <strong>
+          {{"NOTIFICATIONS" | translate}}
+        </strong>
+      </h2>
+    </ion-item>
+  </ion-list>
+
+  <ion-list transparent-items>
+    <ion-card notification *ngFor="let post of posts" (click)="showMore(post);seenPost(post._id)">
+
+      <ion-item notification *ngIf="!post.expanded">
+        <ion-avatar notification item-start>
+          <img [src]="post.thumbnail">
+        </ion-avatar>
+        <h3 text-wrap>{{post.title  | ngXtruncate: 57 : '...'}}</h3>
+        <p><small>{{post.updatedAt | date:'MMM d, y'}}</small></p>
+      </ion-item>
+
+      <img [src]="post.thumbnail" *ngIf="post.expanded">
+
+      <ion-card-content>
+        <ion-card-title padding *ngIf="post.expanded">{{post.title}}</ion-card-title>
+        <!-- <p *ngIf="!post.expanded" text-justify-start [innerHTML]="post.subtitle"></p> -->
+
+        <p padding *ngIf="post.expanded" text-justify-start [ngxmarkdown]="post.content"></p>
+        <ion-item>
+          <small *ngFor="let tag of post.tags" item-start>#{{tag.name}}</small>
+          <ion-badge  item-end color="danger">{{isNew(post._id)}}</ion-badge>
+          <!-- <ion-note item-end>{{post.readTime}} MIN READ</ion-note> -->
+        </ion-item>
+
+      </ion-card-content>
+
+
+
+    </ion-card>
+
+  </ion-list>
+
+</ion-content>

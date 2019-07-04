@@ -1,0 +1,63 @@
+<!--
+  Generated template for the MosaicListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+      <span ion-text color="black">Mosaics</span>
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="black">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+
+
+</ion-header>
+
+
+<ion-content fullscreen background>
+  <ion-grid empty *ngIf="mosaics && !mosaics.length">
+    <ion-row>
+      <ion-col>
+        <img half-width [src]="App.STICKERS.SORRY">
+
+        <p text-wrap color="grey">
+         <strong>
+            It looks like you don't have any mosaics yet.
+          <br> Try adding one or two.
+         </strong>
+        </p>
+
+        <button gradient-button color-5 (click)="gotoAdd()">
+          Create new mosaic
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list transparent-items radio-group *ngIf="mosaics">
+    <ion-card *ngFor="let mosaic of mosaics" [attr.selected]="selectedData.id.equals(mosaic.id) ? true : null" (click)="onSelect(mosaic)"
+      (press)="onPress(mosaic)">
+      <ion-item>
+        <ion-icon item-left name="git-network"></ion-icon>
+        <h2 ion-text color="black">{{ mosaic.id.name }}</h2>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+</ion-content>
+
+<ion-footer no-border *ngIf="mosaics && mosaics.length">
+  <ion-toolbar transparent text-center>
+    <button gradient-button circle color-5 (click)="gotoAdd()">
+      <ion-icon name="md-add"></ion-icon>
+    </button>
+  </ion-toolbar>
+</ion-footer>

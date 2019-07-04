@@ -1,0 +1,16 @@
+page-wallet-details {
+
+    .list > .item-block:first-child {
+        border-top: none !important;
+     }
+  
+    .list > .item-block:last-child {
+        border-bottom: none !important;
+     }
+
+     button[reduce-margin] {
+         margin-top: 8px !important;
+         margin-bottom: 0px !important;
+     }
+
+}

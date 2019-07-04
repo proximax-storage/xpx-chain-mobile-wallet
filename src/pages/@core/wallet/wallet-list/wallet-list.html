@@ -1,0 +1,84 @@
+<!--
+  Generated template for the WalletListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+      <span ion-text color="black">Wallets</span>
+    </ion-title>
+
+    <ion-buttons right>
+      <button ion-button icon-only ion-text color="black" (click)="logout()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content background>
+  <ion-grid empty *ngIf="wallets && !wallets.length">
+    <ion-row>
+      <ion-col>
+        <img half-width [src]="App.STICKERS.WALLET" class="small-image">
+
+        <h3 ion-text color="black">Let's create your first wallet!</h3>
+
+        <!-- <p text-wrap text-center ion-text color="black">
+          Let's start by creating your new wallet.
+        </p> -->
+
+        <button gradient-button color-5 (click)="showAddWalletPrompt()">
+          Continue
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list transparent-items radio-group [(ngModel)]="selectedWallet">
+    <ion-card *ngFor="let wallet of wallets; trackBy: trackByName" [attr.selected]="selectedWallet?.name === wallet?.name ? true : null"
+      (click)="onWalletSelect(wallet)" (press)="onWalletPress(wallet)">
+      <ion-item>
+        <ion-icon item-left ion-text color="black" name="card"></ion-icon>
+        <h2 ion-text color="black">{{ wallet.name }}</h2>
+
+        <p small ion-text color="black" *ngIf="wallet.address; else loading">
+          {{ wallet.address.plain() }}
+        </p>
+
+        <ng-template #loading>
+          <p fake> &nbsp; </p>
+        </ng-template>
+
+        <section text-right item-right *ngIf="(wallet.address.plain() | getWalletType | async) as walletType; else walletLoading">
+          <!-- <button gradient-button pill color-1>
+            <ion-icon *ngIf="walletType === 'Personal'" name="person"></ion-icon>
+            <ion-icon *ngIf="walletType === 'Shared'" name="people"></ion-icon>
+          </button> -->
+
+          <p small> {{ walletType }} </p>
+        </section>
+        <ng-template #walletLoading>
+          <ion-spinner name="dots" item-right></ion-spinner>
+        </ng-template>
+
+        <section></section>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+
+  <section spacing></section>
+</ion-content>
+
+<ion-footer no-border *ngIf="wallets && wallets.length">
+  <ion-navbar transparent text-center [hideBackButton]="true">
+    <button gradient-button circle color-5 (click)="showAddWalletPrompt()">
+      <ion-icon name="md-add"></ion-icon>
+    </button>
+  </ion-navbar>
+</ion-footer>

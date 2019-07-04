@@ -1,0 +1,39 @@
+page-send-mosaic-select {
+
+  .ion-page {
+    
+  border-radius: 5px;
+  height: 54% !important;
+  }
+
+  .scroll-contetnt {
+    height: 50% !important;
+  }
+
+
+  ion-card {
+    &:hover {
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.19), 0 4px 4px rgba(14, 13, 13, 0.746);
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+      background: rgba(77, 77, 77, 0.13) !important;
+    }
+  }
+
+  ion-card[selected] {
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(32, 32, 32, 0.596);
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+      background: rgba(117, 117, 117, 0.287) !important;
+  }
+
+  section[center] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+  }
+
+
+  
+}

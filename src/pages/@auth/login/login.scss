@@ -1,0 +1,19 @@
+page-login {
+    .item .item-button {
+      padding: 0 0.5em;
+      height: 34px;
+      font-size: 1.3rem;
+    }
+
+    .item.item-label-stacked [item-right],
+    .item.item-label-floating [item-right] {
+      margin-top: 0px;
+      margin-bottom: -12px;
+    }
+
+    .item [item-right],
+    .item [item-end] {
+      margin: 0px;
+    }
+
+}

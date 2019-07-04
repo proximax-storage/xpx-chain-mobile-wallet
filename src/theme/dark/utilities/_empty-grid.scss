@@ -1,0 +1,24 @@
+ion-grid[empty] {
+  &,
+  ion-row {
+    height: 100%;
+  }
+
+  ion-row {
+    justify-content: center;
+    text-align: center;
+
+    p {
+      color: color($colors, dark);
+      font-size: 1.5rem;
+    }
+  }
+}
+
+ion-grid[empty],
+ion-card {
+  img { display: inline-block; }
+}
+
+img[quarter-width] { width: 30%; }
+img[half-width] { width: 50%; }

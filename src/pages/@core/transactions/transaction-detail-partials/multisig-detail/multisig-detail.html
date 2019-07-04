@@ -1,0 +1,210 @@
+<!-- XEM -->
+<ion-card no-margin-bottom *ngIf="tx.otherTransaction.containsMosaics && !tx.otherTransaction.containsMosaics()">
+  <ion-card-content no-padding>
+    <ion-item>
+      <img logo-small item-left [src]="App.LOGO.NEM">
+      <h2 ion-text color="black">XEM</h2>
+      <p ion-text color="black">
+        <small>
+          NEM
+        </small>
+      </p>
+
+      <section item-right>
+        <h2 text-right ion-text color="black" *ngIf="amount == 0">
+          0
+        </h2>
+
+        <h2 text-right ion-text color="success" *ngIf="owner?.plain() == tx?.otherTransaction.recipient.value && amount !== 0">
+          + {{ amount | number: '1.6-6' }}
+        </h2>
+
+        <h2 text-right ion-text color="danger" *ngIf="owner?.plain() != tx?.otherTransaction.recipient.value && amount !== 0">
+          - {{ amount | number: '1.6-6' }}
+        </h2>
+
+        <p text-right text-left ion-text color="black" *ngIf="amount">
+          <small>
+            {{ amount | currency }}
+          </small>
+        </p>
+      </section>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./XEM -->
+
+<!-- Mosaic/s -->
+<ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
+  <ion-item>
+    <img logo-small item-left [src]="utils.getLogo(mosaic)">
+    <h2 ion-text text-uppercase color="black">{{ mosaic.mosaicId.name }}</h2>
+    <p text-uppercase ion-text color="black">
+      <small>
+        {{ mosaic.mosaicId.namespaceId }}
+      </small>
+    </p>
+
+    <section item-right>
+      <h2 text-right ion-text color="success" [hidden]="!mosaics" *ngIf="owner?.plain() == tx?.otherTransaction.recipient.plain()">
+        + {{ mosaic.amount?.toString() | number: '1.6-6' }}
+      </h2>
+
+      <h2 text-right ion-text color="danger" [hidden]="!mosaics" *ngIf="owner?.plain() != tx?.otherTransaction.recipient.plain()">
+        - {{ mosaic.amount?.toString() | number: '1.6-6' }}
+      </h2>
+
+      <p text-right text-left ion-text color="black">
+        <small *ngIf="mosaic.mosaicId.name === 'xpx';">
+          {{ mosaic.amount * 0.00837014 | currency }}
+        </small>
+
+        <small *ngIf="mosaic.mosaicId.name === 'lyl';">
+          {{ mosaic.amount * 0.00436937 | currency }}
+        </small>
+
+        <small *ngIf="mosaic.mosaicId.name !== 'lyl' || mosaic.mosaicId.name === 'xpx'">
+          {{ mosaic.amount * 0.00436937 | currency }}
+        </small>
+      </p>
+    </section>
+  </ion-item>
+</ion-card>
+<!-- ./Mosaic/s -->
+
+<!-- Date -->
+<ion-card no-margin-bottom>
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
+
+      <p text-wrap ion-text color="black">
+        {{ tx.otherTransaction.timeWindow.timeStamp.toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
+      </p>
+
+      <p item-right>
+        {{ tx.otherTransaction.timeWindow.timeStamp.toString() | timeago }}
+      </p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Date -->
+
+<!-- Sender -->
+<ion-card no-margin-bottom (click)="utils.copy(tx?.otherTransaction.signer.address.value, 'sender')">
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">
+          {{"WALLETS.MULTISIGTRANSACTION.DETAIL.FROM" | translate}}
+      </h2>
+
+      <p text-wrap> {{ tx?.otherTransaction.signer.address.value | nemAddressPretty | searchContact: tx?.otherTransaction.signer.address.value
+        | async }}</p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Sender -->
+
+<!-- Issuer -->
+<ion-card no-margin-bottom (click)="utils.copy(tx?.otherTransaction.signer.address.value, 'sender')">
+    <ion-card-content no-padding>
+      <ion-item>
+        <h2 ion-text color="black">
+            {{"WALLETS.MULTISIGTRANSACTION.DETAIL.ISSUER" | translate}}
+        </h2>
+  
+        <p text-wrap>{{ tx?.signer.address.value | nemAddressPretty | searchContact: tx?.signer.address.value
+            | async }}</p>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <!-- ./Issuer -->
+
+<!-- Receiver -->
+<ion-card no-margin-bottom (click)="utils.copy(tx?.otherTransaction.recipient.value, 'receiver')">
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">
+        {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
+      </h2>
+
+      <p text-wrap> {{ tx?.otherTransaction.recipient.value | nemAddressPretty | searchContact: tx?.otherTransaction.recipient.value |
+        async }}
+      </p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Receiver -->
+
+<!-- Fee -->
+<ion-card no-margin-bottom>
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
+
+      <p text-wrap ion-text color="black">
+        {{ tx.otherTransaction.fee | formatXEM | currency }} XEM
+      </p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Fee -->
+
+<!-- Block -->
+<ion-card no-margin-bottom>
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.BLOCK" | translate}}</h2>
+
+      <p text-wrap ion-text color="black">
+        {{ (tx?.otherTransaction?.transactionInfo?.height != undefined) ? (tx?.otherTransaction.transactionInfo?.height | number) :  'Transaction waiting to be included - Needs cosignatories signatures'}}
+        
+      </p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Block -->
+
+<!-- Hash -->
+<ion-card no-margin-bottom (click)="utils.copy(tx?.otherTransaction.transactionInfo?.hash?.data, 'hash')">
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</h2>
+
+      <p text-wrap>
+        {{ tx?.otherTransaction.transactionInfo?.hash?.data }}
+      </p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Hash -->
+
+<!-- Message -->
+<ion-card no-margin-bottom (click)="utils.copy(tx.otherTransaction.message.payload, 'message')">
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
+
+      <p text-wrap ion-text color="black" *ngIf="tx.otherTransaction.message.payload; else noMessage">
+        {{ tx.otherTransaction.message.payload }}
+      </p>
+      <ng-template #noMessage>
+        <p ion-text color="black">
+          {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
+        </p>
+      </ng-template>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Message -->
+
+ &nbsp;
+<section padding text-center>
+    <button *ngIf="showSignButton" gradient-button full color-5 ion-button icon-end no-margin (click)="sign()">
+        {{"WALLETS.MULTISIGTRANSACTION.DETAIL.COSIGN" | translate}}
+    </button>
+</section>
+
+<ng-template #loading >
+    <ion-spinner name="ios"></ion-spinner>
+  </ng-template>

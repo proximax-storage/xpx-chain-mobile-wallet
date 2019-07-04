@@ -1,0 +1,91 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+@import "../theme/dark/utilities/icon";
+
+.ios {
+  ion-ios-tab > .ion-page { 
+    animation: fadeIn 0.3s 1 forwards;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 5vh, 0);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: extra-bold;
+  font-weight: 300;
+  src: url('../assets/fonts/opensans/OpenSans-Light.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../assets/fonts/opensans/OpenSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: semi-bold;
+  font-weight: 600;
+  src: url('../assets/fonts/opensans/OpenSans-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: bold;
+  font-weight: 700;
+  src: url('../assets/fonts/opensans/OpenSans-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: extra-bold;
+  font-weight: 800;
+  src: url('../assets/fonts/opensans/OpenSans-ExtraBold.ttf');
+}
+
+$font-family-base: "Open Sans", sans-serif !default;
+$font-family-ios-base: "Open Sans", sans-serif !default;
+$font-family-md-base: "Open Sans", sans-serif !default;
+
+body{
+  font-family: "Open Sans" !important;
+  font-weight: 400 !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6, button, p, span, ion-content, ion-label {
+  font-family: "Open Sans" !important;
+  }
+
+  body.keyboard-is-open {
+    div.tabbar.show-tabbar {
+        display: none;
+    }
+    scroll-content {
+        margin-bottom: 0 !important;
+    }
+}

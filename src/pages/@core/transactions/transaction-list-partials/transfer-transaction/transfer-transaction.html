@@ -1,0 +1,105 @@
+<ion-card-header reduce-transfer-tx-header *ngIf="tx.containsMosaics && !tx.containsMosaics()">
+  <ion-item>
+    <img logo-small item-left [src]="utils.getLogo(tx.xem())">
+    <h2 ion-text color="black">XEM</h2>
+    <p ion-text color="black">
+        <small>
+          NEM
+        </small>
+      </p>
+
+    <section item-right>
+
+      <h2 text-right ion-text color="black" *ngIf="amount == 0">
+        0
+      </h2>
+
+      <h2 text-right ion-text color="success" *ngIf="owner?.plain() == tx?.recipient.value && amount !== 0">
+        +{{ amount | number: '1.6-6' }}
+      </h2>
+
+      <h2 text-right ion-text color="danger" *ngIf="owner?.plain() != tx?.recipient.value && amount !== 0">
+         -{{ amount | number: '1.6-6' }}
+      </h2>
+
+      <p text-right  ion-text color="black">
+          <small>
+            {{ tx.timeWindow.timeStamp.toString() | timeago }}
+          </small>
+        </p>
+    </section>
+  </ion-item>
+
+  <ion-item transaction-status>
+    <section item-left>
+      <p float-left ion-text color="black">
+        <small>Normal</small>
+      </p>
+    </section>
+
+    <section item-right>
+      <p float-right ion-text color="success" *ngIf="tx.isConfirmed()">
+        <small>Confirmed</small>
+      </p>
+
+      <p float-right ion-text color="danger" *ngIf="!tx.isConfirmed()">
+        <small>
+
+          Unconfirmed
+        </small>
+      </p>
+    </section>
+  </ion-item>
+</ion-card-header>
+
+
+<div *ngIf="tx.containsMosaics()">
+  <ion-card-header reduce-transfer-tx-header *ngFor="let mosaic of tx.mosaics()">
+    <ion-item>
+      <img logo-small item-left [src]="utils.getLogo(mosaic)">
+      <h2 ion-text text-uppercase color="black">{{ mosaic?.mosaicId.name }}</h2>
+      <p ion-text text-uppercase color="black">
+          <small>
+            {{ mosaic?.mosaicId.namespaceId }}
+          </small>
+        </p>
+  
+      <section item-right>
+        <h2 text-right ion-text color="success"  *ngIf="owner?.plain() == tx?.recipient.value">
+          +{{ mosaic?.quantity / getDivisibility(mosaic?.mosaicId.name) | number: '1.6-6' }}
+        </h2>
+  
+        <h2 text-right ion-text color="danger"  *ngIf="owner?.plain() != tx?.recipient.value">
+          -{{ mosaic?.quantity / getDivisibility(mosaic?.mosaicId.name) | number: '1.6-6' }}
+        </h2>
+  
+        <p text-right ion-text color="black">
+            <small>
+              {{ tx.timeWindow.timeStamp.toString() | timeago }}
+            </small>
+          </p>
+      </section>
+    </ion-item>  
+
+    <ion-item transaction-status>
+      <section item-left>
+        <p float-left ion-text color="black">
+          <small>Normal</small>
+        </p>
+      </section>
+  
+      <section item-right>
+        <p float-right ion-text color="success" *ngIf="tx.isConfirmed()">
+          <small>Confirmed</small>
+        </p>
+  
+        <p float-right ion-text color="danger" *ngIf="!tx.isConfirmed()">
+          <small>
+  
+            Unconfirmed
+          </small>
+        </p>
+      </section>
+    </ion-item>
+  </ion-card-header>
+</div>

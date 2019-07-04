@@ -1,0 +1,66 @@
+.wallet-1 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #da4d59, lighten(#da4d59, 1%), darken(#da4d59, 10%), darken(#da4d59, 15%), darken(#da4d59, 20%));
+
+}
+
+.wallet-2 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #5C9EBB, lighten(#5C9EBB, 1%), darken(#5C9EBB, 10%), darken(#5C9EBB, 15%), darken(#5C9EBB, 20%));
+
+}
+
+.wallet-3 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #F2962F, lighten(#F2962F, 1%), darken(#F2962F, 10%), darken(#F2962F, 15%), darken(#F2962F, 20%));
+
+}
+
+.wallet-4 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #00A48B, lighten(#00A48B, 1%), darken(#00A48B, 10%), darken(#00A48B, 15%), darken(#00A48B, 20%));
+
+}
+
+.wallet-5 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #ff5575, lighten(#ff5575, 1%), darken(#ff5575, 10%), darken(#ff5575, 15%), darken(#ff5575, 20%));
+
+}
+
+.wallet-6 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #268ff7, lighten(#268ff7, 1%), darken(#268ff7, 10%), darken(#268ff7, 15%), darken(#268ff7, 20%));
+
+}
+
+.wallet-7 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #2bd173, lighten(#2bd173, 1%), darken(#2bd173, 10%), darken(#2bd173, 15%), darken(#15a253, 20%));
+
+}
+
+.wallet-8 {
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, #f1b23c, lighten(#f1b23c, 1%), darken(#f1b23c, 10%), darken(#f1b23c, 15%), darken(#f1b23c, 20%));
+
+}
+
+
+
+.wallet-content[selected] {
+  // background-image: url('../assets/imgs/map.png'), 
+  // linear-gradient(to right bottom, #1F6B86, lighten(#1F6B86, 1%), darken(#1F6B86, 10%), darken(#1F6B86, 15%), darken(#1F6B86, 20%));
+  background-image: url('../assets/imgs/map.png'),
+    linear-gradient(to right bottom, darken(#98AFBA, 40%), darken(#98AFBA, 35%), darken(#98AFBA, 45%), darken(#98AFBA, 35%), darken(#98AFBA, 45%)) !important;
+}
+
+.wallet-create {
+  // background-image: url('../assets/imgs/map.png'), 
+  // linear-gradient(to right bottom, #1F6B86, lighten(#1F6B86, 1%), darken(#1F6B86, 10%), darken(#1F6B86, 15%), darken(#1F6B86, 20%));
+  background-image: url(''),
+    linear-gradient(to right bottom, lighten(#f5f9fa, 1%), lighten(#f5f9fa, 3%), lighten(#f5f9fa, 1%), lighten(#f5f9fa, 3%), lighten(#f5f9fa, 1%)) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1) inset;
+
+
+}

@@ -1,0 +1,49 @@
+[logo] {
+  width: 60%;
+}
+
+[logo-header] {
+  width: 40%;
+}
+
+[logo-small] {
+  width: 8%;
+}
+
+[logo-medium] {
+  width: 13%;
+  height: 10%;
+}
+
+[buttons] {
+  padding: 0 4rem;
+}
+
+[login] {
+  color: color($colors, dark);
+}
+
+.back-button {
+  color: color($colors, dark);
+}
+
+
+
+// title
+.toolbar-ios {
+  min-height: 1em;
+  font-size: 1.8rem;
+}
+
+// navbar right button icon size
+.bar-button-ios[icon-only] {
+  min-width: 1.6em;
+  padding: 1px 0.5em;
+  font-size: 1.8em;
+}
+
+// toolbar button fontsize
+.bar-button-ios {
+  color: color($colors, dark);
+  font-size: 1.8rem;
+}

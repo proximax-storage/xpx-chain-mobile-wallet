@@ -1,0 +1,10 @@
+page-wallet-backup {
+    ion-icon:not([item-left]) {
+        color: darken(color($colors, dark), 10%) !important;
+    }
+    .toolbar-title-ios {
+        margin-top: 1em;
+        font-size: 1.6rem;
+      }
+
+}

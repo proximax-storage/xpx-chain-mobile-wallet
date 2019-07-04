@@ -1,5 +1,8 @@
 {
-  "name": "xpx-catapult-mobile-wallet",
-  "integrations": {},
-  "type": "angular"
+  "name": "nem-wallet-v2",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "id": "0d739b5c"
 }

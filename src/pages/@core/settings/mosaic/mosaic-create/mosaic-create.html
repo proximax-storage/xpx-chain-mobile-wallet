@@ -1,0 +1,115 @@
+<!--
+  Generated template for the MosaicCreatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+    <ion-navbar transparent>
+        <ion-title>
+          <span ion-text color="black">Namespaces</span>
+        </ion-title>
+    
+        <ion-buttons end>
+          <button ion-button icon-only (click)="dismiss()" color="black">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+      </ion-navbar>
+    
+</ion-header>
+<ion-content fullscreen background>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12></ion-col>
+
+      <ion-col col-12 text-center>
+        <h3 ion-text color="black">Create new namespace</h3>
+        <p ion-text color="black">
+          To create new new enter the details below.
+        </p>
+      </ion-col>
+
+      <ion-col buttons padding col-12 text-center>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+          <ion-item transparent padding *ngIf="namespaces">
+            <ion-label stacked>Parent namespace</ion-label>
+            <ion-select formControlName="parentNamespace" type="text" autocapitalize="none">
+              <ion-option disabled *ngIf="namespaces.length === 0"></ion-option>
+              <ion-option [value]="namespace.name" *ngFor="let namespace of namespaces">
+                {{ namespace.name }}
+              </ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Mosaic name</ion-label>
+            <ion-input formControlName="mosaicName" maxlength="32" type="text" autocapitalize="none" placeholder="Enter your mosaic name"></ion-input>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Description</ion-label>
+            <ion-textarea autosize formControlName="description" autocapitalize="none" placeholder="Enter description"></ion-textarea>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Divisibility</ion-label>
+            <ion-input formControlName="divisibility" type="number" maxlength="1" min="0" max="6" autocapitalize="none" placeholder="Enter divisibility"></ion-input>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Supply</ion-label>
+            <ion-input formControlName="supply" type="number" autocapitalize="none" placeholder="Enter supply"></ion-input>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Transferrable</ion-label>
+            <ion-select formControlName="transferrable">
+              <ion-option value="true">Yes</ion-option>
+              <ion-option value="false">No</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Supply mutable</ion-label>
+            <ion-select formControlName="supplyMutable">
+              <ion-option value="true">Yes</ion-option>
+              <ion-option value="false">No</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Requires levy</ion-label>
+            <ion-select formControlName="requiresLevy">
+              <ion-option value="true">Yes</ion-option>
+              <ion-option value="false">No</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Sink address</ion-label>
+            <ion-textarea autosize disabled formControlName="sinkAddress" autocapitalize="none"></ion-textarea>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Fee</ion-label>
+            <ion-input disabled formControlName="fee" type="text" autocapitalize="none"></ion-input>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>Rental fee</ion-label>
+            <ion-input disabled formControlName="rentalFee" type="text" autocapitalize="none"></ion-input>
+          </ion-item>
+
+          <button gradient-button small color-5 [disabled]="formGroup.invalid" type="submit" color="black">
+            Create
+          </button>
+        </form>
+      </ion-col>
+
+      <ion-col col-12></ion-col>
+      <ion-col col-12></ion-col>
+      <ion-col col-12></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

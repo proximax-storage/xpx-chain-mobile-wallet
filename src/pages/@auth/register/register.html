@@ -1,0 +1,72 @@
+<!--
+  Generated template for the RegisterPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+  <ion-navbar transparent></ion-navbar>
+</ion-header>
+<ion-content fullscreen background>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12 text-center>
+        <img logo src="assets/imgs/proximax-sirius.png">
+        <h3 ion-text color="black">{{"APP.SIGNUP" | translate}}</h3>
+        <p ion-text color="black">
+          {{"APP.SIGNUP.DESC" | translate}}
+        </p>
+      </ion-col>
+
+      <ion-col buttons padding col-12 text-center>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" (keyup.enter)="onSubmit(formGroup.value)">
+          <ion-item transparent padding>
+            <ion-label stacked>{{"APP.COMMON.USERNAME" | translate}}</ion-label>
+            <ion-input formControlName="email" type="text" placeholder="{{'APP.COMMON.USERNAME.PLACEHOLDER' | translate}}"></ion-input>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+            <ion-input formControlName="password" [type]="passwordType"
+              placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+            <button type="button" (click)="showHidePassword($event)"  clear item-right ion-button icon-only>
+              <ion-icon item-right color="black" [name]="passwordIcon">
+              </ion-icon>
+            </button>
+          </ion-item>
+
+          <ion-item transparent padding>
+            <ion-label stacked>{{"APP.SIGNUP.CONFIRM_PASSWORD" | translate}}</ion-label>
+            <ion-input formControlName="confirmPassword" [type]="confirmPasswordType" placeholder="{{'APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER'| translate}}">
+            </ion-input>
+
+            <!-- <button (click)="showHideConfirmPassword($event)" clear item-right ion-button icon-only>
+              <ion-icon item-right color="black" [name]="confirmPasswordIcon">
+              </ion-icon>
+            </button> -->
+
+          </ion-item>
+
+          <div *ngIf="formGroup.invalid" color="danger">
+            <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors">
+              <strong>{{ (error.passwordMismatch ? ('APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE' | translate) :'') }}</strong>
+            </p>
+          </div>
+
+
+          <br>&nbsp;<br>
+
+          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formGroup.invalid"
+            type="submit" color="black">
+            {{"APP.SIGNUP" | translate}}
+            </button>
+        </form>
+      </ion-col>
+
+      <ion-col col-12></ion-col>
+      <ion-col col-12></ion-col>
+      <ion-col col-12></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

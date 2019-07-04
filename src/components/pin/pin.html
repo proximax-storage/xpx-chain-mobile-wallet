@@ -1,0 +1,58 @@
+<ion-content padding>
+  <div id="pincode">
+    <ion-grid class="full">
+      <ion-row justify-content-between align-items-center>
+        <ion-col col-12>
+          <div id="pin">
+            <img logo src="assets/imgs/proximax-logo.png">
+            <h4> <strong>{{ title }}</strong> </h4>
+            <p> {{ subtitle }} </p>
+          </div>
+        </ion-col>
+
+        <ion-col col-12>
+          <div id="fields" [ngClass]="{ 'miss': styleClasses.miss }">
+            <ion-grid>
+              <ion-row justify-content-between>
+                <ion-col col-2 class="numberfield" [ngClass]="{ 'active': !!activePin[0] }"><span></span></ion-col>
+                <ion-col col-2 class="numberfield" [ngClass]="{ 'active': !!activePin[1] }"><span></span></ion-col>
+                <ion-col col-2 class="numberfield" [ngClass]="{ 'active': !!activePin[2] }"><span></span></ion-col>
+                <ion-col col-2 class="numberfield" [ngClass]="{ 'active': !!activePin[3] }"><span></span></ion-col>
+                <ion-col col-2 class="numberfield" [ngClass]="{ 'active': !!activePin[4] }"><span></span></ion-col>
+                <ion-col col-2 class="numberfield" [ngClass]="{ 'active': !!activePin[5] }"><span></span></ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-col>
+
+        <ion-col col-12>
+          <div id="numbers">
+            <ion-grid>
+              <ion-row>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[0])">{{keypadNums[0]}}</button> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[1])">{{keypadNums[1]}}</button> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[2])">{{keypadNums[2]}}</button> </ion-col>
+
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[3])">{{keypadNums[3]}}</button> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[4])">{{keypadNums[4]}}</button> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[5])">{{keypadNums[5]}}</button> </ion-col>
+
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[6])">{{keypadNums[6]}}</button> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[7])">{{keypadNums[7]}}</button> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[8])">{{keypadNums[8]}}</button> </ion-col>
+
+                <ion-col col-4> <span></span> </ion-col>
+                <ion-col col-4> <button ion-button clear (click)="handleInput(keypadNums[9])">{{keypadNums[9]}}</button> </ion-col>
+                <ion-col col-4>
+                  <button ion-button clear icon-only small (click)="backspace()">
+                    <ion-icon name="arrow-round-back"></ion-icon>
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

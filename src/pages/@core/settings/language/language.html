@@ -1,0 +1,18 @@
+<!--
+  Generated template for the LanguagePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content background select-mosaic>
+  <ion-list transparent-items>
+    <ion-card no-margin-bottom [attr.selected]="selectedLanguage === lang.value? true:null"
+      *ngFor="let lang of languages" (click)="onSelect(lang)">
+      <ion-item>
+        <img logo-medium item-left [src]="utils.getFlag(lang)">
+        <h2 text-uppercase ion-text color="black">{{ lang.name }}</h2>
+        <p text-uppercase ion-text color="black">({{ lang.value }})</p>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+</ion-content>

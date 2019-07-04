@@ -1,0 +1,14 @@
+page-services {
+
+    h2:not([title]) {
+        height: 1.2rem;
+        font-weight: bolder;
+      }
+    
+      ion-label {
+        h2 + p {
+          margin-top: 16px;
+        }
+      }
+
+}
