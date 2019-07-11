@@ -66,9 +66,9 @@ export class ProximaxProvider {
   //   return common.privateKey;
   // }
 
-  getAccountInfo(address: Address): Observable<AccountInfo> {
-    return this.accountHttp.getAccountInfo(address);
-  }
+getAccountInfo(address: Address): Observable<AccountInfo> {
+  return this.accountHttp.getAccountInfo(address);
+}
 
 getAllTransactionsFromAccount(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
   return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));

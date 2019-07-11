@@ -1,30 +1,45 @@
-<ion-card-header reduce-transfer-tx-header *ngIf="tx.containsMosaics && !tx.containsMosaics()">
+<!-- 
+  export class TransferTransaction {
+    deadline: Deadline;
+    maxFee: UInt64;
+    message: Message;
+    mosaics: Mosaic[];
+    networkType: 168
+    recipient: Address;
+    signature: string;
+    signer: PublicAccount;
+    transactionInfo: TransactionInfo;
+    type: number
+    version: number
+}
+ -->
+<!-- <ion-card-header reduce-transfer-tx-header>
   <ion-item>
-    <img logo-small item-left [src]="utils.getLogo(tx.xem())">
-    <h2 ion-text color="black">XEM</h2>
+    <img logo-small item-left [src]="getLogo()">
+    <h2 ion-text color="black">XPX</h2>
     <p ion-text color="black">
         <small>
-          NEM
+          PRX
         </small>
       </p>
 
     <section item-right>
 
-      <h2 text-right ion-text color="black" *ngIf="amount == 0">
+      <h2 text-right ion-text color="black" *ngIf="getAmount() == 0">
         0
       </h2>
 
-      <h2 text-right ion-text color="success" *ngIf="owner?.plain() == tx?.recipient.value && amount !== 0">
-        +{{ amount | number: '1.6-6' }}
+      <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient.plain() && getAmount() !== 0">
+        +{{ getAmount() | number: '1.6-6' }}
       </h2>
 
-      <h2 text-right ion-text color="danger" *ngIf="owner?.plain() != tx?.recipient.value && amount !== 0">
-         -{{ amount | number: '1.6-6' }}
+      <h2 text-right ion-text color="danger" *ngIf="owner != tx?.recipient.plain()  && getAmount() !== 0">
+         -{{ getAmount() | number: '1.6-6' }}
       </h2>
 
       <p text-right  ion-text color="black">
           <small>
-            {{ tx.timeWindow.timeStamp.toString() | timeago }}
+            {{ tx.deadline.value | timeago }}
           </small>
         </p>
     </section>
@@ -38,22 +53,15 @@
     </section>
 
     <section item-right>
-      <p float-right ion-text color="success" *ngIf="tx.isConfirmed()">
+      <p float-right ion-text color="success">
         <small>Confirmed</small>
-      </p>
-
-      <p float-right ion-text color="danger" *ngIf="!tx.isConfirmed()">
-        <small>
-
-          Unconfirmed
-        </small>
       </p>
     </section>
   </ion-item>
-</ion-card-header>
+</ion-card-header> -->
 
 
-<div *ngIf="tx.containsMosaics()">
+<!-- <div *ngIf="tx.containsMosaics()">
   <ion-card-header reduce-transfer-tx-header *ngFor="let mosaic of tx.mosaics()">
     <ion-item>
       <img logo-small item-left [src]="utils.getLogo(mosaic)">
@@ -102,4 +110,4 @@
       </section>
     </ion-item>
   </ion-card-header>
-</div>
+</div> -->

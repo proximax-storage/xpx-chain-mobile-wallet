@@ -74,7 +74,7 @@
     </ion-slide>
   </ion-slides> -->
 
-  <ion-slides slidesPerView="1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
+  <ion-slides>
     <ion-slide *ngIf="!showEmptyMosaic" (click)="showWalletDetails();">
       <div class="single-wallet">
         <div class="single-wallet-content ">
@@ -139,7 +139,7 @@
     <ion-list transparent-items *ngIf="!isLoading">
       <!-- <ion-card no-margin-bottom *ngFor="let wallet of wallets" (click)="showWalletDetails();onWalletSelect(wallet)"
         (press)="onWalletPress(wallet)"> -->
-        <ion-card no-margin-bottom *ngFor="let wallet of wallets; let i = index" (click)="slideChanged(i)"
+        <ion-card no-margin-bottom *ngFor="let wallet of wallets; let i = index" (click)="onWalletSelect(wallet)"
           (press)="onWalletPress(wallet)">
         <ion-card-header no-padding>
           <ion-item>
@@ -276,69 +276,14 @@
     <!-- Transactions -->
     <ion-list transparent-items *ngIf="!isLoading">
 
-      <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash;"
-        (click)="gotoTransactionDetail(transaction)">
-        <!-- if importance transfer -->
-        <importance-transfer-transaction *ngIf="transaction.type == TransactionTypes.IMPORTANCE_TRANSFER"
-          [tx]="transaction"></importance-transfer-transaction>
-
-        <!-- if mosaic definition -->
-        <mosaic-definition-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_DEFINITION_CREATION"
-          [tx]="transaction"></mosaic-definition-transaction>
-
-        <!-- if mosaic supply change -->
-        <mosaic-supply-change-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE"
-          [tx]="transaction"></mosaic-supply-change-transaction>
-
-        <!-- if multisig transaction  -->
-        <multisig-transaction *ngIf="transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
-        </multisig-transaction>
-
-        <!-- if multisig aggregate modification  -->
-        <multisig-aggregate-modification-transaction
-          *ngIf="transaction.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="transaction">
-        </multisig-aggregate-modification-transaction>
-
-        <!-- if provision namespace  -->
-        <provision-namespace-transaction *ngIf="transaction.type == TransactionTypes.PROVISION_NAMESPACE"
-          [tx]="transaction"></provision-namespace-transaction>
-
-        <!-- if transfer  -->
-        <transfer-transaction *ngIf="transaction.type == TransactionTypes.TRANSFER" [tx]="transaction"
-          [owner]="selectedWallet.address">
-        </transfer-transaction>
-      </ion-card>
+      
 
       <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
-        (click)="gotoTransactionDetail(transaction)">
-        <!-- if importance transfer -->
-        <importance-transfer-transaction *ngIf="transaction.type == TransactionTypes.IMPORTANCE_TRANSFER"
-          [tx]="transaction"></importance-transfer-transaction>
-
-        <!-- if mosaic definition -->
-        <mosaic-definition-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_DEFINITION_CREATION"
-          [tx]="transaction"></mosaic-definition-transaction>
-
-        <!-- if mosaic supply change -->
-        <mosaic-supply-change-transaction *ngIf="transaction.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE"
-          [tx]="transaction"></mosaic-supply-change-transaction>
-
-        <!-- if multisig transaction  -->
-        <multisig-transaction *ngIf="transaction.type == TransactionTypes.MULTISIG" [tx]="transaction">
-        </multisig-transaction>
-
-        <!-- if multisig aggregate modification  -->
-        <multisig-aggregate-modification-transaction
-          *ngIf="transaction.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="transaction">
-        </multisig-aggregate-modification-transaction>
-
-        <!-- if provision namespace  -->
-        <provision-namespace-transaction *ngIf="transaction.type == TransactionTypes.PROVISION_NAMESPACE"
-          [tx]="transaction"></provision-namespace-transaction>
+        (click)="gotoTransactionDetail(transaction)">        
 
         <!-- if transfer  -->
-        <transfer-transaction *ngIf="transaction.type == TransactionTypes.TRANSFER" [tx]="transaction"
-          [owner]="selectedWallet.address">
+        <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
+          [owner]="selectedAccount.address.plain()">
         </transfer-transaction>
       </ion-card>
 

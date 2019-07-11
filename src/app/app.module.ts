@@ -62,6 +62,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpModule, Http } from '@angular/http';
 import { MosaicsProvider } from '../providers/mosaics/mosaics';
 import { ProximaxProvider } from '../providers/proximax/proximax';
+import { TransactionsProvider } from '../providers/transactions/transactions';
+import { HelperProvider } from '../providers/helper/helper';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -144,7 +146,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     Keyboard,
     MosaicsProvider,
     MosaicsProvider,
-    ProximaxProvider
+    ProximaxProvider,
+    TransactionsProvider,
+    HelperProvider
   ]
 })
 export class AppModule {}

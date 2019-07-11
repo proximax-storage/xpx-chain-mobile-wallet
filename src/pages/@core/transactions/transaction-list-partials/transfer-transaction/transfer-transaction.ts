@@ -8,91 +8,33 @@ import { NemProvider } from '../../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
+import { TransferTransaction } from '../../../../../models/transfer-transaction';
+import { HelperProvider } from '../../../../../providers/helper/helper';
 
 @Component({
   selector: 'transfer-transaction',
   templateUrl: 'transfer-transaction.html'
 })
 export class TransferTransactionComponent {
-  @Input() tx: any;
+  @Input() tx: TransferTransaction;
   @Input() owner: string;
+  
   App = App;
 
-  // owner: Address;
-  amount: number;
-  mosaics: MosaicTransferable[];
-  hasLevy: boolean;
-  mosaicInfo: { mosaicId: string; divisibility: number; }[];
-
-  private _getAmount() {
-    try {
-      this.amount = this.tx.xem().amount;
-    } catch (e) {
-      this.amount = 0;
-    }
-  }
-
-  private _getMosaics() {
-    // try {
-    //   this.nemProvider.getMosaicsDefinition(this.tx.mosaics()).subscribe(mosaics => {
-    //     this.mosaics = mosaics;
-    //     // console.log(mosaics);
-    //     this.hasLevy = this.mosaics.filter(mosaic => mosaic.levy).length
-    //       ? true
-    //       : false;
-    //   });
-    // } catch (e) {
-    //   this.mosaics = [];
-    // }
-  }
-
-  private _setOwner() {
-    // this.wallet.getSelectedWallet().then(wallet => {
-    //   this.owner = wallet.address;
-    // });
-  }
-
-  constructor(
-    private nemProvider: NemProvider,
-    private wallet: WalletProvider,
-    public utils: UtilitiesProvider
-  ) {
-    this.hasLevy = false;
-    this.amount = 0;
-    this.mosaics = [];
-
-    this.mosaicInfo = [
-      { mosaicId: 'xpx', divisibility: 6 },
-      { mosaicId: 'xem', divisibility: 6 },
-      { mosaicId: 'npxs', divisibility: 6 },
-      { mosaicId: 'sft', divisibility: 6 },
-      { mosaicId: 'xar', divisibility: 4 },
-    ]
-  }
-
-  getDivisibility(mosaicId): number {
-    let currentMosaic = this.mosaicInfo.find(mosaic => mosaic.mosaicId == mosaicId);
-
-    if (currentMosaic != undefined) {
-
-      if (currentMosaic.divisibility == 6) {
-        return 1e6;
-      }
-      else if (currentMosaic.divisibility == 4) {
-        return 1e4;
-      }
-
-    } else {
-      return 1e6;
-    }
-
-
-
-  }
+  utils: UtilitiesProvider;
+  helper: HelperProvider
 
   ngOnInit() {
-    this._getAmount();
-    this._getMosaics();
-    this._setOwner();
+    console.log("LOG: TransferTransactionComponent -> tx", this.tx);
+    console.log("LOG: TransferTransactionComponent -> owner", this.owner);
+  }
+
+  getLogo() {
+    console.log("LOG: TransferTransactionComponent -> getLogo -> this.tx.mosaics[0].id.toHex()", this.tx.mosaics[0].id.toHex());
+    return this.utils.getLogo(this.tx.mosaics[0].id.toHex());
+  }
+
+  getAmount() {
+    return this.helper.getRelativeAmount(this.tx.maxFee.compact());
   }
 }
