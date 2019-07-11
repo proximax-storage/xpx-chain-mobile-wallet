@@ -1,40 +1,39 @@
 //"type": 257
 
 import { Component, Input } from '@angular/core';
-
-import { Address, MosaicTransferable } from 'nem-library';
-
-import { NemProvider } from '../../../../../providers/nem/nem';
-import { WalletProvider } from '../../../../../providers/wallet/wallet';
-import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { TransferTransaction } from '../../../../../models/transfer-transaction';
-import { HelperProvider } from '../../../../../providers/helper/helper';
+import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
+import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 
 @Component({
   selector: 'transfer-transaction',
   templateUrl: 'transfer-transaction.html'
 })
 export class TransferTransactionComponent {
-  @Input() tx: TransferTransaction;
+  @Input() tx: TransferTransaction; // Type conversion for better code completion
   @Input() owner: string;
   
   App = App;
+  LOGO: string = '';
+  AMOUNT: number = 0;
+  MOSAIC_INFO: any;
 
-  utils: UtilitiesProvider;
-  helper: HelperProvider
+
+  constructor(
+    private mosaicsProvider: MosaicsProvider,
+    private utils: UtilitiesProvider,
+    ){
+  }
 
   ngOnInit() {
-    console.log("LOG: TransferTransactionComponent -> tx", this.tx);
-    console.log("LOG: TransferTransactionComponent -> owner", this.owner);
+    // this.getMosaicInfo();
   }
 
-  getLogo() {
-    console.log("LOG: TransferTransactionComponent -> getLogo -> this.tx.mosaics[0].id.toHex()", this.tx.mosaics[0].id.toHex());
-    return this.utils.getLogo(this.tx.mosaics[0].id.toHex());
-  }
-
-  getAmount() {
-    return this.helper.getRelativeAmount(this.tx.maxFee.compact());
+  getMosaicInfo() {
+    this.MOSAIC_INFO = this.mosaicsProvider.setMosaicInfo(this.tx.mosaics[0]);
+    console.log("LOG: TransferTransactionComponent -> getMosaicInfo -> this.MOSAIC_INFO", this.MOSAIC_INFO);
+    this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
+    this.AMOUNT = this.MOSAIC_INFO;
   }
 }

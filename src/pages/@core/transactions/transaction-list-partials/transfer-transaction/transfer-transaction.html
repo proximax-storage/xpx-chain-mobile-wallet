@@ -13,33 +13,33 @@
     version: number
 }
  -->
-<!-- <ion-card-header reduce-transfer-tx-header>
+<ion-card-header reduce-transfer-tx-header>
   <ion-item>
-    <img logo-small item-left [src]="getLogo()">
-    <h2 ion-text color="black">XPX</h2>
+    <img logo-small item-left [src]="LOGO" alt="logo">
+    <h2 ion-text color="black">{{MOSAIC_INFO.mosaicId}}</h2>
     <p ion-text color="black">
         <small>
-          PRX
+          {{MOSAIC_INFO.namespaceId}}
         </small>
       </p>
 
     <section item-right>
 
-      <h2 text-right ion-text color="black" *ngIf="getAmount() == 0">
+      <h2 text-right ion-text color="black" *ngIf="AMOUNT == 0">
         0
       </h2>
 
-      <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient.plain() && getAmount() !== 0">
-        +{{ getAmount() | number: '1.6-6' }}
+      <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient.plain() && AMOUNT !== 0">
+        +{{ AMOUNT | number: '1.6-6' }}
       </h2>
 
-      <h2 text-right ion-text color="danger" *ngIf="owner != tx?.recipient.plain()  && getAmount() !== 0">
-         -{{ getAmount() | number: '1.6-6' }}
+      <h2 text-right ion-text color="danger" *ngIf="owner != tx?.recipient.plain()  && AMOUNT !== 0">
+         -{{ AMOUNT | number: '1.6-6' }}
       </h2>
 
       <p text-right  ion-text color="black">
           <small>
-            {{ tx.deadline.value | timeago }}
+            {{ tx.deadline.value.toString() | timeago }}
           </small>
         </p>
     </section>
@@ -58,7 +58,7 @@
       </p>
     </section>
   </ion-item>
-</ion-card-header> -->
+</ion-card-header>
 
 
 <!-- <div *ngIf="tx.containsMosaics()">

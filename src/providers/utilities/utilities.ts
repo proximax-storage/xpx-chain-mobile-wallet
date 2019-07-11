@@ -3,7 +3,7 @@ import { ModalController, Platform, ViewController, NavController, App, Events }
 import { MosaicTransferable } from 'nem-library';
 
 import { App as AppConfig } from './../app/app';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../toast/toast';

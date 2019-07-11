@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { DateTime } from 'luxon';
-import { Base64 } from 'js-base64';
-
-import { findIndex } from 'lodash';
 
 import { AuthProvider } from '../auth/auth';
-import { SimpleWallet, Password, NetworkType, Address, EncryptedPrivateKey, AccountInfo, MosaicAmountView } from 'tsjs-xpx-chain-sdk';
-import { AppConfig } from '../../app/app.config';
+import { SimpleWallet, Password, Address, EncryptedPrivateKey, AccountInfo, MosaicAmountView } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 

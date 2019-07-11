@@ -54,7 +54,6 @@ import {
 import { MetadataHttp } from 'tsjs-xpx-chain-sdk/dist/src/infrastructure/MetadataHttp';
 
 import { AppConfig } from '../../app/app.config';
-import { QRCodeGenerator } from 'nem2-qr-library';
 import { Block } from "nem-library";
 
 // export const SERVER_CONFIG: ServerConfig[] = [
@@ -195,44 +194,6 @@ export class NemProvider{
     encriptedData: any
   ): string {
     return;
-  }
-
-  /**
-   * Generate Address QR Text
-   * @param address address
-   * @return Address QR Text
-   */
-  public generateWalletQRText(password: string, wallet: SimpleWallet): string {
-    // define custom object to suit your application use case.
-    const object = {"obj": wallet};
-
-    // create QR Code base64
-    const request = QRCodeGenerator.createExportObject(object);
-
-    // get base64 notation for <img> HTML attribute
-    const base64 = request.toBase64();
-    console.log("LOG: NemProvider -> base64", base64);
-
-    return base64;
-  }
-
-  /**
-   * Generate Address QR Text
-   * @param address address
-   * @return Address QR Text
-   */
-  public generateAddressQRText(address: Address): string {
-    // define custom object to suit your application use case.
-    const object = {"obj": address};
-
-    // create QR Code base64
-    const request = QRCodeGenerator.createExportObject(object);
-
-    // get base64 notation for <img> HTML attribute
-    const base64 = request.toBase64();
-    console.log("LOG: NemProvider -> base64", base64);
-
-    return base64;
   }
 
   /**

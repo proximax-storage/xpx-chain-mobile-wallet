@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { NemProvider } from '../../providers/nem/nem';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Address } from 'nem-library';
 
 /**

@@ -1,6 +1,5 @@
-import { Component, ViewChild, trigger, transition, style, animate } from '@angular/core';
-import { App, NavController, NavParams, ViewController, ActionSheetController, AlertController, Platform, InfiniteScroll, ModalController, Slides, Haptic, DateTime } from 'ionic-angular';
-// import { SimpleWallet, MosaicTransferable, TransactionTypes, Pageable, Transaction } from 'nem-library';
+import { Component, ViewChild} from '@angular/core';
+import { App, NavController, NavParams, ViewController, ActionSheetController, AlertController, Platform, ModalController, Slides} from 'ionic-angular';
 
 import { App as AppConfig } from '../../providers/app/app';
 import { WalletProvider } from '../../providers/wallet/wallet';
@@ -12,18 +11,14 @@ import { NemProvider } from '../../providers/nem/nem';
 import { HapticProvider } from '../../providers/haptic/haptic';
 
 
-import find from 'lodash/find';
-import filter from 'lodash/filter';
 import { GetMarketPricePipe } from '../../pipes/get-market-price/get-market-price';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleWallet, Mosaic, Password, Account, Address, UInt64, Wallet, AccountInfo, TransactionType, Transaction } from 'tsjs-xpx-chain-sdk';
 import { AuthProvider } from '../../providers/auth/auth';
 import { MosaicsProvider } from '../../providers/mosaics/mosaics';
-import { mergeMap } from 'rxjs/operators';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
-import { ThrowStmt } from '@angular/compiler';
-import { Observable } from 'rxjs/Observable';
-import { TransferTransaction } from '../../models/transfer-transaction';
+import { Observable } from 'rxjs';
+import {animate, style, transition, trigger} from "@angular/animations";
 
 
 export enum WalletCreationType {
@@ -63,9 +58,7 @@ export class HomePage {
   /** Transaction list member variables */
   App = App;
   TransactionType = TransactionType;
-  
-  currentWallet: SimpleWallet;
-  // TransactionfakeList: Array<any>;
+
   unconfirmedTransactions: Array<Transaction>;
   confirmedTransactions: Array<any>;
   showEmptyTransaction: boolean = false;
@@ -79,10 +72,6 @@ export class HomePage {
   selectedAccount: Account;
   accountInfo: AccountInfo;
   selectedMosaic: Mosaic;
-
-
-
-
 
   constructor(
     public app: App,
@@ -102,7 +91,7 @@ export class HomePage {
     private marketPrice: GetMarketPricePipe,
     private translateService: TranslateService,
     private authProvider: AuthProvider,
-    private mosaicsProvider: MosaicsProvider,
+    public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider
   ) {
     this.totalWalletBalance = 0;
@@ -180,6 +169,7 @@ export class HomePage {
     this.getDefaultMosaics();
 
     accountInfo.mosaics.forEach(mosaic => {
+    console.log("LOG: HomePage -> updateDefaultMosaics -> mosaic", mosaic);
       const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
       console.log("6. LOG: HomePage -> updateDefaultMosaics -> mosaicInfo", mosaicInfo);
     });
@@ -251,19 +241,11 @@ export class HomePage {
       const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
       console.log("8. LOG: HomePage -> getTransactions -> transferTransactions", transferTransactions);
       this.confirmedTransactions = transferTransactions;
-    })
+    });
 
     this.showEmptyTransaction = false;
     this.isLoading = false;
-
-    return;
   }
-
-
-
-
-
-  
 
   onWalletSelect(wallet) {
     console.log("LOG: HomePage -> onWalletSelect -> wallet", wallet);

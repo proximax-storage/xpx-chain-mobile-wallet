@@ -2,10 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NetworkType, Password, SimpleWallet, AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, NamespaceService, TransactionHttp, Address, AccountInfo, Transaction, PublicAccount, QueryParams, Account, MosaicId, MosaicAmountView } from 'tsjs-xpx-chain-sdk';
 import { AppConfig } from '../../app/app.config';
-// import { crypto } from 'js-xpx-chain-library'
-// import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { crypto } from 'js-xpx-chain-library'
+import { walletInterface, commonInterface } from '../interfaces/shared.interfaces';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
+// import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
+// import { Observable } from 'rxjs';
 
 /*
   Generated class for the ProximaxProvider provider.
@@ -51,20 +53,20 @@ export class ProximaxProvider {
     return SimpleWallet.createFromPrivateKey(nameWallet, password, privateKey, this.networkType);
   }
 
-  // decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
-  //   const common: commonInterface = {
-  //     password: password.value,
-  //     privateKey: ''
-  //   };
+  decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
+    const common: commonInterface = {
+      password: password.value,
+      privateKey: ''
+    };
 
-  //   const wallet: walletInterface = {
-  //     encrypted: encryptedKey,
-  //     iv: iv,
-  //   };
+    const wallet: walletInterface = {
+      encrypted: encryptedKey,
+      iv: iv,
+    };
 
-  //   crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
-  //   return common.privateKey;
-  // }
+    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    return common.privateKey;
+  }
 
 getAccountInfo(address: Address): Observable<AccountInfo> {
   return this.accountHttp.getAccountInfo(address);

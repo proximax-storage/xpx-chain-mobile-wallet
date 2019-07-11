@@ -1,18 +1,7 @@
-import { NemProvider } from './../nem/nem';
-import { Injectable } from '@angular/core';
-
-import {
-  Address,
-  MosaicTransferable,
-  MosaicId,
-  MosaicProperties,
-  SimpleWallet,
-} from 'nem-library';
-import { Observable } from 'rxjs/Observable';
-
-import findIndex from 'lodash/findIndex';
-import { CoingeckoProvider } from '../coingecko/coingecko';
-import { Mosaic } from 'tsjs-xpx-chain-sdk';
+import {Injectable} from '@angular/core';
+import {Mosaic, SimpleWallet} from 'tsjs-xpx-chain-sdk';
+import {CoingeckoProvider} from "../coingecko/coingecko";
+import { Observable } from 'rxjs';
 
 /*
   Generated class for the MosaicsProvider provider.
@@ -24,13 +13,9 @@ import { Mosaic } from 'tsjs-xpx-chain-sdk';
 export class MosaicsProvider {
   defaultMosaics = Array<DefaultMosaic>();
 
-  constructor(private nemProvider: NemProvider, private coingeckoProvider: CoingeckoProvider,) {
+  constructor(private coingeckoProvider: CoingeckoProvider) {
     console.log('Hello MosaicsProvider Provider');
-    this.defaultMosaics = this.generateInitialMosaics();
-  }
-
-  private generateInitialMosaics(): Array<DefaultMosaic> {
-    const initialMosaics = [
+    this.defaultMosaics = [
       {
         namespaceId: 'prx',
         mosaicId: 'xpx',
@@ -55,8 +40,7 @@ export class MosaicsProvider {
         hex: '2dba42ea2b169829',
         amount: 0
       }
-    ]
-    return initialMosaics;
+    ];
   }
 
   public mosaics(): Observable<Array<DefaultMosaic>> {
@@ -66,37 +50,38 @@ export class MosaicsProvider {
   }
 
   public setMosaicInfo(mosaic: Mosaic): DefaultMosaic {
-    let modifiedMosaic = this.defaultMosaics.find(defaultMosaic=>{
+    let modifiedMosaic: DefaultMosaic = null;
+    const obj:any;
+    
+    modifiedMosaic= this.defaultMosaics.find(defaultMosaic=>{
       return defaultMosaic.hex == mosaic.id.toHex();
-    })
+    });
     
     if(modifiedMosaic) {
       modifiedMosaic.amount = this.getRelativeAmount(mosaic.amount.compact());
+      return modifiedMosaic;
+    } else {
+      console.log("LOG: MosaicsProvider -> mosaic", mosaic);
+     
+      obj.amount = 0;
+      obj.hex = mosaic.id.toHex();
+      obj.mosaicId = mosaic.id.toHex();
+      obj.namespaceId = mosaic.id.toHex();
+      return obj as DefaultMosaic;
     }
-    return modifiedMosaic;
+
   }
 
-  public getMosaicInfo(mosaic: Mosaic) {
-    let filteredMosaics = this.defaultMosaics.find(defaultMosaic=>{
-      return defaultMosaic.hex == mosaic.id.toHex();
-    })
-    return filteredMosaics;
-  }
-
-  public getRelativeAmount(amount: number): number {
+  private getRelativeAmount(amount: number): number {
     return amount / Math.pow(10, 6)
   }
 
-  private swap(arr, indexA, indexB) {
-    // console.info("Before", arr);
-    var temp = arr[indexA];
-    arr[indexA] = arr[indexB];
-    arr[indexB] = temp;
-    // console.info("After", arr);
-    return arr;
-  };
+  public getMosaicInfo(mosaic: Mosaic) {
+    return this.defaultMosaics.find(defaultMosaic => {
+      return defaultMosaic.hex == mosaic.id.toHex();
+    });
+  }
   
-
   totalBalance(wallet: SimpleWallet): Promise<number> {
     return new Promise((resolve) => {
       // this.mosaics(wallet.address)
@@ -143,7 +128,7 @@ export class MosaicsProvider {
       .toPromise()
       .then(details => {
         return details.market_data.current_price.usd;
-      }).catch(err => {
+      }).catch(() => {
         return returnZero();
       })
     } else {

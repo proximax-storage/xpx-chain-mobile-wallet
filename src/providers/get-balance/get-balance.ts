@@ -8,7 +8,7 @@ import {
   MosaicProperties,
   SimpleWallet,
 } from 'nem-library';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import findIndex from 'lodash/findIndex';
 import { CoingeckoProvider } from '../coingecko/coingecko';
@@ -77,65 +77,65 @@ export class GetBalanceProvider {
 
 
     return new Observable(observer => {
-      this.nemProvider
-        .getBalance(address)
-        .then((mosaics: Array<MosaicTransferable>) => {
+      // this.nemProvider
+      //   .getBalance(address)
+      //   .then((mosaics: Array<MosaicTransferable>) => {
 
-          const XPX_INDEX = findIndex(mosaics, {
-            mosaicId: { namespaceId: 'prx', name: 'xpx' }
-          });
+      //     const XPX_INDEX = findIndex(mosaics, {
+      //       mosaicId: { namespaceId: 'prx', name: 'xpx' }
+      //     });
 
-          const NPXS_INDEX = findIndex(mosaics, {
-            mosaicId: { namespaceId: 'pundix', name: 'npxs' }
-          });
+      //     const NPXS_INDEX = findIndex(mosaics, {
+      //       mosaicId: { namespaceId: 'pundix', name: 'npxs' }
+      //     });
 
-          const SFT_INDEX = findIndex(mosaics, {
-            mosaicId: { namespaceId: 'sportsfix', name: 'sft' }
-          });
+      //     const SFT_INDEX = findIndex(mosaics, {
+      //       mosaicId: { namespaceId: 'sportsfix', name: 'sft' }
+      //     });
 
-          const XAR_INDEX = findIndex(mosaics, {
-            mosaicId: { namespaceId: 'xarcade', name: 'xar' }
-          });
+      //     const XAR_INDEX = findIndex(mosaics, {
+      //       mosaicId: { namespaceId: 'xarcade', name: 'xar' }
+      //     });
 
 
             
-            if (XPX_INDEX < 0) {
-              mosaics.splice(0, 0, XPX);
-            } else {
-              mosaics = this.swap(mosaics, XPX_INDEX, 0);
+      //       if (XPX_INDEX < 0) {
+      //         mosaics.splice(0, 0, XPX);
+      //       } else {
+      //         mosaics = this.swap(mosaics, XPX_INDEX, 0);
 
-              // const XEM_INDEX = findIndex(mosaics, {
-              //   mosaicId: { namespaceId: 'prx', name: 'xpx' }
-              // });
+      //         // const XEM_INDEX = findIndex(mosaics, {
+      //         //   mosaicId: { namespaceId: 'prx', name: 'xpx' }
+      //         // });
   
-              // if (XEM_INDEX > 0) {
-                mosaics = this.swap(mosaics, mosaics.length-1, 1);
-              // }
-            }
+      //         // if (XEM_INDEX > 0) {
+      //           mosaics = this.swap(mosaics, mosaics.length-1, 1);
+      //         // }
+      //       }
 
-            if (NPXS_INDEX < 0) {
-              mosaics.splice(2, 0, NPXS);
-            } else {
-              mosaics = this.swap(mosaics, NPXS_INDEX, 0);
-            }
+      //       if (NPXS_INDEX < 0) {
+      //         mosaics.splice(2, 0, NPXS);
+      //       } else {
+      //         mosaics = this.swap(mosaics, NPXS_INDEX, 0);
+      //       }
 
-            if (SFT_INDEX < 0) {
-              mosaics.splice(3, 0, SFT);
-            } else {
-              mosaics = this.swap(mosaics, SFT_INDEX, 0);
-            }
+      //       if (SFT_INDEX < 0) {
+      //         mosaics.splice(3, 0, SFT);
+      //       } else {
+      //         mosaics = this.swap(mosaics, SFT_INDEX, 0);
+      //       }
 
-            if (XAR_INDEX < 0) {
-              mosaics.splice(4, 0, XAR);
-            } else {
-              mosaics = this.swap(mosaics, XAR_INDEX, 0);
-            }
+      //       if (XAR_INDEX < 0) {
+      //         mosaics.splice(4, 0, XAR);
+      //       } else {
+      //         mosaics = this.swap(mosaics, XAR_INDEX, 0);
+      //       }
 
            
 
-          // return only 5 mosaics
-          observer.next(mosaics.slice(0, 5));
-          // observer.next(mosaics);
+      //     // return only 5 mosaics
+      //     observer.next(mosaics.slice(0, 5));
+      //     // observer.next(mosaics);
 
 
 
@@ -144,8 +144,8 @@ export class GetBalanceProvider {
 
 
 
-        })
-        .catch(observer.error);
+    //     })
+    //     .catch(observer.error);
     });
   }
 
