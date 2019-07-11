@@ -60,6 +60,8 @@ import { Keyboard } from "@ionic-native/keyboard";
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpModule, Http } from '@angular/http';
+import { MosaicsProvider } from '../providers/mosaics/mosaics';
+import { ProximaxProvider } from '../providers/proximax/proximax';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -139,7 +141,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     ForgeProvider,
     BrowserTab,
     SafariViewController,
-    Keyboard
+    Keyboard,
+    MosaicsProvider,
+    MosaicsProvider,
+    ProximaxProvider
   ]
 })
 export class AppModule {}

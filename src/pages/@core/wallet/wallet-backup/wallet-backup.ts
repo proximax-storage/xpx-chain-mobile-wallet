@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { SimpleWallet } from 'nem-library';
 
 import { App } from './../../../../providers/app/app';
 import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet-backup';
@@ -8,6 +7,7 @@ import { SocialSharing } from '../../../../../node_modules/@ionic-native/social-
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { NemProvider } from '../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 /**
  * Generated class for the WalletBackupPage page.
  *
@@ -54,22 +54,23 @@ export class WalletBackupPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletBackupPage');
+    // console.log('ionViewDidLoad WalletBackupPage');
 
-    this.utils.setHardwareBack(this.navCtrl);
-    this.currentWallet = <SimpleWallet>this.navParams.data;
-    if (this.currentWallet) {
+    // this.utils.setHardwareBack(this.navCtrl);
+    // this.currentWallet = <SimpleWallet>this.navParams.data;
+    // if (this.currentWallet) {
 
-      this.authProvider
-        .getPassword()
-        .then(password => {
-          this.QRData = this.nemProvider.generateWalletQRText(password, this.currentWallet);
-          this.privateKey = this.nemProvider.passwordToPrivateKey(
-            password,
-            this.currentWallet
-          );
-        });
-    }
+    //   this.authProvider
+    //     .getPassword()
+    //     .then(password => {
+    //       this.QRData = this.nemProvider.generateWalletQRText(password, this.currentWallet);
+    //       const account = this.nemProvider.passwordToPrivateKey(
+    //         password,
+    //         this.currentWallet
+    //       );
+    //       this.privateKey = account.privateKey;
+    //     });
+    // }
   }
 
   ionViewDidLeave() {
@@ -94,9 +95,10 @@ export class WalletBackupPage {
   share() {
     const WALLET: SimpleWallet = <SimpleWallet>this.navParams.data;
     this.authProvider.getPassword().then(async password => {
-      const privateKey = await this.nemProvider.passwordToPrivateKey(password, WALLET);
+      const account = await this.nemProvider.passwordToPrivateKey(password, WALLET);
+
       await this.socialSharing.share(
-        privateKey, null, null);
+        account.privateKey, null, null);
       this.goHome();
     });
   }

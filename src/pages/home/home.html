@@ -86,7 +86,7 @@
           </div>
 
           <div class="single-price-tick">
-            <p>{{selectedWallet?.address.plain() | ngXtruncate: 32 : '...'}}</p>
+            <p>{{selectedAccount?.address.plain() | ngXtruncate: 34 : '...'}}</p>
           </div>
 
           <div class="single-button-left">
@@ -207,13 +207,13 @@
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 text-uppercase ion-text color="black"><strong>{{ mosaic.mosaicId.name }}</strong></h2>
-            <p text-uppercase ion-text color="black">{{ mosaic.mosaicId.namespaceId }}</p>
+            <h2 text-uppercase ion-text color="black"><strong>{{ mosaic.mosaicId }}</strong></h2>
+            <p text-uppercase ion-text color="black">{{ mosaic.namespaceId }}</p>
 
             <section text-right item-right>
               <h2 ion-text color="black">{{ mosaic.amount | number : '1.6-6' }}</h2>
               <p text-right ion-text color="black"
-                *ngIf="(mosaic.mosaicId.name | getMarketPrice | async) as marketPrice">
+                *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
                 {{ marketPrice | currency: 'USD' : 'symbol' : '1.6-6' }}
               </p>
             </section>

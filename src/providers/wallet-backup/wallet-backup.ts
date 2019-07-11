@@ -3,12 +3,12 @@ import { File } from '@ionic-native/file';
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 
-import { SimpleWallet, Password } from 'nem-library';
 import { NemProvider } from '../nem/nem';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
 import { AlertProvider } from '../alert/alert';
 import { TranslateService } from '@ngx-translate/core';
+import { SimpleWallet, Password } from 'tsjs-xpx-chain-sdk';
 
 /*
   Generated class for the WalletBackupProvider provider.
@@ -55,26 +55,7 @@ export class WalletBackupProvider {
         console.log(e);
       });
   }
-
-  saveToGoogleDrive(wallet: SimpleWallet) {
-    return this.socialSharing
-      .canShareVia(
-        'com.google.android.apps.docs',
-        wallet.writeWLTFile(),
-        wallet.name + '.wlt'
-      )
-      .then(_ => {
-        console.log('saveToGoogleDrive', wallet.writeWLTFile());
-        console.log('com.google.android.apps.docs', _);
-
-        return this.toastProvider.show(
-          'Saved to google drive successfully',
-          3,
-          true
-        );
-      });
-  }
-
+  
   copyToClipboard(wallet: SimpleWallet) {
     this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(
       value => {
@@ -85,9 +66,9 @@ export class WalletBackupProvider {
       .getPassword()
       .then(password => {
         const PASSWORD = new Password(password);
-        const PRIVATE_KEY = wallet.unlockPrivateKey(PASSWORD);
+        const account = wallet.open(PASSWORD);
 
-        return this.clipboard.copy(PRIVATE_KEY);
+        return this.clipboard.copy(account.privateKey);
       })
       .then(_ => {
         return this.toastProvider.show(alertTitle,

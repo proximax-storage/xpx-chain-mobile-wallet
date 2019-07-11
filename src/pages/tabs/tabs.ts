@@ -31,7 +31,7 @@ export class TabsPage {
     private translateService: TranslateService
     ) {
     this.articles.getUnreadCount().then(count => {
-      console.log("Unread count", count);
+      // console.log("Unread count", count);
       this.notificationCount = count;
     })
    }

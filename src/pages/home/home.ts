@@ -1,6 +1,6 @@
 import { Component, ViewChild, trigger, transition, style, animate } from '@angular/core';
 import { App, NavController, NavParams, ViewController, ActionSheetController, AlertController, Platform, InfiniteScroll, ModalController, Slides, Haptic, DateTime } from 'ionic-angular';
-import { SimpleWallet, MosaicTransferable, TransactionTypes, Pageable, Transaction } from 'nem-library';
+// import { SimpleWallet, MosaicTransferable, TransactionTypes, Pageable, Transaction } from 'nem-library';
 
 import { App as AppConfig } from '../../providers/app/app';
 import { WalletProvider } from '../../providers/wallet/wallet';
@@ -17,6 +17,10 @@ import find from 'lodash/find';
 import filter from 'lodash/filter';
 import { GetMarketPricePipe } from '../../pipes/get-market-price/get-market-price';
 import { TranslateService } from '@ngx-translate/core';
+import { SimpleWallet, Mosaic, Password, Account, Address, UInt64 } from 'tsjs-xpx-chain-sdk';
+import { AuthProvider } from '../../providers/auth/auth';
+import { MosaicsProvider } from '../../providers/mosaics/mosaics';
+import { mergeMap } from 'rxjs/operators';
 
 
 
@@ -46,17 +50,17 @@ export class HomePage {
 
   menu = 'mosaics';
   AppConfig = AppConfig;
-  selectedMosaic: MosaicTransferable;
-  mosaics: Array<MosaicTransferable>;
+  selectedMosaic: Mosaic;
+  mosaics: Array<any>;
   wallets: SimpleWallet[];
-  selectedWallet: SimpleWallet;
+
   fakeList: Array<any>;
   data: any[] = [];
   totalWalletBalance = 0;
 
   /** Transaction list member variables */
   App = App;
-  TransactionTypes = TransactionTypes;
+  // TransactionTypes = TransactionTypes;
   currentWallet: SimpleWallet;
   // TransactionfakeList: Array<any>;
   unconfirmedTransactions: Array<any>;
@@ -65,10 +69,13 @@ export class HomePage {
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
   isLoadingInfinite: boolean = false;
-  pageable: Pageable<Transaction[]>;
+  // pageable: Pageable<Transaction[]>;
   @ViewChild(InfiniteScroll)
   private infiniteScroll: InfiniteScroll;
   tablet: boolean;
+
+  selectedWallet: SimpleWallet;
+  selectedAccount: Account;
 
 
 
@@ -88,7 +95,9 @@ export class HomePage {
     private nemProvider: NemProvider,
     private haptic: HapticProvider,
     private marketPrice: GetMarketPricePipe,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private authProvider: AuthProvider,
+    private mosaicsProvider: MosaicsProvider
   ) {
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
@@ -105,41 +114,112 @@ export class HomePage {
   ionViewWillEnter() {
     console.log("1 ionViewWillEnter");
     this.utils.setHardwareBack();
+
+    // Loaders
+    this.fakeList = [{}, {}];
+    this.isLoading = true;
+    this.showEmptyTransaction = false;
+    this.showEmptyMosaic = false;
+
+    this.unconfirmedTransactions = null;
+    this.confirmedTransactions = null
+    
+    // TODO: (Temporary) False if there is transaction
+    this.showEmptyTransaction = true;;
+
+
+        
+
     this.walletProvider.getWallets().then(wallets => {
-      this.wallets = wallets
+
+        this.wallets = this.walletProvider.convertToSimpleWallets(wallets);
+        console.log("LOG: HomePage -> ionViewWillEnter -> this.wallets", this.wallets);
+
+        if (this.wallets.length > 0) {
+
+          this.walletProvider.getSelectedWallet().then(selectedWallet  => {
+            console.log("Selected wallet:", selectedWallet);
+  
+            this.selectedWallet = selectedWallet ? selectedWallet : wallets[0];
+  
+            // Get user's password and unlock the wallet to get the account
+            this.authProvider
+            .getPassword()
+            .then(password => {
+              // Get user's password
+              const myPassword = new Password(password);
+
+              // Convert current wallet to SimpleWallet
+              const myWallet = this.walletProvider.convertToSimpleWallet(selectedWallet)
+
+              // Unlock wallet to get an account using user's password 
+              const account = myWallet.open(myPassword);
+              this.selectedAccount = account;
+              console.log("1. LOG: HomePage -> ionViewWillEnter -> account", this.selectedAccount);
+
+              console.log('Your new account address is:', account.address.plain(), 'and its private key', account.privateKey , 'and its public key', account.publicKey);
+            
+              // 1. Get account info
+              const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
+              accountInfo.subscribe(info=> {
+              console.log("2. LOG: HomePage -> ionViewWillEnter -> accountInfo", info);
+
+                info.mosaics.forEach(mosaic=> {
+                  const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
+                  console.log("3. LOG: HomePage -> ionViewWillEnter -> mosaicInfo", mosaicInfo);
+                })
+              })
+
+              // TODO #1
+              this.getDefaultMosaics();
+  
+              // TODO #2
+              // Implement getting of transactions for selected wallet.
+              
+              
+            // this.getTransactions(this.selectedWallet);
+
+              // Get balance
+              // const accountBalance = this.walletProvider.getBalance(account.address.plain());
+              // accountBalance
+              // .pipe(
+              //     mergeMap((_) => _)
+              // )
+              // .subscribe(mosaic => {
+              //   console.log('3. You have', mosaic.relativeAmount(), mosaic.fullName());
+              // },
+              // err => console.error(err));
+
+              
 
 
-      if (this.wallets.length > 0) {
-        // Show loader
-        this.fakeList = [{}, {}];
-        /** Transaction list business logic */
+              
+            });
+          }).catch(err => {
+            this.selectedWallet = (!this.selectedWallet && this.wallets) ? this.wallets[0] : null;
+            // this.getTransactions(this.selectedWallet);
+            // this.getMosaicBalance(this.selectedWallet);
+          });
+        
 
-        this.isLoading = true;
-        this.showEmptyTransaction = false;
-        this.showEmptyMosaic = false;
+        } else {
+          
+          this.showEmptyMosaic = true;
+        }
+        this.isLoading = false;
+      });
+  }
 
-        this.computeTotalWalletBalance(this.wallets);
-
-        // this.unconfirmedTransactions = null;
-        // this.confirmedTransactions = null;
-
-        this.walletProvider.getSelectedWallet().then(selectedWallet => {
-          console.log("Selected wallet:", selectedWallet);
-          this.selectedWallet = selectedWallet ? selectedWallet : this.wallets[0];
-          this.getTransactions(this.selectedWallet);
-          this.getMosaicBalance(this.selectedWallet);
-        }).catch(err => {
-          this.selectedWallet = (!this.selectedWallet && this.wallets) ? this.wallets[0] : null;
-          this.getTransactions(this.selectedWallet);
-          this.getMosaicBalance(this.selectedWallet);
-        });
-      } else {
-        this.showEmptyTransaction = true;
-        this.showEmptyMosaic = true;
-      }
-    });
-
-
+  getDefaultMosaics() {
+    this.isLoading = true;
+    this.mosaics = null; // Triggers the skeleton list loader
+    this.mosaicsProvider
+      .mosaics()
+      .subscribe(mosaics => {
+        console.log("4. LOG: HomePage -> getDefaultMosaics -> mosaics", mosaics);
+        this.mosaics = mosaics;
+        this.isLoading = false;
+      });
   }
 
   computeTotalWalletBalance(wallets: any) {
@@ -155,110 +235,110 @@ export class HomePage {
     })
   }
 
-  getTransactions(selectedWallet: SimpleWallet) {
-    console.log("3 getTransactions");
-    console.log("getTransactions", selectedWallet);
-    // this.confirmedTransactions = null;
-    // this.unconfirmedTransactions = null;
-    this.isLoading = true;
+  // getTransactions(selectedWallet: SimpleWallet) {
+  //   console.log("3 getTransactions");
+  //   console.log("getTransactions", selectedWallet);
+  //   // this.confirmedTransactions = null;
+  //   // this.unconfirmedTransactions = null;
+  //   this.isLoading = true;
 
-    this.nemProvider
-      .getUnconfirmedTransactions(selectedWallet.address)
-      .flatMap(_ => _)
-      .toArray()
-      .subscribe(result => {
-        this.unconfirmedTransactions = result;
-      });
+  //   this.nemProvider
+  //     .getUnconfirmedTransactions(selectedWallet.address)
+  //     .flatMap(_ => _)
+  //     .toArray()
+  //     .subscribe(result => {
+  //       this.unconfirmedTransactions = result;
+  //     });
 
 
-    this.nemProvider.getMosaicTransactions(selectedWallet.address).subscribe(mosaicTransactions => {
-      let supportedMosaics = [
-        { mosaicId: 'xpx' },
-        { mosaicId: 'xem' },
-        { mosaicId: 'npxs' },
-        { mosaicId: 'sft' },
-        { mosaicId: 'xar' },
-      ]
-      const filteredTransactions = filter(mosaicTransactions, (tx) => find(supportedMosaics, { mosaicId: tx._mosaics[0].mosaicId.name }));
+  //   this.nemProvider.getMosaicTransactions(selectedWallet.address).subscribe(mosaicTransactions => {
+  //     let supportedMosaics = [
+  //       { mosaicId: 'xpx' },
+  //       { mosaicId: 'xem' },
+  //       { mosaicId: 'npxs' },
+  //       { mosaicId: 'sft' },
+  //       { mosaicId: 'xar' },
+  //     ]
+  //     const filteredTransactions = filter(mosaicTransactions, (tx) => find(supportedMosaics, { mosaicId: tx._mosaics[0].mosaicId.name }));
       
-      setTimeout(() => {
-        this.nemProvider.getXEMTransactions(selectedWallet.address).subscribe(XEMTransactions => {
-          const TRANSACTIONS = [].concat(filteredTransactions, XEMTransactions);
-          // Check transaction is empty
-          if (TRANSACTIONS.length == 0) {
-            this.confirmedTransactions = null;
-            this.showEmptyTransaction = true;
-          } else {
-            this.confirmedTransactions = TRANSACTIONS.sort((a,b) => {
-              return new Date(b.timeWindow.timeStamp).getTime() - new Date(a.timeWindow.timeStamp).getTime()
-            });
-            this.showEmptyTransaction = false;
-          }
-          this.isLoading = false;
-        })
-      }, 1000);
+  //     setTimeout(() => {
+  //       this.nemProvider.getXEMTransactions(selectedWallet.address).subscribe(XEMTransactions => {
+  //         const TRANSACTIONS = [].concat(filteredTransactions, XEMTransactions);
+  //         // Check transaction is empty
+  //         if (TRANSACTIONS.length == 0) {
+  //           this.confirmedTransactions = null;
+  //           this.showEmptyTransaction = true;
+  //         } else {
+  //           this.confirmedTransactions = TRANSACTIONS.sort((a,b) => {
+  //             return new Date(b.timeWindow.timeStamp).getTime() - new Date(a.timeWindow.timeStamp).getTime()
+  //           });
+  //           this.showEmptyTransaction = false;
+  //         }
+  //         this.isLoading = false;
+  //       })
+  //     }, 1000);
 
 
-    })
+  //   })
 
-    return;
-  }
+  //   return;
+  // }
 
   /**
    * Retrieves current account owned mosaics  into this.mosaics
    */
-  public getMosaicBalance(selectedWallet: SimpleWallet) {
-    console.log("4 getMosaicBalance");
+  // public getMosaicBalance(selectedWallet: SimpleWallet) {
+  //   console.log("4 getMosaicBalance");
 
-    this.isLoading = true;
-    this.mosaics = null; // Triggers the skeleton list loader
-    this.getBalanceProvider
-      .mosaics(selectedWallet.address)
-      .subscribe(mosaics => {
+  //   this.isLoading = true;
+  //   this.mosaics = null; // Triggers the skeleton list loader
+  //   this.getBalanceProvider
+  //     .mosaics(selectedWallet.address)
+  //     .subscribe(mosaics => {
         
-        this.mosaics = mosaics;
-        if (this.mosaics.length > 0) {
-          this.isLoading = false;
-          this.showEmptyMosaic = false;
-          this.selectedMosaic =
-            this.navParams.get('selectedMosaic') || this.mosaics[0];
-        }
-      });
-  }
+  //       this.mosaics = mosaics;
+  //       if (this.mosaics.length > 0) {
+  //         this.isLoading = false;
+  //         this.showEmptyMosaic = false;
+  //         this.selectedMosaic =
+  //           this.navParams.get('selectedMosaic') || this.mosaics[0];
+  //       }
+  //     });
+  // }
 
 
 
-  slideChanged(index) {
-    console.log("slideChanged");
-    let currentIndex = index;
-    console.log('Current index is', currentIndex);
-    if (this.wallets.length != currentIndex) {
-      this.showEmptyTransaction = false;
-      this.showEmptyMosaic = false;
-      this.onWalletSelect(this.wallets[currentIndex])
-      this.haptic.selection();
-    } else {
-      this.mosaics = null;
-      this.isLoading = false;
-      this.unconfirmedTransactions = null;
-      this.confirmedTransactions = null;
-      this.showEmptyTransaction = true;
-      this.showEmptyMosaic = true;
-    }
-    this.ionViewWillEnter();
-    this.menu = "mosaics"
-  }
+  // slideChanged(index) {
+  //   console.log("slideChanged");
+  //   let currentIndex = index;
+  //   console.log('Current index is', currentIndex);
+  //   if (this.wallets.length != currentIndex) {
+  //     this.showEmptyTransaction = false;
+  //     this.showEmptyMosaic = false;
+  //     this.onWalletSelect(this.wallets[currentIndex])
+  //     this.haptic.selection();
+  //   } else {
+  //     this.mosaics = null;
+  //     this.isLoading = false;
+  //     this.unconfirmedTransactions = null;
+  //     this.confirmedTransactions = null;
+  //     this.showEmptyTransaction = true;
+  //     this.showEmptyMosaic = true;
+  //   }
+  //   this.ionViewWillEnter();
+  //   this.menu = "mosaics"
+  // }
 
-  trackByName(wallet) {
-    return wallet.name;
-  }
+  // trackByName(wallet) {
+  //   return wallet.name;
+  // }
 
   onWalletSelect(wallet) {
     console.log("On wallet select");
     this.selectedWallet = wallet;
     this.walletProvider.setSelectedWallet(this.selectedWallet).then(() => {
-      this.getMosaicBalance(this.selectedWallet);
-      this.getTransactions(this.selectedWallet);
+      // this.getMosaicBalance(this.selectedWallet);
+      // this.getTransactions(this.selectedWallet);
     });
   }
 
@@ -401,11 +481,6 @@ export class HomePage {
   })
   }
 
-  // public getFormat(mosaic) {
-	// 	console.log("LOG: HomePage -> publicgetFormat -> mosaic", mosaic);
-  //   return `1.${mosaic.properties.divisibility}-${mosaic.properties.divisibility}`
-  // }
-
   public getPriceInUSD(amount, marketPrice) {
     let result = amount * marketPrice;
     this.totalWalletBalance += result
@@ -445,8 +520,8 @@ export class HomePage {
       console.log('Async operation has ended');
       try {
         await this.computeTotalWalletBalance(this.wallets);
-        await this.getMosaicBalance(this.selectedWallet);
-        await this.getTransactions(this.selectedWallet);
+        // await this.getMosaicBalance(this.selectedWallet);
+        // await this.getTransactions(this.selectedWallet);
         refresher.complete();
       } catch (error) {
         this.isLoading = false;
@@ -456,9 +531,11 @@ export class HomePage {
   }
 
    getBalanceOfSelectedWallet() {
-    if(this.selectedWallet) {
-      return (  this.wallets.filter(wallet => wallet.name == this.selectedWallet.name)[0].total);
-    }
+    // if(this.selectedWallet) {
+    //   return (  this.wallets.filter(wallet => wallet.name == this.selectedWallet.name)[0].total);
+    // }
+    // Todo: Compute total balance
+    return 0;
   }
 }
 

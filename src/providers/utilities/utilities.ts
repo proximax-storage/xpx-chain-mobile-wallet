@@ -95,30 +95,30 @@ export class UtilitiesProvider {
    * Get the logo of the mosaics
    * @param mosaic The mosaic object for querying the logo
    */
-  getLogo(mosaic: MosaicTransferable) {
+  getLogo(mosaic: any) {
     if (
-      mosaic.mosaicId.namespaceId === 'nem' &&
-      mosaic.mosaicId.name === 'xem'
+      mosaic.namespaceId === 'nem' &&
+      mosaic.mosaicId === 'xem'
     ) {
       return AppConfig.LOGO.NEM;
     } else if (
-      mosaic.mosaicId.namespaceId === 'prx' &&
-      mosaic.mosaicId.name === 'xpx'
+      mosaic.namespaceId === 'prx' &&
+      mosaic.mosaicId === 'xpx'
     ) {
       return AppConfig.LOGO.XPX;
     } else if (
-      mosaic.mosaicId.namespaceId === 'pundix' &&
-      mosaic.mosaicId.name === 'npxs'
+      mosaic.namespaceId === 'pundix' &&
+      mosaic.mosaicId === 'npxs'
     ) {
       return AppConfig.LOGO.NPXS;
     } else if (
-      mosaic.mosaicId.namespaceId === 'sportsfix' &&
-      mosaic.mosaicId.name === 'sft'
+      mosaic.namespaceId === 'sportsfix' &&
+      mosaic.mosaicId === 'sft'
     ) {
       return AppConfig.LOGO.SFT;
     } else if (
-      mosaic.mosaicId.namespaceId === 'xarcade' &&
-      mosaic.mosaicId.name === 'xar'
+      mosaic.namespaceId === 'xarcade' &&
+      mosaic.mosaicId === 'xar'
     ) {
       return AppConfig.LOGO.XAR;
     } else {

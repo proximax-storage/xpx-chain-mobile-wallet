@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { DateTime } from 'luxon';
 import { Base64 } from 'js-base64';
-import { SimpleWallet, NetworkTypes } from 'nem-library';
 
 import { findIndex } from 'lodash';
 
 import { AuthProvider } from '../auth/auth';
+import { SimpleWallet, Password, NetworkType, Address, EncryptedPrivateKey, AccountInfo, MosaicAmountView } from 'tsjs-xpx-chain-sdk';
+import { AppConfig } from '../../app/app.config';
+import { ProximaxProvider } from '../proximax/proximax';
+import { Observable } from 'rxjs';
 
 /*
  Generated class for the NemProvider provider.
@@ -18,7 +21,55 @@ import { AuthProvider } from '../auth/auth';
 export class WalletProvider {
   wallets: SimpleWallet[];
 
-  constructor(private storage: Storage, private authProvider: AuthProvider) {}
+  constructor(private storage: Storage, private authProvider: AuthProvider, private proximaxProvider: ProximaxProvider) {;
+  }
+
+    /**
+   * Create Simple Wallet
+   * @param walletName wallet idenitifier for app
+   * @param password wallet's password
+   * @param selected network
+   * @return Promise with wallet created
+   */
+  public createSimpleWallet(
+  { walletName, password }: 
+  { walletName: string; password: string; }): 
+  SimpleWallet {
+    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  }
+
+  public createAccountFromPrivateKey(
+    { walletName, password, privateKey }: 
+    { walletName: string; password: string; privateKey: string; }): 
+    SimpleWallet {
+    return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
+  }
+
+  public getAccountInfo(address: string) : Observable<AccountInfo> {
+    return this.proximaxProvider.getAccountInfo(Address.createFromRawAddress(address));
+  }
+
+  public getBalance(address: string): Observable<MosaicAmountView[]> {
+    return this.proximaxProvider.getBalance(Address.createFromRawAddress(address));
+  }
+
+  convertToSimpleWallet(wallet: SimpleWallet) {
+    Object.setPrototypeOf(wallet, SimpleWallet.prototype)
+    Object.setPrototypeOf(wallet.address, Address.prototype);
+    Object.setPrototypeOf(wallet.encryptedPrivateKey, EncryptedPrivateKey.prototype);
+    return wallet;
+  };
+
+  convertToSimpleWallets(wallets: SimpleWallet[]) {
+    return wallets.map(wallet => {
+      Object.setPrototypeOf(wallet, SimpleWallet.prototype)
+      Object.setPrototypeOf(wallet.address, Address.prototype);
+      Object.setPrototypeOf(wallet.encryptedPrivateKey, EncryptedPrivateKey.prototype);
+
+      return wallet;
+    });
+  };
+
 
   /**
    * Store wallet
@@ -31,13 +82,8 @@ export class WalletProvider {
       return this.getAccounts().then(value => {
         let accounts = value;
         result = accounts[email];
+
         result.push({wallet: wallet, walletColor: walletColor});
-        result = result.map(_ => {
-          return {
-            wallet: _.wallet.writeWLTFile(),
-            walletColor: _.walletColor
-          }
-        });
 
         accounts[email] = result;
 
@@ -47,10 +93,6 @@ export class WalletProvider {
       });
     });
   }
-
-  // =======
-  // Wallets
-  // =======
 
   /**
    * Update the wallet name of the given wallet.
@@ -159,7 +201,7 @@ export class WalletProvider {
         let result = null;
         if (wallets) {
           const selectedWallet = wallets[email];
-          result = SimpleWallet.readFromWLT(selectedWallet);
+          result = <SimpleWallet>(selectedWallet);
         } else {
           result = {};
         }
@@ -182,9 +224,10 @@ export class WalletProvider {
         if (wallets) {
           const walletsMap = ACCOUNT_WALLETS.map(walletFile => {
             if (walletFile.name) {
-              return this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
+              return 
+              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
-              return { wallet:SimpleWallet.readFromWLT(walletFile.wallet), walletColor: walletFile.walletColor};
+              return { wallet:<SimpleWallet>(walletFile.wallet), walletColor: walletFile.walletColor};
             }
           });
 
@@ -212,9 +255,10 @@ export class WalletProvider {
         if (ACCOUNT_WALLETS) {
           const walletsMap = ACCOUNT_WALLETS.map(walletFile => {
             if (walletFile.name) {
-              return this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
+              return 
+              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
-              let wallet = SimpleWallet.readFromWLT(walletFile.wallet);
+              let wallet = <SimpleWallet>(walletFile.wallet);
               wallet.walletColor = walletFile.walletColor;
               return wallet ;
             }
@@ -230,26 +274,26 @@ export class WalletProvider {
     });
   }
 
-  private convertJSONWalletToFileWallet(wallet, walletColor): SimpleWallet {
-    let walletString = Base64.encode(
-      JSON.stringify({
-        address: wallet.accounts[0].address,
-        creationDate: DateTime.local().toString(),
-        encryptedPrivateKey: wallet.accounts[0].encrypted,
-        iv: wallet.accounts[0].iv,
-        network:
-          wallet.accounts[0].network == -104
-            ? NetworkTypes.TEST_NET
-            : NetworkTypes.MAIN_NET,
-        name: wallet.name,
-        type: 'simple',
-        schema: 1,
-      })
-    );
-    let importedWallet = SimpleWallet.readFromWLT(walletString);
-    importedWallet.walletColor = walletColor;
-    return importedWallet;
-  }
+  // private convertJSONWalletToFileWallet(wallet, walletColor): SimpleWallet {
+  //   let walletString = Base64.encode(
+  //     JSON.stringify({
+  //       address: wallet.accounts[0].address,
+  //       creationDate: DateTime.local().toString(),
+  //       encryptedPrivateKey: wallet.accounts[0].encrypted,
+  //       iv: wallet.accounts[0].iv,
+  //       network:
+  //         wallet.accounts[0].network == -104
+  //           ? NetworkTypes.TEST_NET
+  //           : NetworkTypes.MAIN_NET,
+  //       name: wallet.name,
+  //       type: 'simple',
+  //       schema: 1,
+  //     })
+  //   );
+  //   let importedWallet = SimpleWallet.readFromWLT(walletString);
+  //   importedWallet.walletColor = walletColor;
+  //   return importedWallet;
+  // }
 
   /**
    * Set a selected wallet
@@ -261,7 +305,7 @@ export class WalletProvider {
     ]).then(results => {
       const EMAIL = results[0];
       const SELECTED_WALLET = results[1] ? results[1] : {};
-      SELECTED_WALLET[EMAIL] = wallet.writeWLTFile();
+      SELECTED_WALLET[EMAIL] = wallet;
 
       return this.storage.set('selectedWallet', SELECTED_WALLET);
     });

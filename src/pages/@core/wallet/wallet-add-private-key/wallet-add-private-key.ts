@@ -12,6 +12,7 @@ import { scan } from 'rxjs/operators';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -88,13 +89,18 @@ export class WalletAddPrivateKeyPage {
     return this.navCtrl.push('WalletBackupPage', wallet);
   }
 
+  goHome() {
+    this.navCtrl.setRoot(
+      'TabsPage',
+      {
+        animate: true
+      }
+    );
+  }
+
   onSubmit(form) {
     try {
-      const newWallet = this.nemProvider.createPrivateKeyWallet(
-        form.name,
-        this.PASSWORD,
-        form.privateKey
-      );
+      const newWallet  = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
       this.walletProvider.checkIfWalletNameExists(newWallet.name).then(value => {
         if (value) {
@@ -106,7 +112,8 @@ export class WalletAddPrivateKeyPage {
             .then(_ => {
               return this.walletProvider.setSelectedWallet(newWallet);
             }).then(_ => {
-              this.gotoBackup(newWallet);
+              // this.gotoBackup(newWallet);
+              this.goHome();
             });
 
         }

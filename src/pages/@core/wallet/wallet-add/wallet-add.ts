@@ -10,6 +10,7 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the WalletAddPage page.
@@ -42,7 +43,8 @@ export class WalletAddPage {
     private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
     private haptic: HapticProvider,
-    private translateService : TranslateService
+    private translateService : TranslateService,
+    private proximaxProvider: ProximaxProvider
   ) {
     this.init();
     this.walletColor = "wallet-1";
@@ -75,13 +77,26 @@ export class WalletAddPage {
     return this.navCtrl.push('WalletBackupPage', wallet);
   }
 
-  onSubmit(form) {
-    const newWallet = this.nemProvider.createSimpleWallet(form.name, this.PASSWORD);
+  goHome() {
+    this.navCtrl.setRoot(
+      'TabsPage',
+      {
+        animate: true
+      }
+    );
+  }
 
-    this.walletProvider.checkIfWalletNameExists(newWallet.name).then(value => {
+  onSubmit(form) {
+    this.walletProvider.checkIfWalletNameExists(form.name).then(value => {
       if (value) {
         this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
       } else {
+        
+        
+        const newWallet = this.walletProvider.createSimpleWallet({ walletName: form.name, password: this.PASSWORD });
+
+        console.log("LOG: WalletAddPage -> onSubmit -> newWallet", newWallet);
+        
         this.walletProvider.storeWallet(newWallet, this.walletColor).then(value => {
 
           newWallet.walletColor = this.walletColor;
@@ -91,7 +106,9 @@ export class WalletAddPage {
           this.haptic.notification({ type: 'success' });
           delete newWallet.total;
           delete newWallet.walletColor;
-          this.gotoBackup(newWallet);
+          // this.gotoBackup(newWallet);
+          this.goHome();
+
         });
       }
     });
