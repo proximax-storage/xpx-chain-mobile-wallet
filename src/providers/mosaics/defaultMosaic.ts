@@ -1,4 +1,4 @@
-class DefaultMosaic {
+interface DefaultMosaic {
     namespaceId: string;
     mosaicId: string;
     hex: string;

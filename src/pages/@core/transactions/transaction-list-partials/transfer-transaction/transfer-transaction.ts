@@ -27,13 +27,14 @@ export class TransferTransactionComponent {
   }
 
   ngOnInit() {
-    // this.getMosaicInfo();
+    this.getMosaicInfo();
   }
 
   getMosaicInfo() {
+    console.log("LOG: TransferTransactionComponent -> getMosaicInfo -> this.tx.mosaics[0]", this.tx.mosaics[0]);
     this.MOSAIC_INFO = this.mosaicsProvider.setMosaicInfo(this.tx.mosaics[0]);
     console.log("LOG: TransferTransactionComponent -> getMosaicInfo -> this.MOSAIC_INFO", this.MOSAIC_INFO);
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
-    this.AMOUNT = this.MOSAIC_INFO;
+    this.AMOUNT = this.MOSAIC_INFO.amount;
   }
 }
