@@ -4,7 +4,7 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { WalletProvider } from '../../../providers/wallet/wallet';
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { NemProvider } from '../../../providers/nem/nem';
 import { HapticProvider } from '../../../providers/haptic/haptic';
  /*
@@ -62,14 +62,15 @@ export class ReceivePage {
   getQRCode() {
     // return this.currentWallet.address.plain().toString();
 
-    let QRCode: any = this.nemProvider.generateAddressQRText(
-      this.currentWallet.address
-    );
-    QRCode = JSON.parse(QRCode);
-    QRCode.data.name = this.currentWallet.name;
+    // let QRCode: any = this.nemProvider.generateAddressQRText(
+    //   this.currentWallet.address
+    // );
+    // QRCode = JSON.parse(QRCode);
+    // QRCode.data.name = this.currentWallet.name;
 
-    console.log("QRCode",QRCode);
+    // console.log("QRCode",QRCode);
 
+    let QRCode = {};
     return JSON.stringify(QRCode);
   }
 

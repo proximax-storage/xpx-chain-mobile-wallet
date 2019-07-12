@@ -1,4 +1,0 @@
-+ webpack@4.35.3
-added 80 packages from 127 contributors, updated 9 packages, moved 18 packages and audited 26818 packages in 18.496s
-found 19 vulnerabilities (4 low, 11 moderate, 2 high, 2 critical)
-  run `npm audit fix` to fix them, or `npm audit` for details

@@ -92,13 +92,13 @@ export class NodeListPage {
       // console.log("LOG: NodeListPage -> getInfo -> results", alice);
       // });
 
-      this.nem.getActiveNode().then((node: Node)=>{
-        console.log("LOG: NodeListPage -> node", node);
-        this.node = node;
-        // this.currentNode = this.node.endpoint.protocol + '://' + this.node.endpoint.host + ':' +this.node.endpoint.port
-        this.currentNode = this.node.identity.name;
+      // this.nem.getActiveNode().then((node: Node)=>{
+      //   console.log("LOG: NodeListPage -> node", node);
+      //   this.node = node;
+      //   // this.currentNode = this.node.endpoint.protocol + '://' + this.node.endpoint.host + ':' +this.node.endpoint.port
+      //   this.currentNode = this.node.identity.name;
         
-      })
+      // })
   }
 
   getNodeInfo(node: Node) {

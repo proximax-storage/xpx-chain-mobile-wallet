@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 
 import {
   Address,
-  MosaicTransferable,
   MosaicId,
   MosaicProperties,
   SimpleWallet,
-} from 'nem-library';
+  MosaicAmountView,
+  Mosaic,
+} from 'tsjs-xpx-chain-sdk';
 import { Observable } from 'rxjs';
 
 import findIndex from 'lodash/findIndex';
@@ -25,51 +26,53 @@ export class GetBalanceProvider {
     console.log('Hello GetBalanceProvider Provider');
   }
 
-  private generateInitialMosaics(): Array<MosaicTransferable> {
+  private generateInitialMosaics(): Array<Mosaic> {
+    return [];
+
     // ProximaX
-    const XPX_MOSAIC_ID = new MosaicId('prx', 'xpx');
-    const XPX_MOSAIC_PROPERTIES = new MosaicProperties(
-      6, //TODO
-      9000000000,
-      true,
-      false
-    );
-    const XPX = new MosaicTransferable(XPX_MOSAIC_ID, XPX_MOSAIC_PROPERTIES, 0);
+    // const XPX_MOSAIC_ID = new MosaicId('prx', 'xpx');
+    // const XPX_MOSAIC_PROPERTIES = new MosaicProperties(
+    //   6, //TODO
+    //   9000000000,
+    //   true,
+    //   false
+    // );
+    // const XPX = new MosaicAmountView(XPX_MOSAIC_ID, XPX_MOSAIC_PROPERTIES, 0);
 
-    // PUNDIX
-    const NPXS_MOSAIC_ID = new MosaicId('pundix', 'npxs');
-    const NPXS_MOSAIC_PROPERTIES = new MosaicProperties(
-      6, //TODO
-      9000000000,
-      true,
-      false
-    );
-    const NPXS = new MosaicTransferable(NPXS_MOSAIC_ID, NPXS_MOSAIC_PROPERTIES, 0);
+    // // PUNDIX
+    // const NPXS_MOSAIC_ID = new MosaicId('pundix', 'npxs');
+    // const NPXS_MOSAIC_PROPERTIES = new MosaicProperties(
+    //   6, //TODO
+    //   9000000000,
+    //   true,
+    //   false
+    // );
+    // const NPXS = new MosaicTransferable(NPXS_MOSAIC_ID, NPXS_MOSAIC_PROPERTIES, 0);
 
-    // SPORTSFIX
-    const SFT_MOSAIC_ID = new MosaicId('sportsfix', 'sft');
-    const SFT_MOSAIC_PROPERTIES = new MosaicProperties(
-      6, //TODO
-      9000000000,
-      true,
-      false
-    );
-    const SFT = new MosaicTransferable(SFT_MOSAIC_ID, SFT_MOSAIC_PROPERTIES, 0);
+    // // SPORTSFIX
+    // const SFT_MOSAIC_ID = new MosaicId('sportsfix', 'sft');
+    // const SFT_MOSAIC_PROPERTIES = new MosaicProperties(
+    //   6, //TODO
+    //   9000000000,
+    //   true,
+    //   false
+    // );
+    // const SFT = new MosaicTransferable(SFT_MOSAIC_ID, SFT_MOSAIC_PROPERTIES, 0);
 
-    // XARCADE
-    const XAR_MOSAIC_ID = new MosaicId('xarcade', 'xar');
-    const XAR_MOSAIC_PROPERTIES = new MosaicProperties(
-      6, //TODO
-      9000000000,
-      true,
-      false
-    );
-    const XAR = new MosaicTransferable(XAR_MOSAIC_ID, XAR_MOSAIC_PROPERTIES, 0);
+    // // XARCADE
+    // const XAR_MOSAIC_ID = new MosaicId('xarcade', 'xar');
+    // const XAR_MOSAIC_PROPERTIES = new MosaicProperties(
+    //   6, //TODO
+    //   9000000000,
+    //   true,
+    //   false
+    // );
+    // const XAR = new MosaicTransferable(XAR_MOSAIC_ID, XAR_MOSAIC_PROPERTIES, 0);
 
-    return [XPX, NPXS, SFT, XAR];
+    // return [XPX, NPXS, SFT, XAR];
   }
 
-  mosaics(address: Address): Observable<Array<MosaicTransferable>> {
+  mosaics(address: Address): Observable<Array<Mosaic>> {
     const XPX = this.generateInitialMosaics()[0];
     const NPXS = this.generateInitialMosaics()[1];
     const SFT = this.generateInitialMosaics()[2];
@@ -168,8 +171,8 @@ export class GetBalanceProvider {
 
           let promises = MOSAICS.map(async (mosaic, index, array)=>{
             // console.clear();
-            const price = await this.getCoinPrice(mosaic.mosaicId.name);
-            return price * mosaic.amount;
+            const price = await this.getCoinPrice(mosaic.id.toHex());
+            return price * mosaic.amount.compact();
           })
 
           function getSum(total, num) {

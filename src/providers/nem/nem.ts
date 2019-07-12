@@ -1,70 +1,27 @@
-import { Injectable, OnInit } from "@angular/core";
-import { Storage } from "@ionic/storage";
-import { HttpClient } from '@angular/common/http';
-import { convert, KeyPair, nacl_catapult } from 'js-xpx-chain-library';
-import { interval, Observable } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Block } from 'nem-library';
+import { Observable } from 'rxjs';
 import {
   Account,
   AccountHttp,
-  AccountPropertyModification,
-  AccountPropertyTransaction,
   Address,
-  AggregateTransaction,
-  AliasActionType,
-  AliasTransaction,
-  CosignatureSignedTransaction,
-  CosignatureTransaction,
-  Deadline,
-  EmptyMessage,
-  EncryptedPrivateKey,
-  Listener,
-  LockFundsTransaction,
-  ModifyMultisigAccountTransaction,
   Mosaic,
-  MosaicAmountView,
-  MosaicDefinitionTransaction,
   MosaicHttp,
   MosaicId,
-  MosaicNonce,
-  MosaicProperties,
-  MosaicService,
-  MosaicSupplyChangeTransaction,
-  MosaicSupplyType,
-  MultisigCosignatoryModification,
-  MultisigCosignatoryModificationType,
   NamespaceHttp,
-  NamespaceId,
   NetworkHttp,
   NetworkType,
   Password,
-  PlainMessage,
-  PropertyType,
-  PublicAccount,
-  QueryParams,
-  RegisterNamespaceTransaction,
-  SignedTransaction,
   SimpleWallet,
   Transaction,
-  TransactionAnnounceResponse,
   TransactionHttp,
   TransferTransaction,
-  UInt64,
+  AccountInfo,
+  MultisigAccountInfo,
 } from 'tsjs-xpx-chain-sdk';
 import { MetadataHttp } from 'tsjs-xpx-chain-sdk/dist/src/infrastructure/MetadataHttp';
 
 import { AppConfig } from '../../app/app.config';
-import { Block } from "nem-library";
-
-// export const SERVER_CONFIG: ServerConfig[] = [
-//   // { protocol: "http", domain: "35.229.200.77", port: 7890 },
-//   // { protocol: "http", domain: "104.128.226.60", port: 7890 },
-//   { protocol: "http", domain: "23.228.67.85", port: 7890 },
-//   // { protocol: "http", domain: "192.3.61.243", port: 7890 },
-//   // { protocol: "http", domain: "50.3.87.123", port: 7890 },
-
-
-// ];
 
 /*
  Generated class for the NemProvider provider.
@@ -74,15 +31,6 @@ import { Block } from "nem-library";
  */
 @Injectable()
 export class NemProvider{
-  // wallets: SimpleWallet[];
-  // accountHttp: AccountHttp;
-  // mosaicHttp: MosaicHttp;
-  // transactionHttp: TransactionHttp;
-  // qrService: QRService;
-  // accountOwnedMosaicsService: AccountOwnedMosaicsService;
-  // chainHttp: ChainHttp;
-  // nodeHttp: NodeHttp;
-
   networkType: NetworkType;
   wsNodeUrl: string;
   httpUrl: string;
@@ -92,11 +40,8 @@ export class NemProvider{
   mosaicHttp: MosaicHttp;
   networkHttp: NetworkHttp;
   metadataHttp: MetadataHttp;
-  
 
-
-
-  constructor(private storage: Storage) {
+  constructor() {
     this.networkType = NetworkType[AppConfig.sirius.networkType];
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
@@ -150,8 +95,12 @@ export class NemProvider{
    * @param address The NEM address
    * @return {AccountInfoWithMetaData}
    */
-  public getAccountInfo(address: Address): Observable<any> {
-    return;
+  public getAccountInfo(address: Address): Observable<AccountInfo> {
+    return this.accountHttp.getAccountInfo(address);
+  }
+
+  public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
+    return this.accountHttp.getMultisigAccountInfo(address);
   }
 
   /**

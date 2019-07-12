@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { NemProvider } from '../../../../providers/nem/nem';

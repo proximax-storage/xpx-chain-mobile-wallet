@@ -1,16 +1,25 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController, Platform } from 'ionic-angular';
-import { SimpleWallet, MosaicTransferable, XEM, Address, TransferTransaction, AccountInfo, AccountInfoWithMetaData, Transaction } from 'nem-library';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NemProvider } from '../../../../providers/nem/nem';
-import { GetBalanceProvider } from '../../../../providers/get-balance/get-balance';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { AlertProvider } from '../../../../providers/alert/alert';
-import { CoingeckoProvider } from '../../../../providers/coingecko/coingecko';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { App } from '../../../../providers/app/app';
 import { Storage } from '@ionic/storage';
+import { IonicPage, ModalController, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
+import {
+  Address,
+  MosaicAmountView,
+  MultisigAccountInfo,
+  PublicAccount,
+  SimpleWallet,
+  TransferTransaction,
+} from 'tsjs-xpx-chain-sdk';
+
+import { AlertProvider } from '../../../../providers/alert/alert';
+import { App } from '../../../../providers/app/app';
+import { CoingeckoProvider } from '../../../../providers/coingecko/coingecko';
+import { GetBalanceProvider } from '../../../../providers/get-balance/get-balance';
+import { NemProvider } from '../../../../providers/nem/nem';
+import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
+import { WalletProvider } from '../../../../providers/wallet/wallet';
+
 /**
  * Generated class for the SendMultisigPage page.
  *
@@ -28,7 +37,7 @@ export class SendMultisigPage {
 
   addressSourceType: { from: string; to: string };
   currentWallet: SimpleWallet;
-  selectedMosaic: MosaicTransferable;
+  selectedMosaic: MosaicAmountView[];
   selectedCoin: any;
 
   form: FormGroup;
@@ -37,10 +46,10 @@ export class SendMultisigPage {
   mosaicSelectedName: string;
 
   // Multisig
-  multisigAccounts: AccountInfo[];
-  selectedAccount: AccountInfo;
+  multisigAccounts: MultisigAccountInfo[];
+  selectedAccount: PublicAccount;
   selectedAccountAddress: string;
-  accountInfo: AccountInfoWithMetaData;
+  accountInfo: MultisigAccountInfo;
   isMultisig: boolean;
   multisigAccountAddress: Address;
 
@@ -80,8 +89,8 @@ export class SendMultisigPage {
 
   onAccountSelected() {
     if (this.multisigAccounts) {
-      this.selectedAccount = this.multisigAccounts.find(multisigAccount => multisigAccount.publicAccount.address.plain() === this.selectedAccountAddress);
-      console.log("Selected account", this.selectedAccount);
+      this.selectedAccount = this.multisigAccounts.map(multisigAccount => multisigAccount.account).find(multisigAccount => multisigAccount.address.plain() === this.selectedAccountAddress);
+      console.log("Selected account", this.selectedAccount); 
 
       this.getMosaics();
     }
@@ -89,24 +98,22 @@ export class SendMultisigPage {
 
   getAccountInfo() {
     console.info("Getting account information.", this.currentWallet.address)
-    this.nemProvider
-      .getAccountInfo(this.currentWallet.address)
-      .subscribe(accountInfo => {
+    this.nemProvider.getMultisigAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
         if (accountInfo) {
           this.accountInfo = accountInfo;
 
-          if (this.accountInfo.cosignatoryOf) {
+          if (this.accountInfo.isMultisig()) {
             console.clear();
             console.log("This is a multisig account");
             this.isMultisig = true;
 
             
-            this.multisigAccounts = [... this.accountInfo.cosignatoryOf]; // get multisig accounts the user has
+            this.multisigAccounts = [this.accountInfo]; // get multisig accounts the user has
 
             if(!this.selectedAccount) {
-              this.selectedAccount = this.multisigAccounts[0]; // select first account as default
-              this.selectedAccountAddress = this.multisigAccounts[0].publicAccount.address.plain();
-              this.multisigAccountAddress = this.multisigAccounts[0].publicAccount.address;
+              this.selectedAccount = this.multisigAccounts[0].account; // select first account as default
+              this.selectedAccountAddress = this.multisigAccounts[0].account.address.plain();
+              this.multisigAccountAddress = this.multisigAccounts[0].account.address;
             }
 
             console.log("accountInfo", this.accountInfo)
@@ -137,10 +144,8 @@ export class SendMultisigPage {
   }
   getMosaics() {
 
-    if (this.selectedAccount.publicAccount.address) {
-      this.getBalanceProvider
-        .mosaics(this.selectedAccount.publicAccount.address)
-        .subscribe(mosaics => {
+    if (this.selectedAccount.address) {
+      this.getBalanceProvider.mosaics(this.selectedAccount.address).subscribe(mosaics => {
 
           console.log("Multisig mosaic", mosaics);
           if (!this.selectedMosaic) {

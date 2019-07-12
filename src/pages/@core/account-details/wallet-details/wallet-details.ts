@@ -1,11 +1,12 @@
-import { AuthProvider } from './../../../../providers/auth/auth';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
-import { AccountInfoWithMetaData, SimpleWallet } from 'nem-library';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { Clipboard } from '@ionic-native/clipboard';
+import { IonicPage, ModalController, NavController, NavParams, ViewController } from 'ionic-angular';
+import { AccountInfo, SimpleWallet } from 'tsjs-xpx-chain-sdk';
+
+import { NemProvider } from '../../../../providers/nem/nem';
 import { ToastProvider } from '../../../../providers/toast/toast';
+import { WalletProvider } from '../../../../providers/wallet/wallet';
+import { AuthProvider } from './../../../../providers/auth/auth';
 
 /**
  * Generated class for the WalletDetailsPage page.
@@ -20,7 +21,7 @@ import { ToastProvider } from '../../../../providers/toast/toast';
   templateUrl: 'wallet-details.html',
 })
 export class WalletDetailsPage {
-  accountInfo: AccountInfoWithMetaData;
+  accountInfo: AccountInfo;
   currentWallet: SimpleWallet;
   walletName: string = '';
   totalBalance: number;
@@ -43,9 +44,7 @@ export class WalletDetailsPage {
   }
 
   getAccountInfo() {
-    this.nemProvider
-      .getAccountInfo(this.currentWallet.address)
-      .subscribe(accountInfo => {
+    this.nemProvider.getAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
         this.accountInfo = accountInfo;
         console.log(this.accountInfo)
       }, (err: any) => {

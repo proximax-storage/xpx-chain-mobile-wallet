@@ -1,24 +1,40 @@
-import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams, ModalController, InfiniteScroll, ViewController, ActionSheetController } from "ionic-angular";
-import { CoinPriceChartProvider } from "../../../providers/coin-price-chart/coin-price-chart";
-import { CoingeckoProvider } from "../../../providers/coingecko/coingecko";
-import { UtilitiesProvider } from "../../../providers/utilities/utilities";
-import { TransactionTypes, SimpleWallet, Transaction, Pageable, AccountInfoWithMetaData, MultisigTransaction, TransferTransaction } from 'nem-library';
-import { NemProvider } from "../../../providers/nem/nem";
-import { WalletProvider } from "../../../providers/wallet/wallet";
-import { Observable } from "rxjs";
-import { App } from "../../../providers/app/app";
-import { Content } from 'ionic-angular';
-import { GetBalanceProvider } from "../../../providers/get-balance/get-balance";
-import { GetMarketPricePipe } from "../../../pipes/get-market-price/get-market-price";
-import { Clipboard } from "@ionic-native/clipboard";
-import { ToastProvider } from "../../../providers/toast/toast";
-import { HapticProvider } from "../../../providers/haptic/haptic";
-import { BrowserTab } from "@ionic-native/browser-tab";
-import { SafariViewController } from "@ionic-native/safari-view-controller";
+import { Component, ViewChild } from '@angular/core';
+import { BrowserTab } from '@ionic-native/browser-tab';
+import { Clipboard } from '@ionic-native/clipboard';
+import { SafariViewController } from '@ionic-native/safari-view-controller';
+import {
+  ActionSheetController,
+  Content,
+  InfiniteScroll,
+  IonicPage,
+  ModalController,
+  NavController,
+  NavParams,
+  ViewController,
+} from 'ionic-angular';
+import {
+  AccountInfo,
+  ModifyMultisigAccountTransaction,
+  SimpleWallet,
+  Transaction,
+  TransactionType,
+  TransferTransaction,
+  AggregateTransaction,
+  Address,
+  MultisigAccountInfo,
+} from 'tsjs-xpx-chain-sdk';
 
-import find from 'lodash/find';
-import filter from 'lodash/filter';
+import { GetMarketPricePipe } from '../../../pipes/get-market-price/get-market-price';
+import { App } from '../../../providers/app/app';
+import { CoinPriceChartProvider } from '../../../providers/coin-price-chart/coin-price-chart';
+import { CoingeckoProvider } from '../../../providers/coingecko/coingecko';
+import { GetBalanceProvider } from '../../../providers/get-balance/get-balance';
+import { HapticProvider } from '../../../providers/haptic/haptic';
+import { NemProvider } from '../../../providers/nem/nem';
+import { ToastProvider } from '../../../providers/toast/toast';
+import { UtilitiesProvider } from '../../../providers/utilities/utilities';
+import { WalletProvider } from '../../../providers/wallet/wallet';
+import { flatMap, toArray } from 'rxjs/operators';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -43,7 +59,7 @@ export class CoinPriceChartPage {
 
   /** Transaction list member variables */
   App = App;
-  TransactionTypes = TransactionTypes;
+  TransactionTypes = TransactionType;
 
   currentWallet: SimpleWallet;
   fakeList: Array<any>;
@@ -55,7 +71,7 @@ export class CoinPriceChartPage {
 
   isLoadingInfinite: boolean = false;
 
-  pageable: Pageable<Transaction[]>;
+  pageable: Transaction[];
 
   coinId: string;
   mosaicId: string;
@@ -70,7 +86,7 @@ export class CoinPriceChartPage {
 
   totalBalance: number;
 
-  accountInfo: AccountInfoWithMetaData;
+  accountInfo: MultisigAccountInfo;
   isMultisig: boolean;
 
 
@@ -182,11 +198,10 @@ export class CoinPriceChartPage {
 
 
 
-      this.nemProvider
-        .getUnconfirmedTransactions(this.currentWallet.address)
-        .flatMap(_ => _)
-        .toArray()
-        .subscribe(result => {
+      this.nemProvider.getUnconfirmedTransactions(this.currentWallet.address).pipe(
+        flatMap(_ => _),
+        toArray()
+      ).subscribe(result => {
           this.unconfirmedTransactions = result;
         });
 
@@ -225,20 +240,20 @@ export class CoinPriceChartPage {
           this.nemProvider.getXEMTransactions(this.currentWallet.address).subscribe(transactions => {
             console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
             transactions.forEach(tx => {
-              if(tx.type == TransactionTypes.MULTISIG) {
+              if(tx.type == TransactionType.MODIFY_MULTISIG_ACCOUNT) {
                 console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> tx", tx);
 
-                let transaction = ((tx as MultisigTransaction).otherTransaction as TransferTransaction)
-                let currentMosaicTransaction = transaction.mosaics().find(mosaic => mosaic.mosaicId.name == this.mosaicId);
+                let transaction: TransferTransaction = ((tx as AggregateTransaction).innerTransactions[0] as TransferTransaction)
+                let currentMosaicTransaction = transaction.mosaics.find(mosaic => mosaic.id.toHex() == this.mosaicId);
 								
                 if(currentMosaicTransaction ) {
                   console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaicTransaction", currentMosaicTransaction);
                   this.confirmedTransactions.push(tx);
-                  if (transaction.recipient.plain() === this.currentWallet.address.plain()) {
-                  total += currentMosaicTransaction.quantity / currentMosaic.divisibility;
+                  if ((transaction.recipient as Address).plain() === this.currentWallet.address.plain()) {
+                  total += currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
                 }
                 else {
-                  total -= currentMosaicTransaction.quantity / currentMosaic.divisibility;
+                  total -= currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
                 }
                 }
               }
@@ -270,14 +285,12 @@ export class CoinPriceChartPage {
   getAccountInfo() {
     console.info("Getting account information.", this.currentWallet.address)
     try {
-      this.nemProvider
-        .getAccountInfo(this.currentWallet.address)
-        .subscribe(accountInfo => {
+      this.nemProvider.getMultisigAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
           if (accountInfo) {
             this.accountInfo = accountInfo;
             console.log("accountInfo", this.accountInfo)
             // Check if account is a cosignatory of multisig account(s)
-            if (this.accountInfo.cosignatoryOf.length > 0) {
+            if (this.accountInfo.cosignatories.length > 0) {
               // console.clear();
               console.log("This is a multisig account");
               this.isMultisig = true;

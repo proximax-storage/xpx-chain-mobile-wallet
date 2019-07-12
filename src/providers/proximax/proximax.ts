@@ -1,13 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NetworkType, Password, SimpleWallet, AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, NamespaceService, TransactionHttp, Address, AccountInfo, Transaction, PublicAccount, QueryParams, Account, MosaicId, MosaicAmountView } from 'tsjs-xpx-chain-sdk';
-import { AppConfig } from '../../app/app.config';
-import { Observable } from 'rxjs/Observable';
-import { crypto } from 'js-xpx-chain-library'
-import { walletInterface, commonInterface } from '../interfaces/shared.interfaces';
+import { crypto } from 'js-xpx-chain-library';
+import { from, Observable } from 'rxjs';
+
+import {
+  Account,
+  AccountHttp,
+  AccountInfo,
+  Address,
+  MosaicAmountView,
+  MosaicHttp,
+  MosaicId,
+  MosaicService,
+  NamespaceHttp,
+  NamespaceService,
+  NetworkType,
+  Password,
+  PublicAccount,
+  SimpleWallet,
+  Transaction,
+  TransactionHttp,
+  QueryParams,
+} from 'tsjs-xpx-chain-sdk';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
-// import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
-// import { Observable } from 'rxjs';
+
+import { AppConfig } from '../../app/app.config';
+import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
 
 /*
   Generated class for the ProximaxProvider provider.
@@ -68,33 +86,37 @@ export class ProximaxProvider {
     return common.privateKey;
   }
 
-getAccountInfo(address: Address): Observable<AccountInfo> {
-  return this.accountHttp.getAccountInfo(address);
-}
+  getAccountInfo(address: Address): Observable<AccountInfo> {
+    // return null;
+    return this.accountHttp.getAccountInfo(address);
+  }
 
-getAllTransactionsFromAccount(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
-  return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));
-}
+  getAllTransactionsFromAccount(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
+    // return null;
+    return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));
+  }
 
-getBalance(address: Address): Observable<MosaicAmountView[]> {
-  return this.mosaicService.mosaicsAmountViewFromAddress(address);
-}
+  getBalance(address: Address): Observable<MosaicAmountView[]> {
+    // return null;
+    return this.mosaicService.mosaicsAmountViewFromAddress(address);
+  }
 
-createFromRawAddress(address: string): Address {
-  return Address.createFromRawAddress(address);
-}
+  createFromRawAddress(address: string): Address {
+    return Address.createFromRawAddress(address);
+  }
 
-getPublicAccountFromPrivateKey(privateKey: string, net: NetworkType): PublicAccount {
-  return Account.createFromPrivateKey(privateKey, net).publicAccount;
-}
+  getPublicAccountFromPrivateKey(privateKey: string, net: NetworkType): PublicAccount {
+    return Account.createFromPrivateKey(privateKey, net).publicAccount;
+  }
 
-getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
-  return this.mosaicHttp.getMosaicNames(mosaicIds);
-}
+  getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
+    return from([]);
+    // return this.mosaicHttp.getMosaicNames(mosaicIds);
+  }
 
-checkAddress(privateKey: string, net: NetworkType, address: string): boolean {
-  return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
-}
+  checkAddress(privateKey: string, net: NetworkType, address: string): boolean {
+    return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
+  }
 
 
 

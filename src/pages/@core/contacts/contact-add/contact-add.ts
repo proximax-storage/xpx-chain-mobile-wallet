@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { Address } from 'tsjs-xpx-chain-sdk';
 
-import { Address } from 'nem-library';
-
+import { AlertProvider } from '../../../../providers/alert/alert';
 import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
 import { NemProvider } from '../../../../providers/nem/nem';
-import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 
 /**
@@ -63,7 +62,7 @@ export class ContactAddPage {
   }
 
   onSubmit(form) {
-    const CONTACT_ADDRESS = new Address(this.formGroup.get('address').value);
+    const CONTACT_ADDRESS = Address.createFromRawAddress(this.formGroup.get('address').value);
     const DATA = form;
     if (!this.nemProvider.isValidAddress(CONTACT_ADDRESS)) {
       this.alertProvider.showMessage(
