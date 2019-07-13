@@ -51,7 +51,7 @@ export class MockDataProvider {
   }
 
   init() {
-    this.initData();
+    // this.initData();
 
     Promise.all([
       this.storage.get('pin'),

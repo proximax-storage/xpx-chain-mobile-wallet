@@ -112,7 +112,8 @@ export class WalletAddPrivateKeyPage {
             .then(_ => {
               return this.walletProvider.setSelectedWallet(newWallet);
             }).then(_ => {
-              // this.gotoBackup(newWallet);
+              // TODO: Backup page
+              // this.gotoBackup(newWallet); 
               this.goHome();
             });
 

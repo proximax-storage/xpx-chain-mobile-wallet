@@ -21,7 +21,7 @@ export class AuthProvider {
 
 
 
-  getEmail() {
+  getUsername() {
     return this.storage.get('selectedAccount').then(data => {
       const result = data ? data : { email: '' };
       return result.email;

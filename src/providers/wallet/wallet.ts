@@ -73,17 +73,17 @@ export class WalletProvider {
    */
   public storeWallet(wallet: SimpleWallet, walletColor): Promise<SimpleWallet> {
     let result = [];
-    return this.authProvider.getEmail().then(email => {
-      return this.getAccounts().then(value => {
-        let accounts = value;
-        result = accounts[email];
+    return this.authProvider.getUsername().then(username => {
+      return this.getLocalWallets().then(value => {
+        let wallets = value;
+        result = wallets[username];
 
         result.push({wallet: wallet, walletColor: walletColor});
 
-        accounts[email] = result;
+        wallets[username] = result;
 
 
-        this.storage.set('wallets', accounts);
+        this.storage.set('wallets', wallets);
         return wallet;
       });
     });
@@ -97,32 +97,32 @@ export class WalletProvider {
   public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor:string) {
     console.log(walletColor);
     // return;
-    return this.authProvider.getEmail().then(email => {
-      return this.getAccounts().then(accounts => {
-        let wallets: any = accounts[email];
+    return this.authProvider.getUsername().then(username => {
+      return this.getLocalWallets().then(wallets => {
+        let _wallets: any = wallets[username];
         let updateWallet :any;
-        for(let i=0; i<wallets.length; i++) {
-          if(wallets[i].wallet.name == wallet.name) {
-            wallets[i].wallet.name = newWalletName;
-            wallets[i].walletColor = walletColor;
-            updateWallet= wallets[i];
+        for(let i=0; i<_wallets.length; i++) {
+          if(_wallets[i].wallet.name == wallet.name) {
+            _wallets[i].wallet.name = newWalletName;
+            _wallets[i].walletColor = walletColor;
+            updateWallet= _wallets[i];
           };
 
         }
 
         
 
-        wallets = wallets.map(_ => {
+        _wallets = _wallets.map(_ => {
           return {
             wallet: _.wallet.writeWLTFile(),
             walletColor: _.walletColor
           }
         });
 
-        let ACCOUNT = {};
-        ACCOUNT[email] = wallets;
+        const WALLET = {};
+        WALLET[username] = _wallets;
 
-        return this.storage.set('wallets', ACCOUNT).then(value => {
+        return this.storage.set('wallets', WALLET).then(value => {
           return updateWallet;
         });
       });
@@ -131,30 +131,30 @@ export class WalletProvider {
 
   deleteWallet(wallet: SimpleWallet) {
     
-    return this.authProvider.getEmail().then(email => {
-      return this.getAccounts().then(value => {
-        let result: Array<any> = value[email];
+    return this.authProvider.getUsername().then(username => {
+      return this.getLocalWallets().then(wallets => {
+        let _wallets: Array<any> = wallets[username];
 
-        console.log(result, wallet);
-        result.map((res,index)=> {
+        console.log(_wallets, wallet);
+        _wallets.map((res,index)=> {
           if (res.wallet.name == wallet.name) {
             console.log("Deleting your wallet: ", wallet.name)
-            result.splice(index, 1);
+            _wallets.splice(index, 1);
 
-            result = result.map(_ => {
+            _wallets = _wallets.map(_ => {
               return {
                 wallet: _.wallet.writeWLTFile(),
                 walletColor: _.walletColor
               }
             });
 
-            let ACCOUNT = {};
-            ACCOUNT[email] = result;
+            const WALLET = {};
+            WALLET[username] = _wallets;
 
-            return this.storage.set('wallets', ACCOUNT);
+            return this.storage.set('wallets', WALLET);
           }
         })
-        result
+        _wallets
         return;
 
         
@@ -172,11 +172,11 @@ export class WalletProvider {
   public checkIfWalletNameExists(walletName: string): Promise<boolean> {
     let exists = false;
 
-    return this.authProvider.getEmail().then(email => {
-      return this.getAccounts().then(wallets => {
-        const WALLETS = wallets[email];
-        for (var i = 0; i < WALLETS.length; i++) {
-          if (WALLETS[i].wallet.name === walletName) {
+    return this.authProvider.getUsername().then(username => {
+      return this.getLocalWallets().then(wallets => {
+        const _wallets = wallets[username];
+        for (var i = 0; i < _wallets.length; i++) {
+          if (_wallets[i].wallet.name === walletName) {
             exists = true;
             break;
           }
@@ -191,17 +191,17 @@ export class WalletProvider {
    * @return promise with selected wallet
    */
   public getSelectedWallet(): Promise<SimpleWallet> {
-    return this.authProvider.getEmail().then(email => {
+    return this.authProvider.getUsername().then(username => {
       return this.storage.get('selectedWallet').then(wallets => {
-        let result = null;
+        let _wallet = null;
         if (wallets) {
-          const selectedWallet = wallets[email];
-          result = <SimpleWallet>(selectedWallet);
+          const selectedWallet = wallets[username];
+          _wallet = <SimpleWallet>(selectedWallet);
         } else {
-          result = {};
+          _wallet = {};
         }
 
-        return result;
+        return _wallet;
       });
     });
   }
@@ -209,15 +209,15 @@ export class WalletProvider {
   /**
    * Get loaded wallets from localStorage
    */
-  public getAccounts(): Promise<any> {
-    return this.authProvider.getEmail().then(email => {
+  public getLocalWallets(): Promise<any> {
+    return this.authProvider.getUsername().then(username => {
       return this.storage.get('wallets').then(wallets => {
         let _wallets = wallets ? wallets : {};
 				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
-        const ACCOUNT_WALLETS = _wallets[email] ? _wallets[email] : [];
+        const WALLETS = _wallets[username] ? _wallets[username] : [];
 
         if (wallets) {
-          const walletsMap = ACCOUNT_WALLETS.map(walletFile => {
+          const walletsMap = WALLETS.map(walletFile => {
             if (walletFile.name) {
               return 
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
@@ -226,9 +226,9 @@ export class WalletProvider {
             }
           });
 
-          _wallets[email] = walletsMap;
+          _wallets[username] = walletsMap;
         } else {
-          _wallets[email] = [];
+          _wallets[username] = [];
         }
 
         return _wallets;
@@ -240,31 +240,34 @@ export class WalletProvider {
    * Get loaded wallets from localStorage
    */
   public getWallets(): Promise<any> {
-    return this.authProvider.getEmail().then(email => {
+    return this.authProvider.getUsername().then(username => {
+    console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", username)
       return this.storage.get('wallets').then(wallets => {
 				console.log("LOG: WalletProvider -> constructor -> data", wallets)
         let _wallets = wallets || {};
-        const ACCOUNT_WALLETS = _wallets[email] ? _wallets[email] : [];
-				console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", ACCOUNT_WALLETS)
+        const WALLETS = _wallets[username] || [];
+				console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
 
-        if (ACCOUNT_WALLETS) {
-          const walletsMap = ACCOUNT_WALLETS.map(walletFile => {
+        if (WALLETS) {
+          const walletsMap = WALLETS.map(walletFile => {
+          console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
+            
             if (walletFile.name) {
               return 
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
-              let wallet = <SimpleWallet>(walletFile.wallet);
-              wallet.walletColor = walletFile.walletColor;
+              let wallet = walletFile.wallet as SimpleWallet;
+              wallet.walletColor = walletFile['walletColor'];
               return wallet ;
             }
           });
 
-          _wallets[email] = walletsMap;
+          _wallets[username] = walletsMap;
         } else {
-          _wallets[email] = [];
+          _wallets[username] = [];
         }
 
-        return _wallets[email];
+        return _wallets[username];
       });
     });
   }
@@ -295,7 +298,7 @@ export class WalletProvider {
    */
   public setSelectedWallet(wallet: SimpleWallet) {
     return Promise.all([
-      this.authProvider.getEmail(),
+      this.authProvider.getUsername(),
       this.storage.get('selectedWallet')
     ]).then(results => {
       const EMAIL = results[0];
@@ -310,7 +313,7 @@ export class WalletProvider {
    * Remove selected Wallet
    */
   public unsetSelectedWallet() {
-    return this.authProvider.getEmail().then(email => {
+    return this.authProvider.getUsername().then(email => {
       this.storage.get('selectedWallet').then(selectedWallet => {
         delete selectedWallet[email];
 

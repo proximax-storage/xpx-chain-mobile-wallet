@@ -144,44 +144,44 @@ export class SendMultisigPage {
   }
   getMosaics() {
 
-    if (this.selectedAccount.address) {
-      this.getBalanceProvider.mosaics(this.selectedAccount.address).subscribe(mosaics => {
+    // if (this.selectedAccount.address) {
+    //   this.getBalanceProvider.mosaics(this.selectedAccount.address).subscribe(mosaics => {
 
-          console.log("Multisig mosaic", mosaics);
-          if (!this.selectedMosaic) {
-            this.selectedMosaic = mosaics.filter(m => m.mosaicId.name == this.mosaicSelectedName)[0];
-            console.log("this.selectedMosaic", this.selectedMosaic);
+    //       console.log("Multisig mosaic", mosaics);
+    //       if (!this.selectedMosaic) {
+    //         this.selectedMosaic = mosaics.filter(m => m.mosaicId.name == this.mosaicSelectedName)[0];
+    //         console.log("this.selectedMosaic", this.selectedMosaic);
 
-            if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
-              console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
-              this.form.get('isMosaicTransfer').setValue(true);
-            }
-          }
+    //         if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
+    //           console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
+    //           this.form.get('isMosaicTransfer').setValue(true);
+    //         }
+    //       }
 
-          let mosaic = this.selectedMosaic.mosaicId.name;
-          let coinId: string;
+    //       let mosaic = this.selectedMosaic.mosaicId.name;
+    //       let coinId: string;
 
-          if (mosaic === 'xem') {
-            coinId = 'nem';
-          }
-          else if (mosaic === 'xpx') {
-            coinId = 'proximax';
-          } else if (mosaic === 'npxs') {
-            coinId = 'pundi-x';
-          }
+    //       if (mosaic === 'xem') {
+    //         coinId = 'nem';
+    //       }
+    //       else if (mosaic === 'xpx') {
+    //         coinId = 'proximax';
+    //       } else if (mosaic === 'npxs') {
+    //         coinId = 'pundi-x';
+    //       }
 
-          // Get coin price
-          if (coinId) {
-            this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
-              this.selectedCoin = coin;
-            });
-          }
-        });
+    //       // Get coin price
+    //       if (coinId) {
+    //         this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
+    //           this.selectedCoin = coin;
+    //         });
+    //       }
+    //     });
 
-      // Set sender address to currenWallet.address
-      this.form.get('senderName').setValue(this.currentWallet.name);
-      this.form.get('senderAddress').setValue(this.multisigAccountAddress.plain());
-    }
+    //   // Set sender address to currenWallet.address
+    //   this.form.get('senderName').setValue(this.currentWallet.name);
+    //   this.form.get('senderAddress').setValue(this.multisigAccountAddress.plain());
+    // }
 
   }
 
