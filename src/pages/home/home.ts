@@ -136,21 +136,15 @@ export class HomePage {
           
             try {
               this.getAccountInfo(account).subscribe(accountInfo=> {
-                if(accountInfo) {
                   console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
-                  // this.accountInfo = accountInfo;
 
                   // Show Assets
                   this.getAssets(accountInfo);
     
                   // Show Transactions
                   this.getTransactions(selectedWallet, account);
-
                   this.hideLoaders();
-                } else {
-                  return;
-                }
-  
+
               })
             } catch (error) {
               this.showEmptyMessage();
@@ -164,6 +158,9 @@ export class HomePage {
     });
   }
   showEmptyMessage() {
+    this.mosaics = null;
+    this.confirmedTransactions = null;
+    this.unconfirmedTransactions = null;
     this.showEmptyMosaic = true;
     this.showEmptyTransaction = true;
   }
