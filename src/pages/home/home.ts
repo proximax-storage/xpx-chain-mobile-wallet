@@ -134,42 +134,61 @@ export class HomePage {
             console.log("4. LOG: HomePage -> ionViewWillEnter -> account", account);
             this.selectedAccount = account;
           
-            this.getAccountInfo(account).subscribe(accountInfo=> {
-              console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
-              // this.accountInfo = accountInfo;
-              this.updateDefaultMosaics(accountInfo);
+            try {
+              this.getAccountInfo(account).subscribe(accountInfo=> {
+                if(accountInfo) {
+                  console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
+                  // this.accountInfo = accountInfo;
 
-              this.getTransactions(selectedWallet, account);
-            })
+                  // Show Assets
+                  this.getAssets(accountInfo);
+    
+                  // Show Transactions
+                  this.getTransactions(selectedWallet, account);
 
-
+                  this.hideLoaders();
+                } else {
+                  return;
+                }
+  
+              })
+            } catch (error) {
+              this.showEmptyMessage();
+            }
           })
         })
       } else {
-        this.showEmptyMosaic = true;
+        this.showEmptyMessage();
       }
-      this.isLoading = false;
+      this.hideLoaders();
     });
+  }
+  showEmptyMessage() {
+    this.showEmptyMosaic = true;
+    this.showEmptyTransaction = true;
+  }
+  hideLoaders() {
+    this.isLoading = false;
   }
   showLoaders() {
     // Loaders
     this.fakeList = [{}, {}];
     this.isLoading = true;
-    this.showEmptyTransaction = false;
-    this.showEmptyMosaic = false;
+    this.showEmptyTransaction = true;
+    this.showEmptyMosaic = true;
 
     this.unconfirmedTransactions = null;
     this.confirmedTransactions = null
     
     // TODO: (Temporary) False if there is transaction
-    this.showEmptyTransaction = true;;
+    // this.showEmptyTransaction = true;;
   }
 
-  private updateDefaultMosaics(accountInfo: AccountInfo) {
+  private getAssets(accountInfo: AccountInfo) {
+    console.log("SIRIUS CHAIN WALLET: HomePage -> updateDefaultMosaics -> accountInfo", accountInfo)
     this.getDefaultMosaics();
 
     accountInfo.mosaics.forEach(mosaic => {
-    console.log("LOG: HomePage -> updateDefaultMosaics -> mosaic", mosaic);
       const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
       console.log("6. LOG: HomePage -> updateDefaultMosaics -> mosaicInfo", mosaicInfo);
     });
@@ -214,7 +233,6 @@ export class HomePage {
     this.mosaicsProvider
       .mosaics()
       .subscribe(mosaics => {
-        console.log("4. LOG: HomePage -> getDefaultMosaics -> mosaics", mosaics);
         this.mosaics = mosaics;
         this.isLoading = false;
       });
@@ -238,12 +256,18 @@ export class HomePage {
     this.isLoading = true;
 
     this.transactionsProvider.getAllTransactionsFromAccount(account.publicAccount).subscribe(transactions=> {
-      const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
-      console.log("8. LOG: HomePage -> getTransactions -> transferTransactions", transferTransactions);
-      this.confirmedTransactions = transferTransactions;
+      if(transactions) {
+        const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
+        console.log("8. LOG: HomePage -> getTransactions -> transferTransactions", transferTransactions);
+        this.confirmedTransactions = transferTransactions;
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true
+      }
+
     });
 
-    this.showEmptyTransaction = false;
+
     this.isLoading = false;
   }
 

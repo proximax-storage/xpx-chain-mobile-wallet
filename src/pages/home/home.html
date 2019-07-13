@@ -75,7 +75,7 @@
   </ion-slides> -->
 
   <ion-slides>
-    <ion-slide *ngIf="!showEmptyMosaic" (click)="showWalletDetails();">
+    <ion-slide *ngIf="selectedWallet" (click)="showWalletDetails();">
       <div class="single-wallet">
         <div class="single-wallet-content ">
           <img class="single-wallet-front-logo single-wallet-logo" [src]="AppConfig.INFO">

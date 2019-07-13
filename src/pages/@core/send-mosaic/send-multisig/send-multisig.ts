@@ -255,23 +255,23 @@ export class SendMultisigPage {
   }
 
   selectMosaic() {
-    this.utils
-      .showInsetModal('SendMosaicSelectPage', {
-        walletAddress: this.selectedAccount.publicAccount.address,
-        selectedMosaic: this.selectedMosaic
-      })
-      .subscribe(data => {
-        if (data) {
-          console.log('Selected mosaic', data);
-          this.selectedMosaic = data;
-          console.log(this.selectedMosaic);
+    // this.utils
+    //   .showInsetModal('SendMosaicSelectPage', {
+    //     walletAddress: this.selectedAccount.publicAccount.address,
+    //     selectedMosaic: this.selectedMosaic
+    //   })
+    //   .subscribe(data => {
+    //     if (data) {
+    //       console.log('Selected mosaic', data);
+    //       this.selectedMosaic = data;
+    //       console.log(this.selectedMosaic);
 
-          if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
-            console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
-            this.form.get('isMosaicTransfer').setValue(true);
-          }
-        }
-      });
+    //       if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
+    //         console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
+    //         this.form.get('isMosaicTransfer').setValue(true);
+    //       }
+    //     }
+    //   });
   }
 
   selectContact(title) {
@@ -286,64 +286,64 @@ export class SendMultisigPage {
   }
 
   calculateFee() {
-    try {
-      let recipient = new Address(
-        this.form
-          .get('recipientAddress')
-          .value.toUpperCase()
-          .replace('-', '')
-      );
-      console.log(recipient);
-      if (!this.nemProvider.isValidAddress(recipient)) {
-        this.alertProvider.showMessage(
-          'This address does not belong to this network'
-        );
-      } else {
-        this._prepareTx(recipient);
-      }
-    } catch (err) {
-      this.alertProvider.showMessage(
-        'This address does not belong to this network'
-      );
-    }
+    // try {
+    //   let recipient = new Address(
+    //     this.form
+    //       .get('recipientAddress')
+    //       .value.toUpperCase()
+    //       .replace('-', '')
+    //   );
+    //   console.log(recipient);
+    //   if (!this.nemProvider.isValidAddress(recipient)) {
+    //     this.alertProvider.showMessage(
+    //       'This address does not belong to this network'
+    //     );
+    //   } else {
+    //     this._prepareTx(recipient);
+    //   }
+    // } catch (err) {
+    //   this.alertProvider.showMessage(
+    //     'This address does not belong to this network'
+    //   );
+    // }
   }
 
 
   /**
    * Calculates fee and returns prepared Transaction
    */
-  private _prepareTx(recipient: Address): TransferTransaction {
-    let transferTransaction: TransferTransaction;
+  private _prepareTx(recipient: Address): any {
+    // let transferTransaction: TransferTransaction;
 
-    if (this.form.get('isMosaicTransfer').value) {
-      const MOSAIC_TRANSFERRABLE = [
-        new MosaicTransferable(
-          this.selectedMosaic.mosaicId,
-          this.selectedMosaic.properties,
-          this.form.get('amount').value,
-          this.selectedMosaic.levy
-        )
-      ];
+    // if (this.form.get('isMosaicTransfer').value) {
+    //   const MOSAIC_TRANSFERRABLE = [
+    //     new MosaicTransferable(
+    //       this.selectedMosaic.mosaicId,
+    //       this.selectedMosaic.properties,
+    //       this.form.get('amount').value,
+    //       this.selectedMosaic.levy
+    //     )
+    //   ];
 
-      transferTransaction = this.nemProvider.prepareMosaicTransaction(
-        recipient,
-        MOSAIC_TRANSFERRABLE,
-        this.form.get('message').value
-      );
-    } else {
-      transferTransaction = this.nemProvider.prepareTransaction(
-        recipient,
-        this.form.get('amount').value,
-        this.form.get('message').value
-      );
+    //   transferTransaction = this.nemProvider.prepareMosaicTransaction(
+    //     recipient,
+    //     MOSAIC_TRANSFERRABLE,
+    //     this.form.get('message').value
+    //   );
+    // } else {
+    //   transferTransaction = this.nemProvider.prepareTransaction(
+    //     recipient,
+    //     this.form.get('amount').value,
+    //     this.form.get('message').value
+    //   );
 
-      this.form.get('fee').setValue(transferTransaction.fee);
-      this.fee = transferTransaction.fee * 0.000001;
+    //   this.form.get('fee').setValue(transferTransaction.fee);
+    //   this.fee = transferTransaction.fee * 0.000001;
 
-    }
-    console.log('transferTransaction', transferTransaction);
+    // }
+    // console.log('transferTransaction', transferTransaction);
 
-    return transferTransaction;
+    // return transferTransaction;
 
     
 
@@ -353,62 +353,62 @@ export class SendMultisigPage {
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
   onSubmit() {
-    if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
+    // if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
 
-    if (
-      !this.form.get('senderAddress').value ||
-      !this.form.get('recipientAddress').value
-    ) {
-      if (this.addressSourceType.to === 'contact') {
-        this.alertProvider.showMessage('Please select a recipient first.');
-      } else {
-        this.alertProvider.showMessage(
-          "Please type the recipient's address first."
-        );
-      }
-      return;
-    }
+    // if (
+    //   !this.form.get('senderAddress').value ||
+    //   !this.form.get('recipientAddress').value
+    // ) {
+    //   if (this.addressSourceType.to === 'contact') {
+    //     this.alertProvider.showMessage('Please select a recipient first.');
+    //   } else {
+    //     this.alertProvider.showMessage(
+    //       "Please type the recipient's address first."
+    //     );
+    //   }
+    //   return;
+    // }
 
-    try {
-      let recipient = new Address(
-        this.form
-          .get('recipientAddress')
-          .value.toUpperCase()
-          .replace('-', '')
-      );
-      if (!this.nemProvider.isValidAddress(recipient)) {
-        this.alertProvider.showMessage(
-          'This address does not belong to this network'
-        );
-      } else {
-        // Prepare transaction
-        let transferTransaction = this._prepareTx(recipient);
+    // try {
+    //   let recipient = new Address(
+    //     this.form
+    //       .get('recipientAddress')
+    //       .value.toUpperCase()
+    //       .replace('-', '')
+    //   );
+    //   if (!this.nemProvider.isValidAddress(recipient)) {
+    //     this.alertProvider.showMessage(
+    //       'This address does not belong to this network'
+    //     );
+    //   } else {
+    //     // Prepare transaction
+    //     let transferTransaction = this._prepareTx(recipient);
 
-        // Compute total
-        console.log(this.selectedCoin.market_data.current_price.usd, this.form.get('amount').value);
-        let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
+    //     // Compute total
+    //     console.log(this.selectedCoin.market_data.current_price.usd, this.form.get('amount').value);
+    //     let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
 
-        // Show confirm transaction
-        let page = "SendMosaicConfirmationPage";
-        const modal = this.modalCtrl.create(page, {
-          ...this.form.value,
-          mosaic: this.selectedMosaic,
-          sendTx: transferTransaction,
-          currentWallet: this.currentWallet,
-          total: total,
-          transactionType: 'multisig',
-          publicKey: this.selectedAccount.publicAccount.publicKey
-        }, {
-            enableBackdropDismiss: false,
-            showBackdrop: true
-          });
-        modal.present();
-      }
-    } catch (err) {
-      this.alertProvider.showMessage(
-        'This address does not belong to this network'
-      );
-    }
+    //     // Show confirm transaction
+    //     let page = "SendMosaicConfirmationPage";
+    //     const modal = this.modalCtrl.create(page, {
+    //       ...this.form.value,
+    //       mosaic: this.selectedMosaic,
+    //       sendTx: transferTransaction,
+    //       currentWallet: this.currentWallet,
+    //       total: total,
+    //       transactionType: 'multisig',
+    //       publicKey: this.selectedAccount.publicAccount.publicKey
+    //     }, {
+    //         enableBackdropDismiss: false,
+    //         showBackdrop: true
+    //       });
+    //     modal.present();
+    //   }
+    // } catch (err) {
+    //   this.alertProvider.showMessage(
+    //     'This address does not belong to this network'
+    //   );
+    // }
   }
 
   dismiss() {
