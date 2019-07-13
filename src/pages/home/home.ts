@@ -151,6 +151,7 @@ export class HomePage {
             }
           })
         })
+        this.hideEmptyMessage();
       } else {
         this.showEmptyMessage();
       }
@@ -163,6 +164,10 @@ export class HomePage {
     this.unconfirmedTransactions = null;
     this.showEmptyMosaic = true;
     this.showEmptyTransaction = true;
+  }
+  hideEmptyMessage() {
+    this.showEmptyMosaic = false;
+    this.showEmptyTransaction = false;
   }
   hideLoaders() {
     this.isLoading = false;
