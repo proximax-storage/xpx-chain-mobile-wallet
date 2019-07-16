@@ -17,7 +17,6 @@
         </button>
       </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content background>
@@ -26,7 +25,7 @@
     <importance-transfer-detail *ngIf="tx.type == TransactionTypes.IMPORTANCE_TRANSFER" [tx]="tx"></importance-transfer-detail>
 
     <!-- if mosaic definition -->
-    <mosaic-definition-detail *ngIf="tx.type == TransactionTypes.MOSAIC_DEFINITION_CREATION" [tx]="tx"></mosaic-definition-detail>
+    <mosaic-definition-detail *ngIf="tx.type == TransactionTypes.MOSAIC_DEFINITION" [tx]="tx"></mosaic-definition-detail>
 
     <!-- if mosaic supply change -->
     <mosaic-supply-change-detail *ngIf="tx.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE" [tx]="tx"></mosaic-supply-change-detail>

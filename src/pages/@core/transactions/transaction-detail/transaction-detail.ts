@@ -1,7 +1,6 @@
 import { NavParams, IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Component } from '@angular/core';
-
-import { TransactionTypes } from 'nem-library';
+import { TransactionType } from 'tsjs-xpx-chain-sdk';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 
 /**
@@ -17,7 +16,7 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
   templateUrl: 'transaction-detail.html'
 })
 export class TransactionDetailPage {
-  TransactionTypes = TransactionTypes;
+  TransactionTypes = TransactionType;
   tx: any;
 
   constructor(private navParams: NavParams, private navCtrl: NavController, private utils: UtilitiesProvider, private viewCtrl: ViewController) {
