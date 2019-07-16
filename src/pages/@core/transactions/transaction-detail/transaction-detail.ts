@@ -1,8 +1,9 @@
 import { NavParams, IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
-import { TransactionTypes } from 'nem-library';
+
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
+import { TransactionType } from 'tsjs-xpx-chain-sdk';
 
 /**
  * Generated class for the TransactionDetailPage page.
@@ -17,11 +18,12 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
   templateUrl: 'transaction-detail.html'
 })
 export class TransactionDetailPage {
-  TransactionTypes = TransactionTypes;
+  TransactionType = TransactionType;
   tx: any;
 
   constructor(private navParams: NavParams, private navCtrl: NavController, private utils: UtilitiesProvider, private viewCtrl: ViewController) {
     this.tx = this.navParams.data;
+    console.log("SIRIUS CHAIN WALLET: TransactionDetailPage -> constructor -> this.tx", this.tx)
   }
 
   ionViewWillEnter() {

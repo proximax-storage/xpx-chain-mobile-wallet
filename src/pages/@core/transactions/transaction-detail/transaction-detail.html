@@ -22,26 +22,8 @@
 
 <ion-content background>
   <ion-list transparent-items *ngIf="tx">
-    <!-- if importance transfer -->
-    <importance-transfer-detail *ngIf="tx.type == TransactionTypes.IMPORTANCE_TRANSFER" [tx]="tx"></importance-transfer-detail>
-
-    <!-- if mosaic definition -->
-    <mosaic-definition-detail *ngIf="tx.type == TransactionTypes.MOSAIC_DEFINITION_CREATION" [tx]="tx"></mosaic-definition-detail>
-
-    <!-- if mosaic supply change -->
-    <mosaic-supply-change-detail *ngIf="tx.type == TransactionTypes.MOSAIC_SUPPLY_CHANGE" [tx]="tx"></mosaic-supply-change-detail>
-
-    <!-- if multisig transaction  -->
-    <multisig-detail *ngIf="tx.type == TransactionTypes.MULTISIG" [tx]="tx"></multisig-detail>
-
-    <!-- if multisig aggregate modification  -->
-    <multisig-aggregate-modification-detail *ngIf="tx.type == TransactionTypes.MULTISIG_AGGREGATE_MODIFICATION" [tx]="tx"></multisig-aggregate-modification-detail>
-
-    <!-- if provision namespace  -->
-    <provision-namespace-detail *ngIf="tx.type == TransactionTypes.PROVISION_NAMESPACE" [tx]="tx"></provision-namespace-detail>
-
     <!-- if transfer  -->
-    <transfer-detail *ngIf="tx.type == TransactionTypes.TRANSFER" [tx]="tx"></transfer-detail>
+    <transfer-detail *ngIf="tx.type == TransactionType.TRANSFER" [tx]="tx"></transfer-detail>
   </ion-list>
 
 </ion-content>

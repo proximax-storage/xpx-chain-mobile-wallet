@@ -6,14 +6,10 @@ import { WalletProvider } from '../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../providers/utilities/utilities';
 import { GetBalanceProvider } from '../../providers/get-balance/get-balance';
 import { AlertProvider } from '../../providers/alert/alert';
-
-import { NemProvider } from '../../providers/nem/nem';
 import { HapticProvider } from '../../providers/haptic/haptic';
-
-
 import { GetMarketPricePipe } from '../../pipes/get-market-price/get-market-price';
 import { TranslateService } from '@ngx-translate/core';
-import { SimpleWallet, Mosaic, Password, Account, Address, UInt64, Wallet, AccountInfo, TransactionType, Transaction } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Mosaic, Password, Account, AccountInfo, TransactionType, Transaction } from 'tsjs-xpx-chain-sdk';
 import { AuthProvider } from '../../providers/auth/auth';
 import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
