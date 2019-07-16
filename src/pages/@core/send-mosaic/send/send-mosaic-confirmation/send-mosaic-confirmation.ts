@@ -189,17 +189,17 @@ export class SendMosaicConfirmationPage {
    * User checking if it can do the send transaction.
    */
   private _allowedToSendTx() {
-    if (this.credentials.password) {
-      try {
-        this.credentials.privateKey = this.nemProvider.passwordToPrivateKey(
-          this.credentials.password,
-          this.currentWallet
-        );
-        return true;
-      } catch (err) {
-        return false;
-      }
-    }
+    // if (this.credentials.password) {
+    //   try {
+    //     this.credentials.privateKey = this.nemProvider.passwordToPrivateKey(
+    //       this.credentials.password,
+    //       this.currentWallet
+    //     );
+    //     return true;
+    //   } catch (err) {
+    //     return false;
+    //   }
+    // }
     return false;
   }
 

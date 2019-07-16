@@ -125,14 +125,14 @@ export class MosaicsProvider {
     });
   }
 
-  getCoinPrice(value: string, ...args) {
+  public getCoinPrice(mosaicId: string) {
     let coinId: string;
 
-    if (value === "xem") {
+    if (mosaicId === "xem") {
       coinId = "nem";
-    } else if (value === "xpx") {
+    } else if (mosaicId === "xpx") {
       coinId = "proximax";
-    } else if (value === "npxs") {
+    } else if (mosaicId === "npxs") {
       coinId = "pundi-x";
     }
     // Add more coins here

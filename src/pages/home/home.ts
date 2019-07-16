@@ -86,7 +86,6 @@ export class HomePage {
     public alertCtrl: AlertController,
     public platform: Platform,
     private modalCtrl: ModalController,
-    private nemProvider: NemProvider,
     private haptic: HapticProvider,
     private marketPrice: GetMarketPricePipe,
     private translateService: TranslateService,
@@ -129,7 +128,6 @@ export class HomePage {
           this.selectedWallet = selectedWallet ? selectedWallet : wallets[0];
           console.log("3. LOG: HomePage -> ionViewWillEnter -> myWallet", this.selectedWallet);
 
-
           this.getAccount(selectedWallet).subscribe(account=>{
             console.log("4. LOG: HomePage -> ionViewWillEnter -> account", account);
             this.selectedAccount = account;
@@ -138,13 +136,31 @@ export class HomePage {
               this.getAccountInfo(account).subscribe(accountInfo=> {
                   console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
 
-                  // Show Assets
-                  this.getAssets(accountInfo);
-    
-                  // Show Transactions
-                  this.getTransactions(selectedWallet, account);
-                  this.hideLoaders();
+                  // Load default mosaics
+                  const myAssets = this.loadDefaultMosaics();
+                  console.log("6. LOG: HomePage -> loadDefaultMosaics()")
+                  myAssets.subscribe(mosaics=> {
+                      this.mosaics = mosaics;
+                      this.isLoading = false;
 
+                       // Update asset info
+                      console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
+                      this.updateAssetsInfo(accountInfo);
+
+
+                      // Compute wallet balance in USD
+                      console.log("8. LOG: HomePage -> getWalletBalanceInUSD -> mosaics", mosaics)
+                      this.getWalletBalanceInUSD(mosaics).then(total=>{
+                        this.totalWalletBalance = total as number;
+                        console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
+                      })
+
+        
+                      // Show Transactions
+                      console.log("9. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
+                      this.getTransactions(selectedWallet, account);
+                      this.hideLoaders();
+                  })
               })
             } catch (error) {
               this.showEmptyMessage();
@@ -186,15 +202,41 @@ export class HomePage {
     // this.showEmptyTransaction = true;;
   }
 
-  private getAssets(accountInfo: AccountInfo) {
-    console.log("SIRIUS CHAIN WALLET: HomePage -> updateDefaultMosaics -> accountInfo", accountInfo)
-    this.getDefaultMosaics();
+  getWalletBalanceInUSD(mosaics: Array<any>) {
+    return new Promise((resolve) => {
 
+      function getSum(total, num) {
+        return total + num;
+      }
+
+      const mosaicsAmountInUSD = mosaics.map(async (mosaic) => {
+        const price = await this.mosaicsProvider.getCoinPrice(mosaic.mosaicId);
+        return price * mosaic.amount;
+      })
+      
+      Promise.all(mosaicsAmountInUSD).then(function(pricesArray) {
+      console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
+        const sum = pricesArray.reduce(getSum);
+        console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> sum", sum)
+        resolve(sum);
+      })
+    })
+  }
+
+  loadDefaultMosaics() {
+    // this.isLoading = true;
+    // this.mosaics = null; // Triggers the skeleton list loader
+    return this.mosaicsProvider.mosaics();
+  }
+
+  private updateAssetsInfo(accountInfo: AccountInfo) {
     accountInfo.mosaics.forEach(mosaic => {
       const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
-      console.log("6. LOG: HomePage -> updateDefaultMosaics -> mosaicInfo", mosaicInfo);
+      // console.log("6. LOG: HomePage -> updateDefaultMosaics -> mosaicInfo", mosaicInfo);
     });
   }
+
+  
 
   private getAccount(wallet: SimpleWallet) : Observable<Account> {
     return new Observable(observer => {
@@ -229,16 +271,7 @@ export class HomePage {
     
   }
 
-  getDefaultMosaics() {
-    this.isLoading = true;
-    this.mosaics = null; // Triggers the skeleton list loader
-    this.mosaicsProvider
-      .mosaics()
-      .subscribe(mosaics => {
-        this.mosaics = mosaics;
-        this.isLoading = false;
-      });
-  }
+  
 
   computeTotalWalletBalance(wallets: any) {
     console.log("2 computeTotalWalletBalance");
@@ -254,13 +287,12 @@ export class HomePage {
   }
 
   getTransactions(selectedWallet: SimpleWallet, account: Account) {
-    console.log("7. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
     this.isLoading = true;
 
     this.transactionsProvider.getAllTransactionsFromAccount(account.publicAccount).subscribe(transactions=> {
       if(transactions) {
         const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
-        console.log("8. LOG: HomePage -> getTransactions -> transferTransactions", transferTransactions);
+        // console.log("8. LOG: HomePage -> getTransactions -> transferTransactions", transferTransactions);
         this.confirmedTransactions = transferTransactions;
         this.showEmptyTransaction = false;
       } else {
@@ -278,6 +310,8 @@ export class HomePage {
     this.selectedWallet = wallet;
     this.walletProvider.setSelectedWallet(this.selectedWallet).then(() => {
       this.init();
+
+      this.menu = "mosaics";
     });
   }
 
