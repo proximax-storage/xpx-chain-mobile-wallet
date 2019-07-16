@@ -9,8 +9,7 @@ import { WalletProvider } from "../../../../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 import {
   SimpleWallet,
-  Namespace,
-  MosaicDefinitionCreationTransaction
+  Namespace
 } from "nem-library";
 import { AlertProvider } from "../../../../../providers/alert/alert";
 
@@ -31,7 +30,7 @@ export class MosaicCreatePage {
   formGroup: FormGroup;
 
   currentWallet: SimpleWallet;
-  mosaicTx: MosaicDefinitionCreationTransaction;
+  mosaicTx: any;
   namespaces: Namespace[];
   PASSWORD: string;
 
@@ -50,24 +49,24 @@ export class MosaicCreatePage {
   }
 
   ionViewWillEnter() {
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-      if (!currentWallet) {
-        this.utils.setRoot("WalletListPage");
-      } else {
-        this.currentWallet = currentWallet;
-      }
+    // this.walletProvider.getSelectedWallet().then(currentWallet => {
+    //   if (!currentWallet) {
+    //     this.utils.setRoot("WalletListPage");
+    //   } else {
+    //     // this.currentWallet = currentWallet;
+    //   }
 
-      this.nemProvider
-        .getNamespacesOwned(this.currentWallet.address)
-        .subscribe(namespaces => {
-          this.namespaces = namespaces;
-          this.formGroup
-            .get("parentNamespace")
-            .setValue(this.namespaces[0].name);
+    //   this.nemProvider
+    //     .getNamespacesOwned(this.currentWallet.address)
+    //     .subscribe(namespaces => {
+    //       this.namespaces = namespaces;
+    //       this.formGroup
+    //         .get("parentNamespace")
+    //         .setValue(this.namespaces[0].name);
 
-          this.initMosaicTx();
-        });
-    });
+    //       this.initMosaicTx();
+    //     });
+    // });
   }
 
   ionViewDidLoad() {
@@ -96,56 +95,56 @@ export class MosaicCreatePage {
 
   initMosaicTx() {
     // Create ProvisionNamespaceTransaction to get the sinkAddress, fee and rentalFee.
-    this.nemProvider
-      .getAccountInfo(this.currentWallet.address)
-      .subscribe(accountInfo => {
-        this.mosaicTx = this.nemProvider.prepareMosaicCreationTransaction(
-          accountInfo,
-          this.namespaces[0].name,
-          "",
-          "",
-          0,
-          0,
-          true,
-          true
-        );
+    // this.nemProvider
+    //   .getAccountInfo(this.currentWallet.address)
+    //   .subscribe(accountInfo => {
+    //     this.mosaicTx = this.nemProvider.prepareMosaicCreationTransaction(
+    //       accountInfo,
+    //       this.namespaces[0].name,
+    //       "",
+    //       "",
+    //       0,
+    //       0,
+    //       true,
+    //       true
+    //     );
 
-        const fee = this.mosaicTx.fee / 1000000;
-        const rentalFee = this.mosaicTx.creationFee / 1000000;
+    //     const fee = this.mosaicTx.fee / 1000000;
+    //     const rentalFee = this.mosaicTx.creationFee / 1000000;
 
-        this.formGroup
-          .get("sinkAddress")
-          .setValue(this.mosaicTx.creationFeeSink.pretty());
-        this.formGroup.get("rentalFee").setValue(rentalFee);
-        this.formGroup.get("fee").setValue(fee);
-      });
+    //     this.formGroup
+    //       .get("sinkAddress")
+    //       .setValue(this.mosaicTx.creationFeeSink.pretty());
+    //     this.formGroup.get("rentalFee").setValue(rentalFee);
+    //     this.formGroup.get("fee").setValue(fee);
+    //   });
   }
 
   onSubmit(form) {
-    console.log(form)
+    // console.log(form)
 
-    this.nemProvider
-      .getAccountInfo(this.currentWallet.address)
-      .subscribe(accountInfo => {
-        let tx: MosaicDefinitionCreationTransaction = this.nemProvider.prepareMosaicCreationTransaction(
-          accountInfo,
-          form.parentNamespace,
-          form.mosaicName,
-          form.description,
-          form.divisibility,
-          form.supply,
-          form.transferrable,
-          form.supplyMutable
-        );
+    // this.nemProvider
+    //   .getAccountInfo(this.currentWallet.address)
+    //   .subscribe(accountInfo => {
+    //     let tx: MosaicDefinitionCreationTransaction = this.nemProvider.prepareMosaicCreationTransaction(
+    //       accountInfo,
+    //       form.parentNamespace,
+    //       form.mosaicName,
+    //       form.description,
+    //       form.divisibility,
+    //       form.supply,
+    //       form.transferrable,
+    //       form.supplyMutable
+    //     );
 
-        this.nemProvider
-          .confirmTransaction(tx, this.currentWallet, this.PASSWORD)
-          .subscribe(res => {
-            this.navCtrl.pop().then(() => {
-              this.alertProvider.showMessage("New namespace created");
-            });
-          });
-      });
+    //     this.nemProvider
+    //       .confirmTransaction(tx, this.currentWallet, this.PASSWORD)
+    //       .subscribe(res => {
+    //         this.navCtrl.pop().then(() => {
+    //           this.alertProvider.showMessage("New namespace created");
+    //         });
+    //       });
+    //   });
   }
 
   dismiss() {

@@ -30,7 +30,7 @@ export class MosaicsProvider {
     ];
   }
 
-  public mosaics(): Observable<Array<DefaultMosaic>> {
+  public getMosaics(): Observable<Array<DefaultMosaic>> {
     return new Observable(observer => {
       let myMosaics = new Array<DefaultMosaic>();
       myMosaics = this.defaultMosaics;
@@ -112,6 +112,27 @@ export class MosaicsProvider {
       //   })
       //   });
     });
+  }
+
+  computeTotalBalance(mosaics: Array<any>) {
+    return new Promise((resolve) => {
+
+      function getSum(total, num) {
+        return total + num;
+      }
+
+      const mosaicsAmountInUSD = mosaics.map(async (mosaic) => {
+        const price = await this.getCoinPrice(mosaic.mosaicId);
+        return price * mosaic.amount;
+      })
+      
+      Promise.all(mosaicsAmountInUSD).then(function(pricesArray) {
+      console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
+        const sum = pricesArray.reduce(getSum);
+        console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> sum", sum)
+        resolve(sum);
+      })
+    })
   }
 
   public getCoinPrice(mosaicId: string) {

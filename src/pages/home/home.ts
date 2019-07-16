@@ -4,7 +4,6 @@ import { App, NavController, NavParams, ViewController, ActionSheetController, A
 import { App as AppConfig } from '../../providers/app/app';
 import { WalletProvider } from '../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../providers/utilities/utilities';
-import { GetBalanceProvider } from '../../providers/get-balance/get-balance';
 import { AlertProvider } from '../../providers/alert/alert';
 import { HapticProvider } from '../../providers/haptic/haptic';
 import { GetMarketPricePipe } from '../../pipes/get-market-price/get-market-price';
@@ -15,12 +14,6 @@ import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
 import { Observable } from 'rxjs';
 import {animate, style, transition, trigger} from "@angular/animations";
-
-
-export enum WalletCreationType {
-  NEW = 0,
-  IMPORT = 1
-}
 
 @Component({
   selector: 'page-home',
@@ -51,7 +44,6 @@ export class HomePage {
   data: any[] = [];
   totalWalletBalance = 0;
 
-  /** Transaction list member variables */
   App = App;
   TransactionType = TransactionType;
 
@@ -61,25 +53,21 @@ export class HomePage {
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
 
-
   tablet: boolean;
 
   selectedWallet: SimpleWallet;
   selectedAccount: Account;
   accountInfo: AccountInfo;
-  selectedMosaic: Mosaic;
 
   constructor(
     public app: App,
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
-    public getBalanceProvider: GetBalanceProvider,
     public alertProvider: AlertProvider,
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
     public actionSheetCtrl: ActionSheetController,
-    public alertCtrl: AlertController,
     public platform: Platform,
     private modalCtrl: ModalController,
     private haptic: HapticProvider,
@@ -96,9 +84,6 @@ export class HomePage {
       this.tablet = true;
     }
    
-  }
-  ionViewDidEnter() {
-	console.log("LOG: HomePage -> ionViewDidEnter -> ionViewDidEnter");
   }
 
   ionViewWillEnter() {
@@ -143,15 +128,13 @@ export class HomePage {
                       console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
                       this.updateAssetsInfo(accountInfo);
 
-
                       // Compute wallet balance in USD
-                      console.log("8. LOG: HomePage -> getWalletBalanceInUSD -> mosaics", mosaics)
-                      this.getWalletBalanceInUSD(mosaics).then(total=>{
+                      console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", mosaics)
+                      this.mosaicsProvider.computeTotalBalance(mosaics).then(total=>{
                         this.totalWalletBalance = total as number;
                         console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
-                      })
+                      });
 
-        
                       // Show Transactions
                       console.log("9. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
                       this.getTransactions(account);
@@ -185,50 +168,22 @@ export class HomePage {
     this.isLoading = false;
   }
   showLoaders() {
-    // Loaders
     this.fakeList = [{}, {}];
     this.isLoading = true;
     this.showEmptyTransaction = true;
     this.showEmptyMosaic = true;
-
     this.unconfirmedTransactions = null;
     this.confirmedTransactions = null
     
-    // TODO: (Temporary) False if there is transaction
-    // this.showEmptyTransaction = true;;
-  }
-
-  getWalletBalanceInUSD(mosaics: Array<any>) {
-    return new Promise((resolve) => {
-
-      function getSum(total, num) {
-        return total + num;
-      }
-
-      const mosaicsAmountInUSD = mosaics.map(async (mosaic) => {
-        const price = await this.mosaicsProvider.getCoinPrice(mosaic.mosaicId);
-        return price * mosaic.amount;
-      })
-      
-      Promise.all(mosaicsAmountInUSD).then(function(pricesArray) {
-      console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
-        const sum = pricesArray.reduce(getSum);
-        console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> sum", sum)
-        resolve(sum);
-      })
-    })
   }
 
   loadDefaultMosaics() {
-    // this.isLoading = true;
-    // this.mosaics = null; // Triggers the skeleton list loader
-    return this.mosaicsProvider.mosaics();
+    return this.mosaicsProvider.getMosaics();
   }
 
   private updateAssetsInfo(accountInfo: AccountInfo) {
     accountInfo.mosaics.forEach(mosaic => {
       const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
-      // console.log("6. LOG: HomePage -> updateDefaultMosaics -> mosaicInfo", mosaicInfo);
     });
   }
 
@@ -252,7 +207,6 @@ export class HomePage {
        observer.next(account);
      
       });
-
     });
   }
 
@@ -262,14 +216,11 @@ export class HomePage {
         accountInfo.subscribe(accountInfo => {
         observer.next(accountInfo);
     });
-
-    })
-    
+    });
   }
 
   getTransactions(account: Account) {
     this.isLoading = true;
-
     this.transactionsProvider.getAllTransactionsFromAccount(account.publicAccount).subscribe(transactions=> {
       if(transactions) {
         const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
@@ -278,9 +229,7 @@ export class HomePage {
       } else {
         this.showEmptyTransaction = true
       }
-
     });
-    
     this.isLoading = false;
   }
 
@@ -348,48 +297,16 @@ export class HomePage {
   }
 
   showAddWalletPrompt() {
-    this.haptic.selection();
-
-    let alert = this.alertCtrl.create();
-    const alertTitle = this.translateService.instant("WALLETS.CREATE.NEW");
-    alert.setTitle(alertTitle);
-    alert.setSubTitle('');
-
-    let newWalletButton = this.translateService.instant("WALLETS.CREATE.NEW");
-    let importWalletButton = this.translateService.instant("WALLETS.CREATE.IMPORT");
-
-    alert.addInput({
-      type: 'radio',
-      label: newWalletButton,
-      value: WalletCreationType.NEW.toString(),
-      checked: true
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: importWalletButton,
-      value: WalletCreationType.IMPORT.toString(),
-      checked: false
-    });
-    const cancelButtonText = this.translateService.instant("WALLETS.BUTTON.CANCEL");
-    const continueButtonText = this.translateService.instant("WALLETS.BUTTON.CONTINUE");
-    alert.addButton(cancelButtonText);
-
-    alert.addButton({
-      text: continueButtonText,
-      handler: data => {
-        if (data === WalletCreationType.NEW.toString()) {
-          this.navCtrl.push('WalletAddPage');
-        } else if (data === WalletCreationType.IMPORT.toString()) {
-          this.navCtrl.push("WalletAddPrivateKeyPage", {
-            name: "",
-            privateKey: ""
-          });
-        }
+    this.alertProvider.showAddWalletPrompt().then(option=> {
+      if(option === 'create') {
+        this.navCtrl.push('WalletAddPage');
+      } else {
+        this.navCtrl.push("WalletAddPrivateKeyPage", {
+          name: "",
+          privateKey: ""
+        });
       }
-    });
-
-    alert.present();
+    })
   }
 
   public gotoWalletList() {
@@ -397,7 +314,7 @@ export class HomePage {
   }
 
   public gotoCoinPrice(mosaic) {
-	console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
+	  console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
 
     let coinId:string;
 
@@ -414,10 +331,8 @@ export class HomePage {
 
     this.marketPrice.transform(mosaic.mosaicId.name).then(price=>{
 			console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
-      
       let totalBalance = mosaic.amount * price;
 			console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
-    
       let page = "CoinPriceChartPage";
       const modal = this.modalCtrl.create(page, { 
         mosaicId: mosaic.mosaicId.name, 
@@ -440,7 +355,6 @@ export class HomePage {
 
   showReceiveModal() {
     let page = "ReceivePage";
-
     this.showModal(page, {});
   }
 
@@ -468,4 +382,3 @@ export class HomePage {
     }, 2000);
   }
 }
-
