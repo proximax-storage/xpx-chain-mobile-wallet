@@ -267,21 +267,6 @@ export class HomePage {
     
   }
 
-  
-
-  computeTotalWalletBalance(wallets: any) {
-    console.log("2 computeTotalWalletBalance");
-    wallets.map((wallet, index) => {
-      this.getBalanceProvider.totalBalance(wallet).then(total => {
-        if (wallet.name == this.selectedWallet.name) {
-          this.slides.slideTo(index);
-        }
-        wallet.total = total;
-        return wallet;
-      })
-    })
-  }
-
   getTransactions(account: Account) {
     this.isLoading = true;
 
@@ -448,18 +433,6 @@ export class HomePage {
   })
   }
 
-  public getPriceInUSD(amount, marketPrice) {
-    let result = amount * marketPrice;
-    this.totalWalletBalance += result
-
-    return result;
-  }
-
-  /** Transaction list methods */
-  trackByHash(index) {
-    return index;
-  }
-
   gotoTransactionDetail(tx) {
     let page = "TransactionDetailPage";
     this.showModal(page, tx);
@@ -486,7 +459,7 @@ export class HomePage {
       this.mosaics = null; // Triggers the skeleton list loader
       console.log('Async operation has ended');
       try {
-        await this.computeTotalWalletBalance(this.wallets);
+        await this.init();
         refresher.complete();
       } catch (error) {
         this.isLoading = false;
