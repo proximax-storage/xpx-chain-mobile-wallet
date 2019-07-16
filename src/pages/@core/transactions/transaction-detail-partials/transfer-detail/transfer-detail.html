@@ -1,33 +1,3 @@
-<!-- XEM -->
-<!-- <ion-card no-margin-bottom *ngIf="tx.containsMosaics && !tx.containsMosaics()">
-  <ion-card-content no-padding>
-    <ion-item>
-      <img logo-small item-left [src]="App.LOGO.NEM">
-      <h2 ion-text color="black">XEM</h2>
-      <p ion-text color="black">
-        <small>
-          NEM
-        </small>
-      </p>
-
-      <section item-right>
-        <h2 text-right ion-text color="black" *ngIf="amount == 0">
-          0
-        </h2>
-
-        <h2 text-right ion-text color="sucess" *ngIf="owner?.plain() == tx?.recipient.value && amount !== 0">
-          + {{ amount | number: '1.6-6' }}
-        </h2>
-
-        <h2 text-right ion-text color="danger" *ngIf="owner?.plain() != tx?.recipient.value && amount !== 0">
-          - {{ amount | number: '1.6-6' }}
-        </h2>
-      </section>
-    </ion-item>
-  </ion-card-content>
-</ion-card> -->
-<!-- ./XEM -->
-
 <!-- Mosaic/s -->
 <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
   <ion-item>

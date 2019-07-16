@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet } from 'nem-library';
-
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../providers/auth/auth';
@@ -11,6 +9,7 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 /**
  * Generated class for the WalletUpdatePage page.

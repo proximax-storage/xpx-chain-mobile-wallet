@@ -66,9 +66,7 @@ export class TransferDetailComponent {
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
   ) {
-    this.hasLevy = false;
-    this.amount = 0;
-    this.mosaics = [];
+    console.log(this.tx);
   }
 
 

@@ -84,7 +84,6 @@
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
     <hook src="scripts/incrementBuildNum.js" type="after_build" />
-    <engine name="android" spec="^7.1.4" />
     <engine name="ios" spec="^4.5.5" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-vibration" spec="^3.1.0" />
@@ -110,4 +109,5 @@
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
     </plugin>
     <plugin name="onesignal-cordova-plugin" spec="^2.4.6" />
+    <engine name="android" spec="~7.1.4" />
 </widget>

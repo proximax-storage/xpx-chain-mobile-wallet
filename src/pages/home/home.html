@@ -82,7 +82,7 @@
 
           <div class="single-wallet-info">
             <span class="single-wallet-name">{{selectedWallet?.name | translate}}</span>
-            <p class="single-wallet-balance">${{ (getBalanceOfSelectedWallet())  | number : '1.2-2'}}</p>
+            <p class="single-wallet-balance">${{ totalWalletBalance  | number : '1.2-2'}}</p>
           </div>
 
           <div class="single-price-tick">
@@ -148,9 +148,9 @@
             <h2 text-uppercase ion-text color="black"><strong>{{ wallet.name }}</strong></h2>
             <p ion-text color="black">{{ wallet.address.plain() }}</p>
 
-            <section text-right item-right>
+            <!-- <section text-right item-right>
               <h2 ion-text color="black">{{ (wallet.total>0?wallet.total:0) | number : '1.2-2'}} USD</h2>
-            </section>
+            </section> -->
           </ion-item>
         </ion-card-header>
       </ion-card>
