@@ -23,7 +23,7 @@
   <ion-list transparent-items *ngIf="tx">
 
        <!-- if transfer  -->
-       <transfer-detail *ngIf="tx.type == TransactionType.TRANSFER" [tx]="tx"></transfer-detail>
+       <transfer-detail *ngIf="tx.type == TransactionTypes.TRANSFER" [tx]="tx"></transfer-detail>
        
     <!-- if importance transfer -->
     <!-- <importance-transfer-detail *ngIf="tx.type == TransactionTypes.IMPORTANCE_TRANSFER" [tx]="tx"></importance-transfer-detail> -->
