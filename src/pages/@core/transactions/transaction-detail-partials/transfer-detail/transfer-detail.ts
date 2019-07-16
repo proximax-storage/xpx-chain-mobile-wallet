@@ -1,11 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Deadline, Address } from 'tsjs-xpx-chain-sdk';
 
-import { NemProvider } from '../../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
-import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 
 /**
@@ -61,7 +59,6 @@ export class TransferDetailComponent {
   }
 
   constructor(
-    private nemProvider: NemProvider,
     private wallet: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,

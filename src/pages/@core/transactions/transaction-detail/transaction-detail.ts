@@ -16,8 +16,8 @@ import { TransactionType } from 'tsjs-xpx-chain-sdk';
   templateUrl: 'transaction-detail.html'
 })
 export class TransactionDetailPage {
-  TransactionTypes = TransactionType;
-  tx: any;
+  public TransactionType = TransactionType;
+  public tx: any;
 
   constructor(private navParams: NavParams, private navCtrl: NavController, private utils: UtilitiesProvider, private viewCtrl: ViewController) {
     this.tx = this.navParams.data;
