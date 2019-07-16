@@ -158,7 +158,7 @@ export class HomePage {
         
                       // Show Transactions
                       console.log("9. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
-                      this.getTransactions(selectedWallet, account);
+                      this.getTransactions(account);
                       this.hideLoaders();
                   })
               })
@@ -286,13 +286,12 @@ export class HomePage {
     })
   }
 
-  getTransactions(selectedWallet: SimpleWallet, account: Account) {
+  getTransactions(account: Account) {
     this.isLoading = true;
 
     this.transactionsProvider.getAllTransactionsFromAccount(account.publicAccount).subscribe(transactions=> {
       if(transactions) {
         const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
-        // console.log("8. LOG: HomePage -> getTransactions -> transferTransactions", transferTransactions);
         this.confirmedTransactions = transferTransactions;
         this.showEmptyTransaction = false;
       } else {
@@ -300,8 +299,7 @@ export class HomePage {
       }
 
     });
-
-
+    
     this.isLoading = false;
   }
 
@@ -493,22 +491,12 @@ export class HomePage {
       console.log('Async operation has ended');
       try {
         await this.computeTotalWalletBalance(this.wallets);
-        // await this.getMosaicBalance(this.selectedWallet);
-        // await this.getTransactions(this.selectedWallet);
         refresher.complete();
       } catch (error) {
         this.isLoading = false;
         refresher.complete();
       }
     }, 2000);
-  }
-
-   getBalanceOfSelectedWallet() {
-    // if(this.selectedWallet) {
-    //   return (  this.wallets.filter(wallet => wallet.name == this.selectedWallet.name)[0].total);
-    // }
-    // Todo: Compute total balance
-    return 0;
   }
 }
 

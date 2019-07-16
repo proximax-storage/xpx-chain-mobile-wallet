@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Mosaic, SimpleWallet} from "tsjs-xpx-chain-sdk";
 import {CoingeckoProvider} from "../coingecko/coingecko";
 import {Observable} from "rxjs";
+import { DefaultMosaic } from "../../models/default-mosaic";
 
 /*
   Generated class for the MosaicsProvider provider.
@@ -15,48 +16,38 @@ export class MosaicsProvider {
 
   constructor(private coingeckoProvider: CoingeckoProvider) {
     console.log("Hello MosaicsProvider Provider");
-    this.defaultMosaics = [
-      {
-        namespaceId: "prx",
-        mosaicId: "xpx",
-        hex: "0dc67fbe1cad29e3",
-        amount: 0
-      },
-      {
-        namespaceId: "pundix",
-        mosaicId: "npxs",
-        hex: "06a9f32c9d3d6246",
-        amount: 0
-      },
-      {
-        namespaceId: "sportsfix",
-        mosaicId: "sft",
-        hex: "1292a9ed863e7aa9",
-        amount: 0
-      },
-      {
-        namespaceId: "xarcade",
-        mosaicId: "xar",
-        hex: "2dba42ea2b169829",
-        amount: 0
-      }
+    this.defaultMosaics = this.getDefaultMosaics();
+  }
+
+  getDefaultMosaics(): Array<DefaultMosaic> {
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: 0 });
+    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: 0 });
+    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: 0 });
+    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: 0 });
+
+    return [
+      XPX, NPXS, SFT, XAR
     ];
   }
 
   public mosaics(): Observable<Array<DefaultMosaic>> {
     return new Observable(observer => {
-      observer.next(this.defaultMosaics);
+      let myMosaics = new Array<DefaultMosaic>();
+      myMosaics = this.defaultMosaics;
+      observer.next(myMosaics);
     });
   }
 
   public setMosaicInfo(mosaic: Mosaic): DefaultMosaic {
-  console.log("LOG: MosaicsProvider -> mosaic", mosaic);
-    let modifiedMosaic: DefaultMosaic;
 
-    modifiedMosaic = this.defaultMosaics.find(defaultMosaic => {
+    let modifiedMosaic: DefaultMosaic;
+    let myMosaics = new Array<DefaultMosaic>();
+    myMosaics = this.defaultMosaics;
+
+
+    modifiedMosaic = myMosaics.find(defaultMosaic => {
       return defaultMosaic.hex == mosaic.id.toHex();
     });
-    console.log("LOG: MosaicsProvider -> modifiedMosaic", modifiedMosaic);
 
     if (!modifiedMosaic) {
       return {
@@ -77,14 +68,14 @@ export class MosaicsProvider {
   }
 
   public getMosaicInfo(mosaic: Mosaic) {
+    let modifiedMosaic: any;
+    let myMosaics = new Array<DefaultMosaic>();
 
-    let modifiedMosaic: DefaultMosaic;
-
-    modifiedMosaic = this.defaultMosaics.find(defaultMosaic => {
+    myMosaics = this.getDefaultMosaics();
+    modifiedMosaic = myMosaics.find(defaultMosaic => {
       return defaultMosaic.hex == mosaic.id.toHex();
     });
-    console.log("LOG: MosaicsProvider -> modifiedMosaic", modifiedMosaic);
-
+    
     if (!modifiedMosaic) {
       return {
         amount: this.getRelativeAmount(mosaic.amount.compact()),
@@ -92,13 +83,11 @@ export class MosaicsProvider {
         mosaicId: mosaic.id.toHex(),
         namespaceId: mosaic.id.toHex()
       };
+    } else {
+      modifiedMosaic.amount = this.getRelativeAmount(mosaic.amount.compact());
     }
 
     return modifiedMosaic;
-
-    // return this.defaultMosaics.find(defaultMosaic => {
-    //   return defaultMosaic.hex == mosaic.id.toHex();
-    // });
   }
 
   totalBalance(wallet: SimpleWallet): Promise<number> {
@@ -160,3 +149,5 @@ export class MosaicsProvider {
     }
   }
 }
+
+
