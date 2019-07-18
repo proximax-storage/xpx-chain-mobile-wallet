@@ -245,9 +245,13 @@ export class HomePage {
 
   showWalletDetails() {
     let page = 'TransactionListPage';
-    let wallet = this.selectedWallet
-    wallet.walletColor = this.wallets[this.slides._activeIndex].walletColor;
-    const modal = this.modalCtrl.create(page, wallet, {
+    let selectedAccount = this.selectedWallet
+    let transactions = this.confirmedTransactions;
+    let total = this.totalWalletBalance;
+
+    let payload = {selectedAccount, transactions, total};
+
+    const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });

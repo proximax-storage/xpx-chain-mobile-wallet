@@ -1,22 +1,16 @@
 import { Component, ViewChild } from "@angular/core";
 import { IonicPage, NavController, NavParams, ModalController, InfiniteScroll, ViewController, ActionSheetController } from "ionic-angular";
-import { TransactionTypes, SimpleWallet, Transaction, Pageable, TransferTransaction, AccountInfoWithMetaData, AccountInfo } from "nem-library";
-import { Observable } from "rxjs";
+import { SimpleWallet, Transaction, Pageable, AccountInfoWithMetaData } from "nem-library";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { CoinPriceChartProvider } from "../../../../providers/coin-price-chart/coin-price-chart";
 import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
-import { NemProvider } from "../../../../providers/nem/nem";
-import { WalletProvider } from "../../../../providers/wallet/wallet";
-import find from 'lodash/find';
 import { App } from "../../../../providers/app/app";
 import { ToastProvider } from "../../../../providers/toast/toast";
 import { Clipboard } from "@ionic-native/clipboard";
-import sortBy from 'lodash/sortBy';
-import { GetBalanceProvider } from "../../../../providers/get-balance/get-balance";
 import { GetMarketPricePipe } from "../../../../pipes/get-market-price/get-market-price";
 import { HapticProvider } from '../../../../providers/haptic/haptic';
-import filter from 'lodash/filter';
 import { TranslateService } from '@ngx-translate/core';
+import { TransactionType } from "tsjs-xpx-chain-sdk";
 
 /**
  * Generated class for the TransactionListPage page.
@@ -34,7 +28,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class TransactionListPage {
   /** Transaction list member variables */
   App = App;
-  TransactionTypes = TransactionTypes;
+  TransactionType = TransactionType;
 
   currentWallet: SimpleWallet;
   fakeList: Array<any>;
@@ -61,6 +55,7 @@ export class TransactionListPage {
   // Multisignature
   isMultisig: boolean;
   accountInfo: AccountInfoWithMetaData;
+  selectedAccount: any;
 
   constructor(
     public navCtrl: NavController,
@@ -69,114 +64,112 @@ export class TransactionListPage {
     public coinPriceChartProvider: CoinPriceChartProvider,
     public utils: UtilitiesProvider,
     private modalCtrl: ModalController,
-    private nemProvider: NemProvider,
-    private walletProvider: WalletProvider,
     private viewCtrl: ViewController,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-    private getBalanceProvider: GetBalanceProvider,
-    private marketPrice: GetMarketPricePipe,
     private actionSheetCtrl: ActionSheetController,
     private haptic: HapticProvider,
     private translateService: TranslateService
   ) {
-    // this.getTotalBalance(currentWallet);
-    console.log("Wallet from home", this.navParams.data);
-    this.currentWallet = this.navParams.data;
-    this.totalBalance = this.currentWallet.total || 0;
+    const payload = this.navParams.data;
+    console.log("SIRIUS CHAIN WALLET: TransactionListPage -> payload", payload)
+
+    this.totalBalance = payload.total;
+    this.confirmedTransactions = payload.transactions;
+    this.selectedAccount = payload.selectedAccount;
 
   }
 
   getAccountInfo() {
-    console.info("Getting account information.", this.currentWallet.address)
+    // console.info("Getting account information.", this.currentWallet.address)
 
 
-    try {
-      this.nemProvider
-        .getAccountInfo(this.currentWallet.address)
-        .subscribe(accountInfo => {
-          if (accountInfo) {
-            this.accountInfo = accountInfo;
-            console.log("accountInfo", this.accountInfo)
-            // Check if account is a cosignatory of multisig account(s)
-            if (this.accountInfo.cosignatoryOf.length > 0) {
-              // console.clear();
-              console.log("This is a multisig account");
-              this.isMultisig = true;
-            }
-          }
+    // try {
+    //   this.nemProvider
+    //     .getAccountInfo(this.currentWallet.address)
+    //     .subscribe(accountInfo => {
+    //       if (accountInfo) {
+    //         this.accountInfo = accountInfo;
+    //         console.log("accountInfo", this.accountInfo)
+    //         // Check if account is a cosignatory of multisig account(s)
+    //         if (this.accountInfo.cosignatoryOf.length > 0) {
+    //           // console.clear();
+    //           console.log("This is a multisig account");
+    //           this.isMultisig = true;
+    //         }
+    //       }
 
-        }, (err: any) => {
-          console.log(err)
-          this.isMultisig = false;
-        });
+    //     }, (err: any) => {
+    //       console.log(err)
+    //       this.isMultisig = false;
+    //     });
 
-    } catch (error) {
-      console.log(error);
-    }
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
   }
 
   ionViewWillEnter() {
-    this.utils.setHardwareBack(this.navCtrl);
+    // this.utils.setHardwareBack(this.navCtrl);
 
-    /** Transaction list business logic */
-    this.unconfirmedTransactions = null;
-    this.confirmedTransactions = null;
+    // /** Transaction list business logic */
+    // this.unconfirmedTransactions = null;
+    // this.confirmedTransactions = null;
 
-    if (this.currentWallet) {
-      this.walletName = this.currentWallet.name;
-      this.currentWallet = this.currentWallet;
-      this.fakeList = [{}, {}];
-      this.isLoading = true;
+    // if (this.currentWallet) {
+    //   this.walletName = this.currentWallet.name;
+    //   this.currentWallet = this.currentWallet;
+    //   this.fakeList = [{}, {}];
+    //   this.isLoading = true;
 
-      this.getAccountInfo();
+    //   this.getAccountInfo();
 
-      this.nemProvider
-        .getUnconfirmedTransactions(this.currentWallet.address)
-        .flatMap(_ => _)
-        .toArray()
-        .subscribe(result => {
-          this.unconfirmedTransactions = result;
-        });
+    //   this.nemProvider
+    //     .getUnconfirmedTransactions(this.currentWallet.address)
+    //     .flatMap(_ => _)
+    //     .toArray()
+    //     .subscribe(result => {
+    //       this.unconfirmedTransactions = result;
+    //     });
 
 
-      this.nemProvider.getMosaicTransactions(this.currentWallet.address).subscribe(mosaicTransactions => {
+    //   this.nemProvider.getMosaicTransactions(this.currentWallet.address).subscribe(mosaicTransactions => {
 
-        console.clear();
+    //     console.clear();
 
-        let supportedMosaics = [
-          { mosaicId: 'xpx' },
-          { mosaicId: 'xem' },
-          { mosaicId: 'npxs' },
-          { mosaicId: 'sft' },
-          { mosaicId: 'xar' },
-        ]
+    //     let supportedMosaics = [
+    //       { mosaicId: 'xpx' },
+    //       { mosaicId: 'xem' },
+    //       { mosaicId: 'npxs' },
+    //       { mosaicId: 'sft' },
+    //       { mosaicId: 'xar' },
+    //     ]
 
-        const filteredTransactions = filter(mosaicTransactions, (tx) => find(supportedMosaics, { mosaicId: tx._mosaics[0].mosaicId.name }));
+    //     const filteredTransactions = filter(mosaicTransactions, (tx) => find(supportedMosaics, { mosaicId: tx._mosaics[0].mosaicId.name }));
       
-        setTimeout(() => {
-          this.nemProvider.getXEMTransactions(this.currentWallet.address).subscribe(XEMTransactions => {
-            const TRANSACTIONS = [].concat(filteredTransactions, XEMTransactions);
-            console.log("LOG: TransactionListPage -> ionViewWillEnter -> TRANSACTIONS.length", TRANSACTIONS.length);
+    //     setTimeout(() => {
+    //       this.nemProvider.getXEMTransactions(this.currentWallet.address).subscribe(XEMTransactions => {
+    //         const TRANSACTIONS = [].concat(filteredTransactions, XEMTransactions);
+    //         console.log("LOG: TransactionListPage -> ionViewWillEnter -> TRANSACTIONS.length", TRANSACTIONS.length);
             
-            // Check transaction is empty
-            if (TRANSACTIONS.length == 0) {
-              this.confirmedTransactions = null;
-              this.showEmptyMessage = true;
-            } else {
-              this.confirmedTransactions = TRANSACTIONS.sort((a,b) => {
-                return new Date(b.timeWindow.timeStamp).getTime() - new Date(a.timeWindow.timeStamp).getTime()
-              });
-              this.showEmptyMessage = false;
-            }
-            this.isLoading = false;
-          })
-        }, 1000);
+    //         // Check transaction is empty
+    //         if (TRANSACTIONS.length == 0) {
+    //           this.confirmedTransactions = null;
+    //           this.showEmptyMessage = true;
+    //         } else {
+    //           this.confirmedTransactions = TRANSACTIONS.sort((a,b) => {
+    //             return new Date(b.timeWindow.timeStamp).getTime() - new Date(a.timeWindow.timeStamp).getTime()
+    //           });
+    //           this.showEmptyMessage = false;
+    //         }
+    //         this.isLoading = false;
+    //       })
+    //     }, 1000);
 
 
-      })
-    }
+    //   })
+    // }
   }
 
   ionViewDidLoad() {

@@ -54,7 +54,7 @@ export class NamespaceCreatePage {
       if (!currentWallet) {
         this.utils.setRoot("WalletListPage");
       } else {
-        this.currentWallet = currentWallet;
+        // this.currentWallet = currentWallet;
       }
 
       // Create ProvisionNamespaceTransaction to get the sinkAddress, fee and rentalFee.
@@ -69,11 +69,11 @@ export class NamespaceCreatePage {
       this.formGroup.get("rentalFee").setValue(rentalFee);
       this.formGroup.get("fee").setValue(fee);
 
-      this.nemProvider
-        .getNamespacesOwned(this.currentWallet.address)
-        .subscribe(namespaces => {
-          this.namespaces = namespaces;
-        });
+      // this.nemProvider
+      //   .getNamespacesOwned(this.currentWallet.address)
+      //   .subscribe(namespaces => {
+      //     this.namespaces = namespaces;
+      //   });
     });
   }
 
@@ -107,13 +107,13 @@ export class NamespaceCreatePage {
       tx = this.nemProvider.prepareNamespaceTransaction(form.name);
     }
 
-    this.nemProvider
-      .confirmTransaction(tx, this.currentWallet, this.PASSWORD)
-      .subscribe(res => {
-        this.navCtrl.pop().then(() => {
-          this.alertProvider.showMessage("New namespace created");
-        });
-      });
+    // this.nemProvider
+    //   .confirmTransaction(tx, this.currentWallet, this.PASSWORD)
+    //   .subscribe(res => {
+    //     this.navCtrl.pop().then(() => {
+    //       this.alertProvider.showMessage("New namespace created");
+    //     });
+    //   });
   }
 
   dismiss(){

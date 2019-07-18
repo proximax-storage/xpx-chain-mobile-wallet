@@ -10,7 +10,7 @@ import {
   ModalController
 } from "ionic-angular";
 
-import { SimpleWallet, MosaicDefinition } from "nem-library";
+import { SimpleWallet } from "nem-library";
 
 import { App } from "../../../../../providers/app/app";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
@@ -33,9 +33,9 @@ export class MosaicListPage {
   App = App;
 
   currentWallet: SimpleWallet;
-  selectedData: MosaicDefinition;
+  selectedData: any;
 
-  mosaics: MosaicDefinition[];
+  mosaics: any[];
 
   constructor(
     public navCtrl: NavController,
@@ -55,20 +55,20 @@ export class MosaicListPage {
   }
 
   ionViewWillEnter() {
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-      if (!currentWallet) {
-        this.utils.setRoot("WalletListPage");
-      } else {
-        this.currentWallet = currentWallet;
-      }
+    // this.walletProvider.getSelectedWallet().then(currentWallet => {
+    //   if (!currentWallet) {
+    //     this.utils.setRoot("WalletListPage");
+    //   } else {
+    //     this.currentWallet = currentWallet;
+    //   }
 
-      this.nemProvider
-        .getMosaicsOwned(this.currentWallet.address)
-        .subscribe(mosaics => {
-          this.mosaics = mosaics;
-          this.selectedData = mosaics[0];
-        });
-    });
+    //   this.nemProvider
+    //     .getMosaicsOwned(this.currentWallet.address)
+    //     .subscribe(mosaics => {
+    //       this.mosaics = mosaics;
+    //       this.selectedData = mosaics[0];
+    //     });
+    // });
   }
 
   onSelect(mosaics) {

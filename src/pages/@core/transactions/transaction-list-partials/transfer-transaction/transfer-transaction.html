@@ -16,10 +16,10 @@
 <ion-card-header reduce-transfer-tx-header>
   <ion-item>
     <img logo-small item-left [src]="LOGO" alt="logo">
-    <h2 ion-text color="black">{{MOSAIC_INFO.mosaicId}}</h2>
+    <h2 ion-text color="black">{{MOSAIC_INFO.mosaicId | uppercase }}</h2>
     <p ion-text color="black">
         <small>
-          {{MOSAIC_INFO.namespaceId}}
+          {{MOSAIC_INFO.namespaceId| uppercase }}
         </small>
       </p>
 
