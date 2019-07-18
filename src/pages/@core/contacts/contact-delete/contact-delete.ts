@@ -5,7 +5,6 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
 import { AuthProvider } from '../../../../providers/auth/auth';
-import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 
 /**
  * Generated class for the ContactDeletePage page.
@@ -32,7 +31,6 @@ export class ContactDeletePage {
     public formBuilder: FormBuilder,
     private contactProvider: ContactsProvider,
     private authProvider: AuthProvider,
-    private utils: UtilitiesProvider,
     private viewCtrl: ViewController
   ) {
     this.contact = this.navParams.data.data;

@@ -9,7 +9,7 @@ import {
 } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from './../../../../providers/wallet/wallet';

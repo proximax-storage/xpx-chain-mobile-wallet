@@ -89,7 +89,7 @@ export class MyApp {
         this.storage.set('isModalShown', false)
       ]).then(results => {
         const pin = !!results[0];
-        const isAppPaused = !!results[1];
+        // const isAppPaused = !!results[1];
         // const isModalShown = results[2];
         // alert("0App paused:" + isAppPaused + ", PIN:" + pin)
 

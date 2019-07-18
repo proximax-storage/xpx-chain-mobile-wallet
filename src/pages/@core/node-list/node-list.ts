@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
 import { NemProvider } from '../../../providers/nem/nem';
-import { Node, NodeEndpoint, ServerConfig, Protocol, NodeHttp } from 'nem-library';
+import { Node, NodeEndpoint, ServerConfig, Protocol } from 'nem-library';
 import { Storage } from '@ionic/storage';
 import { AlertProvider } from '../../../providers/alert/alert';
 import { HttpClient, HttpHeaders } from '@angular/common/http';

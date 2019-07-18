@@ -10,7 +10,7 @@ import {
   ModalController
 } from "ionic-angular";
 
-import { SimpleWallet, Namespace } from "nem-library";
+import { SimpleWallet, Namespace } from "tsjs-xpx-chain-sdk";
 
 import { App } from "../../../../../providers/app/app";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";

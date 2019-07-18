@@ -7,6 +7,7 @@ import { App } from '../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { SafariViewController } from '@ionic-native/safari-view-controller';
 
+
 /**
  * Generated class for the ContactDetailPage page.
  *

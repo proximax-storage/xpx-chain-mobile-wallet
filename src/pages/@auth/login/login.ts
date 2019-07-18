@@ -1,9 +1,7 @@
-import { TapticEngine } from '@ionic-native/taptic-engine';
 import { Storage } from '@ionic/storage';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, Platform, Keyboard } from 'ionic-angular';
-
 import { AuthProvider } from '../../../providers/auth/auth';
 import { WalletProvider } from '../../../providers/wallet/wallet';
 import { AlertProvider } from '../../../providers/alert/alert';
@@ -11,6 +9,7 @@ import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../providers/haptic/haptic';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
+
 
 /**
  * Generated class for the LoginPage page.

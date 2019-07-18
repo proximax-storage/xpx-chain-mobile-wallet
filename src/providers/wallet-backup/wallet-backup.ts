@@ -39,8 +39,8 @@ export class WalletBackupProvider {
     return this.authProvider
       .getPassword()
       .then(password => {
-        const QR_TEXT = this.nemProvider.generateWalletQRText(password, wallet);
-
+        // const QR_TEXT = this.nemProvider.generateWalletQRText(password, wallet);
+        const QR_TEXT = ""
         return this.file.writeFile(STORAGE_DIRECTORY, WALLET_NAME, QR_TEXT, {
           replace: true
         });

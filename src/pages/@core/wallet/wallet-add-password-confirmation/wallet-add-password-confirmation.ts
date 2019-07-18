@@ -5,8 +5,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import {
   SimpleWallet,
-  QRWalletText
-} from 'nem-library';
+  // QRWalletText
+} from 'tsjs-xpx-chain-sdk';
 
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { NemProvider } from './../../../../providers/nem/nem';
@@ -74,31 +74,31 @@ export class WalletAddPasswordConfirmationPage {
     );
   }
 
-  onSubmit(form) {
-    let QRWallet: QRWalletText;
-    if (form.password === this.credentials.password) {
-      if (this.navParams.data.address) {
-        const wallet: SimpleWallet = <SimpleWallet>this.navParams.data;
-        QRWallet = <QRWalletText>JSON.parse(
-          this.nemProvider.generateWalletQRText(
-            this.credentials.password,
-            wallet
-          )
-        );
-      } else {
-        QRWallet = <QRWalletText>this.navParams.data;
-      }
+  // onSubmit(form) {
+  //   let QRWallet: QRWalletText;
+  //   if (form.password === this.credentials.password) {
+  //     if (this.navParams.data.address) {
+  //       const wallet: SimpleWallet = <SimpleWallet>this.navParams.data;
+  //       QRWallet = <QRWalletText>JSON.parse(
+  //         this.nemProvider.generateWalletQRText(
+  //           this.credentials.password,
+  //           wallet
+  //         )
+  //       );
+  //     } else {
+  //       QRWallet = <QRWalletText>this.navParams.data;
+  //     }
 
-      const privateKey = this.nemProvider.decryptPrivateKey(
-        this.credentials.password,
-        QRWallet
-      );
-      this.navCtrl.push('WalletAddPrivateKeyPage', {
-        name: QRWallet.data.name,
-        privateKey: privateKey
-      });
-    } else {
-      this.alertProvider.showMessage('Incorrect password. Please try again.');
-    }
-  }
+  //     const privateKey = this.nemProvider.decryptPrivateKey(
+  //       this.credentials.password,
+  //       QRWallet
+  //     );
+  //     this.navCtrl.push('WalletAddPrivateKeyPage', {
+  //       name: QRWallet.data.name,
+  //       privateKey: privateKey
+  //     });
+  //   } else {
+  //     this.alertProvider.showMessage('Incorrect password. Please try again.');
+  //   }
+  // }
 }

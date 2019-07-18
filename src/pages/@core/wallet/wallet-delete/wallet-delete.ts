@@ -1,5 +1,5 @@
 import { ViewController } from 'ionic-angular';
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, Haptic } from 'ionic-angular';

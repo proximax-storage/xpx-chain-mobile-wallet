@@ -5,7 +5,6 @@ import { AccountInfo, SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 import { NemProvider } from '../../../../providers/nem/nem';
 import { ToastProvider } from '../../../../providers/toast/toast';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from './../../../../providers/auth/auth';
 
 /**
@@ -30,7 +29,6 @@ export class WalletDetailsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private walletProvider: WalletProvider,
     private nemProvider: NemProvider,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,

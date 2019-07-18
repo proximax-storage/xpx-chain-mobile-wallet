@@ -1,7 +1,7 @@
 //"type": 16385
 
 import { Component, Input } from '@angular/core';
-import { Address } from 'nem-library';
+import { Address } from 'tsjs-xpx-chain-sdk';
 
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { App } from '../../../../../providers/app/app';

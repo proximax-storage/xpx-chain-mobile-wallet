@@ -1,7 +1,7 @@
 
 import { Component, Input } from '@angular/core';
 
-import { Address, MosaicTransferable, MosaicId, Transaction } from 'nem-library';
+import { Address, MosaicId, Transaction } from 'tsjs-xpx-chain-sdk';
 
 import { NemProvider } from '../../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
@@ -28,7 +28,6 @@ export class TransferTransactionFilterComponent {
 
   // owner: Address;
   amount: number;
-  mosaics: MosaicTransferable[];
   hasLevy: boolean;
   mosaicInfo: { mosaicId: string; divisibility: number; }[];
 
@@ -80,7 +79,7 @@ export class TransferTransactionFilterComponent {
   ) {
     this.hasLevy = false;
     this.amount = 0;
-    this.mosaics = [];
+    // this.mosaics = [];
 
     this.mosaicInfo = [
       { mosaicId: 'xpx', divisibility: 6 },

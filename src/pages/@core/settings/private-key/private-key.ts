@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 
-import { NemProvider } from './../../../../providers/nem/nem';
+// import { NemProvider } from './../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { ToastProvider } from '../../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
@@ -38,7 +38,7 @@ export class PrivateKeyPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public walletProvider: WalletProvider,
-    private nemProvider: NemProvider,
+    // private nemProvider: NemProvider,
     private clipboard: Clipboard,
     private socialSharing: SocialSharing,
     private toastProvider: ToastProvider,
@@ -54,19 +54,19 @@ export class PrivateKeyPage {
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
 
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-      if (currentWallet) {
-        this.currentWallet = currentWallet;
-        this.privateKey = this.nemProvider.passwordToPrivateKey(
-          this.password,
-          this.currentWallet
-        );
-        this.QRData = this.nemProvider.generateWalletQRText(
-          this.password,
-          this.currentWallet
-        );
-      }
-    });
+    // this.walletProvider.getSelectedWallet().then(currentWallet => {
+    //   if (currentWallet) {
+    //     this.currentWallet = currentWallet;
+    //     this.privateKey = this.nemProvider.passwordToPrivateKey(
+    //       this.password,
+    //       this.currentWallet
+    //     );
+    //     this.QRData = this.nemProvider.generateWalletQRText(
+    //       this.password,
+    //       this.currentWallet
+    //     );
+    //   }
+    // });
   }
 
   ionViewDidLoad() {

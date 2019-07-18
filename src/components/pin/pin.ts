@@ -6,7 +6,6 @@ import {
   OnChanges
 } from "@angular/core";
 import { HapticProvider } from '../../providers/haptic/haptic';
-import { PinProvider } from "../../providers/pin/pin";
 import * as BcryptJS from "bcryptjs";
 
 /**
@@ -37,7 +36,7 @@ export class PinComponent implements OnChanges {
 
   @Output() submit: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private haptic: HapticProvider, private pin: PinProvider) {
+  constructor(private haptic: HapticProvider) {
     console.log(this.random9DigitNumberNotStartingWithZero());
     console.log(
       this.random9DigitNumberNotStartingWithZero()

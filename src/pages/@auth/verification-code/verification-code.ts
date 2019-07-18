@@ -1,4 +1,3 @@
-import { TapticEngine } from '@ionic-native/taptic-engine';
 import { Component } from "@angular/core";
 import {
   IonicPage,
@@ -7,7 +6,6 @@ import {
   ViewController
 } from "ionic-angular";
 import { Storage } from "@ionic/storage";
-import { AlertProvider } from "../../../providers/alert/alert";
 import { UtilitiesProvider } from "../../../providers/utilities/utilities";
 import { HapticProvider } from '../../../providers/haptic/haptic';
 import { PinProvider } from '../../../providers/pin/pin';
@@ -39,7 +37,6 @@ export class VerificationCodePage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public storage: Storage,
-    private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
     private haptic: HapticProvider,
     private pin: PinProvider,
@@ -112,6 +109,7 @@ export class VerificationCodePage {
 
     let status: string = this.navParams.data.status;
     let destination = this.navParams.data.destination;
+    console.log(destination)
     let pinParams = this.navParams.data.pin;
 
     if (status === 'setup') {

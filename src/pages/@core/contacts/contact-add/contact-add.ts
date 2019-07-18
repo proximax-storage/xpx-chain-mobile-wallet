@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { Address } from 'tsjs-xpx-chain-sdk';
-
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
 import { NemProvider } from '../../../../providers/nem/nem';
-import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 
 /**
  * Generated class for the ContactAddPage page.
@@ -33,7 +31,6 @@ export class ContactAddPage {
     public nemProvider: NemProvider,
     public alertProvider: AlertProvider,
     public contactsProvider: ContactsProvider,
-    public utils: UtilitiesProvider,
     private viewCtrl: ViewController
   ) {
     this.init();
