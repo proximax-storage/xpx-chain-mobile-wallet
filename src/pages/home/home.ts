@@ -318,30 +318,32 @@ export class HomePage {
   }
 
   public gotoCoinPrice(mosaic) {
-	  console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
+    console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
+    console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
 
     let coinId:string;
 
-    if (mosaic.mosaicId.name === 'xem') {
+    if (mosaic.mosaicId === 'xem') {
       coinId = 'nem';
     }
-    else if (mosaic.mosaicId.name === 'xpx') {
+    else if (mosaic.mosaicId === 'xpx') {
       coinId = 'proximax';
-    } else if (mosaic.mosaicId.name === 'npxs') {
+    } else if (mosaic.mosaicId === 'npxs') {
       coinId = 'pundi-x';
     } else {
       coinId = '';
     }
 
-    this.marketPrice.transform(mosaic.mosaicId.name).then(price=>{
+    this.marketPrice.transform(mosaic.mosaicId).then(price=>{
 			console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       let totalBalance = mosaic.amount * price;
 			console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
       let page = "CoinPriceChartPage";
       const modal = this.modalCtrl.create(page, { 
-        mosaicId: mosaic.mosaicId.name, 
+        mosaicId: mosaic.mosaicId, 
         coinId: coinId, 
-        currentWallet: this.selectedWallet, 
+        selectedAccount: this.selectedWallet, 
+        transactions: this.confirmedTransactions, 
         mosaicAmount: mosaic.amount,
         totalBalance: totalBalance
       }, {

@@ -59,9 +59,9 @@ export class CoinPriceChartPage {
 
   /** Transaction list member variables */
   App = App;
-  TransactionTypes = TransactionType;
+  TransactionType = TransactionType;
 
-  currentWallet: SimpleWallet;
+  selectedAccount: any;
   fakeList: Array<any>;
 
   unconfirmedTransactions: Array<any>;
@@ -124,7 +124,8 @@ export class CoinPriceChartPage {
     this.mosaicId = this.navParams.data['mosaicId']; // will be used to filter transactions
     console.log("TCL: CoinPriceChartPage -> this.mosaicId", this.mosaicId)
     this.coinId = this.navParams.data['coinId'];
-    this.currentWallet = this.navParams.data['currentWallet'];
+    this.selectedAccount = this.navParams.data['selectedAccount'];
+    this.confirmedTransactions = this.navParams.data['transactions'];
     this.mosaicAmount = this.navParams.data['mosaicAmount']; 
     this.totalBalance = this.navParams.data['totalBalance'];
 
@@ -182,110 +183,110 @@ export class CoinPriceChartPage {
   }
   ionViewWillEnter() {
 
-    /** Transaction list business logic */
-    this.unconfirmedTransactions = null;
-    this.confirmedTransactions = null;
-    this.showEmptyMessage = false;
-    this.isLoading = true;
+    // /** Transaction list business logic */
+    // this.unconfirmedTransactions = null;
+    // this.confirmedTransactions = null;
+    // this.showEmptyMessage = false;
+    // this.isLoading = true;
 
-    if (this.currentWallet) {
-      this.getAccountInfo();
-      this.fakeList = [{}, {}];
+    // if (this.selectedAccount) {
+    //   this.getAccountInfo();
+    //   this.fakeList = [{}, {}];
 
-      this.pageable = this.nemProvider.getAllTransactionsPaginated(
-        this.currentWallet.address
-      );
-
-
-
-      this.nemProvider.getUnconfirmedTransactions(this.currentWallet.address).pipe(
-        flatMap(_ => _),
-        toArray()
-      ).subscribe(result => {
-          this.unconfirmedTransactions = result;
-        });
-
-      // temp
-      if (this.mosaicId != 'xem') {
-        this.nemProvider.getMosaicTransactions(this.currentWallet.address).subscribe(transactions => {
-
-          const filteredTransactions = transactions.filter(tx => tx!._mosaics[0].mosaicId.name == this.mosaicId);
-
-          let mosaicInfo = [
-            { mosaicId: 'xpx', divisibility: 1e6 },
-            { mosaicId: 'npxs', divisibility: 1e6 },
-            { mosaicId: 'sft', divisibility: 1e6 },
-            { mosaicId: 'xar', divisibility: 1e4 },
-          ]
-
-          let currentMosaic = mosaicInfo.find(mosaic => mosaic.mosaicId == this.mosaicId);
-          console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaic", currentMosaic);
+    //   this.pageable = this.nemProvider.getAllTransactionsPaginated(
+    //     this.selectedAccount.address
+    //   );
 
 
-          let total: number = 0;
+
+    //   this.nemProvider.getUnconfirmedTransactions(this.selectedAccount.address).pipe(
+    //     flatMap(_ => _),
+    //     toArray()
+    //   ).subscribe(result => {
+    //       this.unconfirmedTransactions = result;
+    //     });
+
+    //   // temp
+    //   if (this.mosaicId != 'xem') {
+    //     this.nemProvider.getMosaicTransactions(this.selectedAccount.address).subscribe(transactions => {
+
+    //       const filteredTransactions = transactions.filter(tx => tx!._mosaics[0].mosaicId.name == this.mosaicId);
+
+    //       let mosaicInfo = [
+    //         { mosaicId: 'xpx', divisibility: 1e6 },
+    //         { mosaicId: 'npxs', divisibility: 1e6 },
+    //         { mosaicId: 'sft', divisibility: 1e6 },
+    //         { mosaicId: 'xar', divisibility: 1e4 },
+    //       ]
+
+    //       let currentMosaic = mosaicInfo.find(mosaic => mosaic.mosaicId == this.mosaicId);
+    //       console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaic", currentMosaic);
 
 
-          filteredTransactions.forEach(tx => {
-            let amount = tx.mosaics().map(mosaic => mosaic.quantity)[0] / currentMosaic.divisibility;
-            console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> amount", amount);
-            if (tx.recipient.value === this.currentWallet.address.plain()) {
-              total += amount
-            }
-            else {
-              total -= amount
-            }
-          })
+    //       let total: number = 0;
+
+
+    //       filteredTransactions.forEach(tx => {
+    //         let amount = tx.mosaics().map(mosaic => mosaic.quantity)[0] / currentMosaic.divisibility;
+    //         console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> amount", amount);
+    //         if (tx.recipient.value === this.selectedAccount.address.plain()) {
+    //           total += amount
+    //         }
+    //         else {
+    //           total -= amount
+    //         }
+    //       })
         
 
-          this.nemProvider.getXEMTransactions(this.currentWallet.address).subscribe(transactions => {
-            console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
-            transactions.forEach(tx => {
-              if(tx.type == TransactionType.MODIFY_MULTISIG_ACCOUNT) {
-                console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> tx", tx);
+    //       this.nemProvider.getXEMTransactions(this.selectedAccount.address).subscribe(transactions => {
+    //         console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
+    //         transactions.forEach(tx => {
+    //           if(tx.type == TransactionType.MODIFY_MULTISIG_ACCOUNT) {
+    //             console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> tx", tx);
 
-                let transaction: TransferTransaction = ((tx as AggregateTransaction).innerTransactions[0] as TransferTransaction)
-                let currentMosaicTransaction = transaction.mosaics.find(mosaic => mosaic.id.toHex() == this.mosaicId);
+    //             let transaction: TransferTransaction = ((tx as AggregateTransaction).innerTransactions[0] as TransferTransaction)
+    //             let currentMosaicTransaction = transaction.mosaics.find(mosaic => mosaic.id.toHex() == this.mosaicId);
 								
-                if(currentMosaicTransaction ) {
-                  console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaicTransaction", currentMosaicTransaction);
-                  this.confirmedTransactions.push(tx);
-                  if ((transaction.recipient as Address).plain() === this.currentWallet.address.plain()) {
-                  total += currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
-                }
-                else {
-                  total -= currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
-                }
-                }
-              }
-            })
+    //             if(currentMosaicTransaction ) {
+    //               console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaicTransaction", currentMosaicTransaction);
+    //               this.confirmedTransactions.push(tx);
+    //               if ((transaction.recipient as Address).plain() === this.selectedAccount.address.plain()) {
+    //               total += currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
+    //             }
+    //             else {
+    //               total -= currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
+    //             }
+    //             }
+    //           }
+    //         })
   
-          })
+    //       })
 
-          this.isLoading = false;
-          this.showEmptyMessage = false;
-          this.confirmedTransactions = filteredTransactions;
+    //       this.isLoading = false;
+    //       this.showEmptyMessage = false;
+    //       this.confirmedTransactions = filteredTransactions;
 
 
-          // Check transaction is empty
-          if (this.confirmedTransactions.length == 0) this.showEmptyMessage = true;
-        })
-      } else {
-        this.nemProvider.getXEMTransactions(this.currentWallet.address).subscribe(transactions => {
-          this.isLoading = false;
-          this.showEmptyMessage = false;
-          this.confirmedTransactions = transactions;
-          console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
+    //       // Check transaction is empty
+    //       if (this.confirmedTransactions.length == 0) this.showEmptyMessage = true;
+    //     })
+    //   } else {
+    //     this.nemProvider.getXEMTransactions(this.selectedAccount.address).subscribe(transactions => {
+    //       this.isLoading = false;
+    //       this.showEmptyMessage = false;
+    //       this.confirmedTransactions = transactions;
+    //       console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
 
-          if (!this.confirmedTransactions) this.showEmptyMessage = true;
-        })
-      }
-    }
+    //       if (!this.confirmedTransactions) this.showEmptyMessage = true;
+    //     })
+    //   }
+    // }
   }
 
   getAccountInfo() {
-    console.info("Getting account information.", this.currentWallet.address)
+    console.info("Getting account information.", this.selectedAccount.address)
     try {
-      this.nemProvider.getMultisigAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
+      this.nemProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
           if (accountInfo) {
             this.accountInfo = accountInfo;
             console.log("accountInfo", this.accountInfo)
@@ -308,7 +309,7 @@ export class CoinPriceChartPage {
   }
 
   copy() {
-    this.clipboard.copy(this.currentWallet.address.plain()).then(_ => {
+    this.clipboard.copy(this.selectedAccount.address.plain()).then(_ => {
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
     });
   }
