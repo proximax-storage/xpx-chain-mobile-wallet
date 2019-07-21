@@ -182,7 +182,7 @@ export class TransactionListPage {
 
   showReceiveModal() {
     let page = "ReceivePage";
-    const modal = this.modalCtrl.create(page, {
+    const modal = this.modalCtrl.create(page, this.selectedAccount, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });

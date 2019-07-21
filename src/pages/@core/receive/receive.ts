@@ -4,8 +4,7 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { WalletProvider } from '../../../providers/wallet/wallet';
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
-import { NemProvider } from '../../../providers/nem/nem';
+import { Account } from 'tsjs-xpx-chain-sdk';
 import { HapticProvider } from '../../../providers/haptic/haptic';
  /*
  * See https://ionicframework.com/docs/components/#navigation for more info on
@@ -18,7 +17,6 @@ import { HapticProvider } from '../../../providers/haptic/haptic';
   templateUrl: 'receive.html'
 })
 export class ReceivePage {
-  currentWallet: SimpleWallet;
   address:string;
   constructor(
     public viewCtrl: ViewController,
@@ -27,55 +25,21 @@ export class ReceivePage {
     private clipboard: Clipboard,
     private socialSharing: SocialSharing,
     private toastProvider: ToastProvider,
-    private walletProvider: WalletProvider,
-    private nemProvider: NemProvider,
     private haptic: HapticProvider
   ) {
+    const account = this.navParams.data;
+    this.address = (account as Account).address.plain()
   }
   ionViewWillEnter() {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ReceivePage');
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-      if (!currentWallet) {
-        this.navCtrl.setRoot(
-          'TabsPage',
-          {},
-          {
-            animate: true,
-            direction: 'backward'
-          }
-        );
-      } else {
-        this.currentWallet = currentWallet;
-        this.address = this.currentWallet.address.plain();
-      }
-      
-    });
-  }
 
   dismiss() {
     this.viewCtrl.dismiss();
   }
 
-  getQRCode() {
-    // return this.currentWallet.address.plain().toString();
-
-    // let QRCode: any = this.nemProvider.generateAddressQRText(
-    //   this.currentWallet.address
-    // );
-    // QRCode = JSON.parse(QRCode);
-    // QRCode.data.name = this.currentWallet.name;
-
-    // console.log("QRCode",QRCode);
-
-    let QRCode = {};
-    return JSON.stringify(QRCode);
-  }
-
   copy() {
-    this.clipboard.copy(this.currentWallet.address.plain()).then(_ => {
+    this.clipboard.copy(this.address).then(_ => {
       this.haptic.notification({ type: 'success' });
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
     });
@@ -85,7 +49,7 @@ export class ReceivePage {
     this.haptic.notification({ type: 'success' });
     this.socialSharing
       .share(
-        this.currentWallet.address.plain(),
+        this.address,
         null,
         null,
         null
