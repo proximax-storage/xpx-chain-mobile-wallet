@@ -2,15 +2,19 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet, Password, NetworkType} from 'tsjs-xpx-chain-sdk';
+
 
 import { App } from '../../../../../providers/app/app';
-import { NemProvider } from '../../../../../providers/nem/nem';
+// import { NemProvider } from '../../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../../providers/auth/auth';
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
+import * as BcryptJS from "bcryptjs";
+import { WalletProvider } from '../../../../../providers/wallet/wallet';
 
 /**
  * Generated class for the SendMosaicConfirmationPage page.
@@ -37,13 +41,15 @@ export class SendMosaicConfirmationPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    private nemProvider: NemProvider,
+    // private nemProvider: NemProvider,
     private alertProvider: AlertProvider,
     private authProvider: AuthProvider,
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private proximaxProvider: ProximaxProvider,
+    private walletProvider: WalletProvider
   ) {
     this.init();
   }
@@ -61,7 +67,7 @@ export class SendMosaicConfirmationPage {
     this.formGroup = this.formBuilder.group({});
 
     // Get NavParams data
-    console.log(this.navParams.data);
+    console.log('navParams', this.navParams.data);
     this.data = this.navParams.data;
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
@@ -80,51 +86,64 @@ export class SendMosaicConfirmationPage {
   }
 
   onSubmit() {
-    console.log(this.data.transactionType);
+    console.log('transactionType', this.data.transactionType);
     if (this.data.transactionType == 'multisig') {
       console.log("Multisig transfer");
       if (this._allowedToSendTx()) {
-        const multisigAccountPublicKey: string = this.data.publicKey;
-        this.nemProvider.confirmMultisigTransaction(
-          this.data.sendTx,
-          multisigAccountPublicKey,
-          this.data.currentWallet,
-          this.credentials.password
-        )
-          .subscribe(
-            value => {
-              this.showSuccessMessage()
-            },
-            error => {
-              this.showErrorMessage(error)
-            }
-          );
+        // const multisigAccountPublicKey: string = this.data.publicKey;
+        // this.nemProvider.confirmMultisigTransaction(
+        //   this.data.sendTx,
+        //   multisigAccountPublicKey,
+        //   this.data.currentWallet,
+        //   this.credentials.password
+        // )
+        //   .subscribe(
+        //     value => {
+        //       this.showSuccessMessage()
+        //     },
+        //     error => {
+        //       this.showErrorMessage(error)
+        //     }
+        //   );
       } else {
         this.showGenericError();
       }
     } else if (this.data.transactionType = 'normal'){
-      console.log("Normal transfer");
-
       if (this._allowedToSendTx()) {
-        this.nemProvider
-          .confirmTransaction(
-            this.data.sendTx,
-            this.data.currentWallet,
-            this.credentials.password
-          )
-          .subscribe(
-            value => {
-              this.showSuccessMessage()
-            },
-            error => {
-              this.showErrorMessage(error)
-            }
+        const acountRecipient = this.data.recipientAddress;
+        const amount = this.data.amount;
+        const message = this.data.message;
+        const password =  this.credentials.password
+        const mosaic = this.data.mosaic.hex;
+        const common = { password: password };
+        if (this.walletProvider.decrypt(common, this.data.currentWallet)) {
+          const rspBuildSend = this.walletProvider.buildToSendTransfer(
+            common,
+            acountRecipient,
+            message,
+            amount,
+            NetworkType.TEST_NET,
+            mosaic
           );
+          rspBuildSend.transactionHttp
+            .announce(rspBuildSend.signedTransaction)
+            .subscribe(
+              value => {
+                console.log('value ', value)
+                this.showSuccessMessage()
+              },
+              async error => {
+                console.log('error ', error)
+                this.showErrorMessage(error)
+              }
+            );
+        }
       } else {
         this.showGenericError();
       }
     }
   }
+
   showGenericError() {
     this.translateService.get('APP.ERROR').subscribe(
       value => {
@@ -170,7 +189,7 @@ export class SendMosaicConfirmationPage {
     this.alertProvider.showMessage(
       `You have successfully sent ${
       this.data.amount
-      } ${this.data.mosaic.mosaicId.name.toUpperCase()} to ${
+      } ${this.data.mosaic.mosaicId.toUpperCase()} to ${
       this.data.recipientName || this.data.recipientAddress
       }`
     );
@@ -189,17 +208,21 @@ export class SendMosaicConfirmationPage {
    * User checking if it can do the send transaction.
    */
   private _allowedToSendTx() {
-    // if (this.credentials.password) {
+    
+    if (this.credentials.password) {
+      const myPassword = new Password(this.credentials.password);
+      console.log('myPassword', myPassword)
+      
     //   try {
-    //     this.credentials.privateKey = this.nemProvider.passwordToPrivateKey(
+    //     this.credentials.privateKey = this.proximaxProvider.passwordToPrivateKey(
     //       this.credentials.password,
     //       this.currentWallet
     //     );
-    //     return true;
+        return true;
     //   } catch (err) {
     //     return false;
     //   }
-    // }
+    }
     return false;
   }
 
