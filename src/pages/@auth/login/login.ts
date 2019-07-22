@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, Platform, Keyboard } from 'ionic-angular';
 import { AuthProvider } from '../../../providers/auth/auth';
-import { WalletProvider } from '../../../providers/wallet/wallet';
 import { AlertProvider } from '../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../providers/haptic/haptic';
@@ -35,7 +34,6 @@ export class LoginPage implements OnInit {
     public formBuilder: FormBuilder,
     public storage: Storage,
     public alertProvider: AlertProvider,
-    public walletProvider: WalletProvider,
     public authProvider: AuthProvider,
     public utils: UtilitiesProvider,
     private haptic: HapticProvider,

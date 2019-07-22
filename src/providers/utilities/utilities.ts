@@ -95,11 +95,6 @@ export class UtilitiesProvider {
    */
   getLogo(mosaic: any) {
     if (
-      mosaic.namespaceId === 'nem' &&
-      mosaic.mosaicId === 'xem'
-    ) {
-      return AppConfig.LOGO.NEM;
-    } else if (
       mosaic.namespaceId === 'prx' &&
       mosaic.mosaicId === 'xpx'
     ) {

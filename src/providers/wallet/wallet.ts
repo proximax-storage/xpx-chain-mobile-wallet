@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
 import { AuthProvider } from '../auth/auth';
-import { SimpleWallet, Password, Address, EncryptedPrivateKey, AccountInfo, MosaicAmountView } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Password, Address, EncryptedPrivateKey, 
+  AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
+  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
+import { crypto } from 'js-xpx-chain-library';
+import { AppConfig } from '../../app/app.config';
 
 /*
  Generated class for the NemProvider provider.
@@ -14,6 +18,7 @@ import { Observable } from 'rxjs';
  */
 @Injectable()
 export class WalletProvider {
+  publicAccount: PublicAccount;
   wallets: SimpleWallet[];
 
   constructor(private storage: Storage, private authProvider: AuthProvider, private proximaxProvider: ProximaxProvider) {;
@@ -321,4 +326,83 @@ export class WalletProvider {
       });
     });
   }
+
+
+  decrypt(common: any, current: any, account: any = '', algo: any = '', network: any = '') {
+    const acct = current;
+    const net = NetworkType.TEST_NET;
+    const alg = 'pass:bip32';
+    const walletAccount = {
+      encrypted: current.encryptedPrivateKey.encryptedKey,
+      iv: current.encryptedPrivateKey.iv
+    }
+    // Try to generate or decrypt key
+    if (!crypto.passwordToPrivatekey(common, walletAccount, alg)) {
+      // console.log('passwordToPrivatekeyy ')
+      setTimeout(() => {
+        console.log('Error Invalid password')
+        // this.sharedService.showError('Error', '¡Invalid password!');
+      }, 500);
+      return false;
+    }
+    if (common.isHW) {
+      return true;
+    }
+    // console.log('pase common.common ', common.privateKey)
+    // console.log('pase common.net ', net)
+    // console.log('pase common.acct.address ', acct.address.address)
+    if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address.address)) {
+      setTimeout(() => {
+        console.log('Error Invalid password')
+        // this.sharedService.showError('Error', '¡Invalid password!');
+      }, 500);
+      return false;
+    }
+    // console.log('!this.isPrivateKeyValid......')
+    //Get public account from private key
+    this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
+    // console.log('this.publicAccount ', this.publicAccount )
+    return true;
+  }
+
+  
+  isPrivateKeyValid(privateKey: any) {
+    if (privateKey.length !== 64 && privateKey.length !== 66) {
+      console.error('Private key length must be 64 or 66 characters !');
+      return false;
+    } else if (!this.isHexadecimal(privateKey)) {
+      console.error('Private key must be hexadecimal only !');
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  isHexadecimal(str: { match: (arg0: string) => any; }) {
+    return str.match('^(0x|0X)?[a-fA-F0-9]+$') !== null;
+  }
+
+  buildToSendTransfer(
+    common: { password?: any; privateKey?: any },
+    recipient: string,
+    message: string,
+    amount: any,
+    network: NetworkType,
+    mosaic: string | number[]
+  ) {
+    const recipientAddress = this.proximaxProvider.createFromRawAddress(recipient);
+    const transferTransaction = TransferTransaction.create(Deadline.create(5), recipientAddress,
+      [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount)))], PlainMessage.create(message), network
+    );
+    const account = Account.createFromPrivateKey(common.privateKey, network);
+    const signedTransaction = account.sign(transferTransaction)
+    const transactionHttp = new TransactionHttp(
+      AppConfig.sirius.httpNodeUrl
+    );
+    return {
+      signedTransaction: signedTransaction,
+      transactionHttp: this.proximaxProvider.transactionHttp
+    };
+  }
+
 }
