@@ -81,95 +81,11 @@ export class TransactionListPage {
   }
 
   getAccountInfo() {
-    // console.info("Getting account information.", this.currentWallet.address)
-
-
-    // try {
-    //   this.nemProvider
-    //     .getAccountInfo(this.currentWallet.address)
-    //     .subscribe(accountInfo => {
-    //       if (accountInfo) {
-    //         this.accountInfo = accountInfo;
-    //         console.log("accountInfo", this.accountInfo)
-    //         // Check if account is a cosignatory of multisig account(s)
-    //         if (this.accountInfo.cosignatoryOf.length > 0) {
-    //           // console.clear();
-    //           console.log("This is a multisig account");
-    //           this.isMultisig = true;
-    //         }
-    //       }
-
-    //     }, (err: any) => {
-    //       console.log(err)
-    //       this.isMultisig = false;
-    //     });
-
-    // } catch (error) {
-    //   console.log(error);
-    // }
 
   }
 
   ionViewWillEnter() {
-    // this.utils.setHardwareBack(this.navCtrl);
 
-    // /** Transaction list business logic */
-    // this.unconfirmedTransactions = null;
-    // this.confirmedTransactions = null;
-
-    // if (this.currentWallet) {
-    //   this.walletName = this.currentWallet.name;
-    //   this.currentWallet = this.currentWallet;
-    //   this.fakeList = [{}, {}];
-    //   this.isLoading = true;
-
-    //   this.getAccountInfo();
-
-    //   this.nemProvider
-    //     .getUnconfirmedTransactions(this.currentWallet.address)
-    //     .flatMap(_ => _)
-    //     .toArray()
-    //     .subscribe(result => {
-    //       this.unconfirmedTransactions = result;
-    //     });
-
-
-    //   this.nemProvider.getMosaicTransactions(this.currentWallet.address).subscribe(mosaicTransactions => {
-
-    //     console.clear();
-
-    //     let supportedMosaics = [
-    //       { mosaicId: 'xpx' },
-    //       { mosaicId: 'xem' },
-    //       { mosaicId: 'npxs' },
-    //       { mosaicId: 'sft' },
-    //       { mosaicId: 'xar' },
-    //     ]
-
-    //     const filteredTransactions = filter(mosaicTransactions, (tx) => find(supportedMosaics, { mosaicId: tx._mosaics[0].mosaicId.name }));
-      
-    //     setTimeout(() => {
-    //       this.nemProvider.getXEMTransactions(this.currentWallet.address).subscribe(XEMTransactions => {
-    //         const TRANSACTIONS = [].concat(filteredTransactions, XEMTransactions);
-    //         console.log("LOG: TransactionListPage -> ionViewWillEnter -> TRANSACTIONS.length", TRANSACTIONS.length);
-            
-    //         // Check transaction is empty
-    //         if (TRANSACTIONS.length == 0) {
-    //           this.confirmedTransactions = null;
-    //           this.showEmptyMessage = true;
-    //         } else {
-    //           this.confirmedTransactions = TRANSACTIONS.sort((a,b) => {
-    //             return new Date(b.timeWindow.timeStamp).getTime() - new Date(a.timeWindow.timeStamp).getTime()
-    //           });
-    //           this.showEmptyMessage = false;
-    //         }
-    //         this.isLoading = false;
-    //       })
-    //     }, 1000);
-
-
-    //   })
-    // }
   }
 
   ionViewDidLoad() {
@@ -243,7 +159,7 @@ export class TransactionListPage {
 
   moreDetails() {
     let page = "WalletDetailsPage";
-    this.showModal(page, { totalBalance: this.totalBalance, wallet: this.currentWallet });
+    this.showModal(page, { totalBalance: this.totalBalance, selectedAccount: this.selectedAccount });
   }
 
   showModal(page, params) {

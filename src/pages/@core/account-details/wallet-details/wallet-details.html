@@ -33,42 +33,42 @@
 
         <ion-list transparent-items>
 
-            <ion-item *ngIf="currentWallet">
+            <ion-item *ngIf="selectedAccount">
                 <ion-icon name='fi-wallet' item-start></ion-icon>
                 {{"WALLETS.WALLET_NAME" | translate}}:
-                <span item-end>{{currentWallet.name }}</span>
+                <span item-end>{{selectedAccount?.name }}</span>
             </ion-item>
 
-            <ion-item *ngIf="currentWallet" (click)="copy(currentWallet.address.value)">
+            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
                 <ion-icon name='ios-cash-outline' item-start></ion-icon>
                 {{"WALLETS.BALANCE" | translate}}:
-                <span item-end *ngIf="currentWallet">${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</span>
+                <span item-end *ngIf="selectedAccount">${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</span>
             </ion-item>
 
-            <ion-item *ngIf="currentWallet" (click)="copy(currentWallet.address.value)">
+            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
                 <ion-icon name='ios-paper-outline' item-start></ion-icon>
                 {{"WALLETS.ADDRESS" | translate}}:
-                <p text-justify  *ngIf="currentWallet">{{ currentWallet?.address.value }} </p>
+                <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
             </ion-item>
 
-            <ion-item *ngIf="accountInfo && accountInfo.publicAccount" (click)="copy(accountInfo.publicAccount.publicKey)">
+            <!-- <ion-item *ngIf="accountInfo && accountInfo.publicAccount" (click)="copy(accountInfo.publicAccount.publicKey)">
                 <ion-icon name='ios-key-outline' item-start></ion-icon>
                 {{"WALLETS.PUBLIC_KEY" | translate}}:
-                <p text-justify  *ngIf="currentWallet">{{ accountInfo.publicAccount.publicKey }} </p>
+                <p text-justify  *ngIf="selectedAccount">{{ accountInfo.publicAccount.publicKey }} </p>
             </ion-item>
 
             <ion-item *ngIf="accountInfo" (click)="copy(accountInfo.importance)">
                 <ion-icon name='ios-cloud-upload-outline' item-start></ion-icon>
                 {{"WALLETS.IMPORTANCE_SCORE" | translate}}:
-                <p text-wrap item-end *ngIf="currentWallet">
+                <p text-wrap item-end *ngIf="selectedAccount">
                     {{ ((accountInfo.importance | formatImportance)[0] | number:'1.0-0') + '.' + (accountInfo.importance | formatImportance)[1]
                     }} * 10</p>
             </ion-item>
             <ion-item *ngIf="accountInfo" (click)="copy(accountInfo.balance.vestedBalance)">
                 <ion-icon name='ios-pulse-outline' item-start></ion-icon>
                 {{"WALLETS.VESTED_BALANCE" | translate}}:
-                <p text-wrap item-end *ngIf="currentWallet">{{ accountInfo.balance.vestedBalance | formatXEM }} XEM</p>
-            </ion-item>
+                <p text-wrap item-end *ngIf="selectedAccount">{{ accountInfo.balance.vestedBalance | formatXEM }} XEM</p>
+            </ion-item> -->
           </ion-list>
 
         <ion-row>

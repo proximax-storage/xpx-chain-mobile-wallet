@@ -24,34 +24,35 @@ export class WalletDetailsPage {
   currentWallet: SimpleWallet;
   walletName: string = '';
   totalBalance: number;
+  selectedAccount:any;
 
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private nemProvider: NemProvider,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,
     private authProvider: AuthProvider
   ) {
-    this.totalBalance = navParams.get('totalBalance');
-    this.currentWallet = navParams.get('wallet');
-    this.getAccountInfo();
+    console.log("SIRIUS CHAIN WALLET: WalletDetailsPage -> this.navParams.data", this.navParams.data)
+    this.totalBalance = this.navParams.get('totalBalance');
+    this.selectedAccount = this.navParams.get('selectedAccount');
+    // this.getAccountInfo();
   }
 
   getAccountInfo() {
-    this.nemProvider.getAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
-        this.accountInfo = accountInfo;
-        console.log(this.accountInfo)
-      }, (err: any) => {
-        console.log(err)
-      });
+    // this.nemProvider.getAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
+    //     this.accountInfo = accountInfo;
+    //     console.log(this.accountInfo)
+    //   }, (err: any) => {
+    //     console.log(err)
+    //   });
   }
 
   copy() {
-    this.clipboard.copy(this.currentWallet.address.plain()).then(_ => {
+    this.clipboard.copy(this.selectedAccount.address.plain()).then(_ => {
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
     });
   }
