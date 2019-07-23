@@ -126,8 +126,6 @@ export class ProximaxProvider {
   public isValidAddress(address: string): boolean {
     const addr = Address.createFromRawAddress(address);
 
-    console.log('isValidAddress', addr);
-
     // Reset recipient data
     let success = true;
     // From documentation: Addresses have always a length of 40 characters.

@@ -5,7 +5,8 @@ import { Address } from 'tsjs-xpx-chain-sdk';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
-import { NemProvider } from '../../../../providers/nem/nem';
+// import { NemProvider } from '../../../../providers/nem/nem';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the ContactAddPage page.
@@ -28,10 +29,11 @@ export class ContactAddPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    public nemProvider: NemProvider,
+    // public nemProvider: NemProvider,
     public alertProvider: AlertProvider,
     public contactsProvider: ContactsProvider,
-    private viewCtrl: ViewController
+    private viewCtrl: ViewController,
+    private proximaxProvider: ProximaxProvider
   ) {
     this.init();
   }
@@ -59,14 +61,15 @@ export class ContactAddPage {
   }
 
   onSubmit(form) {
-    const CONTACT_ADDRESS = Address.createFromRawAddress(this.formGroup.get('address').value);
+    const CONTACT_ADDRESS = this.formGroup.get('address').value.toUpperCase().replace('-', '');
+   
     const DATA = form;
-    if (!this.nemProvider.isValidAddress(CONTACT_ADDRESS)) {
+    if (!this.proximaxProvider.isValidAddress(CONTACT_ADDRESS)) {
       this.alertProvider.showMessage(
         'Sorry, it looks like this NEM address does not belong to this network. Please try again.'
       );
     } else {
-      DATA.address = CONTACT_ADDRESS.plain();
+      DATA.address = CONTACT_ADDRESS;
       this.contactsProvider.push(DATA).then(_ => {
         this.gotoHome();
       });
