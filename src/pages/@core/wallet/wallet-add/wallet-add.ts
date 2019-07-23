@@ -44,7 +44,6 @@ export class WalletAddPage {
     private utils: UtilitiesProvider,
     private haptic: HapticProvider,
     private translateService : TranslateService,
-    private proximaxProvider: ProximaxProvider
   ) {
     this.init();
     this.walletColor = "wallet-1";
@@ -106,9 +105,7 @@ export class WalletAddPage {
           this.haptic.notification({ type: 'success' });
           delete newWallet.total;
           delete newWallet.walletColor;
-          // this.gotoBackup(newWallet);
-          this.goHome();
-
+          this.gotoBackup(newWallet);
         });
       }
     });

@@ -31,45 +31,12 @@ export class WalletBackupProvider {
     console.log('Hello WalletBackupProvider Provider');
   }
 
-  saveAsFile(wallet: SimpleWallet): Promise<any> {
-    const WALLET_NAME = wallet.name + '.wlt';
-    const STORAGE_DIRECTORY =
-      this.file.externalApplicationStorageDirectory + 'files';
-
-    return this.authProvider
-      .getPassword()
-      .then(password => {
-        // const QR_TEXT = this.nemProvider.generateWalletQRText(password, wallet);
-        const QR_TEXT = ""
-        return this.file.writeFile(STORAGE_DIRECTORY, WALLET_NAME, QR_TEXT, {
-          replace: true
-        });
-      })
-      .then(result => {
-        this.alertProvider.showMessage(
-          `You can view your backed up wallet in ${STORAGE_DIRECTORY}`
-        );
-        return result;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
   
-  copyToClipboard(wallet: SimpleWallet) {
+  copyToClipboard(privateKey) {
     this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(
       value => {
-        // value is our translated string
         let alertTitle = value;
-
-        return this.authProvider
-      .getPassword()
-      .then(password => {
-        const PASSWORD = new Password(password);
-        const account = wallet.open(PASSWORD);
-
-        return this.clipboard.copy(account.privateKey);
-      })
+        return this.clipboard.copy(privateKey)
       .then(_ => {
         return this.toastProvider.show(alertTitle,
           3,

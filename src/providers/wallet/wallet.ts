@@ -45,6 +45,27 @@ export class WalletProvider {
     return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
   }
 
+  public getAccount(wallet: SimpleWallet) : Observable<Account> {
+    return new Observable(observer => {
+      // Get user's password and unlock the wallet to get the account
+     this.authProvider
+     .getPassword()
+     .then(password => {
+       // Get user's password
+       const myPassword = new Password(password);
+
+       // Convert current wallet to SimpleWallet
+       const myWallet = this.convertToSimpleWallet(wallet)
+
+       // Unlock wallet to get an account using user's password 
+       const account = myWallet.open(myPassword);
+
+       observer.next(account);
+     
+      });
+    });
+  }
+
   public getAccountInfo(address: string) : Observable<AccountInfo> {
     return this.proximaxProvider.getAccountInfo(Address.createFromRawAddress(address));
   }

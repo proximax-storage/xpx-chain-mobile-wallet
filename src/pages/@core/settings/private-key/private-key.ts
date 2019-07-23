@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Password, Account } from 'tsjs-xpx-chain-sdk';
 
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
@@ -12,6 +12,8 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { App } from '../../../../providers/app/app';
 import { TranslateService } from '@ngx-translate/core';
+import CryptoJS from 'crypto-js';
+import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet-backup';
 
 /**
  * Generated class for the PrivateKeyPage page.
@@ -32,8 +34,6 @@ export class PrivateKeyPage {
   privateKey: string;
   password: string;
 
-  QRData: any;
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -46,27 +46,25 @@ export class PrivateKeyPage {
     private viewController: ViewController,
     private haptic: HapticProvider,
     private modalCtrl: ModalController,
-    private translateService: TranslateService
+    private walletBackupProvider: WalletBackupProvider
   ) {
     this.password = this.navParams.get('password');
+    console.log("SIRIUS CHAIN WALLET: PrivateKeyPage -> this.password", this.password)
+  
   }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
 
-    // this.walletProvider.getSelectedWallet().then(currentWallet => {
-    //   if (currentWallet) {
-    //     this.currentWallet = currentWallet;
-    //     this.privateKey = this.nemProvider.passwordToPrivateKey(
-    //       this.password,
-    //       this.currentWallet
-    //     );
-    //     this.QRData = this.nemProvider.generateWalletQRText(
-    //       this.password,
-    //       this.currentWallet
-    //     );
-    //   }
-    // });
+    this.walletProvider.getSelectedWallet().then(currentWallet => {
+    console.log("SIRIUS CHAIN WALLET: PrivateKeyPage -> ionViewWillEnter -> currentWallet", currentWallet)
+      if (currentWallet) {
+      this.currentWallet = currentWallet;
+      this.walletProvider.getAccount(currentWallet).subscribe(account=> {
+        this.privateKey = account.privateKey;
+      })
+      }
+    });
   }
 
   ionViewDidLoad() {
@@ -75,17 +73,8 @@ export class PrivateKeyPage {
 
 
   copy() {
-    this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(
-      value => {
-        // value is our translated string
-        let alertTitle = value;
-        this.clipboard.copy(this.privateKey).then(_ => {
-          this.haptic.notification({ type: 'success' });
-          this.toastProvider.show(alertTitle, 3, true);
-          this.dismiss();
-        });
-      });
-   
+    this.walletBackupProvider.copyToClipboard(this.privateKey);
+    this.dismiss();
   }
 
   share() {
@@ -108,7 +97,7 @@ export class PrivateKeyPage {
 
   gotoQRCodePage() {
     let page = "WalletBackupQrcodePage";
-    const modal = this.modalCtrl.create(page, { QRData: this.QRData, privateKey: this.privateKey, walletName: this.currentWallet.name }, {
+    const modal = this.modalCtrl.create(page, { privateKey: this.privateKey, walletName: this.currentWallet.name }, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });

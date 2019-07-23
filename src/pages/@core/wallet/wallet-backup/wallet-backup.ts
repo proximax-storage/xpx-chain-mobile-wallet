@@ -8,6 +8,7 @@ import { AuthProvider } from '../../../../providers/auth/auth';
 import { NemProvider } from '../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { WalletProvider } from '../../../../providers/wallet/wallet';
 /**
  * Generated class for the WalletBackupPage page.
  *
@@ -32,45 +33,34 @@ export class WalletBackupPage {
   selectedOption: number = 0;
   showBackupfile: boolean;
   privateKey: string;
-  QRData: string;
   currentWallet: SimpleWallet;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private authProvider: AuthProvider,
     private walletBackupProvider: WalletBackupProvider,
-    private nemProvider: NemProvider,
     private socialSharing: SocialSharing,
-    private utils: UtilitiesProvider,
     private modalCtrl: ModalController,
+    private utils: UtilitiesProvider,
+    private walletProvider: WalletProvider
   ) {
-
   }
 
   ionViewWillEnter() {
+    this.utils.setHardwareBack(this.navCtrl);
 
-
+    this.walletProvider.getSelectedWallet().then(currentWallet => {
+    console.log("SIRIUS CHAIN WALLET: PrivateKeyPage -> ionViewWillEnter -> currentWallet", currentWallet)
+      if (currentWallet) {
+      this.currentWallet = currentWallet;
+      this.walletProvider.getAccount(currentWallet).subscribe(account=> {
+        this.privateKey = account.privateKey;
+      })
+      }
+    });
   }
 
   ionViewDidLoad() {
-    // console.log('ionViewDidLoad WalletBackupPage');
-
-    // this.utils.setHardwareBack(this.navCtrl);
-    // this.currentWallet = <SimpleWallet>this.navParams.data;
-    // if (this.currentWallet) {
-
-    //   this.authProvider
-    //     .getPassword()
-    //     .then(password => {
-    //       this.QRData = this.nemProvider.generateWalletQRText(password, this.currentWallet);
-    //       const account = this.nemProvider.passwordToPrivateKey(
-    //         password,
-    //         this.currentWallet
-    //       );
-    //       this.privateKey = account.privateKey;
-    //     });
-    // }
   }
 
   ionViewDidLeave() {
@@ -88,24 +78,19 @@ export class WalletBackupPage {
   }
 
   copy() {
-    this.walletBackupProvider.copyToClipboard(<SimpleWallet>this.navParams.data);
+    this.walletBackupProvider.copyToClipboard(this.privateKey);
     this.goHome();
   }
 
   share() {
-    const WALLET: SimpleWallet = <SimpleWallet>this.navParams.data;
-    this.authProvider.getPassword().then(async password => {
-      const account = await this.nemProvider.passwordToPrivateKey(password, WALLET);
-
-      await this.socialSharing.share(
-        account.privateKey, null, null);
+      this.socialSharing.share(
+      this.privateKey, null, null);
       this.goHome();
-    });
   }
 
   gotoQRCodePage() {
     let page = "WalletBackupQrcodePage";
-    const modal = this.modalCtrl.create(page, {QRData:this.QRData, privateKey: this.privateKey, walletName: this.currentWallet.name } ,{
+    const modal = this.modalCtrl.create(page, {privateKey: this.privateKey, walletName: this.currentWallet.name } ,{
       enableBackdropDismiss: false,
       showBackdrop: true
     });

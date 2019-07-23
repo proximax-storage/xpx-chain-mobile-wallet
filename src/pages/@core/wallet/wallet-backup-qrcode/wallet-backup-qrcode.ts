@@ -33,8 +33,8 @@ export class WalletBackupQrcodePage {
     private clipboard: Clipboard,
     private toastProvider: ToastProvider
     ) {
+      console.log("SIRIUS CHAIN WALLET: WalletBackupQrcodePage -> this.navParams.data", this.navParams.data)
       this.privateKey = this.navParams.get("privateKey");
-      this.QRData = this.navParams.get("QRData");
       this.walletName = this.navParams.get("walletName");
       this.showScreenshotButton = true;
   }
@@ -43,13 +43,8 @@ export class WalletBackupQrcodePage {
     console.log('ionViewDidLoad WalletBackupQrcodePage');
   }
 
-  ionViewDidEnter() {
-    // Take a screenshot then go home.
-  }
-
   dismiss() {
      this.viewCtrl.dismiss(); 
-    //  this.goHome();
   }
 
   copy() {
