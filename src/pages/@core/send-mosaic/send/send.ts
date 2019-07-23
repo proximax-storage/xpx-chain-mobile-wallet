@@ -104,6 +104,7 @@ export class SendPage {
       } else {
         if(this.selectedMosaic){
           this.selectedMosaic
+          console.log("SIRIUS CHAIN WALLET: SendPage -> ionViewWillEnter -> this.selectedMosaic", this.selectedMosaic)
         }else{
         this.currentWallet = currentWallet;
           this.getAccount(this.currentWallet).subscribe(account=>{ 

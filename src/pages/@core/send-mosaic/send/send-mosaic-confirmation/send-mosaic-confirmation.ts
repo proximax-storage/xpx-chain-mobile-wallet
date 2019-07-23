@@ -41,7 +41,6 @@ export class SendMosaicConfirmationPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    // private nemProvider: NemProvider,
     private alertProvider: AlertProvider,
     private authProvider: AuthProvider,
     public utils: UtilitiesProvider,
@@ -55,7 +54,6 @@ export class SendMosaicConfirmationPage {
   }
 
   ionViewWillEnter() {
-    // this.utils.setHardwareBack(this.navCtrl);
   }
 
   ionViewDidLoad() {
@@ -63,7 +61,7 @@ export class SendMosaicConfirmationPage {
   }
 
   init() {
-    // Inititalize empty for mfor submission only
+    // Inititalize empty fo  submission only
     this.formGroup = this.formBuilder.group({});
 
     // Get NavParams data
@@ -95,15 +93,19 @@ export class SendMosaicConfirmationPage {
         this.showGenericError();
       }
     } else if (this.data.transactionType = 'normal'){
+      console.log("Normal transfer");
       if (this._allowedToSendTx()) {
+
         const acountRecipient = this.data.recipientAddress;
         const amount = this.proximaxProvider.getAbsoluteAmount(this.data.amount);
         const message = this.data.message;
         const password =  this.credentials.password
         const mosaic = this.data.mosaic.hex;
         const common = { password: password };
+
         if (this.walletProvider.decrypt(common, this.data.currentWallet)) {
-          const rspBuildSend = this.walletProvider.buildToSendTransfer(
+
+          const transferTransction = this.walletProvider.buildToSendTransfer(
             common,
             acountRecipient,
             message,
@@ -111,8 +113,9 @@ export class SendMosaicConfirmationPage {
             NetworkType.TEST_NET,
             mosaic
           );
-          rspBuildSend.transactionHttp
-            .announce(rspBuildSend.signedTransaction)
+
+          transferTransction.transactionHttp
+            .announce(transferTransction.signedTransaction)
             .subscribe(
               value => {
                 console.log('value ', value)
@@ -141,39 +144,39 @@ export class SendMosaicConfirmationPage {
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });
     console.log(error);
-              if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-                this.alertProvider.showMessage(
-                  'Sorry, you don\'t have enough balance to continue the transaction.'
-                );
-              } else if (
-                error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
-              ) {
-                this.alertProvider.showMessage(
-                  'The note you entered is too long. Please try again.'
-                );
-              } else if (error.statusCode == 404) {
-                this.alertProvider.showMessage(
-                  'This address does not belong to this network'
-                );
-              } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
-                this.alertProvider.showMessage(
-                  'Transaction is not allowed for multisignature enabled wallets.'
-                );
-              } else {
-                // this.alertProvider.showMessage(
-                //   'An error occured. Please try again.'
-                // );
-                this.alertProvider.showMessage(
-                  error
-                );
-              }
+    if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
+      this.alertProvider.showMessage(
+        'Sorry, you don\'t have enough balance to continue the transaction.'
+      );
+    } else if (
+      error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
+    ) {
+      this.alertProvider.showMessage(
+        'The note you entered is too long. Please try again.'
+      );
+    } else if (error.statusCode == 404) {
+      this.alertProvider.showMessage(
+        'This address does not belong to this network'
+      );
+    } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
+      this.alertProvider.showMessage(
+        'Transaction is not allowed for multisignature enabled wallets.'
+      );
+    } else {
+      // this.alertProvider.showMessage(
+      //   'An error occured. Please try again.'
+      // );
+      this.alertProvider.showMessage(
+        error
+      );
+    }
               
               
   }
   showSuccessMessage() {
     this.haptic.notification({ type: 'success' });
     this.alertProvider.showMessage(
-      `You have successfully sent ${
+      `You sent ${
       this.data.amount
       } ${this.data.mosaic.mosaicId.toUpperCase()} to ${
       this.data.recipientName || this.data.recipientAddress
@@ -194,20 +197,12 @@ export class SendMosaicConfirmationPage {
    * User checking if it can do the send transaction.
    */
   private _allowedToSendTx() {
+    // TODO: do some checking before send transaction
     
     if (this.credentials.password) {
       const myPassword = new Password(this.credentials.password);
       console.log('myPassword', myPassword)
-      
-    //   try {
-    //     this.credentials.privateKey = this.proximaxProvider.passwordToPrivateKey(
-    //       this.credentials.password,
-    //       this.currentWallet
-    //     );
         return true;
-    //   } catch (err) {
-    //     return false;
-    //   }
     }
     return false;
   }

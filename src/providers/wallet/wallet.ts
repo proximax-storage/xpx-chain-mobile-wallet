@@ -396,9 +396,9 @@ export class WalletProvider {
     );
     const account = Account.createFromPrivateKey(common.privateKey, network);
     const signedTransaction = account.sign(transferTransaction)
-    const transactionHttp = new TransactionHttp(
-      AppConfig.sirius.httpNodeUrl
-    );
+    // const transactionHttp = new TransactionHttp(
+    //   AppConfig.sirius.httpNodeUrl
+    // );
     return {
       signedTransaction: signedTransaction,
       transactionHttp: this.proximaxProvider.transactionHttp
