@@ -5,6 +5,8 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { App } from '../../../../../providers/app/app';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
+import { SimpleWallet, Address } from 'tsjs-xpx-chain-sdk';
+import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 
 /**
  * Generated class for the SendMosaicSelectPage page.
@@ -19,15 +21,17 @@ import { UtilitiesProvider } from '../../../../../providers/utilities/utilities'
   templateUrl: 'send-mosaic-select.html'
 })
 export class SendMosaicSelectPage {
+  selectedMosaicc: any;
   App = App;
 
-  // selectedMosaic: MosaicTransferable;
-  // mosaics: Array<MosaicTransferable>;
+  selectedMosaic: any;
+  // mosaics: Array<any>;
+  mosaics: any=[];
 
-  // selectedWallet: SimpleWallet;
+  selectedWallet: SimpleWallet;
 
-  // fakeList: Array<any>;
-  // walletAddress: Address;
+  fakeList: Array<any>;
+  walletAddress: Address;
 
   constructor(
     public navCtrl: NavController,
@@ -36,26 +40,27 @@ export class SendMosaicSelectPage {
     public getBalanceProvider: GetBalanceProvider,
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
+    public mosaicsProvider: MosaicsProvider,
   ) {
-    // this.fakeList = [{}, {}];
-    // this.walletAddress = this.navParams.get('walletAddress');
+    this.fakeList = [{}, {}];
+    // this.walletAddress =  this.navParams.data.walletAddress;
+    this.selectedMosaicc = this.navParams.data.selectedMosaic;
 
+    // console.log('wallet....', this.walletAddress)
+    // console.log("Nav params walletAddress", this.navParams.data.walletAddress);
+    // console.log("Nav params selectedMosaic", this.navParams.data.selectedMosaic);
+    // console.log('this.selectedMosaicc....', this.selectedMosaicc)
   }
 
   ionViewWillEnter() {
-    // if(this.walletAddress) {
-    //   this.getBalance(this.walletAddress);
-    // } else {
-    //   this.walletProvider.getSelectedWallet().then(wallet => {
-    //     if (!wallet) this.navCtrl.setRoot('TabsPage');
-    //     else {
-    //       this.selectedWallet = wallet;
-    //       this.getBalance(this.selectedWallet.address);
-    //     }
-    //   });
-    // }
+    this.selectedMosaicc.forEach(mosaics => { 
+      const mosaicInfo= this.mosaicsProvider.setMosaicInfo(mosaics);
+      this.mosaics.push(mosaicInfo)
+    })
+  }
 
-
+  loadDefaultMosaics() {
+    return this.mosaicsProvider.getMosaics();
   }
 
   ionViewDidLoad() {
@@ -63,17 +68,18 @@ export class SendMosaicSelectPage {
   }
 
   onSelect(data) {
-    // this.selectedMosaic = data;
+    this.selectedMosaic = data;
   }
 
   onSubmit() {
-    // this.viewCtrl.dismiss(this.selectedMosaic);
+    this.viewCtrl.dismiss(this.selectedMosaic);
   }
 
   /**
    * Retrieves current account owned mosaics  into this.mosaics
    */
-  public getBalance(address: any) {
+  // public getBalance(address: any) {
+  //   console.log('banalce address',  address)
     // this.getBalanceProvider.mosaics(address).subscribe(mosaics => {
     //   this.mosaics = mosaics;
     //   this.selectedMosaic = this.mosaics[0];
@@ -82,7 +88,7 @@ export class SendMosaicSelectPage {
     //     this.selectedMosaic = this.navParams.get('selectedMosaic') || this.mosaics[0];
     //   }
     // });
-  }
+  // }
 
 
 }

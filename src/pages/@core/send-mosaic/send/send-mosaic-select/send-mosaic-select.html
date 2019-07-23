@@ -16,16 +16,16 @@
 
 <ion-content background select-mosaic>
   <ion-list transparent-items>
-    <ion-card no-margin-bottom [attr.selected]="(selectedMosaic.mosaicId.name === mosaic.mosaicId.name && selectedMosaic.mosaicId.namespaceId === mosaic.mosaicId.namespaceId) ? true : null"
+    <ion-card no-margin-bottom 
       *ngFor="let mosaic of mosaics" (click)="onSelect(mosaic);onSubmit()">
       <ion-item>
         <img logo-medium item-left [src]="utils.getLogo(mosaic)">
-        <h2 text-uppercase ion-text color="black">{{ mosaic.mosaicId.name }}</h2>
-        <p text-uppercase ion-text color="black">{{ mosaic.mosaicId.namespaceId }}</p>
+        <h2 text-uppercase ion-text color="black">{{ mosaic.mosaicId }}</h2>
+        <p text-uppercase ion-text color="black">{{ mosaic.namespaceId }}</p>
 
         <section item-right>
           <h2 ion-text color="black">{{ mosaic.amount | number:'1.2' }}</h2>
-          <p text-right text-left ion-text color="black"  *ngIf="(mosaic.mosaicId.name | getMarketPrice | async) as marketPrice">
+          <p text-right text-left ion-text color="black"  *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
             <small>
               {{ mosaic.amount * marketPrice | currency : 'USD' : 'symbol' : '1.2-6' }}
             </small>

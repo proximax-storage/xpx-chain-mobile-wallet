@@ -40,8 +40,8 @@
               <ion-avatar item-start>
                 <img [src]="utils.getLogo(data.mosaic)">
               </ion-avatar>
-              <h2 text-uppercase ion-text color="black">{{ data.mosaic.mosaicId.name }}</h2>
-              <p text-uppercase ion-text color="black">{{ data.mosaic.mosaicId.namespaceId }}</p>
+              <h2 text-uppercase ion-text color="black">{{ data.mosaic.mosaicId }}</h2>
+              <p text-uppercase ion-text color="black">{{ data.mosaic.namespaceId }}</p>
 
               <section item-right>
                 <h2 ion-text color="black">{{ data.amount | number:'1.0-8' }}</h2>
@@ -74,7 +74,7 @@
             <ion-item>
               <h2 ion-text color="black">{{"WALLETS.SEND.LABEL.FEE" | translate}}</h2>
               <p ion-text text-wrap color="black">
-                {{ data.sendTx.fee | formatXEM }} XEM
+                {{ data.sendTx | formatXEM }} XPX
               </p>
             </ion-item>
           </ion-card>
@@ -87,7 +87,7 @@
             <ion-item>
               <img item-left logo-small [src]="App.USER">
               <h2 ion-text color="black" *ngIf="data.senderName">{{ data.senderName }}</h2>
-              <p small ion-text color="black" [attr.text-wrap]="!data.senderName ? true : null">{{ data.senderAddress }}</p>
+              <p small ion-text color="black" [attr.text-wrap]="!data.senderName ? true : null">{{ data.senderAddress.address }}</p>
             </ion-item>
           </ion-card>
 

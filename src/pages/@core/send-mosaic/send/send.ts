@@ -4,10 +4,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController, Platform } from 'ionic-angular';
 import {
   SimpleWallet,
-  XEM,
+  // XEM,
   Address,
-  TransferTransaction
-} from 'nem-library';
+  TransferTransaction,
+  Password,
+  Account, 
+  AccountInfo
+} from 'tsjs-xpx-chain-sdk';
 
 import { App } from '../../../../providers/app/app';
 import { NemProvider } from './../../../../providers/nem/nem';
@@ -18,6 +21,10 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { CoingeckoProvider } from '../../../../providers/coingecko/coingecko';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
+import { Observable } from 'rxjs';
+import { AuthProvider } from '../../../../providers/auth/auth';
+import { MosaicsProvider } from '../../../../providers/mosaics/mosaics';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the SendPage page.
@@ -32,11 +39,14 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'send.html'
 })
 export class SendPage {
+
+  mosaicWallet: any[];
+  mosaics: any=[];
   App = App;
 
   addressSourceType: { from: string; to: string };
   currentWallet: SimpleWallet;
-  // selectedMosaic: MosaicTransferable;
+  selectedMosaic: any;
   selectedCoin: any;
 
   form: FormGroup;
@@ -62,12 +72,15 @@ export class SendPage {
     private coingeckoProvider: CoingeckoProvider,
     private barcodeScanner: BarcodeScanner,
     private storage: Storage,
-    public platform: Platform
+    public platform: Platform,
+    private authProvider: AuthProvider,
+    public mosaicsProvider: MosaicsProvider,
+    private proximaxProvider: ProximaxProvider
   ) {
-    console.log("Nav params", this.navParams.data);
+    // console.log("Nav params", this.navParams.data);
 
     this.mosaicSelectedName = this.navParams.get('mosaicSelectedName');
-    console.log(this.mosaicSelectedName);
+    // console.log("dandole ", this.mosaicSelectedName);
 
     // If no mosaic selected, fallback to xpx
     if (!this.mosaicSelectedName) {
@@ -79,64 +92,97 @@ export class SendPage {
   }
 
   ionViewWillEnter() {
-    // this.utils.setHardwareBack(this.navCtrl);
+    this.utils.setHardwareBack(this.navCtrl);
     // console.log('ionViewWillEnter SendPage');
-    // this.walletProvider.getSelectedWallet().then(currentWallet => {
-    //   if (!currentWallet) {
-    //     this.navCtrl.setRoot(
-    //       'TabsPage',
-    //       {},
-    //       {
-    //         animate: true,
-    //         direction: 'backward'
-    //       }
-    //     );
-    //   } else {
-    //     this.currentWallet = currentWallet;
+    this.walletProvider.getSelectedWallet().then(currentWallet => {
+      if (!currentWallet) {
+        this.navCtrl.setRoot(
+          'TabsPage',
+          {},
+          {
+            animate: true,
+            direction: 'backward'
+          }
+        );
+      } else {
+        if(this.selectedMosaic){
+          this.selectedMosaic
+        }else{
+        this.currentWallet = currentWallet;
+          this.getAccount(this.currentWallet).subscribe(account=>{ 
+            // console.log('account', account)
+            this.getAccountInfo(account).subscribe(accountInfo=> { 
+              // console.log('accountInfo', accountInfo)
+              this.mosaicWallet = accountInfo.mosaics
+              this.selectedMosaic = accountInfo.mosaics
+              // console.log('this.selectedMosaic', this.selectedMosaic)
 
-    //     this.getBalanceProvider
-    //       .mosaics(this.currentWallet.address)
-    //       .subscribe(mosaics => {
-    //         if (!this.selectedMosaic) {
-    //           this.selectedMosaic = mosaics.filter(m => m.mosaicId.name == this.mosaicSelectedName)[0];
-    //           console.log("this.selectedMosaic", this.selectedMosaic);
+              this.selectedMosaic.forEach(mosaics => { 
+                const mosaicInfo= this.mosaicsProvider.setMosaicInfo(mosaics);
+                // console.log('mosaicInfo', mosaicInfo)
+                if (mosaicInfo.mosaicId === 'xpx') {
+                  this.mosaics = mosaicInfo
+                  this.selectedMosaic = mosaicInfo
+                  // console.log(' mosaics for defect', this.selectedMosaic)
+                } 
 
-    //           if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
-    //             console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
-    //             this.form.get('isMosaicTransfer').setValue(true);
-    //           }
-    //         }
+                let mosaic = this.mosaics.mosaicId;
+                let coinId: string;
+    
+                if (mosaic === 'xpx') {
+                  coinId = 'proximax';
+                } else if (mosaic === 'npxs') {
+                  coinId = 'pundi-x';
+                } 
+                // Get coin price
+                if (coinId) {
+                  this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
+                    this.selectedCoin = coin;
+                  });
+                }
+                
+              })
+          });
+          });
+        }
 
-    //         let mosaic = this.selectedMosaic.mosaicId.name;
-    //         let coinId: string;
+        // Set sender address to currenWallet.address
+        this.form.get('senderName').setValue(this.currentWallet.name);
+        this.form
+          .get('senderAddress')
+          .setValue(this.currentWallet.address);
+      }
+    });
+  }
 
-    //         if (mosaic === 'xem') {
-    //           coinId = 'nem';
-    //         }
-    //         else if (mosaic === 'xpx') {
-    //           coinId = 'proximax';
-    //         } else if (mosaic === 'npxs') {
-    //           coinId = 'pundi-x';
-    //         }
+  private getAccountInfo(account: Account) : Observable<AccountInfo>{
+    return new Observable(observer => {
+      const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
+        accountInfo.subscribe(accountInfo => {
+        observer.next(accountInfo);
+    });
+    });
+  }
 
-    //         // Get coin price
-    //         if (coinId) {
-    //           this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
-    //             this.selectedCoin = coin;
-    //           });
-    //         }
-    //       });
+  private getAccount(wallet: SimpleWallet) : Observable<Account> {
+    return new Observable(observer => {
+      // Get user's password and unlock the wallet to get the account
+     this.authProvider
+     .getPassword()
+     .then(password => {
+       // Get user's password
+       const myPassword = new Password(password);
 
-    //     // Set sender address to currenWallet.address
-    //     this.form.get('senderName').setValue(this.currentWallet.name);
-    //     this.form
-    //       .get('senderAddress')
-    //       .setValue(this.currentWallet.address.plain());
-    //   }
-    // });
+       // Convert current wallet to SimpleWallet
+       const myWallet = this.walletProvider.convertToSimpleWallet(wallet)
 
+       // Unlock wallet to get an account using user's password 
+       const account = myWallet.open(myPassword);
 
-
+       observer.next(account);
+     
+      });
+    });
   }
 
   ionViewDidLoad() {
@@ -207,22 +253,25 @@ export class SendPage {
   }
 
   selectMosaic() {
-    // this.utils
-    //   .showInsetModal('SendMosaicSelectPage', {
-    //     selectedMosaic: this.selectedMosaic
-    //   })
-    //   .subscribe(data => {
-    //     if (data) {
-    //       console.log('Selected mosaic', data);
-    //       this.selectedMosaic = data;
-    //       console.log(this.selectedMosaic);
+    // console.log('this.selectedMosaic', this.selectedMosaic)
+    this.utils
+      .showInsetModal('SendMosaicSelectPage', {
+        selectedMosaic: this.mosaicWallet,
+        walletAddress: this.currentWallet.address.plain()
+      })
+      .subscribe(data => {
+        if (data) {
+          // console.log('Selected mosaic', data);
+          this.selectedMosaic = data;
+          this.mosaics = data;
+          // console.log('mosaic desde el modal', this.mosaics);
 
-    //       if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
-    //         console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
-    //         this.form.get('isMosaicTransfer').setValue(true);
-    //       }
-    //     }
-    //   });
+          // if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
+          //   console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
+          //   this.form.get('isMosaicTransfer').setValue(true);
+          // }
+        }
+      });
   }
 
   selectContact(title) {
@@ -258,6 +307,7 @@ export class SendPage {
     //   );
     // }
   }
+  
   /**
    * Calculates fee and returns prepared Transaction
    */
@@ -299,68 +349,68 @@ export class SendPage {
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
   onSubmit() {
-    // if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
+    if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
 
-    // if (
-    //   !this.form.get('senderAddress').value ||
-    //   !this.form.get('recipientAddress').value
-    // ) {
-    //   if (this.addressSourceType.to === 'contact') {
-    //     this.alertProvider.showMessage('Please select a recipient first.');
-    //   } else {
-    //     this.alertProvider.showMessage(
-    //       "Please enter the recipient's address first."
-    //     );
-    //   }
-    //   return;
-    // }
+    if (
+      !this.form.get('senderAddress').value ||
+      !this.form.get('recipientAddress').value
+    ) {
+      if (this.addressSourceType.to === 'contact') {
+        this.alertProvider.showMessage('Please select a recipient first.');
+      } else {
+        this.alertProvider.showMessage(
+          "Please enter the recipient's address first."
+        );
+      }
+      return;
+    }
 
-    // try {
-    //   let recipient = new Address(
-    //     this.form
-    //       .get('recipientAddress')
-    //       .value.toUpperCase()
-    //       .replace('-', '')
-    //   );
-    //   if (!this.nemProvider.isValidAddress(recipient)) {
-    //     this.alertProvider.showMessage(
-    //       'This address does not belong to this network'
-    //     );
-    //   } else {
-    //     // Prepare transaction
-    //     let transferTransaction = this._prepareTx(recipient);
+    try {
+      let recipient = (
+        this.form
+          .get('recipientAddress')
+          .value.toUpperCase()
+          .replace('-', '')
+      );
+      // if (!this.proximaxProvider.isValidAddress(recipient)) {
+      //   this.alertProvider.showMessage(
+      //     'This address does not belong to this network'
+      //   );
+      // } else {
+        // Prepare transaction
+        let transferTransaction = this._prepareTx(recipient);
 
-    //     // Compute total
-    //     console.log(this.selectedCoin.market_data.current_price.usd, this.form.get('amount').value);
-    //     let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
+        // Compute total
+        console.log(this.selectedCoin.market_data.current_price.usd, this.form.get('amount').value);
+        let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
 
-    //     // Show confirm transaction
-    //     let page = "SendMosaicConfirmationPage";
-    //     const modal = this.modalCtrl.create(page, {
-    //       ...this.form.value,
-    //       mosaic: this.selectedMosaic,
-    //       sendTx: transferTransaction,
-    //       currentWallet: this.currentWallet,
-    //       transactionType: 'normal',
-    //       total: total
-    //     }, {
-    //         enableBackdropDismiss: false,
-    //         showBackdrop: true
-    //       });
-    //     modal.present();
+        // Show confirm transaction
+        let page = "SendMosaicConfirmationPage";
+        const modal = this.modalCtrl.create(page, {
+          ...this.form.value,
+          mosaic: this.selectedMosaic,
+          sendTx: transferTransaction,
+          currentWallet: this.currentWallet,
+          transactionType: 'normal',
+          total: total
+        }, {
+            enableBackdropDismiss: false,
+            showBackdrop: true
+          });
+        modal.present();
 
-    //     // this.navCtrl.push('SendMosaicConfirmationPage', {
-    //     //   ...this.form.value,
-    //     //   mosaic: this.selectedMosaic,
-    //     //   sendTx: transferTransaction,
-    //     //   currentWallet: this.currentWallet
-    //     // });
-    //   }
-    // } catch (err) {
-    //   this.alertProvider.showMessage(
-    //     'This address does not belong to this network'
-    //   );
-    // }
+        this.navCtrl.push('SendMosaicConfirmationPage', {
+          ...this.form.value,
+          mosaic: this.selectedMosaic,
+          sendTx: transferTransaction,
+          currentWallet: this.currentWallet
+        });
+      // }
+    } catch (err) {
+      this.alertProvider.showMessage(
+        'This address does not belong to this network'
+      );
+    }
   }
 
   dismiss() {
