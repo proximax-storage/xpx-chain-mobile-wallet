@@ -42,14 +42,6 @@ export class WalletDetailsPage {
     // this.getAccountInfo();
   }
 
-  getAccountInfo() {
-    // this.nemProvider.getAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
-    //     this.accountInfo = accountInfo;
-    //     console.log(this.accountInfo)
-    //   }, (err: any) => {
-    //     console.log(err)
-    //   });
-  }
 
   copy() {
     this.clipboard.copy(this.selectedAccount.address.plain()).then(_ => {
@@ -75,7 +67,7 @@ export class WalletDetailsPage {
 
   showWalletUpdate() {
     let page = "WalletUpdatePage";
-    this.showModal(page, { wallet: this.currentWallet });
+    this.showModal(page, { wallet: this.selectedAccount });
   }
 
   showWalletDete() {
