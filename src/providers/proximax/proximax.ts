@@ -118,6 +118,31 @@ export class ProximaxProvider {
     return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
   }
 
+  /**
+   * Check if acount belongs it is valid, has 40 characters and belongs to network
+   * @param address address to check
+   * @return Return prepared transaction
+   */
+  public isValidAddress(address: string): boolean {
+    const addr = Address.createFromRawAddress(address);
+
+    console.log('isValidAddress', addr);
+
+    // Reset recipient data
+    let success = true;
+    // From documentation: Addresses have always a length of 40 characters.
+    if (!address || addr.plain().length != 40) success = false;
+
+    //if raw data, clean address and check if it is from network
+    if (addr.networkType != this.networkType) success = false;
+    return success;
+  }
+
+  public getAbsoluteAmount(amount: number): number {
+    return amount * Math.pow(10, 6);
+  }
+
+
 
 
 }

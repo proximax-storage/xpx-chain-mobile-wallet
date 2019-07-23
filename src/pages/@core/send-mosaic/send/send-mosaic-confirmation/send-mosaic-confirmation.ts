@@ -90,28 +90,14 @@ export class SendMosaicConfirmationPage {
     if (this.data.transactionType == 'multisig') {
       console.log("Multisig transfer");
       if (this._allowedToSendTx()) {
-        // const multisigAccountPublicKey: string = this.data.publicKey;
-        // this.nemProvider.confirmMultisigTransaction(
-        //   this.data.sendTx,
-        //   multisigAccountPublicKey,
-        //   this.data.currentWallet,
-        //   this.credentials.password
-        // )
-        //   .subscribe(
-        //     value => {
-        //       this.showSuccessMessage()
-        //     },
-        //     error => {
-        //       this.showErrorMessage(error)
-        //     }
-        //   );
+        // TODO: Multisig Send
       } else {
         this.showGenericError();
       }
     } else if (this.data.transactionType = 'normal'){
       if (this._allowedToSendTx()) {
         const acountRecipient = this.data.recipientAddress;
-        const amount = this.data.amount;
+        const amount = this.proximaxProvider.getAbsoluteAmount(this.data.amount);
         const message = this.data.message;
         const password =  this.credentials.password
         const mosaic = this.data.mosaic.hex;

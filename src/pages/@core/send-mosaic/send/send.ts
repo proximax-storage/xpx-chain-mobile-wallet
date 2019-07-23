@@ -77,10 +77,7 @@ export class SendPage {
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
   ) {
-    // console.log("Nav params", this.navParams.data);
-
     this.mosaicSelectedName = this.navParams.get('mosaicSelectedName');
-    // console.log("dandole ", this.mosaicSelectedName);
 
     // If no mosaic selected, fallback to xpx
     if (!this.mosaicSelectedName) {
@@ -110,20 +107,14 @@ export class SendPage {
         }else{
         this.currentWallet = currentWallet;
           this.getAccount(this.currentWallet).subscribe(account=>{ 
-            // console.log('account', account)
             this.getAccountInfo(account).subscribe(accountInfo=> { 
-              // console.log('accountInfo', accountInfo)
               this.mosaicWallet = accountInfo.mosaics
               this.selectedMosaic = accountInfo.mosaics
-              // console.log('this.selectedMosaic', this.selectedMosaic)
-
               this.selectedMosaic.forEach(mosaics => { 
                 const mosaicInfo= this.mosaicsProvider.setMosaicInfo(mosaics);
-                // console.log('mosaicInfo', mosaicInfo)
                 if (mosaicInfo.mosaicId === 'xpx') {
                   this.mosaics = mosaicInfo
                   this.selectedMosaic = mosaicInfo
-                  // console.log(' mosaics for defect', this.selectedMosaic)
                 } 
 
                 let mosaic = this.mosaics.mosaicId;
@@ -253,7 +244,6 @@ export class SendPage {
   }
 
   selectMosaic() {
-    // console.log('this.selectedMosaic', this.selectedMosaic)
     this.utils
       .showInsetModal('SendMosaicSelectPage', {
         selectedMosaic: this.mosaicWallet,
@@ -261,17 +251,10 @@ export class SendPage {
       })
       .subscribe(data => {
         if (data) {
-          // console.log('Selected mosaic', data);
           this.selectedMosaic = data;
           this.mosaics = data;
-          // console.log('mosaic desde el modal', this.mosaics);
-
-          // if (!XEM.MOSAICID.equals(this.selectedMosaic.mosaicId)) {
-          //   console.log('this.selectedMosaic.mosaicId', this.selectedMosaic.mosaicId);
-          //   this.form.get('isMosaicTransfer').setValue(true);
-          // }
         }
-      });
+    });
   }
 
   selectContact(title) {
@@ -285,65 +268,6 @@ export class SendPage {
       });
   }
 
-  calculateFee() {
-    // try {
-    //   let recipient = new Address(
-    //     this.form
-    //       .get('recipientAddress')
-    //       .value.toUpperCase()
-    //       .replace('-', '')
-    //   );
-    //   console.log(recipient);
-    //   if (!this.nemProvider.isValidAddress(recipient)) {
-    //     this.alertProvider.showMessage(
-    //       'This address does not belong to this network'
-    //     );
-    //   } else {
-    //     this._prepareTx(recipient);
-    //   }
-    // } catch (err) {
-    //   this.alertProvider.showMessage(
-    //     'This address does not belong to this network'
-    //   );
-    // }
-  }
-  
-  /**
-   * Calculates fee and returns prepared Transaction
-   */
-  private _prepareTx(recipient: Address): any {
-    // let transferTransaction: TransferTransaction;
-    // if (this.form.get('isMosaicTransfer').value) {
-    //   const MOSAIC_TRANSFERRABLE = [
-    //     new MosaicTransferable(
-    //       this.selectedMosaic.mosaicId,
-    //       this.selectedMosaic.properties,
-    //       this.form.get('amount').value,
-    //       this.selectedMosaic.levy
-    //     )
-    //   ];
-
-    //   transferTransaction = this.nemProvider.prepareMosaicTransaction(
-    //     recipient,
-    //     MOSAIC_TRANSFERRABLE,
-    //     this.form.get('message').value
-    //   );
-    // } else {
-    //   transferTransaction = this.nemProvider.prepareTransaction(
-    //     recipient,
-    //     this.form.get('amount').value,
-    //     this.form.get('message').value
-    //   );
-
-    //   this.form.get('fee').setValue(transferTransaction.fee);
-    //   this.fee = transferTransaction.fee * 0.000001;
-
-    // }
-
-    // console.log('transferTransaction', transferTransaction);
-
-    // return transferTransaction;
-  }
 
   /**
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
@@ -372,16 +296,15 @@ export class SendPage {
           .value.toUpperCase()
           .replace('-', '')
       );
-      // if (!this.proximaxProvider.isValidAddress(recipient)) {
-      //   this.alertProvider.showMessage(
-      //     'This address does not belong to this network'
-      //   );
-      // } else {
-        // Prepare transaction
-        let transferTransaction = this._prepareTx(recipient);
+
+      // Check the validity of an address
+      if (!this.proximaxProvider.isValidAddress(recipient)) {
+        this.alertProvider.showMessage(
+          'This address does not belong to this network'
+        );
+      } else { 
 
         // Compute total
-        console.log(this.selectedCoin.market_data.current_price.usd, this.form.get('amount').value);
         let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
 
         // Show confirm transaction
@@ -389,7 +312,6 @@ export class SendPage {
         const modal = this.modalCtrl.create(page, {
           ...this.form.value,
           mosaic: this.selectedMosaic,
-          sendTx: transferTransaction,
           currentWallet: this.currentWallet,
           transactionType: 'normal',
           total: total
@@ -398,14 +320,7 @@ export class SendPage {
             showBackdrop: true
           });
         modal.present();
-
-        this.navCtrl.push('SendMosaicConfirmationPage', {
-          ...this.form.value,
-          mosaic: this.selectedMosaic,
-          sendTx: transferTransaction,
-          currentWallet: this.currentWallet
-        });
-      // }
+      }
     } catch (err) {
       this.alertProvider.showMessage(
         'This address does not belong to this network'
@@ -485,7 +400,7 @@ export class SendPage {
 
   validateInput() {
     const AMOUNT = this.form.get('amount').value;
-    if (AMOUNT) {
+    if (AMOUNT && AMOUNT.includes('.') ) {
       this.decimalCount = this.countDecimals(AMOUNT);
     }
   }
