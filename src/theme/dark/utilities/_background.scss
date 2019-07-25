@@ -1,11 +1,9 @@
 [background] {
-  // background: linear-gradient(
-  //     transparentize(color($colors, bg),1), color($colors, bg)
-  //   ),
-    // url('../assets/imgs/proximax-bg.jpg')
-    // no-repeat;
-
-  background: color($colors, white);
+  background: linear-gradient(
+        transparentize(color($colors, white),0.1), color($colors, white)
+       ),
+      url('../assets/imgs/proximax-bg.jpg')
+      no-repeat;
   background-position: center !important;
   background-size: cover;
   height: 100%;
