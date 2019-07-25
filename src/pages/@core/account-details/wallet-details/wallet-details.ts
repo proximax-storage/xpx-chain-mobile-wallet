@@ -70,9 +70,9 @@ export class WalletDetailsPage {
     this.showModal(page, { wallet: this.selectedAccount });
   }
 
-  showWalletDete() {
+  showWalletDelete() {
     let page = "WalletDeletePage";
-    this.showModal(page, { wallet: this.currentWallet });
+    this.showModal(page, { wallet: this.selectedAccount });
   }
 
   showModal(page, params) {

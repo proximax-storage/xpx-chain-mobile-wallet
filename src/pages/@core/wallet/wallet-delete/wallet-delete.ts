@@ -41,6 +41,7 @@ export class WalletDeletePage {
     private viewCtrl: ViewController
   ) {
     this.selectedWallet = this.navParams.get('wallet');
+    console.log("SIRIUS CHAIN WALLET: WalletDeletePage -> this.selectedWallet", this.selectedWallet)
     this.init();
   }
 
