@@ -140,7 +140,7 @@ export class WalletProvider {
 
         _wallets = _wallets.map(_ => {
           return {
-            wallet: _.wallet.writeWLTFile(),
+            wallet: _.wallet,
             walletColor: _.walletColor
           }
         });
