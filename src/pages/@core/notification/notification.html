@@ -44,12 +44,12 @@
       <img [src]="post.thumbnail" *ngIf="post.expanded">
 
       <ion-card-content>
-        <ion-card-title padding *ngIf="post.expanded">{{post.title}}</ion-card-title>
+        <ion-card-title padding *ngIf="post.expanded"><strong>{{post.title}}</strong></ion-card-title>
         <!-- <p *ngIf="!post.expanded" text-justify-start [innerHTML]="post.subtitle"></p> -->
 
         <p padding *ngIf="post.expanded" text-justify-start [ngxmarkdown]="post.content"></p>
         <ion-item>
-          <small *ngFor="let tag of post.tags" item-start>#{{tag.name}}</small>
+          <small *ngFor="let tag of post.tags" item-start><strong>#{{tag.name}}</strong></small>
           <ion-badge  item-end color="danger">{{isNew(post._id)}}</ion-badge>
           <!-- <ion-note item-end>{{post.readTime}} MIN READ</ion-note> -->
         </ion-item>
