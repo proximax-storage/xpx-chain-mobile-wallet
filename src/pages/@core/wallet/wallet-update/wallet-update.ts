@@ -48,7 +48,7 @@ export class WalletUpdatePage {
     private haptic: HapticProvider,
     private translateService: TranslateService
   ) {
-    //this.walletColor = "wallet-1"; // to be change with current wallet color
+    // this.walletColor = "wallet-1"; // to be change with current wallet color
     this.init();
   }
 

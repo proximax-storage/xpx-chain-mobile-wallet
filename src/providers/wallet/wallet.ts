@@ -148,7 +148,7 @@ export class WalletProvider {
         const WALLET = {};
         WALLET[username] = _wallets;
 
-        return this.storage.set('wallets', WALLET).then(value => {
+        return this.storage.set('wallets', WALLET).then(_ => {
           return updateWallet;
         });
       });
