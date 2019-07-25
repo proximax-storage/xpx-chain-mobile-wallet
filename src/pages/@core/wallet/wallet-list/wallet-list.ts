@@ -5,7 +5,8 @@ import {
   NavParams,
   ActionSheetController,
   Platform,
-  AlertController
+  AlertController,
+  ViewController
 } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
@@ -17,6 +18,7 @@ import { WalletProvider } from './../../../../providers/wallet/wallet';
 import sortBy from 'lodash/sortBy';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the WalletListPage page.
@@ -51,7 +53,13 @@ export class WalletListPage {
     public walletProvider: WalletProvider,
     public storage: Storage,
     public utils: UtilitiesProvider,
-  ) {}
+    private viewCtrl: ViewController
+  ) {
+    const wallets = this.navParams.data.wallets;
+    console.log("SIRIUS CHAIN WALLET: WalletListPage -> wallets", wallets)
+
+    this.wallets = wallets;
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WalletListPage');
@@ -60,42 +68,31 @@ export class WalletListPage {
   ionViewWillEnter() {
     this.utils.setHardwareBack();
 
-    this.walletProvider.getWallets().then(value => {
-      this.wallets = sortBy(value, 'name');
+    // this.walletProvider.getWallets().then(value => {
+    //   this.wallets = sortBy(value, 'name');
 
-      this.walletProvider.getSelectedWallet().then(selectedWallet => {
-        this.selectedWallet = selectedWallet ? selectedWallet : this.wallets[0];
-      }).catch(err => {
-        this.selectedWallet = (!this.selectedWallet && this.wallets) ? this.wallets[0] : null;
-      });
-    });
+    //   this.walletProvider.getSelectedWallet().then(selectedWallet => {
+    //     this.selectedWallet = selectedWallet ? selectedWallet : this.wallets[0];
+    //   }).catch(err => {
+    //     this.selectedWallet = (!this.selectedWallet && this.wallets) ? this.wallets[0] : null;
+    //   });
+    // });
   }
 
-  logout() {
-    this.authProvider.logout().then(_ => {
-      this.navCtrl.setRoot('WelcomePage', {}, {
-        animate: true,
-        direction: 'backward'
-      });
-    });
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 
   trackByName(wallet) {
     return wallet.name;
   }
 
-  onWalletSelect(wallet) {
-    this.selectedWallet = wallet;
-
-    this.walletProvider.setSelectedWallet(this.selectedWallet).then(() => {
-      setTimeout(() => {
-        this.navCtrl.setRoot(
-          'TabsPage',
-          {},
-          { animate: true, direction: 'forward' }
-        );
-      }, 100);
-    });
+  onWalletSelect(wallet:string,index:number) {
+    var data = {
+      wallet: wallet,
+      index: index
+    };
+    this.viewCtrl.dismiss(data);
   }
 
   onWalletPress(wallet) {

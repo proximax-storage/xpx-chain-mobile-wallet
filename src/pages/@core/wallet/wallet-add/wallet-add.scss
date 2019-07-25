@@ -35,110 +35,110 @@ page-wallet-add {
 
     button[one] {
         @include button-styles();
-        background-color: #da4d59;
+        background-color: color($colors, wallet-1);
 
         &:hover {
-            background: #da4d59 radial-gradient(circle, transparent 1%, #da4d59 1%) center/15000%;
+            background: color($colors, wallet-1) radial-gradient(circle, transparent 1%, color($colors, wallet-1) 1%) center/15000%;
         }
     
         &:active {
-            background-color: lighten(#da4d59, 10%);
+            background-color: lighten(color($colors, wallet-1), 10%);
             background-size: 100%;
             transition: background 0s;
         }
     }
     button[two] {
         @include button-styles();
-        background-color: #5C9EBB;
+        background-color: color($colors, wallet-2);
 
         &:hover {
-            background: #5C9EBB radial-gradient(circle, transparent 1%, #5C9EBB 1%) center/15000%;
+            background: color($colors, wallet-2) radial-gradient(circle, transparent 1%, color($colors, wallet-2) 1%) center/15000%;
         }
     
         &:active {
-            background-color: lighten(#5C9EBB, 10%);
+            background-color: lighten(color($colors, wallet-2), 10%);
             background-size: 100%;
             transition: background 0s;
         }
     }
     button[three] {
         @include button-styles();
-        background-color: #F2962F;
+        background-color: color($colors, wallet-3);
         &:hover {
-            background: #F2962F radial-gradient(circle, transparent 1%, #F2962F 1%) center/15000%;
+            background: color($colors, wallet-3) radial-gradient(circle, transparent 1%, color($colors, wallet-3) 1%) center/15000%;
         }
     
         &:active {
-            background-color: lighten(#F2962F, 10%);
+            background-color: lighten(color($colors, wallet-3), 10%);
             background-size: 100%;
             transition: background 0s;
         }
     }
     button[four] {
         @include button-styles();
-        background-color: #00A48B;
+        background-color: color($colors, wallet-4);
         &:hover {
-            background: #00A48B radial-gradient(circle, transparent 1%, #00A48B 1%) center/15000%;
+            background: color($colors, wallet-4) radial-gradient(circle, transparent 1%, color($colors, wallet-4) 1%) center/15000%;
         }
     
         &:active {
-            background-color: lighten(#00A48B, 10%);
+            background-color: lighten(color($colors, wallet-4), 10%);
             background-size: 100%;
             transition: background 0s;
         }
     }
     button[five] {
       @include button-styles();
-      background-color: #ff5575;
+      background-color: color($colors, wallet-5);
 
       &:hover {
-        background: #ff5575 radial-gradient(circle, transparent 1%, #ff5575 1%) center/15000%;
+        background: color($colors, wallet-5) radial-gradient(circle, transparent 1%, color($colors, wallet-5) 1%) center/15000%;
       }
 
       &:active {
-        background-color: lighten(#ff5575, 10%);
+        background-color: lighten(color($colors, wallet-5), 10%);
         background-size: 100%;
         transition: background 0s;
       }
     }
     button[six] {
       @include button-styles();
-      background-color: #268ff7;
+      background-color: color($colors, wallet-6);
 
       &:hover {
-        background: #268ff7 radial-gradient(circle, transparent 1%, #268ff7 1%) center/15000%;
+        background: color($colors, wallet-6) radial-gradient(circle, transparent 1%, color($colors, wallet-6) 1%) center/15000%;
       }
 
       &:active {
-        background-color: lighten(#268ff7, 10%);
+        background-color: lighten(color($colors, wallet-6), 10%);
         background-size: 100%;
         transition: background 0s;
       }
     }
     button[seven] {
       @include button-styles();
-      background-color: #2bd173;
+      background-color: color($colors, wallet-7);
 
       &:hover {
-        background: #2bd173 radial-gradient(circle, transparent 1%, #2bd173 1%) center/15000%;
+        background: color($colors, wallet-7) radial-gradient(circle, transparent 1%, color($colors, wallet-7) 1%) center/15000%;
       }
 
       &:active {
-        background-color: lighten(#2bd173, 10%);
+        background-color: lighten(color($colors, wallet-7), 10%);
         background-size: 100%;
         transition: background 0s;
       }
     }
     button[eight] {
       @include button-styles();
-      background-color: #f1b23c;
+      background-color: color($colors, wallet-8);
 
       &:hover {
-        background: #f1b23c radial-gradient(circle, transparent 1%, #f1b23c 1%) center/15000%;
+        background: color($colors, wallet-8) radial-gradient(circle, transparent 1%, color($colors, wallet-8) 1%) center/15000%;
       }
 
       &:active {
-        background-color: lighten(#f1b23c, 10%);
+        background-color: lighten(color($colors, wallet-8), 10%);
         background-size: 100%;
         transition: background 0s;
       }

@@ -387,4 +387,43 @@ export class HomePage {
       }
     }, 2000);
   }
+
+  slideChanged() {
+    console.log("slideChanged");
+    let currentIndex = this.slides.getActiveIndex();
+    console.log('Current index is', currentIndex);
+    
+    if (this.wallets.length != currentIndex) {
+      this.onWalletSelect(this.wallets[currentIndex])
+      this.haptic.selection();
+    } else {
+      this.mosaics = null;
+      this.isLoading = false;
+      this.unconfirmedTransactions = null;
+      this.confirmedTransactions = null;
+      this.showEmptyTransaction = true;
+      this.showEmptyMosaic = true;
+    }
+  }
+
+  showWalletList(){
+    const page = "WalletListPage";
+
+    // this.showModal(page, {wallets: this.wallets});
+
+    this.utils
+      .showInsetModal(page, {wallets: this.wallets})
+      .subscribe(data => {
+      console.log("SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data", data)
+        const wallet = data.wallet;
+        const index = data.index;
+        if(wallet) {
+
+          this.slides.slideTo(index);
+          this.onWalletSelect(wallet);
+        }
+       
+      });
+
+  }
 }
