@@ -7,7 +7,8 @@ import { AlertProvider } from '../../../providers/alert/alert';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-
+import { ProximaxProvider } from '../../../providers/proximax/proximax';
+import { UInt64 } from 'tsjs-xpx-chain-sdk';
 /**
  * Generated class for the NodeListPage page.
  *
@@ -22,24 +23,29 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class NodeListPage {
  
+  url: string;
   public blockHeight: number  = 0;
   public nodes: Array<any> = [
-    {name: "hugealice.nem.ninja", endpoint:"88.99.192.82"},
-    {name: "hugealice2.nem.ninja", endpoint:"76.9.68.110"},
-    {name: "hugealice3.nem.ninja  ", endpoint:"176.9.20.180"},
-    {name: "hugealice4.nem.ninja", endpoint:"199.217.118.114"},
-    {name: "bigalice3.nem.ninja", endpoint:"62.75.171.41"},
-    {name: "san.nem.ninja", endpoint:"167.86.96.227"},
-    {name: "go.nem.ninja", endpoint:"167.86.95.114"},
-    {name: "hachi.nem.ninja", endpoint:"167.86.95.115"},
-    {name: "jusan.nem.ninja", endpoint:"167.86.96.228"},
-    {name: "nijuichi.nem.ninja", endpoint:"167.86.96.231"},
-    {name: "alice2.nem.ninja", endpoint:"62.75.251.134"},
-    {name: "alice3.nem.ninja", endpoint:"62.75.163.236"},
-    {name: "alice4.nem.ninja", endpoint:"209.126.98.204"},
-    {name: "alice5.nem.ninja", endpoint:"108.61.182.27"},
-    {name: "alice6.nem.ninja", endpoint:"108.61.168.86"},
-    {name: "alice7.nem.ninja", endpoint:"104.238.161.61"},
+    {name: "bcdev1.xpxsirius.io", endpoint:"18.236.176.247"},
+    {name: "bcstage1.xpxsirius.io", endpoint:"54.245.38.13"},
+    {name: "bctestnet1.xpxsirius.io", endpoint:"54.255.178.204"},
+
+    // {name: "hugealice.nem.ninja", endpoint:"88.99.192.82"},
+    // {name: "hugealice2.nem.ninja", endpoint:"76.9.68.110"},
+    // {name: "hugealice3.nem.ninja  ", endpoint:"176.9.20.180"},
+    // {name: "hugealice4.nem.ninja", endpoint:"199.217.118.114"},
+    // {name: "bigalice3.nem.ninja", endpoint:"62.75.171.41"},
+    // {name: "san.nem.ninja", endpoint:"167.86.96.227"},
+    // {name: "go.nem.ninja", endpoint:"167.86.95.114"},
+    // {name: "hachi.nem.ninja", endpoint:"167.86.95.115"},
+    // {name: "jusan.nem.ninja", endpoint:"167.86.96.228"},
+    // {name: "nijuichi.nem.ninja", endpoint:"167.86.96.231"},
+    // {name: "alice2.nem.ninja", endpoint:"62.75.251.134"},
+    // {name: "alice3.nem.ninja", endpoint:"62.75.163.236"},
+    // {name: "alice4.nem.ninja", endpoint:"209.126.98.204"},
+    // {name: "alice5.nem.ninja", endpoint:"108.61.182.27"},
+    // {name: "alice6.nem.ninja", endpoint:"108.61.168.86"},
+    // {name: "alice7.nem.ninja", endpoint:"104.238.161.61"},
   ];
   public node: Node;
   currentNode: string = "";
@@ -60,7 +66,8 @@ export class NodeListPage {
     private alertProvider: AlertProvider,
     private http: HttpClient,
     private loadingCtrl: LoadingController,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private proximaxProvider: ProximaxProvider
     ) {
      
       this.getInfo();
@@ -74,46 +81,37 @@ export class NodeListPage {
   }
 
   getInfo() {
-    this.nem.getBlockHeight().then(block=> {
-      console.log("LOG: NodeListPage -> block", block);
-        this.blockHeight = block.height;
-      })
+    this.storage.get('node').then(node => {
+      const domain = JSON.parse(node).domain
 
-      // this.nem.getActiveNodes().then((nodes: Array<Node>) => {
-      // console.log("LOG: NodeListPage -> nodes", nodes);
-      // //  this.nodes = nodes;
+      const url = "http://" + domain + ":3000/chain/height";
+      this.http.get(url).subscribe(response => {
+        const height = new UInt64(response['height']).compact()
+        this.blockHeight = height;
+      });
 
-      // let alice = nodes.filter( node => {
-      //    return node.identity.name.includes('Alice')
-      // });
-
-      // this.nodes = alice;
-
-      // console.log("LOG: NodeListPage -> getInfo -> results", alice);
-      // });
-
-      // this.nem.getActiveNode().then((node: Node)=>{
-      //   console.log("LOG: NodeListPage -> node", node);
-      //   this.node = node;
-      //   // this.currentNode = this.node.endpoint.protocol + '://' + this.node.endpoint.host + ':' +this.node.endpoint.port
-      //   this.currentNode = this.node.identity.name;
-        
-      // })
+      const url1 = "http://" + domain + ":3000/node/info";
+      this.http.get(url1).subscribe(response => {
+        this.currentNode = response['host']
+      });
+    });
   }
 
   getNodeInfo(node: Node) {
+    console.log('consulta getNodeInfo', node)
     // return node.endpoint.protocol + '://' + node.endpoint.host + ':' + node.endpoint.port
     return node.identity.name;
   }
 
   onChange() {
+    console.log('this.selectedNode',this.selectedNode)
     this.validateIPaddress(this.selectedNode);
     // this.switchNode(this.selectedNode.protocol, this.selectedNode.host, this.selectedNode.port)
     
   }
 
-
-   switchNode(protocol="http", host:string, port=7890){
+   switchNode(protocol="http", host:string, port=3000){
+    console.log('consulta getNodeInfo', protocol + '--' + host + '--' + port)
 
     let serverConfig: ServerConfig = { protocol: protocol as Protocol, domain: host, port: port};
     console.log("LOG: NodeListPage -> onChange -> serverConfig", serverConfig);
@@ -123,7 +121,6 @@ export class NodeListPage {
       const alertTitle = this.translateService.instant("SETTINGS.NODES.SWITCH", {'host' : host} );
       this.alertProvider.showMessage(alertTitle)
       setTimeout(()=> {
-        
         window.location.reload();
       }, 1500)
       
@@ -138,6 +135,7 @@ export class NodeListPage {
 
   validateIPaddress(ipaddress) 
   {
+    
     this.loading = this.loadingCtrl.create({
       content: 'Pinging ' + ipaddress
     });
@@ -146,13 +144,13 @@ export class NodeListPage {
     {
       try {
 
-        let url = "http://" + ipaddress + ":7890/node/info";
+        let url = "http://" + ipaddress + ":3000/node/info";
           let headers = new HttpHeaders();
           this.http.get(url, { headers: headers })
             .toPromise()
             .then(response => { 
               console.log("LOG: NodeListPage -> response", response);
-              this.switchNode("http", ipaddress, 7890)
+              this.switchNode("http", ipaddress, 3000)
               this.loading.dismiss();
              })
             .catch((response: Response) => {
@@ -163,13 +161,10 @@ export class NodeListPage {
       } catch (error) {
 				console.log("LOG: NodeListPage -> error", error);
       }
-
-      
     } else {
       this.alertProvider.showMessage("The IP Address provided is invalid!");
     }
   } 
-
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad NodeListPage');
