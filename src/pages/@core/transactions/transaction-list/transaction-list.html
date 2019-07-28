@@ -124,15 +124,16 @@
     <ion-grid normal>
       <ion-row>
         <ion-col>
-          <button  (click)="showReceiveModal()"  icon-start block ion-button color="primary" round>
-            <ion-icon name="ios-arrow-round-down"></ion-icon>
-            {{"WALLETS.RECEIVE" | translate}}</button>
+          <button (click)="showReceiveModal()" gradient-button full color-5 ion-button icon-start no-margin>
+            <ion-icon name="arrow-round-down"></ion-icon>
+            {{"WALLETS.RECEIVE" | translate}}
+          </button>
         </ion-col>
         <ion-col>
-            <button (click)="showSendModal()" icon-start block ion-button color="secondary" round>
-              <ion-icon name="ios-arrow-round-up"></ion-icon>
-              {{"WALLETS.SEND" | translate}}</button>
-
+          <button (click)="showSendModal()" gradient-button full color-6 ion-button icon-end no-margin>
+            {{"WALLETS.SEND" | translate}}
+            <ion-icon name="arrow-round-up"></ion-icon>
+          </button>
         </ion-col>
       </ion-row>
     </ion-grid>
