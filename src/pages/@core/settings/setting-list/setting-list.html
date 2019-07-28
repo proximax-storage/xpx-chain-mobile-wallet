@@ -4,15 +4,6 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<!-- <ion-header no-border>
-  <ion-navbar transparent>
-    <ion-title>
-      <span ion-text color="black">
-        Settings
-      </span>
-    </ion-title>
-  </ion-navbar>
-</ion-header> -->
 
 <ion-content background>
 
@@ -30,74 +21,7 @@
   <br>
 
 
-  <!-- QR code of NEM address -->
-  <!-- <ngx-kjua text-center *ngIf="currentWallet" fill="#000" [label]="'Your wallet'" [mSize]="100" [back]="'transparent'" [text]="getQRCode()">
-  </ngx-kjua> -->
-
-  <!-- <section text-center *ngIf="!currentWallet">
-    <ion-spinner name="dots"></ion-spinner>
-  </section> -->
-
   <ion-list transparent-items>
-    <!-- <ion-card (click)="copy(currentWallet.address.plain())">
-      <ion-item>
-        <ion-icon item-left name="barcode"></ion-icon>
-        <h2>Address</h2>
-        <p text-wrap *ngIf="currentWallet">{{ currentWallet.address.pretty() }}</p>
-      </ion-item>
-    </ion-card> -->
-
-
-
-    <!-- <ion-card *ngIf="accountInfo && accountInfo.publicAccount" (click)="copy(accountInfo.publicAccount.publicKey)">
-      <ion-item>
-        <ion-icon item-left name="paper"></ion-icon>
-        <h2>Public key</h2>
-        <p text-wrap *ngIf="currentWallet">{{ accountInfo.publicAccount.publicKey }}</p>
-      </ion-item>
-    </ion-card>
-
-    <ion-card *ngIf="accountInfo" (click)="copy(accountInfo.importance)">
-      <ion-item>
-        <ion-icon item-left name="pulse"></ion-icon>
-        <h2>Importance score</h2>
-        <p text-wrap *ngIf="currentWallet">
-          {{ ((accountInfo.importance | formatImportance)[0] | number:'1.0-0') + '.' + (accountInfo.importance | formatImportance)[1]
-          }} * 10
-          <sup>(-4)</sup>
-        </p>
-      </ion-item>
-    </ion-card>
-
-    <ion-card *ngIf="accountInfo" (click)="copy(accountInfo.balance.vestedBalance)">
-      <ion-item>
-        <ion-icon item-left name="cloud-upload"></ion-icon>
-        <h2>Vested balance</h2>
-        <p text-wrap *ngIf="currentWallet">{{ accountInfo.balance.vestedBalance | formatXEM }} XEM</p>
-      </ion-item>
-    </ion-card>
-
-     <ion-card (click)="goto('PrivateKeyPasswordPage')">
-      <ion-item>
-        <ion-icon item-left name="ios-key-outline"></ion-icon>
-        <h2>Export Private Key</h2>
-        <p text-wrap>Your private key holds all the power of your account.</p>
-      </ion-item>
-    </ion-card>
-
-
-    <section></section> -->
-
-    <!-- <ion-card no-margin-bottom (click)="backupWallet()">
-          <ion-item>
-            <ion-icon item-left name="ios-download-outline"></ion-icon>
-            <h2>Backup Wallet</h2>
-            <p text-wrap>A wallet backup protects your digital assets against software failures. It may also help you to retrieve your account in the event your device is stolen or lost.</p>
-          </ion-item>
-        </ion-card> -->
-
-
-
     <ion-card (click)="gotoGuide()">
       <ion-item>
         <ion-icon item-left name="ios-images-outline"></ion-icon>
@@ -122,13 +46,13 @@
         </ion-item>
       </ion-card>
 
-    <ion-card (click)="showReleaseNotes()">
+    <!-- <ion-card (click)="showReleaseNotes()">
         <ion-item>
           <ion-icon item-left name="ios-flame-outline"></ion-icon>
           <h2>{{"SETTINGS.CHANGELOG" | translate}}</h2>
           <p text-wrap></p>
         </ion-item>
-      </ion-card>
+      </ion-card> -->
 
 
     <ion-card (click)="showResetPINPrompt()">
