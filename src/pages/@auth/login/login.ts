@@ -102,6 +102,7 @@ export class LoginPage implements OnInit {
         }
       })
       .catch(err => {
+        console.log("LOG: LoginPage -> onSubmit -> err", err);
         this.utils.showInsetModal('TryAgainPage', {}, 'small');
         this.haptic.notification({ type: 'error' });
       });

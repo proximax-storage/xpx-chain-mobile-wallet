@@ -35,6 +35,7 @@ export class GetMarketPricePipe implements PipeTransform {
       .then(details => {
         return details.market_data.current_price.usd;
       }).catch(err => {
+      console.log("LOG: GetMarketPricePipe -> transform -> err", err);
         return returnZero();
       })
     } else {

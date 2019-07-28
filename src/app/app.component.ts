@@ -207,8 +207,8 @@ export class MyApp {
     if (this.platform.is('cordova')) {
       console.log("You're on a mobile device");
       this.oneSignal.startInit(
-        "440ee37e-cfc8-4a61-8df8-87dfff255ce5",
-        "1031485430046"
+        "a443505d-da4a-405e-91dd-c655923cbcf6",
+        "678106224342"
       );
 
       this.oneSignal.inFocusDisplaying(

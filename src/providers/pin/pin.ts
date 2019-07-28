@@ -22,7 +22,8 @@ export class PinProvider {
       this.storage.get("pin").then(pin => {
         resolve(pin);
       }).catch(error => {
-        reject(error);
+      console.log("LOG: PinProvider -> get -> error", error);
+        // reject(error);
       })
     });
   }
@@ -34,7 +35,8 @@ export class PinProvider {
       this.storage.set("pin", hashedPin).then(pin => {
         resolve(pin);
       }).catch(error => {
-        reject(error);
+      console.log("LOG: PinProvider -> set -> error", error);
+        // reject(error);
       })
     });
   }
@@ -55,7 +57,8 @@ export class PinProvider {
           resolve(false);
         }
       }).catch(error => {
-        reject(error);
+      console.log("LOG: PinProvider -> compare -> error", error);
+        // reject(error);
       })
     });
   }
@@ -108,7 +111,8 @@ export class PinProvider {
       this.storage.set("currentPin", currentPin).then(pin => {
         resolve(pin);
       }).catch(error => {
-        reject(error);
+      console.log("LOG: PinProvider -> saveCurrentPin -> error", error);
+        // reject(error);
       })
     })  
     
@@ -124,7 +128,8 @@ export class PinProvider {
         }
         
       }).catch(error => {
-        reject(error);
+      console.log("LOG: PinProvider -> getCurrentPin -> error", error);
+        // reject(error);
       })
     });
 
@@ -134,6 +139,7 @@ export class PinProvider {
     this.storage.set("currentPin", false).then(pin => {
       console.log(pin);
     }).catch(error => {
+    console.log("LOG: PinProvider -> removeCurrentPin -> error", error);
       console.log(error);
     })
   }
@@ -146,7 +152,8 @@ export class PinProvider {
         this.removeCurrentPin();
         resolve(pin);
       }).catch(error => {
-        reject(error);
+      console.log("LOG: PinProvider -> reset -> error", error);
+        // reject(error);
       })
     });
   }

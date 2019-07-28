@@ -155,7 +155,8 @@ export class MosaicsProvider {
         .then(details => {
           return details.market_data.current_price.usd;
         })
-        .catch(() => {
+        .catch((err) => {
+        console.log("LOG: MosaicsProvider -> getCoinPrice -> err", err);
           return returnZero();
         });
     } else {
