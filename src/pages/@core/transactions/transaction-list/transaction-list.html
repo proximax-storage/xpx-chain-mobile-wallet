@@ -74,7 +74,7 @@
 
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-          [owner]="selectedAccount.address.plain()">
+          [owner]="selectedAccount.address.plain()" [status]="Confirmed">
         </transfer-transaction>
       </ion-card>
 
