@@ -94,6 +94,7 @@
     "WALLETS.DETAIL.MARKET_RANK" : "시장 순위",
     "WALLETS.DETAIL.MARKET_CAP" : "시가 총액",
     "WALLETS.DETAIL.TRADING_VOLUME" : "거래량",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "주소가 클립 보드에 복사되었습니다.",
     "WALLETS.DETAIL.24H_HIGH" : "24 시간 높음",
     "WALLETS.DETAIL.24H_LOW" : "24H 낮음",
     "WALLETS.DETAIL.CIRCULATING" : "순환하는",
