@@ -50,7 +50,6 @@ export class RegisterPage implements OnInit {
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
     this.passDisabled = true;
-    
   }
 
   init() {
@@ -61,7 +60,6 @@ export class RegisterPage implements OnInit {
     });
 
     this.formGroup.valueChanges.subscribe(form => {
-      console.log('values', form)
       if(this.formGroup.controls.password.value === '' && this.formGroup.controls.confirmPassword.value !== ''){
         this.passDisabled = true; 
         this.formGroup.patchValue({
