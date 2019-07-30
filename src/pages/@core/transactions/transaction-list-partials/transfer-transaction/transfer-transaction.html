@@ -52,11 +52,18 @@
       </p>
     </section>
 
-    <section item-right>
+    <section item-right *ngIf="STATUS=='Confirmed'">
       <p float-right ion-text color="success">
-        <small>Confirmed</small>
+        <small>{{STATUS}}</small>
       </p>
     </section>
+
+    <section item-right *ngIf="STATUS=='Unconfirmed'">
+      <p float-right ion-text color="danger">
+        <small>{{STATUS}}</small>
+      </p>
+    </section>
+
   </ion-item>
 </ion-card-header>
 

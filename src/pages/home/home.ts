@@ -217,12 +217,12 @@ export class HomePage {
   private getAccountInfo(account: Account) : Observable<AccountInfo>{
     return this.walletProvider.getAccountInfo(account.address.plain());
     // return 
-    new Observable(observer => {
-      const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
-        accountInfo.subscribe(accountInfo => {
-        observer.next(accountInfo);
-    });
-    });
+    // new Observable(observer => {
+    //   const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
+    //     accountInfo.subscribe(accountInfo => {
+    //     observer.next(accountInfo);
+    // });
+    // });
   }
 
   getTransactions(account: Account) {
