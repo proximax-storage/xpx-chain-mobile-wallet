@@ -22,7 +22,8 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 })
 export class ContactAddPage {
   App = App;
-
+  alfaNumberPattern = '^[a-zA-Z0-9\-\]+$';
+  userTelegram = '^[a-zA-Z0-9@]+$';
   formGroup: FormGroup;
 
   constructor(
@@ -45,9 +46,9 @@ export class ContactAddPage {
 
   init() {
     this.formGroup = this.formBuilder.group({
-      name: ['', [Validators.minLength(3), Validators.required]],
-      address: ['', [Validators.minLength(40), Validators.required]],
-      telegram: ['']
+      name: ['', [Validators.minLength(3), Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      address: ['', [Validators.minLength(40), Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      telegram: ['', [Validators.pattern(this.alfaNumberPattern)]]
     });
 
     if (this.navParams.data) {
