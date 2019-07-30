@@ -38,7 +38,7 @@
 
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.SIGNUP.CONFIRM_PASSWORD" | translate}}</ion-label>
-            <ion-input formControlName="confirmPassword" [type]="confirmPasswordType" placeholder="{{'APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER'| translate}}">
+            <ion-input (ionChange)="validate()" [disabled]="passDisabled" formControlName="confirmPassword" [type]="confirmPasswordType" placeholder="{{'APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER'| translate}}">
             </ion-input>
 
             <!-- <button (click)="showHideConfirmPassword($event)" clear item-right ion-button icon-only>

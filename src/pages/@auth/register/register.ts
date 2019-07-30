@@ -21,6 +21,7 @@ import { Keyboard } from '@ionic-native/keyboard';
   templateUrl: 'register.html'
 })
 export class RegisterPage implements OnInit {
+  passDisabled: boolean;
   formGroup: FormGroup;
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
@@ -48,6 +49,7 @@ export class RegisterPage implements OnInit {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
+    this.passDisabled = true;
   }
 
   init() {
@@ -58,19 +60,29 @@ export class RegisterPage implements OnInit {
     });
 
     this.formGroup.valueChanges.subscribe(form => {
-      this.checkPasswords(this.formGroup);
+      if(this.formGroup.controls.password.value === '' && this.formGroup.controls.confirmPassword.value !== ''){
+        this.passDisabled = true; 
+        this.formGroup.patchValue({
+          confirmPassword: ''
+        })
+      } else {
+        this.passDisabled = false;
+      }
     });
   }
 
-    checkPasswords(form: FormGroup) {
-      let pass = form.controls.password.value;
-      let confirmPass = form.controls.confirmPassword.value;
+  validate(){
+    this.checkPasswords(this.formGroup.controls.confirmPassword.value) 
+  }
+  
+    checkPasswords(value) {
+      let pass = this.formGroup.controls.password.value;
+      let confirmPass = value;
 
     return pass === confirmPass
       ? null
       : this.formGroup.setErrors([{ passwordMismatch: true }]);
   }
-
 
   onSubmit(form) {
     if(this.formGroup.status == "VALID") {

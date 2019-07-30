@@ -23,4 +23,10 @@ export class TransactionsProvider {
     return transaction;
   }
 
+  getAllTransactionsUnconfirmed(publicAccount: PublicAccount): Observable<Transaction[]> {
+    const pageSize = 10;
+    const transaction = this.proximaxProvider.getAllTransactionsUnconfirmed(publicAccount, pageSize)
+    return transaction;
+  }
+
 }

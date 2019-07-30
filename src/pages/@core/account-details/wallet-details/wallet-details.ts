@@ -6,6 +6,7 @@ import { AccountInfo, SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { NemProvider } from '../../../../providers/nem/nem';
 import { ToastProvider } from '../../../../providers/toast/toast';
 import { AuthProvider } from './../../../../providers/auth/auth';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the WalletDetailsPage page.
@@ -34,7 +35,8 @@ export class WalletDetailsPage {
     private toastProvider: ToastProvider,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,
-    private authProvider: AuthProvider
+    private authProvider: AuthProvider,
+    private translateService: TranslateService
   ) {
     console.log("SIRIUS CHAIN WALLET: WalletDetailsPage -> this.navParams.data", this.navParams.data)
     this.totalBalance = this.navParams.get('totalBalance');
@@ -45,7 +47,7 @@ export class WalletDetailsPage {
 
   copy() {
     this.clipboard.copy(this.selectedAccount.address.plain()).then(_ => {
-      this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
+      this.toastProvider.show(this.translateService.instant("WALLETS.DETAIL.COPY_ADDRESS"), 3, true);
     });
   }
 
