@@ -94,6 +94,7 @@
     "WALLETS.DETAIL.PRICE_CHART" : "Prijskaart",
     "WALLETS.DETAIL.INFO" : "info",
     "WALLETS.DETAIL.STATS" : "Stats",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "Uw adres is succesvol naar het klembord gekopieerd",
     "WALLETS.DETAIL.MARKET_RANK" : "Marktpositie",
     "WALLETS.DETAIL.MARKET_CAP" : "Marktkapitalisatie",
     "WALLETS.DETAIL.TRADING_VOLUME" : "Handelsvolume",

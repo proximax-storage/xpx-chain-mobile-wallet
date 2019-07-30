@@ -94,6 +94,7 @@
     "WALLETS.DETAIL.PRICE_CHART" : "Ценовая диаграмма",
     "WALLETS.DETAIL.INFO" : "Информация",
     "WALLETS.DETAIL.STATS" : "Статистика",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "Ваш адрес был скопирован в буфер обмена",
     "WALLETS.DETAIL.MARKET_RANK" : "Маркет Ранk",
     "WALLETS.DETAIL.MARKET_CAP" : "Рыночная капитализация",
     "WALLETS.DETAIL.TRADING_VOLUME" : "Объем торгов",
