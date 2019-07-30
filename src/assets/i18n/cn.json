@@ -94,6 +94,7 @@
     "WALLETS.DETAIL.PRICE_CHART" : "价格图表",
     "WALLETS.DETAIL.INFO" : "信息",
     "WALLETS.DETAIL.STATS" : "统计",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "您的地址已成功复制到剪贴板",
     "WALLETS.DETAIL.MARKET_RANK" : "市场排名",
     "WALLETS.DETAIL.MARKET_CAP" : "市值",
     "WALLETS.DETAIL.TRADING_VOLUME" : "交易量",

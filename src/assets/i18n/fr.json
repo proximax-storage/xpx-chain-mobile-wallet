@@ -94,6 +94,7 @@
     "WALLETS.DETAIL.PRICE_CHART" : "Prix ​​Chart",
     "WALLETS.DETAIL.INFO" : "Info",
     "WALLETS.DETAIL.STATS" : "Statistiques",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "Votre adresse a été copiée avec succès dans le presse-papier",
     "WALLETS.DETAIL.MARKET_RANK" : "Rang du marché",
     "WALLETS.DETAIL.MARKET_CAP" : "Capitalisation boursière",
     "WALLETS.DETAIL.TRADING_VOLUME" : "Volume d'échanges",

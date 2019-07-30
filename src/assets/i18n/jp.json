@@ -94,6 +94,7 @@
     "WALLETS.DETAIL.PRICE_CHART" : "価格表",
     "WALLETS.DETAIL.INFO" : "情報",
     "WALLETS.DETAIL.STATS" : "統計",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "あなたの住所はクリップボードにコピーされました",
     "WALLETS.DETAIL.MARKET_RANK" : "マーケットランク",
     "WALLETS.DETAIL.MARKET_CAP" : "時価総額",
     "WALLETS.DETAIL.TRADING_VOLUME" : "取引ボリューム",
