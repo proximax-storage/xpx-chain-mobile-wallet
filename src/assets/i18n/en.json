@@ -95,6 +95,7 @@
     "WALLETS.DETAIL.PRICE_CHART" : "Price Chart",
     "WALLETS.DETAIL.INFO" : "Info",
     "WALLETS.DETAIL.STATS" : "Stats",
+    "WALLETS.DETAIL.COPY_ADDRESS" : "Your address has been successfully copied to the clipboard",
     "WALLETS.DETAIL.MARKET_RANK" : "Market Rank",
     "WALLETS.DETAIL.MARKET_CAP" : "Market Cap",
     "WALLETS.DETAIL.TRADING_VOLUME" : "Trading Volume",

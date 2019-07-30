@@ -90,7 +90,7 @@ export class TransactionListPage {
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad TransactionListPage");
-
+    
   }
   goto(page) {
     this.navCtrl.push(page);
@@ -184,9 +184,9 @@ export class TransactionListPage {
     this.viewCtrl.dismiss();
   }
 
-  copy() {
-    this.clipboard.copy(this.currentWallet.address.plain()).then(_ => {
-      this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
+  copy(val) {
+    this.clipboard.copy(val).then(_ => {
+      this.toastProvider.show(this.translateService.instant("WALLETS.DETAIL.COPY_ADDRESS"), 3, true);
     });
   }
 }

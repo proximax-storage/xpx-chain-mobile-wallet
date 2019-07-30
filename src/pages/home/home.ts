@@ -138,8 +138,12 @@ export class HomePage {
                       // Show Transactions
                       console.log("9. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
                       this.getTransactions(account);
+                      this.getTransactionsUnconfirmed(account);
+                      console.log('-------- getTransactions', account)
                       this.hideLoaders();
                   })
+              }, err => {
+                this.showEmptyMessage();
               })
             } catch (error) {
               this.showEmptyMessage();
@@ -211,12 +215,14 @@ export class HomePage {
   }
 
   private getAccountInfo(account: Account) : Observable<AccountInfo>{
-    return new Observable(observer => {
-      const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
-        accountInfo.subscribe(accountInfo => {
-        observer.next(accountInfo);
-    });
-    });
+    return this.walletProvider.getAccountInfo(account.address.plain());
+    // return 
+    // new Observable(observer => {
+    //   const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
+    //     accountInfo.subscribe(accountInfo => {
+    //     observer.next(accountInfo);
+    // });
+    // });
   }
 
   getTransactions(account: Account) {
@@ -225,6 +231,22 @@ export class HomePage {
       if(transactions) {
         const transferTransactions: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
         this.confirmedTransactions = transferTransactions;
+        console.log('this.confirmedTransactions ', this.confirmedTransactions)
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true
+      }
+    });
+    this.isLoading = false;
+  }
+
+  getTransactionsUnconfirmed(account: Account) {
+    this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsUnconfirmed(account.publicAccount).subscribe(transactions=> {
+      if(transactions) {
+        const transferTransactionsUnconfirmed: Array<Transaction> = transactions.filter(tx=> tx.type== TransactionType.TRANSFER)
+        this.unconfirmedTransactions = transferTransactionsUnconfirmed;
+        console.log('this.unconfirmedTransactions ', this.unconfirmedTransactions )
         this.showEmptyTransaction = false;
       } else {
         this.showEmptyTransaction = true

@@ -96,6 +96,10 @@ export class ProximaxProvider {
     return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));
   }
 
+  getAllTransactionsUnconfirmed(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
+    // return null;
+    return this.accountHttp.unconfirmedTransactions(publicAccount, new QueryParams(queryParams));
+  }
   getBalance(address: Address): Observable<MosaicAmountView[]> {
     // return null;
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
