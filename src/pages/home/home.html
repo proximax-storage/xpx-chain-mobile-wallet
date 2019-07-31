@@ -34,7 +34,7 @@
           <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-logo-white.png">
 
           <div *ngIf="!tablet">
-            <p class="wallet-number">{{ wallet?.address.plain() | ngXtruncate: 24 : '...' }}</p>
+            <p class="wallet-number">{{ wallet?.address.plain() | ngXtruncate: 22 : '...' }}</p>
           </div>
           <div *ngIf="tablet">
             <p class="wallet-number">{{ wallet?.address.plain() }}</p>
