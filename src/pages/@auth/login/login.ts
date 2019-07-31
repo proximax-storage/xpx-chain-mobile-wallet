@@ -97,8 +97,8 @@ export class LoginPage implements OnInit {
               }, 1000);
             });
         } else {
-          // this.utils.showInsetModal('TryAgainPage', {}, 'small');
-          // this.haptic.notification({ type: 'error' });
+          this.utils.showInsetModal('TryAgainPage', {}, 'small');
+          this.haptic.notification({ type: 'error' });
         }
       })
       .catch(err => {
