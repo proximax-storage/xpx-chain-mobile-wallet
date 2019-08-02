@@ -126,6 +126,7 @@
     "SERVICES.ADDRESS_BOOK.TITLE" : "Адресная книга",
     "SERVICES.ADDRESS_BOOK.DESC" : "Позволяет легко получить доступ к вашим контактам сохраняя данные своего аккаунта.",
     "SERVICES.ADDRESS_BOOK.ADD_CONTACT":"Добавить новый контакт",
+    "SERVICES.ADDRESS_BOOK.ADD_ERROR":"Извините, этот адрес не относится к этой сети. Пожалуйста, попробуйте еще раз.",
     "SERVICES.ADDRESS_BOOK.FIELDS.NAME":"Имя",
     "SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS":"Адрес кошелька",
     "SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM":"Телеграмм",
