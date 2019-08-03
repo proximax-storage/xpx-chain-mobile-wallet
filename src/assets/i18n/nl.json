@@ -126,6 +126,7 @@
     "SERVICES.ADDRESS_BOOK.TITLE" : "Adressenboek",
     "SERVICES.ADDRESS_BOOK.DESC" : "Biedt eenvoudige toegang tot je contacten door hun accountgegevens te bewaren.",
     "SERVICES.ADDRESS_BOOK.ADD_CONTACT": "Voeg contact toe",
+    "SERVICES.ADDRESS_BOOK.ADD_ERROR":"Sorry, het lijkt erop dat dit adres niet tot dit netwerk behoort. Probeer het opnieuw",
     "SERVICES.ADDRESS_BOOK.FIELDS.NAME":"Naam",
     "SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS":"Wallet-adres",
     "SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM":"Telegram",

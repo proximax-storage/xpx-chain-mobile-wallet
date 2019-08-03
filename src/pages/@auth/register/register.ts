@@ -86,7 +86,7 @@ export class RegisterPage implements OnInit {
 
   onSubmit(form) {
     if(this.formGroup.status == "VALID") {
-      if(form.password === form.confirmPassword) {
+      // if(form.password === form.confirmPassword) {
         this.authProvider
           .register(form.email, form.password)
           .then(status => {
@@ -110,9 +110,9 @@ export class RegisterPage implements OnInit {
           .then(_ => {
             this.authProvider.setSelectedAccount(form.email, form.password);
           })
-      } else {
-        alert("Please make sure you confirm your password.");
-      }
+      // } else {
+      //   alert("Please make sure you confirm your password.");
+      // }
     }
    
   }

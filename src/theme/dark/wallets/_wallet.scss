@@ -2,6 +2,9 @@ ion-slides {
   height: auto;
   padding: 16px;
 }
+ion-slides[onboarding] {
+  height: 100%;
+}
 ion-slide {
   margin-bottom: 1rem;
 }
@@ -290,6 +293,10 @@ ion-slide {
 
   ion-slides {
       height: 335px;
+  }
+
+  ion-slides[onboarding] {
+    height: 100%;
   }
 
 

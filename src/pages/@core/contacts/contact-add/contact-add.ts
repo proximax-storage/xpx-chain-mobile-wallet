@@ -5,8 +5,8 @@ import { Address } from 'tsjs-xpx-chain-sdk';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
-// import { NemProvider } from '../../../../providers/nem/nem';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the ContactAddPage page.
@@ -30,11 +30,11 @@ export class ContactAddPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    // public nemProvider: NemProvider,
     public alertProvider: AlertProvider,
     public contactsProvider: ContactsProvider,
     private viewCtrl: ViewController,
-    private proximaxProvider: ProximaxProvider
+    private proximaxProvider: ProximaxProvider,
+    private translateService: TranslateService
   ) {
     this.init();
   }
@@ -67,7 +67,7 @@ export class ContactAddPage {
     const DATA = form;
     if (!this.proximaxProvider.isValidAddress(CONTACT_ADDRESS)) {
       this.alertProvider.showMessage(
-        'Sorry, it looks like this NEM address does not belong to this network. Please try again.'
+        this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_ERROR")
       );
     } else {
       DATA.address = CONTACT_ADDRESS;

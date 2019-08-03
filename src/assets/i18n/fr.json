@@ -126,6 +126,7 @@
     "SERVICES.ADDRESS_BOOK.TITLE" : "Carnet d'adresses",
     "SERVICES.ADDRESS_BOOK.DESC" : "Permet un accès facile à vos contacts en conservant les détails de leur compte.",
     "SERVICES.ADDRESS_BOOK.ADD_CONTACT":"Ajouter un nouveau contact",
+    "SERVICES.ADDRESS_BOOK.ADD_ERROR":"Désolé, il semble que cette adresse n'appartient pas à ce réseau. Réessayer",
     "SERVICES.ADDRESS_BOOK.FIELDS.NAME":"Nom",
     "SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS":"Adresse du wallet",
     "SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM":"Telegram",

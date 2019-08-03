@@ -31,7 +31,7 @@
       (click)="showWalletDetails();onWalletSelect(wallet)" (press)="showWalletList()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="wallet.walletColor">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-logo-white.png">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-wallet-white.png">
 
           <div *ngIf="!tablet">
             <p class="wallet-number">{{ wallet?.address.plain() | ngXtruncate: 22 : '...' }}</p>

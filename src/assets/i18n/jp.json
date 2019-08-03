@@ -126,6 +126,7 @@
     "SERVICES.ADDRESS_BOOK.TITLE" : "アドレス帳",
     "SERVICES.ADDRESS_BOOK.DESC" : "相手のアカウントの詳細を保持し、あなたへコンタクトを簡単にする",
     "SERVICES.ADDRESS_BOOK.ADD_CONTACT":"新たなコンタクトを作成する",
+    "SERVICES.ADDRESS_BOOK.ADD_ERROR":"申し訳ありませんが、このアドレスはこのネットワークに属していないようです。もう一度やり直してください",
     "SERVICES.ADDRESS_BOOK.FIELDS.NAME":"名",
     "SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS":"ウォレットアドレス",
     "SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM":"電報",
