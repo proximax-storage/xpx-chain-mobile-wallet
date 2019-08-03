@@ -76,7 +76,7 @@ export class AuthProvider {
       
       // TODO : Encrypt password
       const ACCOUNT = {
-        email: email,
+        email: email.toLowerCase(),
         password: password
       };
       const ACCOUNTS = data ? data : [];
@@ -154,7 +154,7 @@ export class AuthProvider {
        } else {
         // TODO: Encrypt password
         const accountFromInput = {
-          email: email,
+          email: email.toLowerCase(),
           password: BcryptJS.hashSync(password, 8)
         };
         accounts.push(accountFromInput);
