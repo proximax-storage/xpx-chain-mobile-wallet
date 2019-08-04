@@ -123,6 +123,7 @@
     "SERVICES.ADDRESS_BOOK.TITLE" : "주소록",
     "SERVICES.ADDRESS_BOOK.DESC" : "주소를 잘 보관하여 용이하게 접속하게 하십시오.",
     "SERVICES.ADDRESS_BOOK.ADD_CONTACT":"새로운 주소 추가하기",
+    "SERVICES.ADDRESS_BOOK.ADD_ERROR":"죄송합니다.이 주소는이 네트워크에 속하지 않은 것으로 보입니다. 다시 시도하십시오.",
     "SERVICES.ADDRESS_BOOK.FIELDS.NAME":"성명",
     "SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS":"지갑 주소",
     "SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM":"텔레그램",

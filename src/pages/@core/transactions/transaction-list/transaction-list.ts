@@ -78,6 +78,10 @@ export class TransactionListPage {
     this.confirmedTransactions = payload.transactions;
     this.selectedAccount = payload.selectedAccount;
 
+    if(this.confirmedTransactions === null){
+      this.showEmptyMessage = true;
+    }
+
   }
 
   getAccountInfo() {

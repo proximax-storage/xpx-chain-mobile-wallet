@@ -9,7 +9,7 @@ ion-tabs {
 
   .tabbar {
     .tab-button[aria-selected='true'] {
-      border-top-color: #43BDB5;
+      border-top-color:color($colors, secondary);
       border-top-width: 2px;
       border-top-style: outset;
       &,
