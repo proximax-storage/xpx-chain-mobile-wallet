@@ -119,6 +119,7 @@ export class SendMosaicConfirmationPage {
             .subscribe(
               value => {
                 console.log('value ', value)
+                navigator.vibrate(500)
                 this.showSuccessMessage()
               },
               async error => {

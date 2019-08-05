@@ -133,7 +133,7 @@ export class VerificationCodePage {
       let page = "TabsPage";
       this.isVerify = true;
       this.previousPin = pin;
-
+      navigator.vibrate(500)
       return this.pin.set(pin)
         .then(_ => {
           return this.storage.set("isModalShown", false);
@@ -157,6 +157,7 @@ export class VerificationCodePage {
         console.log("TCL: VerificationCodePage -> onSubmit -> isMatch", isMatch)
 
         if (isMatch) {
+          navigator.vibrate(500)
           this.haptic.notification({ type: 'success' });
           let page = "TabsPage";
           this.isVerify = true;
