@@ -63,6 +63,7 @@ import { MosaicsProvider } from '../providers/mosaics/mosaics';
 import { ProximaxProvider } from '../providers/proximax/proximax';
 import { TransactionsProvider } from '../providers/transactions/transactions';
 import { HelperProvider } from '../providers/helper/helper';
+import { Vibration } from '@ionic-native/vibration';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -147,7 +148,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MosaicsProvider,
     ProximaxProvider,
     TransactionsProvider,
-    HelperProvider
+    HelperProvider,
+    Vibration
   ]
 })
 export class AppModule {}
