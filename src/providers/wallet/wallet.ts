@@ -18,6 +18,7 @@ import { AppConfig } from '../../app/app.config';
  */
 @Injectable()
 export class WalletProvider {
+  wallet: any;
   publicAccount: PublicAccount;
   wallets: SimpleWallet[];
 
@@ -269,10 +270,13 @@ export class WalletProvider {
     return this.authProvider.getUsername().then(username => {
     console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", username)
       return this.storage.get('wallets').then(wallets => {
-				console.log("LOG: WalletProvider -> constructor -> data", wallets)
+        console.log("LOG: WalletProvider -> constructor -> data", wallets)
         let _wallets = wallets || {};
         const WALLETS = _wallets[username] || [];
-				console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
+        console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
+        this.wallet = WALLETS[0].wallet.address
+
+        console.log("LOG: WalletProvider ->  -> this.wallet", this.wallet)
 
         if (WALLETS) {
           const walletsMap = WALLETS.map(walletFile => {
