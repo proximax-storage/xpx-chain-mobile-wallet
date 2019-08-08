@@ -1,5 +1,5 @@
 import { Component, ViewChild} from '@angular/core';
-import { App, NavController, NavParams, ViewController, ActionSheetController, AlertController, Platform, ModalController, Slides} from 'ionic-angular';
+import { App, NavController, NavParams, ViewController, ActionSheetController, AlertController, Platform, ModalController, Slides, LoadingController, LoadingOptions} from 'ionic-angular';
 
 import { App as AppConfig } from '../../providers/app/app';
 import { WalletProvider } from '../../providers/wallet/wallet';
@@ -75,7 +75,8 @@ export class HomePage {
     private translateService: TranslateService,
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
-    private transactionsProvider: TransactionsProvider
+    private transactionsProvider: TransactionsProvider,
+    public loadingCtrl: LoadingController
   ) {
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
@@ -93,6 +94,17 @@ export class HomePage {
   }
 
   private init() {
+
+    let options:LoadingOptions = {
+      content: 'Loading...'
+    };
+
+    let loader = this.loadingCtrl.create(options);
+
+    loader.present();
+    this.totalWalletBalance = 0;
+
+
 
     this.showLoaders();
     
@@ -133,6 +145,7 @@ export class HomePage {
                       this.mosaicsProvider.computeTotalBalance(mosaics).then(total=>{
                         this.totalWalletBalance = total as number;
                         console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
+                        loader.dismiss();
                       });
 
                       // Show Transactions
