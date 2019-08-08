@@ -26,7 +26,7 @@
   </ion-list>
 
   <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
-    <ion-slide *ngFor="let wallet of wallets; trackBy: trackByName"
+    <ion-slide *ngFor="let wallet of wallets"
       [attr.selected]="selectedWallet?.name === wallet?.name ? true : null"
       (click)="showWalletDetails();onWalletSelect(wallet)" (press)="showWalletList()">
       <div class="wallet">
@@ -220,7 +220,7 @@
 
       
 
-      <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash"
+      <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy"
         (click)="gotoTransactionDetail(transaction)">        
 
         <!-- if transfer  -->
@@ -236,7 +236,7 @@
 
       
 
-      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
+      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy"
         (click)="gotoTransactionDetail(transaction)">        
 
         <!-- if transfer  -->
