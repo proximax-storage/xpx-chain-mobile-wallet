@@ -21,35 +21,15 @@ export class TransferDetailComponent {
   App = App;
 
   owner: Address;
-  deadline: Deadline
-  amount: number;
-  mosaics: any;
-//   mosaics: MosaicTransferable[];
-  hasLevy: boolean;
 
-//   private _getAmount() {
-//     try {
-//       this.amount = this.tx.xem().amount;
-//     } catch (e) {
-//       this.amount = 0;
-//     }
-//   }
+  mosaics: any[]=[];
 
   private _getMosaics() {
       this.tx.mosaics.forEach(mosaic => {
          const mosaicInfo= this.mosaicsProvider.setMosaicInfo(mosaic);
-        this.mosaics = [mosaicInfo]
+        this.mosaics.push(mosaicInfo)
+        console.log('this.mosaics', this.mosaics)
       });
-    // try {
-    //   this.nemProvider.getMosaicsDefinition(this.tx.mosaics()).subscribe(mosaics => {
-    //     this.mosaics = mosaics;
-    //     this.hasLevy = this.mosaics.filter(mosaic => mosaic.levy).length
-    //       ? true
-    //       : false;
-    //   });
-    // } catch (e) {
-    //   this.mosaics = [];
-    // }
   }
 
   private _setOwner() {
@@ -63,13 +43,12 @@ export class TransferDetailComponent {
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
   ) {
-    console.log(this.tx);
+    // console.log(this.tx);
   }
 
 
   ngOnInit() {
     this._setOwner();
-    // this._getAmount();
     this._getMosaics();
   }
 }
