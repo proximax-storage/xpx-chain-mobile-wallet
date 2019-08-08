@@ -122,6 +122,35 @@ export class ProximaxProvider {
     return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
   }
 
+  verifyNetworkAddressEqualsNetwork(val: string, val2: string) {
+    let value = val.toUpperCase()
+    let value2 = val2.toUpperCase()
+    if ((value.length === 40 || value.length === 46) && (value2.length === 40 || value2.length === 46)) {
+      if (value.charAt(0) === 'S' && value2.charAt(0) === 'S') {
+        // NetworkType.MIJIN_TEST
+        return true;
+      } else if (value.charAt(0) === 'M' && value2.charAt(0) === 'M') {
+        // NetworkType.MIJIN
+        return true;
+      } else if (value.charAt(0) === 'V' && value2.charAt(0) === 'V') {
+        // NetworkType.TEST_NET
+        return true;
+      } else if (value.charAt(0) === 'X' && value2.charAt(0) === 'X') {
+        // NetworkType.MAIN_NET
+        return true;
+      } else if (value.charAt(0) === 'W' && value2.charAt(0) === 'W') {
+        // NetworkType.PRIVATE_TEST
+        return true;
+      } else if (value.charAt(0) === 'Z' && value2.charAt(0) === 'Z') {
+        // NetworkType.PRIVATE
+        return true;
+      } else {
+        // Address Network unsupported
+        return false;
+      }
+    }
+  }
+
   /**
    * Check if acount belongs it is valid, has 40 characters and belongs to network
    * @param address address to check
