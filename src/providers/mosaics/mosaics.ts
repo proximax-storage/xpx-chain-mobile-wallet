@@ -33,7 +33,7 @@ export class MosaicsProvider {
     ];
   }
 
-  async getNameMosaics(mosaicsId: MosaicId[]): Promise<MosaicNames[]> {
+  async getMosaicNames(mosaicsId: MosaicId[]): Promise<MosaicNames[]> {
     return await this.proximaxProvider.mosaicHttp.getMosaicNames(mosaicsId).toPromise();
   }
   

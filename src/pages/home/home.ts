@@ -33,10 +33,10 @@ import { animate, style, transition, trigger } from "@angular/animations";
 })
 export class HomePage {
   hex: string;
-  valores: { mosaicId: string; namespaceId: string; hex: string; amount: number; };
-  mosaicsAll: any[] = [];
+  mosaicInfo: { mosaicId: string; namespaceId: string; hex: string; amount: number; };
+  mosaicName: string[];
   amount: number;
-  nameS: string[];
+
   @ViewChild(Slides) slides: Slides;
 
   menu = 'mosaics';
@@ -146,35 +146,35 @@ export class HomePage {
                   this.mosaics = mosaics;
                   this.isLoading = false;
 
-                  await this.mosaicsProvider.getNameMosaics(mosaicsIds).then(mosaicsAll => {
+                  await this.mosaicsProvider.getMosaicNames(mosaicsIds).then(mosaicsNames => {
                     mosacis.forEach(mosacis => {
 
-                      mosaicsAll.forEach(mosaicAll => {
+                      mosaicsNames.forEach(mosaicName => {
 
-                        if (mosacis.id.toHex() === mosaicAll.mosaicId.id.toHex()) {
-                          let arrayDeCadenas = mosaicAll.names
-                          if (arrayDeCadenas.length > 0) {
-                            arrayDeCadenas.map(val => {
-                              this.nameS = val.split(".")
+                        if (mosacis.id.toHex() === mosaicName.mosaicId.id.toHex()) {
+                          let _mosaicNames = mosaicName.names
+                          if (_mosaicNames.length > 0) {
+                            _mosaicNames.map(val => {
+                              this.mosaicName = val.split(".")
                             })
                           } else {
-                            this.nameS = [" ", mosaicAll.mosaicId.id.toHex()]
+                            this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
                           }
                           this.amount = this.mosaicsProvider.getRelativeAmount(mosacis.amount.compact())
-                          this.hex = mosaicAll.mosaicId.id.toHex()
+                          this.hex = mosaicName.mosaicId.id.toHex()
                         }
 
-                        this.valores = {
-                          mosaicId: this.nameS[1],
-                          namespaceId: this.nameS[0],
+                        this.mosaicInfo = {
+                          mosaicId: this.mosaicName[1],
+                          namespaceId: this.mosaicName[0],
                           hex: this.hex,
                           amount: this.amount
                         }
 
                       })
-                      let filter = this.mosaics.filter(mosaic => mosaic.hex === this.valores.hex)
+                      let filter = this.mosaics.filter(mosaic => mosaic.hex === this.mosaicInfo.hex)
                       if (filter.length == 0) {
-                        this.mosaics.push(this.valores)
+                        this.mosaics.push(this.mosaicInfo)
                       }
                     })
                   })
