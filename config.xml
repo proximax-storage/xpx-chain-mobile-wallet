@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget android-versionCode="5" id="io.proximax.siriuschainwallet" ios-CFBundleVersion="2" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-	<name>Sirius Chain Wallet</name>
+<widget android-versionCode="5" id="io.proximax.siriuschainwallet" ios-CFBundleVersion="3" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+	<name>ProximaX Sirius Wallet</name>
 	<description>A simple and secure wallet to store, send and receive your ProximaX based digital assets. </description>
 	<author email="core.dev@proximax.io" href="http://proximax.io/">ProximaX Limited</author>
 	<content src="index.html"/>
@@ -69,6 +69,17 @@
 		<icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58"/>
 		<icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87"/>
 		<icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024"/>
+		<icon height="20" src="resources/ios/icon/icon-20.png" width="20"/>
+		<icon height="40" src="resources/ios/icon/icon-20@2x.png" width="40"/>
+		<icon height="60" src="resources/ios/icon/icon-20@3x.png" width="60"/>
+		<icon height="29" src="resources/ios/icon/icon-29.png" width="29"/>
+		<icon height="58" src="resources/ios/icon/icon-29@2x.png" width="58"/>
+		<icon height="87" src="resources/ios/icon/icon-29@3x.png" width="87"/>
+		<icon height="48" src="resources/ios/icon/icon-24@2x.png" width="48"/>
+		<icon height="55" src="resources/ios/icon/icon-27.5@2x.png" width="55"/>
+		<icon height="88" src="resources/ios/icon/icon-44@2x.png" width="88"/>
+		<icon height="172" src="resources/ios/icon/icon-86@2x.png" width="172"/>
+		<icon height="196" src="resources/ios/icon/icon-98@2x.png" width="196"/>
 		<splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640"/>
 		<splash height="1334" src="resources/ios/splash/Default-667h.png" width="750"/>
 		<splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242"/>
@@ -82,10 +93,12 @@
 		<splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640"/>
 		<splash height="480" src="resources/ios/splash/Default~iphone.png" width="320"/>
 		<splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732"/>
+		<splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125"/>
+		<splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436"/>
 	</platform>
 	<hook src="scripts/incrementBuildNum.js" type="after_build"/>
 	<engine name="android" spec="^7.0.0"/>
-	<engine name="ios" spec="4.5.5"/>
+	<engine name="ios" spec="^4.4.0"/>
 	<plugin name="com.darktalker.cordova.screenshot" spec="^0.1.6"/>
 	<plugin name="cordova-clipboard" spec="^1.2.1"/>
 	<plugin name="cordova-plugin-app-version" spec="^0.1.9"/>
