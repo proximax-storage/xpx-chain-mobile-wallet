@@ -162,7 +162,7 @@ export class SendPage {
      this.authProvider
      .getPassword()
      .then(password => {
-       // Get user's password
+       // Get user's passwordmosaics
        const myPassword = new Password(password);
 
        // Convert current wallet to SimpleWallet
@@ -401,9 +401,9 @@ export class SendPage {
 
   validateInput() {
     const AMOUNT = this.form.get('amount').value;
-    if (AMOUNT && AMOUNT.includes('.') ) {
-      this.decimalCount = this.countDecimals(AMOUNT);
-    }
+    // if (AMOUNT && AMOUNT.includes('.') ) {
+    //   this.decimalCount = this.countDecimals(AMOUNT);
+    // }
   }
 
 

@@ -124,14 +124,11 @@ export class HomePage {
                 const mosacis = accountInfo.mosaics
                 const mosaicsIds = mosacis.map(data => data.id);
 
-
-
                 // Load default mosaics
                 const myAssets = this.loadDefaultMosaics();
                 console.log("6. LOG: HomePage -> loadDefaultMosaics()")
-
                 myAssets.subscribe(async mosaics => {
-                  this.mosaics = mosaics;
+                  this.mosaics = mosaics.slice(0);
                   this.isLoading = false;
 
                   await this.mosaicsProvider.getNameMosaics(mosaicsIds).then(mosaicsAll => {
@@ -158,7 +155,6 @@ export class HomePage {
                           hex: this.hex,
                           amount: this.amount
                         }
-
                       })
                       let filter = this.mosaics.filter(mosaic => mosaic.hex === this.valores.hex)
                       if (filter.length == 0) {
@@ -383,8 +379,8 @@ export class HomePage {
   }
 
   public gotoCoinPrice(mosaic) {
-    console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
-    console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
+    // console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
+    // console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
 
     let coinId: string;
 
@@ -400,11 +396,12 @@ export class HomePage {
     }
 
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
-      console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
+      // console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       let totalBalance = mosaic.amount * price;
-      console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
+      // console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
       let page = "CoinPriceChartPage";
       const modal = this.modalCtrl.create(page, {
+        mosaicHex: mosaic.hex,
         mosaicId: mosaic.mosaicId,
         coinId: coinId,
         selectedAccount: this.selectedWallet,

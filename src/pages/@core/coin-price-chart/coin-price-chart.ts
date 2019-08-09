@@ -50,6 +50,8 @@ import { flatMap, toArray } from 'rxjs/operators';
   providers: [GetMarketPricePipe]
 })
 export class CoinPriceChartPage {
+  confirmed: any;
+  mosaicHex: any;
   /** Mosaic details member variables */
   durations: Array<{ label: string; value: number }>;
   selectedDuration: { label: string; value: number };
@@ -63,9 +65,7 @@ export class CoinPriceChartPage {
 
   selectedAccount: any;
   fakeList: Array<any>;
-
-  unconfirmedTransactions: Array<any>;
-  confirmedTransactions: Array<any>;
+  confirmedTransactions: any[]=[];
   showEmptyMessage: boolean;
   isLoading: boolean;
 
@@ -119,13 +119,25 @@ export class CoinPriceChartPage {
 
     ];
     this.selectedDuration = this.durations[0];
-
-    console.log("navParams.data", this.navParams.data);
+  this.mosaicHex = this.navParams.data['mosaicHex'];
     this.mosaicId = this.navParams.data['mosaicId']; // will be used to filter transactions
-    console.log("TCL: CoinPriceChartPage -> this.mosaicId", this.mosaicId)
     this.coinId = this.navParams.data['coinId'];
     this.selectedAccount = this.navParams.data['selectedAccount'];
-    this.confirmedTransactions = this.navParams.data['transactions'];
+    this.confirmed = this.navParams.data['transactions'];
+
+    this.confirmed.forEach(confirmed => {
+      let mosaics = confirmed.mosaics;
+      mosaics.forEach(mosac => {
+        if(mosac.id.toHex() === this.mosaicHex){
+          this.confirmedTransactions.push(confirmed)
+        }
+      });
+    });
+    
+    if(this.confirmedTransactions.length < 1){
+      this.showEmptyMessage = true;
+    }
+    
     this.mosaicAmount = this.navParams.data['mosaicAmount']; 
     this.totalBalance = this.navParams.data['totalBalance'];
 
@@ -173,7 +185,7 @@ export class CoinPriceChartPage {
       if (this.coinId) {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
           this.selectedCoin = coin;
-          console.log("TCL: CoinPriceChartPage -> this.selectedCoin", this.selectedCoin)
+          // console.log("TCL: CoinPriceChartPage -> this.selectedCoin", this.selectedCoin)
         });
       }
 
@@ -284,16 +296,16 @@ export class CoinPriceChartPage {
   }
 
   getAccountInfo() {
-    console.info("Getting account information.", this.selectedAccount.address)
+    // console.info("Getting account information.", this.selectedAccount.address)
     try {
       this.nemProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
           if (accountInfo) {
             this.accountInfo = accountInfo;
-            console.log("accountInfo", this.accountInfo)
+            // console.log("accountInfo", this.accountInfo)
             // Check if account is a cosignatory of multisig account(s)
             if (this.accountInfo.cosignatories.length > 0) {
               // console.clear();
-              console.log("This is a multisig account");
+              // console.log("This is a multisig account");
               this.isMultisig = true;
             }
           }
