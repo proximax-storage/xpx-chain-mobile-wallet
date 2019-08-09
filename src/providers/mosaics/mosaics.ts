@@ -1,8 +1,10 @@
 import {Injectable} from "@angular/core";
-import {Mosaic, SimpleWallet} from "tsjs-xpx-chain-sdk";
+import {Mosaic, SimpleWallet, MosaicId} from "tsjs-xpx-chain-sdk";
 import {CoingeckoProvider} from "../coingecko/coingecko";
 import {Observable} from "rxjs";
 import { DefaultMosaic } from "../../models/default-mosaic";
+import { MosaicNames } from "tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames";
+import { ProximaxProvider } from "../proximax/proximax";
 
 /*
   Generated class for the MosaicsProvider provider.
@@ -13,8 +15,9 @@ import { DefaultMosaic } from "../../models/default-mosaic";
 @Injectable()
 export class MosaicsProvider {
   defaultMosaics = Array<DefaultMosaic>();
+  
 
-  constructor(private coingeckoProvider: CoingeckoProvider) {
+  constructor(private coingeckoProvider: CoingeckoProvider, private proximaxProvider: ProximaxProvider,) {
     console.log("Hello MosaicsProvider Provider");
     this.defaultMosaics = this.getDefaultMosaics();
   }
@@ -30,6 +33,10 @@ export class MosaicsProvider {
     ];
   }
 
+  async getMosaicNames(mosaicsId: MosaicId[]): Promise<MosaicNames[]> {
+    return await this.proximaxProvider.mosaicHttp.getMosaicNames(mosaicsId).toPromise();
+  }
+  
   public getMosaics(): Observable<Array<DefaultMosaic>> {
     return new Observable(observer => {
       let myMosaics = new Array<DefaultMosaic>();
@@ -63,7 +70,7 @@ export class MosaicsProvider {
     return modifiedMosaic;
   }
 
-  private getRelativeAmount(amount: number): number {
+  public getRelativeAmount(amount: number): number {
     return amount / Math.pow(10, 6);
   }
 

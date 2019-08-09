@@ -7,6 +7,7 @@ import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { TranslateService } from '@ngx-translate/core';
+import { WalletProvider } from '../../../../providers/wallet/wallet';
 
 /**
  * Generated class for the ContactAddPage page.
@@ -21,6 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: 'contact-add.html'
 })
 export class ContactAddPage {
+  msgErrorUnsupported: string;
   App = App;
   alfaNumberPattern = '^[a-zA-Z0-9\-\]+$';
   userTelegram = '^[a-zA-Z0-9@]+$';
@@ -34,9 +36,11 @@ export class ContactAddPage {
     public contactsProvider: ContactsProvider,
     private viewCtrl: ViewController,
     private proximaxProvider: ProximaxProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private walletProvider: WalletProvider
   ) {
     this.init();
+    this.subscribeValue();
   }
 
 
@@ -61,6 +65,37 @@ export class ContactAddPage {
     this.navCtrl.pop();
   }
 
+  subscribeValue() {
+    // Account recipient
+    this.formGroup.get('address').valueChanges.subscribe(
+      value => {
+        console.log('value', value)
+        const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
+        console.log('accountRecipient 1', accountRecipient)
+        // const accountSelected = (this.formGroup.get('contact').value) ? this.formGroup.get('contact').value.split('-').join('') : '';
+        // if ((accountSelected !== '') && (accountSelected !== accountRecipient)) {
+        //   this.formGroup.get('contact').patchValue('');
+        // }
+
+        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+          console.log('accountRecipient', accountRecipient)
+          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.wallet.plain(), accountRecipient)) {
+            // this.blockSendButton = true;
+            this.msgErrorUnsupported = 'Recipient Address Network unsupported';
+          } else {
+            // this.blockSendButton = false;
+            this.msgErrorUnsupported = '';
+          }
+        } else if (!this.formGroup.get('address').getError("required") && this.formGroup.get('address').valid) {
+          // this.blockSendButton = true;
+          this.msgErrorUnsupported = 'Recipient Address Network unsupported';
+        } else {
+          // this.blockSendButton = false;
+          this.msgErrorUnsupported = '';
+        }
+      }
+    );
+  }
   onSubmit(form) {
     const CONTACT_ADDRESS = this.formGroup.get('address').value.toUpperCase().replace('-', '');
    

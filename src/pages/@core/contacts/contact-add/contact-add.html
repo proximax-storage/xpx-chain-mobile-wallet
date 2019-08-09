@@ -43,6 +43,11 @@
             <ion-label stacked>{{"SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS" | translate}}</ion-label>
             <ion-textarea autosize row="1" formControlName="address" type="text" autocapitalize="none" placeholder=""></ion-textarea>
           </ion-item>
+          <div *ngIf="msgErrorUnsupported !== ''">
+            <!-- <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors"> -->
+              <strong style="color:red;">{{msgErrorUnsupported}}</strong>
+            <!-- </p> -->
+          </div>
           <!-- <p description>Example: <strong>TDDG3UDZBGZUIOCDCOPT45N...</strong></p> -->
 
           <ion-item transparent padding>

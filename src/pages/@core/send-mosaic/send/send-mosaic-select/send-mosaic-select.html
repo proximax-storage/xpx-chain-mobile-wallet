@@ -24,7 +24,8 @@
         <p text-uppercase ion-text color="black">{{ mosaic.namespaceId }}</p>
 
         <section item-right>
-          <h2 ion-text color="black">{{ mosaic.amount | number:'1.2' }}</h2>
+          <!-- <h2 ion-text color="black">{{ mosaic.amount | number:'1.2' }}</h2> -->
+          <h2 ion-text color="black">{{ mosaic.amount }}</h2>
           <p text-right text-left ion-text color="black"  *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
             <small>
               {{ mosaic.amount * marketPrice | currency : 'USD' : 'symbol' : '1.2-6' }}
