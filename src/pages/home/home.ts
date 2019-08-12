@@ -207,6 +207,7 @@ export class HomePage {
         this.showEmptyMessage();
       }
       this.hideLoaders();
+      loader.dismiss();
     });
   }
   showEmptyMessage() {
