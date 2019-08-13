@@ -23,10 +23,10 @@ export class MosaicsProvider {
   }
 
   getDefaultMosaics(): Array<DefaultMosaic> {
-    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: "0.000000" });
-    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000" });
-    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000" });
-    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000" });
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: 0 });
+    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: 0 });
+    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: 0 });
+    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: 0 });
 
     return [
       XPX, NPXS, SFT, XAR

@@ -4,9 +4,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController, Platform } from 'ionic-angular';
 import {
   SimpleWallet,
-  // XEM,
-  Address,
-  TransferTransaction,
   Password,
   Account, 
   AccountInfo
@@ -41,6 +38,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SendPage {
 
+  msgErrorBalance: any;
   msgErrorUnsupported: any;
   mosaicWallet: any[];
   mosaics: any=[];
@@ -256,6 +254,20 @@ export class SendPage {
     }
     }
     );
+
+    this.form.get('amount').valueChanges.subscribe(
+      value => {
+        // console.log('amount', parseFloat(value))
+        // console.log('this.mosaics', this.mosaics.amount)
+        if(value > this.mosaics.amount){
+          this.msgErrorBalance = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
+        } else {
+          this.msgErrorBalance = '';
+        }
+      }
+    );
+
+
     }
 
   onChangeFrom(val) {
@@ -311,6 +323,8 @@ export class SendPage {
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
   onSubmit() {
+
+
     if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
 
     if (
@@ -338,7 +352,7 @@ export class SendPage {
       // Check the validity of an address
       if (!this.proximaxProvider.isValidAddress(recipient)) {
         this.alertProvider.showMessage(
-          'This address does not belong to this network'
+          this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
         );
       } else { 
 
@@ -364,7 +378,7 @@ export class SendPage {
       }
     } catch (err) {
       this.alertProvider.showMessage(
-        'This address does not belong to this network'
+        this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
       );
     }
   }
@@ -384,8 +398,8 @@ export class SendPage {
       // this.storage.set('isModalShown', false);
     }).catch(err => {
       console.log('Error', err);
-      if (err.toString().indexOf('Access to the camera has been prohibited; please enable it in the Settings app to continue.') >= 0) {
-        let message = "Camera access is disabled. Please enable it in the Settings app."
+      if (err.toString().indexOf(this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")) >= 0) {
+        let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2")
         this.alertProvider.showMessage(message);
         // this.storage.set('isModalShown', false);
       }

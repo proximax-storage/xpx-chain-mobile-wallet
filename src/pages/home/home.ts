@@ -151,7 +151,7 @@ export class HomePage {
                   this.isLoading = false;
 
                   const mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
-                  console.log("mosaicsInfomosaicsInfomosaicsInfomosaicsInfomosaicsInfo", mosaicsInfo)
+                  // console.log("mosaicsInfo", mosaicsInfo)
                   await this.mosaicsProvider.getMosaicNames(mosaicsIds).then(mosaicsNames => {
                     mosacis.forEach(async mosacis => {
 
@@ -159,8 +159,8 @@ export class HomePage {
                         // console.log('------', mosaicsI)
                         if (mosacis.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
                           this.disivitity = mosaicsI
-                          console.log('------ mosaicsI', mosaicsI.mosaicId.id.toHex())
-                          console.log('------ este es el completo', this.disivitity)
+                          // console.log('------ mosaicsI', mosaicsI.mosaicId.id.toHex())
+                          // console.log('------ este es el completo', this.disivitity)
                         }
 
                       })
@@ -179,8 +179,8 @@ export class HomePage {
                           this.amount = this.mosaicsProvider.amountFormatter(mosacis.amount, this.disivitity)
                           this.hex = mosaicName.mosaicId.id.toHex()
                         }
-                        console.log('mosacis.amount', mosacis.amount.compact())
-                        console.log('amountamountamountamount', this.amount)
+                        // console.log('mosacis.amount', mosacis.amount.compact())
+                        // console.log('amountamountamountamount', this.amount)
 
                         this.mosaicInfo = {
                           mosaicId: this.mosaicName[1],

@@ -29,7 +29,7 @@ export class SendMosaicSelectPage {
 
   selectedMosaic: any;
   // mosaics: Array<any>;
-  mosaics: any=[];
+  mosaics: any[]=[];
 
   selectedWallet: SimpleWallet;
 
