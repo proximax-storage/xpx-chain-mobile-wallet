@@ -176,7 +176,7 @@ export class HomePage {
                           } else {
                             this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
                           }
-                          this.amount = this.mosaicsProvider.amountFormatter(mosacis.amount, this.disivitity)
+                          this.amount = this.mosaicsProvider.amountFormatter(mosacis.amount, this.disivitity).toString();
                           this.hex = mosaicName.mosaicId.id.toHex()
                         }
                         // console.log('mosacis.amount', mosacis.amount.compact())
