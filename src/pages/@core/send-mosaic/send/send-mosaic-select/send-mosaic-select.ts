@@ -5,8 +5,9 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { App } from '../../../../../providers/app/app';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
-import { SimpleWallet, Address } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Address, MosaicInfo } from 'tsjs-xpx-chain-sdk';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the SendMosaicSelectPage page.
@@ -21,6 +22,8 @@ import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
   templateUrl: 'send-mosaic-select.html'
 })
 export class SendMosaicSelectPage {
+  disivitity: MosaicInfo;
+  mosaic: any[]=[];
   selectedMosaicc: any;
   App = App;
 
@@ -41,20 +44,23 @@ export class SendMosaicSelectPage {
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
+    private proximaxProvider: ProximaxProvider,
   ) {
     this.fakeList = [{}, {}];
-    // this.walletAddress =  this.navParams.data.walletAddress;
     this.selectedMosaicc = this.navParams.data.selectedMosaic;
-
-    // console.log('wallet....', this.walletAddress)
-    // console.log("Nav params walletAddress", this.navParams.data.walletAddress);
-    // console.log("Nav params selectedMosaic", this.navParams.data.selectedMosaic);
-    // console.log('this.selectedMosaicc....', this.selectedMosaicc)
   }
 
   ionViewWillEnter() {
-    this.selectedMosaicc.forEach(mosaics => { 
-      const mosaicInfo= this.mosaicsProvider.setMosaicInfo(mosaics);
+    this.selectedMosaicc.forEach(async mosaics => { 
+      this.mosaic.push(mosaics.id)
+
+      const mosaicsInfo = await this.proximaxProvider.getMosaics(this.mosaic).toPromise();
+      mosaicsInfo.forEach(mosaicsI => {
+        if (mosaics.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
+        this.disivitity = mosaicsI
+        }
+      })
+      const mosaicInfo= this.mosaicsProvider.setMosaicInfoWithDisivitity(mosaics, this.disivitity);
       this.mosaics.push(mosaicInfo)
     })
   }
@@ -74,21 +80,5 @@ export class SendMosaicSelectPage {
   onSubmit() {
     this.viewCtrl.dismiss(this.selectedMosaic);
   }
-
-  /**
-   * Retrieves current account owned mosaics  into this.mosaics
-   */
-  // public getBalance(address: any) {
-  //   console.log('banalce address',  address)
-    // this.getBalanceProvider.mosaics(address).subscribe(mosaics => {
-    //   this.mosaics = mosaics;
-    //   this.selectedMosaic = this.mosaics[0];
-
-    //   if (this.mosaics.length > 0) {
-    //     this.selectedMosaic = this.navParams.get('selectedMosaic') || this.mosaics[0];
-    //   }
-    // });
-  // }
-
 
 }
