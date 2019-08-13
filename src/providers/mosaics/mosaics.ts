@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo} from "tsjs-xpx-chain-sdk";
 import {CoingeckoProvider} from "../coingecko/coingecko";
 import {Observable} from "rxjs";
-import { DefaultMosaic } from "../../models/default-mosaic";
+import { DefaultMosaic, DefaultMosaic2 } from "../../models/default-mosaic";
 import { MosaicNames } from "tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames";
 import { ProximaxProvider } from "../proximax/proximax";
 
@@ -15,6 +15,7 @@ import { ProximaxProvider } from "../proximax/proximax";
 @Injectable()
 export class MosaicsProvider {
   defaultMosaics = Array<DefaultMosaic>();
+  defaultMosaics2 = Array<DefaultMosaic2>();
   
 
   constructor(private coingeckoProvider: CoingeckoProvider, private proximaxProvider: ProximaxProvider,) {
@@ -33,6 +34,17 @@ export class MosaicsProvider {
     ];
   }
 
+  getDefaultMosaics2(): Array<DefaultMosaic2> {
+    const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: "0.000000" });
+    const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000"  });
+    const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000"  });
+    const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000"  });
+
+    return [
+      XPX, NPXS, SFT, XAR
+    ];
+  }
+
   async getMosaicNames(mosaicsId: MosaicId[]): Promise<MosaicNames[]> {
     return await this.proximaxProvider.mosaicHttp.getMosaicNames(mosaicsId).toPromise();
   }
@@ -45,15 +57,15 @@ export class MosaicsProvider {
     });
   }
 
-  public setMosaicInfoWithDisivitity(mosaic: Mosaic, disivitity: MosaicInfo): DefaultMosaic {
+  public setMosaicInfoWithDisivitity(mosaic: Mosaic, disivitity: MosaicInfo): DefaultMosaic2 {
 
-    let modifiedMosaic: DefaultMosaic;
-    let myMosaics = new Array<DefaultMosaic>();
-    myMosaics = this.defaultMosaics;
+    let modifiedMosaic: DefaultMosaic2;
+    let myMosaics = new Array<DefaultMosaic2>();
+    myMosaics = this.defaultMosaics2;
 
 
-    modifiedMosaic = myMosaics.find(defaultMosaic => {
-      return defaultMosaic.hex == mosaic.id.toHex();
+    modifiedMosaic = myMosaics.find(defaultMosaic2 => {
+      return defaultMosaic2.hex == mosaic.id.toHex();
     });
 
     if (!modifiedMosaic) {

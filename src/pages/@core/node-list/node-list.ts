@@ -26,9 +26,9 @@ export class NodeListPage {
   url: string;
   public blockHeight: number  = 0;
   public nodes: Array<any> = [
-    {name: "bcdev1.xpxsirius.io", endpoint:"18.236.176.247"},
-    {name: "bcstage1.xpxsirius.io", endpoint:"54.245.38.13"},
-    {name: "bctestnet1.xpxsirius.io", endpoint:"54.255.178.204"},
+    {name: "bctestnet2-cow.xpxsirius.io", endpoint:"54.189.186.124"},
+    {name: "bctestnet1-cow.xpxsirius.io", endpoint:"bctestnet1.xpxsirius.io"},
+    
 
     // {name: "hugealice.nem.ninja", endpoint:"88.99.192.82"},
     // {name: "hugealice2.nem.ninja", endpoint:"76.9.68.110"},

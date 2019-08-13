@@ -146,8 +146,12 @@ export class HomePage {
                 console.log("6. LOG: HomePage -> loadDefaultMosaics()")
                 myAssets.subscribe(async mosaics => {
                   this.mosaics = mosaics.slice(0);
-                  // this.amount = this.mosaicsProvider.getRelativeAmount(mosacis.amount.compact())
-                  console.log("6. LOG: HomePage -> this.mosaics", )
+
+                  this.mosaics.forEach(mosac => {
+                    if(mosac.amount == 0){
+                      mosac.amount = '0.000000'
+                    }
+                  });
                   this.isLoading = false;
 
                   const mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
