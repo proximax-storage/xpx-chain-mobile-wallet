@@ -111,7 +111,7 @@ export class MosaicsProvider {
     return amount / Math.pow(10, 6);
   }
 
-  public amountFormatter(amountParam: UInt64 | number, mosaic: MosaicInfo, manualDivisibility = '') : number {
+  public amountFormatter(amountParam: UInt64 | number, mosaic: MosaicInfo, manualDivisibility = '') {
     // console.log('.............................', mosaic['properties'].divisibility )
     const divisibility = (manualDivisibility === '') ? mosaic['properties'].divisibility : manualDivisibility;
     const amount = (typeof (amountParam) === 'number') ? amountParam : amountParam.compact();
@@ -122,7 +122,7 @@ export class MosaicsProvider {
     const amountFormatter = amountDivisibility.toLocaleString("en-us", {
       minimumFractionDigits: divisibility
     });
-    return parseInt(amountFormatter);
+    return amountFormatter;
   }
 
   public getMosaicInfo(mosaic: Mosaic) {
