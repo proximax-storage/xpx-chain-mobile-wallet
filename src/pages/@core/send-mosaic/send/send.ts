@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { MosaicsProvider } from '../../../../providers/mosaics/mosaics';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the SendPage page.
@@ -40,6 +41,7 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 })
 export class SendPage {
 
+  msgErrorUnsupported: any;
   mosaicWallet: any[];
   mosaics: any=[];
   App = App;
@@ -75,7 +77,8 @@ export class SendPage {
     public platform: Platform,
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
-    private proximaxProvider: ProximaxProvider
+    private proximaxProvider: ProximaxProvider,
+    private translateService: TranslateService,
   ) {
     this.mosaicSelectedName = this.navParams.get('mosaicSelectedName');
 
@@ -86,6 +89,7 @@ export class SendPage {
 
 
     this.init();
+    this.subscribeValue();
   }
 
   ionViewWillEnter() {
@@ -193,15 +197,15 @@ export class SendPage {
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: '',
-      senderAddress: ['', Validators.required],
+      senderAddress: [''],
 
       recipientName: '',
       recipientAddress: ['', Validators.required],
 
       isMosaicTransfer: [false, Validators.required],
-      message: ['', Validators.required],
+      message: [''],
       amount: ['', Validators.required],
-      fee: ['', Validators.required]
+      fee: ['']
     });
 
     // Initialize source type of NEM address in from and to
@@ -220,6 +224,39 @@ export class SendPage {
     this.fee = 0;
     this.amount = null;
   }
+
+
+  subscribeValue() {
+    // Account recipient
+    this.form.get('recipientAddress').valueChanges.subscribe(
+    value => {
+    console.log('value', value)
+    const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
+    console.log('accountRecipient 1', accountRecipient)
+    // const accountSelected = (this.formGroup.get('contact').value) ? this.formGroup.get('contact').value.split('-').join('') : '';
+    // if ((accountSelected !== '') && (accountSelected !== accountRecipient)) {
+    // this.formGroup.get('contact').patchValue('');
+    // }
+    
+    if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+    console.log('accountRecipient', accountRecipient)
+    if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.wallet.plain(), accountRecipient)) {
+    // this.blockSendButton = true;
+    this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+    } else {
+    // this.blockSendButton = false;
+    this.msgErrorUnsupported = '';
+    }
+    } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
+    // this.blockSendButton = true;
+    this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+    } else {
+    // this.blockSendButton = false;
+    this.msgErrorUnsupported = '';
+    }
+    }
+    );
+    }
 
   onChangeFrom(val) {
     if (val === 'manual') {
@@ -306,6 +343,9 @@ export class SendPage {
       } else { 
 
         // Compute total
+        // let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
+        const prueba = this.selectedCoin.market_data.current_price.usd ;
+        console.log('por este multiploca',prueba)
         let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
 
         // Show confirm transaction

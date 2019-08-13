@@ -81,6 +81,7 @@
     "WALLETS.SEND.AMOUNT" : "Количество",
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT":"Выберите мультиподписной аккаунт",
     "WALLETS.SEND.ADDRESS" : "Адрес",
+    "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "Адресная сеть получателя не поддерживается.",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "Параметры ввода адреса",
     "WALLETS.SEND.ADDRESS.OPTION1" : "Ввести  вручную",
     "WALLETS.SEND.ADDRESS.OPTION2" : "Выбрать из адресной книги",

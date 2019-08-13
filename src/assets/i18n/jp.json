@@ -81,6 +81,7 @@
     "WALLETS.SEND.AMOUNT" : "合計",
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT":"相互署名アカウントを選択する",
     "WALLETS.SEND.ADDRESS" : "アドレス",
+    "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "受信者のアドレスネットワークはサポートされていません。",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "アドレス 入力オプション",
     "WALLETS.SEND.ADDRESS.OPTION1" : "マニュアル入力",
     "WALLETS.SEND.ADDRESS.OPTION2" : "アドレス帳から選択",

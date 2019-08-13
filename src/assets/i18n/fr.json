@@ -81,6 +81,7 @@
     "WALLETS.SEND.AMOUNT" : "Quantité",
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT":"Sélectionnez un compte multisig",
     "WALLETS.SEND.ADDRESS" : "Addresse",
+    "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "Le réseau d'adresses du destinataire n'est pas pris en charge.",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "Options de saisie d'adresse",
     "WALLETS.SEND.ADDRESS.OPTION1" : "Entrer manuellement",
     "WALLETS.SEND.ADDRESS.OPTION2" : "Sélectionner dans le carnet d'adresses",

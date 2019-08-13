@@ -81,6 +81,7 @@
     "WALLETS.SEND.AMOUNT" : "Hoeveelheid",
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT": "Selecteer multi-handtekening account",
     "WALLETS.SEND.ADDRESS" : "Adres",
+    "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "Het adresnetwerk van de ontvanger wordt niet ondersteund.",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "Adres invoeropties",
     "WALLETS.SEND.ADDRESS.OPTION1" : "Handmatig invoeren",
     "WALLETS.SEND.ADDRESS.OPTION2" : "Selecteer vanuit adressenboek",

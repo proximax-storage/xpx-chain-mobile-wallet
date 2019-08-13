@@ -117,6 +117,11 @@
           </button>
         </ion-item>
       </ion-card>
+      <div *ngIf="msgErrorUnsupported !== ''">
+          <!-- <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors"> -->
+            <strong style="color:red;padding-left: 2rem;">{{msgErrorUnsupported}}</strong>
+          <!-- </p> -->
+        </div>
 
       <!-- Note -->
       <ion-card>
@@ -131,7 +136,7 @@
   </ion-list>
 
   <section text-center>
-    <button gradient-button half color-6 ion-button icon-end no-margin (click)="onSubmit()">
+    <button gradient-button half color-6 ion-button icon-end no-margin [disabled]="msgErrorUnsupported" (click)="onSubmit()">
         {{"WALLETS.SEND" | translate}}
       <ion-icon name="arrow-round-up"></ion-icon>
     </button>

@@ -82,6 +82,7 @@
     "WALLETS.SEND.AMOUNT" : "Amount",
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT":"Select a multisig account",
     "WALLETS.SEND.ADDRESS" : "Address",
+    "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "Recipient Address Network unsupported",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "Address input options",
     "WALLETS.SEND.ADDRESS.OPTION1" : "Enter manually",
     "WALLETS.SEND.ADDRESS.OPTION2" : "Select from address book",

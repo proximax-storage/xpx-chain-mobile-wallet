@@ -78,6 +78,7 @@
     "WALLETS.SEND.AMOUNT" : "금액",
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT":"다중 서명 계정을 선택해 주십시오",
     "WALLETS.SEND.ADDRESS" : "주소",
+    "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "수신자의 주소 네트워크가 지원되지 않습니다",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "주소 기입 선택 사항 ",
     "WALLETS.SEND.ADDRESS.OPTION1" : "매뉴얼 기입",
     "WALLETS.SEND.ADDRESS.OPTION2" : "주소록에서 선택",

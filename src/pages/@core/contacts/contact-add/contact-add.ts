@@ -81,14 +81,14 @@ export class ContactAddPage {
           console.log('accountRecipient', accountRecipient)
           if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.wallet.plain(), accountRecipient)) {
             // this.blockSendButton = true;
-            this.msgErrorUnsupported = 'Recipient Address Network unsupported';
+            this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
           } else {
             // this.blockSendButton = false;
             this.msgErrorUnsupported = '';
           }
         } else if (!this.formGroup.get('address').getError("required") && this.formGroup.get('address').valid) {
           // this.blockSendButton = true;
-          this.msgErrorUnsupported = 'Recipient Address Network unsupported';
+          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
           // this.blockSendButton = false;
           this.msgErrorUnsupported = '';

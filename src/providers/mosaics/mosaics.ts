@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Mosaic, SimpleWallet, MosaicId} from "tsjs-xpx-chain-sdk";
+import {Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo} from "tsjs-xpx-chain-sdk";
 import {CoingeckoProvider} from "../coingecko/coingecko";
 import {Observable} from "rxjs";
 import { DefaultMosaic } from "../../models/default-mosaic";
@@ -23,10 +23,10 @@ export class MosaicsProvider {
   }
 
   getDefaultMosaics(): Array<DefaultMosaic> {
-    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: 0 });
-    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: 0 });
-    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: 0 });
-    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: 0 });
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: "0.000000" });
+    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000" });
+    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000" });
+    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000" });
 
     return [
       XPX, NPXS, SFT, XAR
@@ -72,6 +72,20 @@ export class MosaicsProvider {
 
   public getRelativeAmount(amount: number): number {
     return amount / Math.pow(10, 6);
+  }
+
+  public amountFormatter(amountParam: UInt64 | number, mosaic: MosaicInfo, manualDivisibility = '') {
+    console.log('.............................', mosaic['properties'].divisibility )
+    const divisibility = (manualDivisibility === '') ? mosaic['properties'].divisibility : manualDivisibility;
+    const amount = (typeof (amountParam) === 'number') ? amountParam : amountParam.compact();
+    const amountDivisibility = Number(
+      amount / Math.pow(10, divisibility)
+    );
+
+    const amountFormatter = amountDivisibility.toLocaleString("en-us", {
+      minimumFractionDigits: divisibility
+    });
+    return amountFormatter;
   }
 
   public getMosaicInfo(mosaic: Mosaic) {
