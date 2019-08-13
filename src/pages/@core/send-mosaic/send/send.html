@@ -54,8 +54,11 @@
       <section total text-center>
         <h2 price ion-text color="black" *ngIf="selectedCoin">
           ≈ {{ selectedCoin?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }}</h2>
-      </section>
-
+          <div *ngIf="msgErrorBalance !== ''">
+                <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
+            </div>
+        </section>
+      
 
       <!-- Mosaic -->
       <!-- (click)="selectMosaic()" -->
@@ -78,6 +81,7 @@
           </section>
         </ion-item>
       </ion-card>
+      
       <ion-card no-margin-bottom fake-card *ngIf="!mosaics">
         <ion-item text-center>
           <ion-spinner name="dots"></ion-spinner>
@@ -117,6 +121,11 @@
           </button>
         </ion-item>
       </ion-card>
+      <div *ngIf="msgErrorUnsupported !== ''">
+          <!-- <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors"> -->
+            <strong style="color:red;padding-left: 2rem;">{{msgErrorUnsupported}}</strong>
+          <!-- </p> -->
+        </div>
 
       <!-- Note -->
       <ion-card>
@@ -131,7 +140,7 @@
   </ion-list>
 
   <section text-center>
-    <button gradient-button half color-6 ion-button icon-end no-margin (click)="onSubmit()">
+    <button gradient-button half color-6 ion-button icon-end no-margin [disabled]="msgErrorBalance || msgErrorUnsupported" (click)="onSubmit()">
         {{"WALLETS.SEND" | translate}}
       <ion-icon name="arrow-round-up"></ion-icon>
     </button>

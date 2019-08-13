@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Mosaic, SimpleWallet, MosaicId} from "tsjs-xpx-chain-sdk";
+import {Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo} from "tsjs-xpx-chain-sdk";
 import {CoingeckoProvider} from "../coingecko/coingecko";
 import {Observable} from "rxjs";
 import { DefaultMosaic } from "../../models/default-mosaic";
@@ -45,6 +45,31 @@ export class MosaicsProvider {
     });
   }
 
+  public setMosaicInfoWithDisivitity(mosaic: Mosaic, disivitity: MosaicInfo): DefaultMosaic {
+
+    let modifiedMosaic: DefaultMosaic;
+    let myMosaics = new Array<DefaultMosaic>();
+    myMosaics = this.defaultMosaics;
+
+
+    modifiedMosaic = myMosaics.find(defaultMosaic => {
+      return defaultMosaic.hex == mosaic.id.toHex();
+    });
+
+    if (!modifiedMosaic) {
+      return {
+        amount: this.amountFormatter(mosaic.amount, disivitity),
+        hex: mosaic.id.toHex(),
+        mosaicId: mosaic.id.toHex(),
+        namespaceId: mosaic.id.toHex()
+      };
+    } else {
+      modifiedMosaic.amount = this.amountFormatter(mosaic.amount, disivitity);
+    }
+
+    return modifiedMosaic;
+  }
+
   public setMosaicInfo(mosaic: Mosaic): DefaultMosaic {
 
     let modifiedMosaic: DefaultMosaic;
@@ -72,6 +97,20 @@ export class MosaicsProvider {
 
   public getRelativeAmount(amount: number): number {
     return amount / Math.pow(10, 6);
+  }
+
+  public amountFormatter(amountParam: UInt64 | number, mosaic: MosaicInfo, manualDivisibility = '') {
+    // console.log('.............................', mosaic['properties'].divisibility )
+    const divisibility = (manualDivisibility === '') ? mosaic['properties'].divisibility : manualDivisibility;
+    const amount = (typeof (amountParam) === 'number') ? amountParam : amountParam.compact();
+    const amountDivisibility = Number(
+      amount / Math.pow(10, divisibility)
+    );
+
+    const amountFormatter = amountDivisibility.toLocaleString("en-us", {
+      minimumFractionDigits: divisibility
+    });
+    return amountFormatter;
   }
 
   public getMosaicInfo(mosaic: Mosaic) {

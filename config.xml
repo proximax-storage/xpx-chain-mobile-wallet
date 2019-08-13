@@ -85,7 +85,7 @@
 	</platform>
 	<hook src="scripts/incrementBuildNum.js" type="after_build"/>
 	<engine name="android" spec="^7.0.0"/>
-	<engine name="ios" spec="^4.4.0"/>
+	<engine name="ios" spec="4.5.5"/>
 	<plugin name="com.darktalker.cordova.screenshot" spec="^0.1.6"/>
 	<plugin name="cordova-clipboard" spec="^1.2.1"/>
 	<plugin name="cordova-plugin-app-version" spec="^0.1.9"/>

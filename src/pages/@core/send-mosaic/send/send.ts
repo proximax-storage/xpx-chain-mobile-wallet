@@ -4,9 +4,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController, Platform } from 'ionic-angular';
 import {
   SimpleWallet,
-  // XEM,
-  Address,
-  TransferTransaction,
   Password,
   Account, 
   AccountInfo
@@ -25,6 +22,7 @@ import { Observable } from 'rxjs';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { MosaicsProvider } from '../../../../providers/mosaics/mosaics';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the SendPage page.
@@ -40,6 +38,8 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 })
 export class SendPage {
 
+  msgErrorBalance: any;
+  msgErrorUnsupported: any;
   mosaicWallet: any[];
   mosaics: any=[];
   App = App;
@@ -75,7 +75,8 @@ export class SendPage {
     public platform: Platform,
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
-    private proximaxProvider: ProximaxProvider
+    private proximaxProvider: ProximaxProvider,
+    private translateService: TranslateService,
   ) {
     this.mosaicSelectedName = this.navParams.get('mosaicSelectedName');
 
@@ -86,6 +87,7 @@ export class SendPage {
 
 
     this.init();
+    this.subscribeValue();
   }
 
   ionViewWillEnter() {
@@ -193,15 +195,15 @@ export class SendPage {
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: '',
-      senderAddress: ['', Validators.required],
+      senderAddress: [''],
 
       recipientName: '',
       recipientAddress: ['', Validators.required],
 
       isMosaicTransfer: [false, Validators.required],
-      message: ['', Validators.required],
+      message: [''],
       amount: ['', Validators.required],
-      fee: ['', Validators.required]
+      fee: ['']
     });
 
     // Initialize source type of NEM address in from and to
@@ -220,6 +222,53 @@ export class SendPage {
     this.fee = 0;
     this.amount = null;
   }
+
+
+  subscribeValue() {
+    // Account recipient
+    this.form.get('recipientAddress').valueChanges.subscribe(
+    value => {
+    console.log('value', value)
+    const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
+    console.log('accountRecipient 1', accountRecipient)
+    // const accountSelected = (this.formGroup.get('contact').value) ? this.formGroup.get('contact').value.split('-').join('') : '';
+    // if ((accountSelected !== '') && (accountSelected !== accountRecipient)) {
+    // this.formGroup.get('contact').patchValue('');
+    // }
+    
+    if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+    console.log('accountRecipient', accountRecipient)
+    if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.wallet.plain(), accountRecipient)) {
+    // this.blockSendButton = true;
+    this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+    } else {
+    // this.blockSendButton = false;
+    this.msgErrorUnsupported = '';
+    }
+    } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
+    // this.blockSendButton = true;
+    this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+    } else {
+    // this.blockSendButton = false;
+    this.msgErrorUnsupported = '';
+    }
+    }
+    );
+
+    this.form.get('amount').valueChanges.subscribe(
+      value => {
+        // console.log('amount', parseFloat(value))
+        // console.log('this.mosaics', this.mosaics.amount)
+        if(value > this.mosaics.amount){
+          this.msgErrorBalance = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
+        } else {
+          this.msgErrorBalance = '';
+        }
+      }
+    );
+
+
+    }
 
   onChangeFrom(val) {
     if (val === 'manual') {
@@ -274,6 +323,8 @@ export class SendPage {
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
   onSubmit() {
+
+
     if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
 
     if (
@@ -301,11 +352,14 @@ export class SendPage {
       // Check the validity of an address
       if (!this.proximaxProvider.isValidAddress(recipient)) {
         this.alertProvider.showMessage(
-          'This address does not belong to this network'
+          this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
         );
       } else { 
 
         // Compute total
+        // let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
+        const prueba = this.selectedCoin.market_data.current_price.usd ;
+        console.log('por este multiploca',prueba)
         let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
 
         // Show confirm transaction
@@ -324,7 +378,7 @@ export class SendPage {
       }
     } catch (err) {
       this.alertProvider.showMessage(
-        'This address does not belong to this network'
+        this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
       );
     }
   }
@@ -344,8 +398,8 @@ export class SendPage {
       // this.storage.set('isModalShown', false);
     }).catch(err => {
       console.log('Error', err);
-      if (err.toString().indexOf('Access to the camera has been prohibited; please enable it in the Settings app to continue.') >= 0) {
-        let message = "Camera access is disabled. Please enable it in the Settings app."
+      if (err.toString().indexOf(this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")) >= 0) {
+        let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2")
         this.alertProvider.showMessage(message);
         // this.storage.set('isModalShown', false);
       }
