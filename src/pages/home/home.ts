@@ -128,6 +128,13 @@ export class HomePage {
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
           console.log("2. Selected wallet:", selectedWallet);
 
+          // Slide to selected wallet
+          this.wallets.forEach((wallet,index)=> {
+            if(selectedWallet.name === wallet.name) {
+              this.slides.slideTo(index);
+            }
+          })
+
           this.selectedWallet = selectedWallet ? selectedWallet : wallets[0];
           console.log("3. LOG: HomePage -> ionViewWillEnter -> myWallet", this.selectedWallet);
 
