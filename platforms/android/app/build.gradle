@@ -91,10 +91,10 @@ ext {
 }
 
 // PLUGIN GRADLE EXTENSIONS START
-apply from: "../phonegap-plugin-barcodescanner/siriuschainwallet-barcodescanner.gradle"
 apply from: "../cordova-plugin-browsertab/siriuschainwallet-BrowserTab.gradle"
 apply from: "../cordova-plugin-safariviewcontroller/siriuschainwallet-SafariViewController-java18.gradle"
 apply from: "../onesignal-cordova-plugin/siriuschainwallet-build-extras-onesignal.gradle"
+apply from: "../phonegap-plugin-barcodescanner/siriuschainwallet-barcodescanner.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()
@@ -263,14 +263,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     // SUB-PROJECT DEPENDENCIES START
     implementation(project(path: ":CordovaLib"))
-    compile "com.android.support:support-annotations:27.+"
-    compile "com.android.support:support-v4:24.1.1+"
+    compile "com.android.support:customtabs:23.3.0"
     compile "com.android.support:support-v4:25.+"
     compile "com.android.support:appcompat-v7:25.+"
-    compile "com.android.support:support-v4:27.+"
-    compile "com.android.support:customtabs:23.3.0"
+    compile "com.android.support:support-annotations:27.+"
     compile "com.android.support:customtabs:23.2.0"
+    compile "com.android.support:support-v4:24.1.1+"
     compile "com.onesignal:OneSignal:3.11.1"
+    compile "com.android.support:support-v4:27.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 
