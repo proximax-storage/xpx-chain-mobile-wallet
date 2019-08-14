@@ -11,6 +11,7 @@ import {
   MosaicAmountView,
   MosaicHttp,
   MosaicId,
+  MosaicInfo,
   MosaicService,
   NamespaceHttp,
   NamespaceService,
@@ -113,6 +114,9 @@ export class ProximaxProvider {
     return Account.createFromPrivateKey(privateKey, net).publicAccount;
   }
 
+  getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
+    return this.mosaicHttp.getMosaics(mosaicIsd);
+  }
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
     return from([]);
     // return this.mosaicHttp.getMosaicNames(mosaicIds);

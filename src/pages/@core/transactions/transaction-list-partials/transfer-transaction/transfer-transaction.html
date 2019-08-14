@@ -30,11 +30,11 @@
       </h2>
 
       <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient.plain() && AMOUNT !== 0">
-        +{{ AMOUNT | number: '1.6-6' }}
+        +{{ AMOUNT  }}
       </h2>
 
       <h2 text-right ion-text color="danger" *ngIf="owner != tx?.recipient.plain()  && AMOUNT !== 0">
-         -{{ AMOUNT | number: '1.6-6' }}
+         -{{ AMOUNT }}
       </h2>
 
       <p text-right  ion-text color="black">

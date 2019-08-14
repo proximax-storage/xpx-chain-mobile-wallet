@@ -8,12 +8,13 @@ import { AlertProvider } from '../../providers/alert/alert';
 import { HapticProvider } from '../../providers/haptic/haptic';
 import { GetMarketPricePipe } from '../../pipes/get-market-price/get-market-price';
 import { TranslateService } from '@ngx-translate/core';
-import { SimpleWallet, Mosaic, Password, Account, AccountInfo, TransactionType, Transaction } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Mosaic, Password, Account, AccountInfo, TransactionType, Transaction, MosaicInfo } from 'tsjs-xpx-chain-sdk';
 import { AuthProvider } from '../../providers/auth/auth';
 import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
 import { Observable } from 'rxjs';
 import { animate, style, transition, trigger } from "@angular/animations";
+import { ProximaxProvider } from '../../providers/proximax/proximax';
 
 @Component({
   selector: 'page-home',
@@ -32,10 +33,13 @@ import { animate, style, transition, trigger } from "@angular/animations";
   providers: [GetMarketPricePipe]
 })
 export class HomePage {
+  mosaicInfo: { mosaicId: string; namespaceId: string; hex: string; amount: string; disivitity: any; };
+  amount: string;
+  disivitity: MosaicInfo;
   hex: string;
-  mosaicInfo: { mosaicId: string; namespaceId: string; hex: string; amount: number; };
+
   mosaicName: string[];
-  amount: number;
+
 
   @ViewChild(Slides) slides: Slides;
 
@@ -81,7 +85,8 @@ export class HomePage {
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    private proximaxProvider: ProximaxProvider,
   ) {
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
@@ -136,19 +141,34 @@ export class HomePage {
                 const mosacis = accountInfo.mosaics
                 const mosaicsIds = mosacis.map(data => data.id);
 
-
-
                 // Load default mosaics
                 const myAssets = this.loadDefaultMosaics();
                 console.log("6. LOG: HomePage -> loadDefaultMosaics()")
-
                 myAssets.subscribe(async mosaics => {
-                  this.mosaics = mosaics;
+                  this.mosaics = mosaics.slice(0);
+
+                  this.mosaics.forEach(mosac => {
+                    if(mosac.amount == 0){
+                      mosac.amount = '0.000000'
+                    }
+                  });
                   this.isLoading = false;
 
+                  const mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
+                  // console.log("mosaicsInfo", mosaicsInfo)
                   await this.mosaicsProvider.getMosaicNames(mosaicsIds).then(mosaicsNames => {
-                    mosacis.forEach(mosacis => {
+                    mosacis.forEach(async mosacis => {
 
+                      mosaicsInfo.forEach(mosaicsI => {
+                        // console.log('------', mosaicsI)
+                        if (mosacis.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
+                          this.disivitity = mosaicsI
+                          // console.log('------ mosaicsI', mosaicsI.mosaicId.id.toHex())
+                          // console.log('------ este es el completo', this.disivitity)
+                        }
+
+                      })
+                      
                       mosaicsNames.forEach(mosaicName => {
 
                         if (mosacis.id.toHex() === mosaicName.mosaicId.id.toHex()) {
@@ -160,18 +180,21 @@ export class HomePage {
                           } else {
                             this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
                           }
-                          this.amount = this.mosaicsProvider.getRelativeAmount(mosacis.amount.compact())
+                          this.amount = this.mosaicsProvider.amountFormatter(mosacis.amount, this.disivitity).toString();
                           this.hex = mosaicName.mosaicId.id.toHex()
                         }
+                        // console.log('mosacis.amount', mosacis.amount.compact())
+                        // console.log('amountamountamountamount', this.amount)
 
                         this.mosaicInfo = {
                           mosaicId: this.mosaicName[1],
                           namespaceId: this.mosaicName[0],
                           hex: this.hex,
-                          amount: this.amount
+                          amount: this.amount,
+                          disivitity: this.disivitity['properties'].divisibility
                         }
-
                       })
+                   
                       let filter = this.mosaics.filter(mosaic => mosaic.hex === this.mosaicInfo.hex)
                       if (filter.length == 0) {
                         this.mosaics.push(this.mosaicInfo)
@@ -211,6 +234,7 @@ export class HomePage {
         this.showEmptyMessage();
       }
       this.hideLoaders();
+      loader.dismiss();
     });
   }
   showEmptyMessage() {
@@ -396,8 +420,10 @@ export class HomePage {
   }
 
   public gotoCoinPrice(mosaic) {
-    console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
-    console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
+
+    console.log('mosaicmosaicmosaic', mosaic)
+    // console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
+    // console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
 
     let coinId: string;
 
@@ -413,11 +439,12 @@ export class HomePage {
     }
 
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
-      console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
+      // console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       let totalBalance = mosaic.amount * price;
-      console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
+      // console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
       let page = "CoinPriceChartPage";
       const modal = this.modalCtrl.create(page, {
+        mosaicHex: mosaic.hex,
         mosaicId: mosaic.mosaicId,
         coinId: coinId,
         selectedAccount: this.selectedWallet,
