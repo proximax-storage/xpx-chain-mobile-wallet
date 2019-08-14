@@ -222,15 +222,18 @@ export class HomePage {
                   this.hideLoaders();
                 })
               }, err => {
+                this.hideLoaders();
                 this.showEmptyMessage();
               })
             } catch (error) {
+              this.hideLoaders();
               this.showEmptyMessage();
             }
           })
         })
         this.hideEmptyMessage();
       } else {
+        this.hideLoaders();
         this.showEmptyMessage();
       }
       this.hideLoaders();

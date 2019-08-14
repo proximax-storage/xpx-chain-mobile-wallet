@@ -274,7 +274,7 @@ export class WalletProvider {
         let _wallets = wallets || {};
         const WALLETS = _wallets[username] || [];
         console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
-        this.wallet = WALLETS[0].wallet.address
+
         if (WALLETS) {
           const walletsMap = WALLETS.map(walletFile => {
           console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
