@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo} from "tsjs-xpx-chain-sdk";
-import {CoingeckoProvider} from "../coingecko/coingecko";
-import {Observable} from "rxjs";
+import { Injectable } from "@angular/core";
+import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo } from "tsjs-xpx-chain-sdk";
+import { CoingeckoProvider } from "../coingecko/coingecko";
+import { Observable } from "rxjs";
 import { DefaultMosaic, DefaultMosaic2 } from "../../models/default-mosaic";
 import { MosaicNames } from "tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames";
 import { ProximaxProvider } from "../proximax/proximax";
@@ -14,11 +14,17 @@ import { ProximaxProvider } from "../proximax/proximax";
 */
 @Injectable()
 export class MosaicsProvider {
+  mosaics: any[]=[];
+  mosaicInfo: { mosaicId: string; namespaceId: string; hex: string; amount: any; disivitity: any; };
+  hex: string;
+  amount: any;
+  mosaicName: string[];
+  disivitity: MosaicInfo;
   defaultMosaics = Array<DefaultMosaic>();
   defaultMosaics2 = Array<DefaultMosaic2>();
-  
 
-  constructor(private coingeckoProvider: CoingeckoProvider, private proximaxProvider: ProximaxProvider,) {
+
+  constructor(private coingeckoProvider: CoingeckoProvider, private proximaxProvider: ProximaxProvider, ) {
     console.log("Hello MosaicsProvider Provider");
     this.defaultMosaics = this.getDefaultMosaics();
   }
@@ -36,9 +42,9 @@ export class MosaicsProvider {
 
   getDefaultMosaics2(): Array<DefaultMosaic2> {
     const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: "0.000000" });
-    const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000"  });
-    const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000"  });
-    const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000"  });
+    const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000" });
+    const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000" });
+    const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000" });
 
     return [
       XPX, NPXS, SFT, XAR
@@ -48,7 +54,7 @@ export class MosaicsProvider {
   async getMosaicNames(mosaicsId: MosaicId[]): Promise<MosaicNames[]> {
     return await this.proximaxProvider.mosaicHttp.getMosaicNames(mosaicsId).toPromise();
   }
-  
+
   public getMosaics(): Observable<Array<DefaultMosaic>> {
     return new Observable(observer => {
       let myMosaics = new Array<DefaultMosaic>();
@@ -133,7 +139,7 @@ export class MosaicsProvider {
     modifiedMosaic = myMosaics.find(defaultMosaic => {
       return defaultMosaic.hex == mosaic.id.toHex();
     });
-    
+
     if (!modifiedMosaic) {
       return {
         amount: this.getRelativeAmount(mosaic.amount.compact()),
@@ -183,9 +189,9 @@ export class MosaicsProvider {
         const price = await this.getCoinPrice(mosaic.mosaicId);
         return price * mosaic.amount;
       })
-      
-      Promise.all(mosaicsAmountInUSD).then(function(pricesArray) {
-      console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
+
+      Promise.all(mosaicsAmountInUSD).then(function (pricesArray) {
+        console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
         const sum = pricesArray.reduce(getSum);
         console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> sum", sum)
         resolve(sum);
@@ -214,7 +220,7 @@ export class MosaicsProvider {
           return details.market_data.current_price.usd;
         })
         .catch((err) => {
-        console.log("LOG: MosaicsProvider -> getCoinPrice -> err", err);
+          console.log("LOG: MosaicsProvider -> getCoinPrice -> err", err);
           return returnZero();
         });
     } else {
@@ -227,6 +233,49 @@ export class MosaicsProvider {
       // Toss a coin
       return 0;
     }
+  }
+
+
+  async getArmedMosaic(mosacis) {
+    this.mosaics = [];
+    const mosaicsIds = mosacis.map(data => data.id);
+    const mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
+    await this.getMosaicNames(mosaicsIds).then(mosaicsNames => {
+      mosacis.forEach(async mosacis => {
+
+        mosaicsInfo.forEach(mosaicsI => {
+          if (mosacis.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
+            this.disivitity = mosaicsI
+          }
+        })
+
+        mosaicsNames.forEach(mosaicName => {
+
+          if (mosacis.id.toHex() === mosaicName.mosaicId.id.toHex()) {
+            let _mosaicNames = mosaicName.names
+            if (_mosaicNames.length > 0) {
+              _mosaicNames.map(val => {
+                this.mosaicName = val.split(".")
+              })
+            } else {
+              this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
+            }
+            this.amount = this.amountFormatter(mosacis.amount, this.disivitity).toString();
+            this.hex = mosaicName.mosaicId.id.toHex()
+          }
+
+          this.mosaicInfo = {
+            mosaicId: this.mosaicName[1],
+            namespaceId: this.mosaicName[0],
+            hex: this.hex,
+            amount: this.amount,
+            disivitity: this.disivitity['properties'].divisibility
+          }
+        })
+        this.mosaics.push(this.mosaicInfo)
+      })
+    })
+    return this.mosaics;
   }
 }
 

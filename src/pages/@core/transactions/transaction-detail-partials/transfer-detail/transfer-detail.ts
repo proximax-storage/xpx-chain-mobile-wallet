@@ -5,6 +5,7 @@ import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the TransferDetailComponent component.
@@ -19,17 +20,17 @@ import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 export class TransferDetailComponent {
   @Input() tx: any;
   App = App;
-
   owner: Address;
+  mosaics: any[] = [];
 
-  mosaics: any[]=[];
-
-  private _getMosaics() {
-      this.tx.mosaics.forEach(mosaic => {
-         const mosaicInfo= this.mosaicsProvider.setMosaicInfo(mosaic);
-        this.mosaics.push(mosaicInfo)
-        console.log('this.mosaics', this.mosaics)
-      });
+  private async _getMosaics() {
+    let filter = this.tx.mosaics.filter(mosaics => mosaics)
+    await this.mosaicsProvider.getArmedMosaic(filter).then(result => {
+      filter.forEach(mosaicsI => {
+        let filter2 = result.filter(mosaics => mosaics.hex === mosaicsI.id.toHex())
+        this.mosaics.push(filter2[0])
+      })
+    })
   }
 
   private _setOwner() {
@@ -42,10 +43,10 @@ export class TransferDetailComponent {
     private wallet: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
+    private proximaxProvider: ProximaxProvider,
   ) {
     // console.log(this.tx);
   }
-
 
   ngOnInit() {
     this._setOwner();

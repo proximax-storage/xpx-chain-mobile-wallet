@@ -96,7 +96,7 @@ export class UtilitiesProvider {
   getLogo(mosaic: any) {
     if (
       mosaic.namespaceId === 'prx' &&
-      mosaic.mosaicId === 'xpx'
+      mosaic.mosaicId === 'xpx' || mosaic.mosaicId ===  '0dc67fbe1cad29e3'
     ) {
       return AppConfig.LOGO.XPX;
     } else if (

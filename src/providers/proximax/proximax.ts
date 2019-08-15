@@ -117,6 +117,7 @@ export class ProximaxProvider {
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
+  
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
     return from([]);
     // return this.mosaicHttp.getMosaicNames(mosaicIds);

@@ -146,7 +146,7 @@ export class HomePage {
               this.getAccountInfo(account).subscribe(accountInfo => {
                 console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
                 const mosacis = accountInfo.mosaics
-                const mosaicsIds = mosacis.map(data => data.id);
+                // const mosaicsIds = mosacis.map(data => data.id);
 
                 // Load default mosaics
                 const myAssets = this.loadDefaultMosaics();
@@ -160,55 +160,14 @@ export class HomePage {
                     }
                   });
                   this.isLoading = false;
-
-                  const mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
-                  // console.log("mosaicsInfo", mosaicsInfo)
-                  await this.mosaicsProvider.getMosaicNames(mosaicsIds).then(mosaicsNames => {
-                    mosacis.forEach(async mosacis => {
-
-                      mosaicsInfo.forEach(mosaicsI => {
-                        // console.log('------', mosaicsI)
-                        if (mosacis.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
-                          this.disivitity = mosaicsI
-                          // console.log('------ mosaicsI', mosaicsI.mosaicId.id.toHex())
-                          // console.log('------ este es el completo', this.disivitity)
-                        }
-
-                      })
-                      
-                      mosaicsNames.forEach(mosaicName => {
-
-                        if (mosacis.id.toHex() === mosaicName.mosaicId.id.toHex()) {
-                          let _mosaicNames = mosaicName.names
-                          if (_mosaicNames.length > 0) {
-                            _mosaicNames.map(val => {
-                              this.mosaicName = val.split(".")
-                            })
-                          } else {
-                            this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
-                          }
-                          this.amount = this.mosaicsProvider.amountFormatter(mosacis.amount, this.disivitity).toString();
-                          this.hex = mosaicName.mosaicId.id.toHex()
-                        }
-                        // console.log('mosacis.amount', mosacis.amount.compact())
-                        // console.log('amountamountamountamount', this.amount)
-
-                        this.mosaicInfo = {
-                          mosaicId: this.mosaicName[1],
-                          namespaceId: this.mosaicName[0],
-                          hex: this.hex,
-                          amount: this.amount,
-                          disivitity: this.disivitity['properties'].divisibility
-                        }
-                      })
-                   
-                      let filter = this.mosaics.filter(mosaic => mosaic.hex === this.mosaicInfo.hex)
+                  await this.mosaicsProvider.getArmedMosaic(mosacis ).then(result => {
+                    result.forEach(element => {
+                        let filter = this.mosaics.filter(mosaic => mosaic.hex === element.hex)
                       if (filter.length == 0) {
-                        this.mosaics.push(this.mosaicInfo)
+                        this.mosaics.push(element)
                       }
-                    })
+                    });
                   })
-
                   // Update asset info
                   console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
                   this.updateAssetsInfo(accountInfo);

@@ -20,7 +20,7 @@ export class TransferTransactionComponent {
   AMOUNT: number = 0;
   MOSAIC_INFO: any;
   STATUS:string = '';
-
+  array: any[]=[];
 
   constructor(
     private mosaicsProvider: MosaicsProvider,
@@ -35,10 +35,21 @@ export class TransferTransactionComponent {
 
   }
 
-  getMosaicInfo() {
+  async getMosaicInfo() {
+    // console.log('this.tx.mosaics[0]', this.tx.mosaics[0].id);
+   
+    // console.log('this.array', this.array);
     this.MOSAIC_INFO = this.mosaicsProvider.getMosaicInfo(this.tx.mosaics[0]);
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
-    this.AMOUNT = this.MOSAIC_INFO.amount;
     this.STATUS = this.status;
+    this.array.push(this.tx.mosaics[0])
+    await this.mosaicsProvider.getArmedMosaic(this.array).then(valores => {
+      valores.forEach(element => {
+        this.MOSAIC_INFO = element;
+        this.AMOUNT = element.amount;
+      });
+      
+    });
+    // this.AMOUNT = this.MOSAIC_INFO.amount;
   }
 }
