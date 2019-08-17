@@ -11,6 +11,7 @@ import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
   templateUrl: 'transfer-transaction.html'
 })
 export class TransferTransactionComponent {
+  hiden: boolean;
   @Input() tx: TransferTransaction; // Type conversion for better code completion
   @Input() owner: string;
   @Input() status: string;
@@ -36,9 +37,6 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    // console.log('this.tx.mosaics[0]', this.tx.mosaics[0].id);
-   
-    // console.log('this.array', this.array);
     this.MOSAIC_INFO = this.mosaicsProvider.getMosaicInfo(this.tx.mosaics[0]);
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
@@ -47,9 +45,11 @@ export class TransferTransactionComponent {
       valores.forEach(element => {
         this.MOSAIC_INFO = element;
         this.AMOUNT = element.amount;
+        if(this.AMOUNT){
+          this.hiden = true;
+        }
       });
-      
+    
     });
-    // this.AMOUNT = this.MOSAIC_INFO.amount;
   }
 }
