@@ -14,7 +14,8 @@ import { ProximaxProvider } from "../proximax/proximax";
 */
 @Injectable()
 export class MosaicsProvider {
-  idMosaics: any[]=[];
+  mosacisAnt: any;
+  mosaicsInNamespace: any[]=[];
   mosaics: any[]=[];
   mosaicInfo: { mosaicId: string; namespaceId: string; hex: string; amount: any; disivitity: any; };
   hex: string;
@@ -211,9 +212,7 @@ export class MosaicsProvider {
       coinId = "pundi-x";
     }
     // Add more coins here
-
     if (coinId != undefined) {
-      // console.log("CoinId",coinId)
       return this.coingeckoProvider
         .getDetails(coinId)
         .toPromise()
@@ -240,50 +239,32 @@ export class MosaicsProvider {
    async getArmedMosaic(mosacis) {
     this.mosaics = [];
     const mosaicsIds = mosacis.map(data => data.id);
-    console.log('mosaicsIds ***************', mosaicsIds)
     let mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
-    // console.log('mosaicsInfomosaicsInfomosaicsInfo', mosaicsInfo)
     if(mosaicsInfo.length === 0) {
-
-      
-      mosaicsIds.forEach(async id => {
-        console.log('mosaicsIds in the for',id);
-        await this.proximaxProvider.getLinkedMosaicId(id).subscribe(ele => {
-          console.log('ele', ele);
-        })
-        
-        // getLinked.forEach(element => {
-        //   console.log('getLinked', element);
-        // });
-        // subscribe(_=> {
-        //   console.log('getLinked', _);
-        //   this.idMosaics.push(_)
-        // })
-      });
-
-      // console.log('this.idMosaics', this.idMosaics)
-      // mosaicsInfo = await this.proximaxProvider.getMosaics(this.idMosaics).toPromise();
-        // console.log('mosaicsInfo', mosaicsInfo)
-      // mosaicsInfo = await this.proximaxProvider.getMosaics(this.idMosaics).toPromise();
-    // console.log('this.idMosaics', this.idMosaics)
-      // const namespaceInfo = await this.proximaxProvider.getNamespace(mosaicsIds).toPromise();
-      // console.log('namespaceInfonamespaceInfonamespaceInfonamespaceInfo', namespaceInfo)
+      // let filter = mosaicsIds.filter(mosaics => mosaics.id)
+      for (let index = 0; index < mosaicsIds.length; index++) {
+        const element = mosaicsIds[index];
+        // console.log('element', element)
+        let getLinked = await this.proximaxProvider.getLinkedMosaicId(element).toPromise();
+        this.mosaicsInNamespace.push(getLinked)
+      }
+      let mosaicsInfo2 = await this.proximaxProvider.getMosaics(this.mosaicsInNamespace).toPromise();
+      const value = await this.continue(this.mosacisAnt, mosaicsInfo2, this.mosaicsInNamespace)
+      return value;
     } else {
       const value = await this.continue(mosacis, mosaicsInfo, mosaicsIds)
         return value;
     }
   }
 
+
+
+
   async continue(mosacis, mosaicsInfo, mosaicsIds){
-    console.log('mosacis', mosacis)
-    console.log('mosaicsInfo', mosaicsInfo)
-    console.log('mosaicsIds', mosaicsIds)
+    this.mosacisAnt = mosacis
     await this.getMosaicNames(mosaicsIds).then(mosaicsNames => {
-      // console.log('mosaicsNamesmosaicsNames', mosaicsNames)
       mosacis.forEach(async mosacis => {
-        // console.log('mosacismosacis', mosacis)
         mosaicsInfo.forEach(mosaicsI => {
-          // console.log('mosaicsInfomosaicsInfo', mosaicsI)
           if (mosacis.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
             this.disivitity = mosaicsI
           }
@@ -292,8 +273,6 @@ export class MosaicsProvider {
         mosaicsNames.forEach(mosaicName => {
 
           if (mosacis.id.toHex() === mosaicName.mosaicId.id.toHex()) {
-            // console.log('mosaicName ---------', mosaicName);
-              // console.log('mosaicName ---------', mosaicName.names[0].name)
               let _mosaicNames = mosaicName.names[0].name
            
               if (_mosaicNames.length > 0) {
@@ -305,7 +284,6 @@ export class MosaicsProvider {
               this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
               }
  
-        
             this.amount = this.amountFormatter(mosacis.amount, this.disivitity).toString();
             this.hex = mosaicName.mosaicId.id.toHex()
           }
@@ -321,8 +299,6 @@ export class MosaicsProvider {
         this.mosaics.push(this.mosaicInfo)
       })
     })
-
-    console.log('comtinue this.mosaics', this.mosaics)
     return this.mosaics;
   }
 }
