@@ -11,6 +11,9 @@ import {
   MosaicAmountView,
   MosaicHttp,
   MosaicId,
+  NamespaceId,
+  NamespaceInfo,
+  NamespaceName,
   MosaicInfo,
   MosaicService,
   NamespaceHttp,
@@ -117,7 +120,16 @@ export class ProximaxProvider {
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
+
+  getNamespace(NamespaceId: NamespaceId[]): Observable<NamespaceName[]> {
+    return this.namespaceHttp.getNamespacesName(NamespaceId)
+    // return this.mosaicHttp.getMosaics(mosaicIsd);
+  }
   
+  getLinkedMosaicId(NamespaceId: NamespaceId): Observable<MosaicId> {
+    return this.namespaceHttp.getLinkedMosaicId(NamespaceId)
+  }
+
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
     return from([]);
     // return this.mosaicHttp.getMosaicNames(mosaicIds);

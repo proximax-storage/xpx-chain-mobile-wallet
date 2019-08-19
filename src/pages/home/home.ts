@@ -146,6 +146,7 @@ export class HomePage {
               this.getAccountInfo(account).subscribe(accountInfo => {
                 console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
                 const mosacis = accountInfo.mosaics
+                console.log('mosacismosacismosacismosacis', mosacis)
                 // const mosaicsIds = mosacis.map(data => data.id);
 
                 // Load default mosaics
@@ -160,7 +161,8 @@ export class HomePage {
                     }
                   });
                   this.isLoading = false;
-                  await this.mosaicsProvider.getArmedMosaic(mosacis ).then(result => {
+                  this.mosaicsProvider.getArmedMosaic(mosacis ).then(result => {
+                    console.log('result', result)
                     result.forEach(element => {
                         let filter = this.mosaics.filter(mosaic => mosaic.hex === element.hex)
                       if (filter.length == 0) {

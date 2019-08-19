@@ -114,20 +114,20 @@ export class SendMosaicConfirmationPage {
             mosaic
           );
 
-          transferTransction.transactionHttp
-            .announce(transferTransction.signedTransaction)
-            .subscribe(
-              value => {
-                console.log('value ', value)
-                navigator.vibrate(500)
-        console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
-                this.showSuccessMessage()
-              },
-              async error => {
-                console.log('error ', error)
-                this.showErrorMessage(error)
-              }
-            );
+        //   transferTransction.transactionHttp
+        //     .announce(transferTransction.signedTransaction)
+        //     .subscribe(
+        //       value => {
+        //         console.log('value ', value)
+        //         navigator.vibrate(500)
+        // console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
+        //         this.showSuccessMessage()
+        //       },
+        //       async error => {
+        //         console.log('error ', error)
+        //         this.showErrorMessage(error)
+        //       }
+        //     );
         }
       } else {
         this.showGenericError();

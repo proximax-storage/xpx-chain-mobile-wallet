@@ -417,12 +417,10 @@ export class WalletProvider {
       [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount)))], PlainMessage.create(message), network
     );
     const account = Account.createFromPrivateKey(common.privateKey, network);
-    const signedTransaction = account.sign(transferTransaction)
-    // const transactionHttp = new TransactionHttp(
-    //   AppConfig.sirius.httpNodeUrl
-    // );
+    // const signedTransaction = account.sign(transferTransaction)
+
     return {
-      signedTransaction: signedTransaction,
+      // signedTransaction: signedTransaction,
       transactionHttp: this.proximaxProvider.transactionHttp
     };
   }

@@ -36,12 +36,16 @@ export class TransferTransactionComponent {
 
   }
 
-  async getMosaicInfo() {
+  getMosaicInfo() {
     this.MOSAIC_INFO = this.mosaicsProvider.getMosaicInfo(this.tx.mosaics[0]);
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
-    this.array.push(this.tx.mosaics[0])
-    await this.mosaicsProvider.getArmedMosaic(this.array).then(valores => {
+    console.log('this.tx.mosaics[0]', this.tx.mosaics)
+    // this.array.push(this.tx.mosaics[0])
+   
+    this.mosaicsProvider.getArmedMosaic(this.tx.mosaics).then(valores => {
+
+      console.log('valores vista', valores)
       valores.forEach(element => {
         this.MOSAIC_INFO = element;
         this.AMOUNT = element.amount;
