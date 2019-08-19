@@ -132,7 +132,7 @@ export class ProximaxProvider {
 
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
     // return from([]);
-    return this.mosaicHttp.getMosaicNames(mosaicIds);
+    return this.mosaicHttp.getMosaicsNames(mosaicIds);
   }
 
   checkAddress(privateKey: string, net: NetworkType, address: string): boolean {
