@@ -53,7 +53,7 @@ export class MosaicsProvider {
   }
 
   async getMosaicNames(mosaicsId: MosaicId[]): Promise<MosaicNames[]> {
-    return await this.proximaxProvider.mosaicHttp.getMosaicsNames(mosaicsId).toPromise();
+    return await this.proximaxProvider.getMosaicNames(mosaicsId).toPromise();
   }
 
   public getMosaics(): Observable<Array<DefaultMosaic>> {
