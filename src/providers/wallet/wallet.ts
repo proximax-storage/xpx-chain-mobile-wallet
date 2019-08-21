@@ -67,8 +67,8 @@ export class WalletProvider {
     });
   }
 
-  public getAccountInfo(address: string) : Observable<AccountInfo> {
-    return this.proximaxProvider.getAccountInfo(Address.createFromRawAddress(address));
+  public getAccountInfo(account: Account) : Observable<AccountInfo> {
+    return this.proximaxProvider.getAccountInfo(Address.createFromRawAddress(account.address.plain()));
   }
 
   public getBalance(address: string): Observable<MosaicAmountView[]> {

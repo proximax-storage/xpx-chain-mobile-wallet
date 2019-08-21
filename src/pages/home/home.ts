@@ -143,7 +143,7 @@ export class HomePage {
             this.selectedAccount = account;
 
             try {
-              this.getAccountInfo(account).subscribe(accountInfo => {
+              this.walletProvider.getAccountInfo(account).subscribe(accountInfo => {
                 console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
                 const mosacis = accountInfo.mosaics
                 console.log('mosacismosacismosacismosacis', mosacis)
@@ -265,16 +265,16 @@ export class HomePage {
     });
   }
 
-  private getAccountInfo(account: Account): Observable<AccountInfo> {
-    return this.walletProvider.getAccountInfo(account.address.plain());
-    // return 
-    // new Observable(observer => {
-    //   const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
-    //     accountInfo.subscribe(accountInfo => {
-    //     observer.next(accountInfo);
-    // });
-    // });
-  }
+  // private getAccountInfo(account: Account): Observable<AccountInfo> {
+  //   return this.walletProvider.getAccountInfo(account.address.plain());
+  //   // return 
+  //   // new Observable(observer => {
+  //   //   const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
+  //   //     accountInfo.subscribe(accountInfo => {
+  //   //     observer.next(accountInfo);
+  //   // });
+  //   // });
+  // }
 
   getTransactions(account: Account) {
     this.isLoading = true;

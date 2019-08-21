@@ -154,7 +154,7 @@ export class SendPage {
 
   private getAccountInfo(account: Account): Observable<AccountInfo> {
     return new Observable(observer => {
-      const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
+      const accountInfo = this.walletProvider.getAccountInfo(account);
       accountInfo.subscribe(accountInfo => {
         observer.next(accountInfo);
       });
