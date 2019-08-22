@@ -261,6 +261,7 @@ export class MosaicsProvider {
 
 
   async continue(mosacis, mosaicsInfo, mosaicsIds){
+    // console.log('--------------------------info', mosaicsInfo)
     this.mosacisAnt = mosacis
     await this.getMosaicNames(mosaicsIds).then(mosaicsNames => {
       mosacis.forEach(async mosacis => {

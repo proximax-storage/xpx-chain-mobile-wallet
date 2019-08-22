@@ -86,7 +86,7 @@ export class ProximaxProvider {
       iv: iv,
     };
 
-    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    crypto.passwordToPrivatekey(common, wallet, 2);
     return common.privateKey;
   }
 

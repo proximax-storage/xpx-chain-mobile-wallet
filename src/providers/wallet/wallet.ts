@@ -4,11 +4,11 @@ import { Storage } from '@ionic/storage';
 import { AuthProvider } from '../auth/auth';
 import { SimpleWallet, Password, Address, EncryptedPrivateKey, 
   AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
-  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, } from 'tsjs-xpx-chain-sdk';
+  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, Crypto, NetworkCurrencyMosaic} from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
-import { crypto } from 'js-xpx-chain-library';
 import { AppConfig } from '../../app/app.config';
+import { HttpClient } from '@angular/common/http';
 
 /*
  Generated class for the NemProvider provider.
@@ -18,13 +18,29 @@ import { AppConfig } from '../../app/app.config';
  */
 @Injectable()
 export class WalletProvider {
+  generationHash: any;
+  httpUrl: string;
+  AppConfig: any;
   wallet: any;
   publicAccount: PublicAccount;
   wallets: SimpleWallet[];
 
-  constructor(private storage: Storage, private authProvider: AuthProvider, private proximaxProvider: ProximaxProvider) {;
+  constructor(
+    private storage: Storage, 
+    private authProvider: AuthProvider, 
+    private proximaxProvider: ProximaxProvider,
+    private http: HttpClient,) {
+      this.httpUrl = AppConfig.sirius.httpNodeUrl;
+      this.getNodoBlock();
   }
 
+  getNodoBlock(){
+    const url1 = this.httpUrl+ "/block/1";
+    this.http.get(url1).subscribe(response => {
+      console.log('********************* ', response['meta'].generationHash)
+      this.generationHash = response['meta'].generationHash
+    });
+  }
     /**
    * Create Simple Wallet
    * @param walletName wallet idenitifier for app
@@ -353,13 +369,16 @@ export class WalletProvider {
   decrypt(common: any, current: any, account: any = '', algo: any = '', network: any = '') {
     const acct = current;
     const net = NetworkType.TEST_NET;
-    const alg = 'pass:bip32';
+    const alg = 2;
     const walletAccount = {
       encrypted: current.encryptedPrivateKey.encryptedKey,
       iv: current.encryptedPrivateKey.iv
     }
+    console.log('common', common)
+    console.log('walletAccount', walletAccount)
+    console.log('alg', alg)
     // Try to generate or decrypt key
-    if (!crypto.passwordToPrivatekey(common, walletAccount, alg)) {
+    if (!Crypto.passwordToPrivateKey(common, walletAccount, alg)) {
       // console.log('passwordToPrivatekeyy ')
       setTimeout(() => {
         console.log('Error Invalid password')
@@ -413,14 +432,14 @@ export class WalletProvider {
     mosaic: string | number[]
   ) {
     const recipientAddress = this.proximaxProvider.createFromRawAddress(recipient);
-    const transferTransaction = TransferTransaction.create(Deadline.create(5), recipientAddress,
-      [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount)))], PlainMessage.create(message), network
+    const transferTransaction = TransferTransaction.create(Deadline.create(10), recipientAddress,
+      [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount))), NetworkCurrencyMosaic.createRelative(10)], PlainMessage.create(message), network
     );
     const account = Account.createFromPrivateKey(common.privateKey, network);
-    // const signedTransaction = account.sign(transferTransaction)
+    const signedTransaction = account.sign(transferTransaction,  this.generationHash)
 
     return {
-      // signedTransaction: signedTransaction,
+      signedTransaction: signedTransaction,
       transactionHttp: this.proximaxProvider.transactionHttp
     };
   }
