@@ -14,7 +14,7 @@ import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
 import { Observable } from 'rxjs';
 import { animate, style, transition, trigger } from "@angular/animations";
-import { ProximaxProvider } from '../../providers/proximax/proximax';
+// import { ProximaxProvider } from '../../providers/proximax/proximax';
 
 @Component({
   selector: 'page-home',
@@ -86,7 +86,6 @@ export class HomePage {
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
-    private proximaxProvider: ProximaxProvider,
   ) {
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
