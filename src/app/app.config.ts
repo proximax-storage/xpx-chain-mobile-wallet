@@ -3,7 +3,7 @@ export const AppConfig = {
       environment: 'dev'
     },
     sirius: {
-      httpNodeUrl: "http://bctestnet1.xpxsirius.io",
+      httpNodeUrl: "http://bctestnet1.xpxsirius.io:3000",
       wsNodeUrl: "ws://bctestnet1.xpxsirius.io",
       networkType: "TEST_NET",
 

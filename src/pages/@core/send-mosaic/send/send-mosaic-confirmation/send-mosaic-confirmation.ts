@@ -29,6 +29,7 @@ import { WalletProvider } from '../../../../../providers/wallet/wallet';
   templateUrl: 'send-mosaic-confirmation.html'
 })
 export class SendMosaicConfirmationPage {
+  generationHash: any;
   App = App;
   formGroup: FormGroup;
   currentWallet: SimpleWallet;
@@ -51,6 +52,8 @@ export class SendMosaicConfirmationPage {
     private walletProvider: WalletProvider
   ) {
     this.init();
+    this.generationHash = this.walletProvider.generationHash
+    console.log('-------------------------', this.generationHash)
   }
 
   ionViewWillEnter() {
@@ -114,20 +117,20 @@ export class SendMosaicConfirmationPage {
             mosaic
           );
 
-        //   transferTransction.transactionHttp
-        //     .announce(transferTransction.signedTransaction)
-        //     .subscribe(
-        //       value => {
-        //         console.log('value ', value)
-        //         navigator.vibrate(500)
-        // console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
-        //         this.showSuccessMessage()
-        //       },
-        //       async error => {
-        //         console.log('error ', error)
-        //         this.showErrorMessage(error)
-        //       }
-        //     );
+          transferTransction.transactionHttp
+            .announce(transferTransction.signedTransaction)
+            .subscribe(
+              value => {
+                console.log('value ', value)
+                navigator.vibrate(500)
+        console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
+                this.showSuccessMessage()
+              },
+              async error => {
+                console.log('error ', error)
+                this.showErrorMessage(error)
+              }
+            );
         }
       } else {
         this.showGenericError();

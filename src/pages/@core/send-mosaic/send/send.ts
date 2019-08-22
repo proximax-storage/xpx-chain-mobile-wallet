@@ -83,6 +83,8 @@ export class SendPage {
     private translateService: TranslateService,
   ) {
     this.mosaicSelectedName = this.navParams.get('mosaicSelectedName');
+
+    console.log('this.mosaicSelectedName', this.mosaicSelectedName)
     // If no mosaic selected, fallback to xpx
     if (!this.mosaicSelectedName) {
       this.mosaicSelectedName = 'xpx';
@@ -94,8 +96,9 @@ export class SendPage {
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-    // console.log('ionViewWillEnter SendPage');
     this.walletProvider.getSelectedWallet().then(currentWallet => {
+      console.log('currentWallet ', currentWallet)
+      
       if (!currentWallet) {
         this.navCtrl.setRoot(
           'TabsPage',
@@ -109,36 +112,42 @@ export class SendPage {
         if (this.selectedMosaic) {
           this.selectedMosaic;
           this.form.get('amount').setValue(null);
-          console.log("SIRIUS CHAIN WALLET: SendPage -> ionViewWillEnter -> this.selectedMosaic", this.selectedMosaic)
         } else {
+          // this.mosaics = [{
+          //   mosaicId: "xpx", 
+          //   namespaceId: "prx", 
+          //   hex: "3c0f3de5298ced2d", 
+          //   amount: "0.000000"
+          // }]
+          // console.log('por defecto', this.mosaics)
           this.currentWallet = currentWallet;
           this.getAccount(this.currentWallet).subscribe(account => {
             this.wallet = account.address.plain()
-            this.getAccountInfo(account).subscribe(accountInfo => {
+            this.getAccountInfo(account).subscribe(async accountInfo => {
               this.mosaicWallet = accountInfo.mosaics
               this.selectedMosaic = accountInfo.mosaics
-              this.selectedMosaic.forEach(mosaics => {
-                const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaics);
-                if (mosaicInfo.mosaicId === 'xpx') {
-                  this.mosaics = mosaicInfo
-                  this.selectedMosaic = mosaicInfo
-                }
-
-                let mosaic = this.mosaics.mosaicId;
-                let coinId: string;
-
-                if (mosaic === 'xpx') {
-                  coinId = 'proximax';
-                } else if (mosaic === 'npxs') {
-                  coinId = 'pundi-x';
-                }
-                // Get coin price
-                if (coinId) {
-                  this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
-                    this.selectedCoin = coin;
-                  });
-                }
-
+              await this.mosaicsProvider.getArmedMosaic( this.selectedMosaic ).then(result => {
+                result.forEach(mosaics => {
+                    if (mosaics.mosaicId === 'xpx') {
+                      this.mosaics = mosaics
+                      this.selectedMosaic = mosaics
+                    }
+    
+                    let mosaic = this.mosaics.mosaicId;
+                    let coinId: string;
+    
+                    if (mosaic === 'xpx') {
+                      coinId = 'proximax';
+                    } else if (mosaic === 'npxs') {
+                      coinId = 'pundi-x';
+                    }
+                    // Get coin price
+                    if (coinId) {
+                      this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
+                        this.selectedCoin = coin;
+                      });
+                    }
+                  })
               })
             });
           });
@@ -221,26 +230,28 @@ export class SendPage {
 
   subscribeValue() {
     // Account recipient
-    this.form.get('recipientAddress').valueChanges.subscribe(
-      value => {
-        const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
+    // this.form.get('recipientAddress').valueChanges.subscribe(
+    //   value => {
+    //     const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
-        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, accountRecipient)) {
-            this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
-          } else {
-            this.msgErrorUnsupported = '';
-          }
-        } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
-          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
-        } else {
-          this.msgErrorUnsupported = '';
-        }
-      }
-    );
+    //     if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+    //       if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, accountRecipient)) {
+    //         this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+    //       } else {
+    //         this.msgErrorUnsupported = '';
+    //       }
+    //     } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
+    //       this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+    //     } else {
+    //       this.msgErrorUnsupported = '';
+    //     }
+    //   }
+    // );
 
     this.form.get('amount').valueChanges.subscribe(
       value => {
+        console.log('value', String(value))
+        console.log('value', typeof(this.mosaics.amount))
         if (value > this.mosaics.amount) {
           this.msgErrorBalance = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
         } else {
@@ -332,11 +343,12 @@ export class SendPage {
       );
 
       // Check the validity of an address
-      if (!this.proximaxProvider.isValidAddress(recipient)) {
-        this.alertProvider.showMessage(
-          this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
-        );
-      } else {
+      // if (this.proximaxProvider.isValidAddress(recipient)) {
+      //   console.log('-------------' )
+      //   this.alertProvider.showMessage(
+      //     this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
+      //   );
+      // } else {
         // Compute total
         // let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
         const prueba = this.selectedCoin.market_data.current_price.usd;
@@ -356,8 +368,9 @@ export class SendPage {
             showBackdrop: true
           });
         modal.present();
-      }
+      // }
     } catch (err) {
+      console.log('puto')
       this.alertProvider.showMessage(
         this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
       );
