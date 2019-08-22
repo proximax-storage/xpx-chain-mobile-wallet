@@ -404,18 +404,23 @@ export class HomePage {
       coinId = 'proximax';
     } else if (mosaic.mosaicId === 'npxs') {
       coinId = 'pundi-x';
-    } else {
+    } else if (mosaic.mosaicId === 'sft') {
+      coinId = 'sportsfix';
+    }else {
       coinId = '';
     }
-
+   
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
-      // console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
+      console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       let totalBalance = mosaic.amount * price;
       // console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
       let page = "CoinPriceChartPage";
+      // console.log("_________________________****************",  mosaic.mosaicId);
+      // console.log("_________________________****************", mosaic.namespaceId);
       const modal = this.modalCtrl.create(page, {
         mosaicHex: mosaic.hex,
         mosaicId: mosaic.mosaicId,
+        namespaceId: mosaic.namespaceId,
         coinId: coinId,
         selectedAccount: this.selectedWallet,
         transactions: this.confirmedTransactions,

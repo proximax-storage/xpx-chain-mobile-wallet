@@ -7,6 +7,7 @@
     "APP.COMMON.PASSWROD" : "パスワード",
     "APP.COMMON.PASSWROD.PLACEHOLDER" : "パスワードを入力してください",
     "APP.EMPTY.MOSAICS":"ここにあなたのMosaicが表示されます。（今は表示されません）",
+    "APP.EMPTY.MOSAICS.INFO":"モザイク情報がここに表示されます。現在、情報はありません",
     "APP.EMPTY.TRANSACTIONS":"あなたの取引が表示されます（今は表示されません）",
     "APP.EMPTY.CONTACT":"あなたの連絡先が表示されます（今は表示されません）",
     "APP.LOGIN" : "ログイン",

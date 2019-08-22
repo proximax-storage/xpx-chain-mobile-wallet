@@ -7,6 +7,7 @@
     "APP.COMMON.PASSWROD" : "비밀번호",
     "APP.COMMON.PASSWROD.PLACEHOLDER" : "비밀번호를 기입해주세요",
     "APP.EMPTY.MOSAICS":"Y모자이크가 이곳에 보여질 것입니다. 지금은 모자이크가 없습니다.",
+    "APP.EMPTY.MOSAICS.INFO":"모자이크 정보가 여기에 나타납니다. 현재 정보가 없습니다.",
     "APP.EMPTY.TRANSACTIONS":"거래 내용이 이곳에 보여질 것입니다. 지금은 거래 내용이 없습니다.",
     "APP.EMPTY.CONTACT":"연락처가 이것에 나타날 것입니다. 지금은 연락처가 없습니다.",
     "APP.LOGIN" : "로그인",
