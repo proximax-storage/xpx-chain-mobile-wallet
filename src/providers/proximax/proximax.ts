@@ -25,6 +25,7 @@ import {
   Transaction,
   TransactionHttp,
   QueryParams,
+  NetworkHttp,
 } from 'tsjs-xpx-chain-sdk';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
@@ -41,6 +42,7 @@ import { commonInterface, walletInterface } from '../interfaces/shared.interface
 export class ProximaxProvider {
 
   networkType: NetworkType;
+  networkHttp: NetworkHttp;
   wsNodeUrl: string;
   httpUrl: string;
   accountHttp: AccountHttp;
@@ -53,10 +55,11 @@ export class ProximaxProvider {
   constructor(public http: HttpClient) {
     this.networkType = NetworkType[AppConfig.sirius.networkType];
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
+    this.networkHttp = new NetworkHttp(this.httpUrl);
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
-    this.accountHttp = new AccountHttp(this.httpUrl);
-    this.mosaicHttp = new MosaicHttp(this.httpUrl);
-    this.namespaceHttp = new NamespaceHttp(this.httpUrl);
+    this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
+    this.mosaicHttp = new MosaicHttp(this.httpUrl, this.networkHttp);
+    this.namespaceHttp = new NamespaceHttp(this.httpUrl, this.networkHttp);
     this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
     this.namespaceService = new NamespaceService(this.namespaceHttp);
     this.transactionHttp = new TransactionHttp(this.httpUrl);
