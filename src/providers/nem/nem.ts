@@ -42,7 +42,7 @@ export class NemProvider{
   metadataHttp: MetadataHttp;
 
   constructor() {
-    this.networkType = NetworkType[AppConfig.sirius.networkType];
+    this.networkType = AppConfig.sirius.networkType;
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
     this.networkHttp = new NetworkHttp(this.httpUrl);

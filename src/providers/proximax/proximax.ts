@@ -53,7 +53,7 @@ export class ProximaxProvider {
   transactionHttp: TransactionHttp;
 
   constructor(public http: HttpClient) {
-    this.networkType = NetworkType[AppConfig.sirius.networkType];
+    this.networkType = AppConfig.sirius.networkType;
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
     this.networkHttp = new NetworkHttp(this.httpUrl);
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
