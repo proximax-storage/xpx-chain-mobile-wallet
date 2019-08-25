@@ -24,15 +24,21 @@ export class GetMarketPricePipe implements PipeTransform {
       coinId = 'proximax';
     } else if (value === 'npxs') {
       coinId = 'pundi-x';
+    } else if (value === 'sft') {
+      coinId = 'sportsfix';
+    }else {
+      coinId = '';
     } 
+    console.log('coinId en get market', coinId)
     // Add more coins here
     
-    if(coinId != undefined) {
-      // console.log("CoinId",coinId)
+    if(coinId != undefined && coinId != '') {
+      console.log("CoinId",coinId)
       return this.coingeckoProvider
       .getDetails(coinId)
       .toPromise()
       .then(details => {
+        console.log("detailsdetailsdetailsdetails",details.market_data.current_price.usd)
         return details.market_data.current_price.usd;
       }).catch(err => {
       console.log("LOG: GetMarketPricePipe -> transform -> err", err);

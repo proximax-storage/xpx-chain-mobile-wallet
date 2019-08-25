@@ -50,6 +50,7 @@ import { flatMap, toArray } from 'rxjs/operators';
   providers: [GetMarketPricePipe]
 })
 export class CoinPriceChartPage {
+  showEmptyMosaic: boolean;
   confirmed: any;
   mosaicHex: any;
   /** Mosaic details member variables */
@@ -75,6 +76,7 @@ export class CoinPriceChartPage {
 
   coinId: string;
   mosaicId: string;
+  namespaceId: string;
   mosaicAmount: number;
 
   @ViewChild(InfiniteScroll)
@@ -108,7 +110,7 @@ export class CoinPriceChartPage {
     private haptic: HapticProvider,
     private browserTab: BrowserTab,
     private safariViewController: SafariViewController
-  ) {
+  ) { 
     this.selectedSegment = 'transactions';
     this.durations = [
       { label: "24H", value: 1 },
@@ -118,10 +120,14 @@ export class CoinPriceChartPage {
       { label: "6M", value: 182 }
 
     ];
+    // console.log('this.navParams.data', this.navParams.data)
     this.selectedDuration = this.durations[0];
-  this.mosaicHex = this.navParams.data['mosaicHex'];
-    this.mosaicId = this.navParams.data['mosaicId']; // will be used to filter transactions
+    this.mosaicHex = this.navParams.data['mosaicHex'];
+    this.mosaicId = this.navParams.data['mosaicId'];
+    this.namespaceId = this.navParams.data['namespaceId'];
+     // will be used to filter transactions
     this.coinId = this.navParams.data['coinId'];
+    // console.log(' this.coinId ',this.coinId )
     this.selectedAccount = this.navParams.data['selectedAccount'];
     this.confirmed = this.navParams.data['transactions'];
 
@@ -143,25 +149,29 @@ export class CoinPriceChartPage {
 
 
 
-    if (this.mosaicId == "sft") {
-      this.selectedCoin = {
-        "name": "SportsFix",
-        "symbol": "SFT",
-        "links": {
-          "homepage": ["https://sportsfix.io/"],
-          "announcement_url": ["https://medium.com/@sportsfix"],
-          "blockchain_site": ["https://bitcointalk.org/index.php?topic=4380637.msg39045279#msg39045279"],
-          "facebook_username": "sportsfix.io",
-          "twitter_screen_name": "SportsFix_io",
-          "telegram_channel_identifier": "SFICO"
-        },
-        "genesis_date": "2018-12-18",
-        "description": {
-          en: "SportsFix aims to transform the most powerful content in the world – SPORTS. SF presents a decentralized sports media ecosystem which aims to completely change the way fans connect and engage with sports content. In its current stage, SF is a rapidly growing over-the-top (OTT) business in Asia streaming local and international sports events to millions of fans every week and on track to become one of the most valuable video streaming platforms in the region. In our next phase, SF will be issuing SportsFix Tokens (SFT) which allows fans to participate and engage with their favourite leagues and clubs in a self-contained economy with all digital transactions employing smart contracts backed by blockchain technology."
-        }
-      }
+    // if (this.mosaicId == "sft") {
+    //   this.selectedCoin = {
+    //     "name": "SportsFix",
+    //     "symbol": "SFT",
+    //     "links": {
+    //       "homepage": ["https://sportsfix.io/"],
+    //       "announcement_url": ["https://medium.com/@sportsfix"],
+    //       "blockchain_site": ["https://bitcointalk.org/index.php?topic=4380637.msg39045279#msg39045279"],
+    //       "facebook_username": "sportsfix.io",
+    //       "twitter_screen_name": "SportsFix_io",
+    //       "telegram_channel_identifier": "SFICO"
+    //     },
+    //     "genesis_date": "2018-12-18",
+    //     "description": {
+    //       en: "SportsFix aims to transform the most powerful content in the world – SPORTS. SF presents a decentralized sports media ecosystem which aims to completely change the way fans connect and engage with sports content. In its current stage, SF is a rapidly growing over-the-top (OTT) business in Asia streaming local and international sports events to millions of fans every week and on track to become one of the most valuable video streaming platforms in the region. In our next phase, SF will be issuing SportsFix Tokens (SFT) which allows fans to participate and engage with their favourite leagues and clubs in a self-contained economy with all digital transactions employing smart contracts backed by blockchain technology."
+    //     }
+    //   }
 
-    } else if (this.mosaicId == 'xar') {
+    // } else 
+    // console.log('this.mosaicId', this.mosaicId)
+    // console.log('this.namespaceId', this.namespaceId)
+    
+    if (this.mosaicId == 'xar') {
 
       this.selectedCoin = {
         "name": "Xarcade",
@@ -179,13 +189,34 @@ export class CoinPriceChartPage {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
       }
-
+      this.showEmptyMosaic = true;
+    } else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
+      this.selectedCoin = {
+        "name": this.mosaicId,
+        "symbol": this.namespaceId,
+        "links": {
+          "homepage": [""],
+          "announcement_url": [""],
+          "blockchain_site": [""],
+          "facebook_username": "",
+          "twitter_screen_name": "",
+          "telegram_channel_identifier": ""
+        },
+        "genesis_date": "2018-03-05",
+        "description": {
+          en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
+        }
+      }
+      this.showEmptyMosaic = true;
     } else {
-      // console.info(this.mosaicId, this.coinId );
-      if (this.coinId) {
+      // console.info('con id ', this.coinId );
+      // if(){}
+      if (this.coinId != "") {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
+          // console.log("TCL: CoinPriceChartPage -> this.coin", coin)
           this.selectedCoin = coin;
-          // console.log("TCL: CoinPriceChartPage -> this.selectedCoin", this.selectedCoin)
+          this.showEmptyMosaic = false;
+          // console.log("TCL: CoinPriceChartPage -> this.selectedCoin", this.selectedCoin.market_data)
         });
       }
 
@@ -327,6 +358,7 @@ export class CoinPriceChartPage {
   }
 
   select(duration) {
+    // console.log('duration',duration)
     this.selectedDuration = duration;
     this.coinPriceChartProvider.load(
       this.selectedCoin,
