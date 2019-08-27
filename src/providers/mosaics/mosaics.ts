@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../coingecko/coingecko";
-import { Observable, from, of, forkJoin, combineLatest } from "rxjs";
+import { Observable, from, forkJoin } from "rxjs";
 import { DefaultMosaic, DefaultMosaic2 } from "../../models/default-mosaic";
 import { MosaicNames } from "tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames";
 import { ProximaxProvider } from "../proximax/proximax";
@@ -43,6 +43,7 @@ export class MosaicsProvider {
     ];
   }
 
+  // TODO: Remove
   getDefaultMosaics2(): Array<DefaultMosaic2> {
     const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: "0.000000" });
     const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: "0.000000" });
@@ -162,6 +163,7 @@ export class MosaicsProvider {
     return a;
   }
 
+  // TODO: Remove
   public setMosaicInfoWithDisivitity(mosaic: Mosaic, disivitity: MosaicInfo): DefaultMosaic2 {
 
     let modifiedMosaic: DefaultMosaic2;
@@ -203,7 +205,8 @@ export class MosaicsProvider {
         amount: this.getRelativeAmount(mosaic.amount.compact()),
         hex: mosaic.id.toHex(),
         mosaicId: mosaic.id.toHex(),
-        namespaceId: mosaic.id.toHex()
+        namespaceId: mosaic.id.toHex(),
+        divisibility: 0
       };
     } else {
       modifiedMosaic.amount = this.getRelativeAmount(mosaic.amount.compact());
@@ -212,10 +215,12 @@ export class MosaicsProvider {
     return modifiedMosaic;
   }
 
+  // TODO: Remove
   public getRelativeAmount(amount: number): number {
     return amount / Math.pow(10, 6);
   }
 
+  // TODO: Refactor
   public getRelativeAmount1(amount: number, divisibility: number): number {
     return amount / Math.pow(10, divisibility);
   }
@@ -249,7 +254,7 @@ export class MosaicsProvider {
         amount: this.getRelativeAmount(mosaic.amount.compact()),
         hex: mosaic.id.toHex(),
         mosaicId: mosaic.id.toHex(),
-        namespaceId: mosaic.id.toHex()
+        namespaceId: mosaic.id.toHex(),
       };
     } else {
       modifiedMosaic.amount = this.getRelativeAmount(mosaic.amount.compact());
@@ -258,6 +263,7 @@ export class MosaicsProvider {
     return modifiedMosaic;
   }
 
+  // TODO: Refactor
   totalBalance(wallet: SimpleWallet): Promise<number> {
     return new Promise(resolve => {
       // this.mosaics(wallet.address)
@@ -337,7 +343,7 @@ export class MosaicsProvider {
     }
   }
 
-
+  // TODO: Remove
    async getOwnedMosaic(mosacis) {
     this.mosaics = [];
     const mosaicsIds = mosacis.map(data => data.id);
@@ -361,7 +367,7 @@ export class MosaicsProvider {
 
 
 
-
+  // TODO: Remove
   async continue(mosacis, mosaicsInfo, mosaicsIds){
     // console.log('--------------------------info', mosaicsInfo)
     this.mosacisAnt = mosacis
