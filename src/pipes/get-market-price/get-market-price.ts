@@ -29,19 +29,19 @@ export class GetMarketPricePipe implements PipeTransform {
     }else {
       coinId = '';
     } 
-    console.log('coinId en get market', coinId)
+    // console.log('coinId en get market', coinId)
     // Add more coins here
     
     if(coinId != undefined && coinId != '') {
-      console.log("CoinId",coinId)
+      // console.log("CoinId",coinId)
       return this.coingeckoProvider
       .getDetails(coinId)
       .toPromise()
       .then(details => {
-        console.log("detailsdetailsdetailsdetails",details.market_data.current_price.usd)
+        // console.log("details",details.market_data.current_price.usd)
         return details.market_data.current_price.usd;
       }).catch(err => {
-      console.log("LOG: GetMarketPricePipe -> transform -> err", err);
+      // console.log("LOG: GetMarketPricePipe -> transform -> err", err);
         return returnZero();
       })
     } else {

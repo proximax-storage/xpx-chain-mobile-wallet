@@ -153,10 +153,10 @@
             <p text-uppercase ion-text color="black">{{ mosaic.namespaceId }}</p>
 
             <section text-right item-right>
-              <h2 ion-text color="black">{{ mosaic.amount | number : '1.6-6'}}</h2>
+              <h2 ion-text color="black">{{ mosaic.amount | number : '1.0-6'}}</h2>
               <p text-right ion-text color="black"
                 *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
-                {{ marketPrice | currency: 'USD' : 'symbol' : '1.6-6' }}
+                {{ marketPrice | currency: 'USD' : 'symbol' : '1.0-6' }}
               </p>
             </section>
           </ion-item>
@@ -241,6 +241,7 @@
 
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
+          [mosaics]="mosaics" 
           [owner]="selectedAccount.address.plain()" [status]="'Confirmed'">
         </transfer-transaction>
       </ion-card>

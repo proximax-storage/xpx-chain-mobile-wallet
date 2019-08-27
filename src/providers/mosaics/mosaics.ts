@@ -33,10 +33,10 @@ export class MosaicsProvider {
   }
 
   getDefaultMosaics(): Array<DefaultMosaic> {
-    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: 0 });
-    // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: 0 });
-    // const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: 0 });
-    // const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: 0 });
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: 0, divisibility:0 });
+    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
+    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: 0, divisibility:0 });
+    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: 0, divisibility:0 });
 
     return [
       XPX
@@ -45,9 +45,9 @@ export class MosaicsProvider {
 
   getDefaultMosaics2(): Array<DefaultMosaic2> {
     const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: "0.000000" });
-    const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000" });
-    const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000" });
-    const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000" });
+    const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: "0.000000" });
+    const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: "0.000000" });
+    const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: "0.000000" });
 
     return [
       XPX, NPXS, SFT, XAR
@@ -116,6 +116,7 @@ export class MosaicsProvider {
                       mosaicId: mName.name.toString().split('.')[1], // mosaicId
                       hex: mName.id.toHex(), // mosaic hex id
                       amount: this.getRelativeAmount1(mosaic.amount.compact(), mInfo.divisibility),
+                      divisibility: mInfo.divisibility,
                       // 'duration': mInfo.duration
                     });
                   });
@@ -124,6 +125,9 @@ export class MosaicsProvider {
               )
                 .subscribe(myMosaicsOwned=> {
                   console.log('LOG: MosaicsProvider -> myMosaicsOwned -> myMosaicsOwned', myMosaicsOwned);
+                  console.log('LOG: MosaicsProvider -> this.defaultMosaics', this.defaultMosaics);
+
+                  
                   const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.defaultMosaics));
                   console.log('LOG: MosaicsProvider -> mergeMosaics -> mergedMosaics', mergedMosaics);
 
@@ -235,6 +239,7 @@ export class MosaicsProvider {
     let myMosaics = new Array<DefaultMosaic>();
 
     myMosaics = this.getDefaultMosaics();
+    console.log('LOG: MosaicsProvider -> getMosaicInfo -> this.getDefaultMosaics();', this.getDefaultMosaics());
     modifiedMosaic = myMosaics.find(defaultMosaic => {
       return defaultMosaic.hex == mosaic.id.toHex();
     });

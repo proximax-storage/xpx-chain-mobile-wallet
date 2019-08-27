@@ -128,8 +128,8 @@ export class HomePage {
           console.log("2. Selected wallet:", selectedWallet);
 
           // Slide to selected wallet
-          this.wallets.forEach((wallet,index)=> {
-            if(selectedWallet.name === wallet.name) {
+          this.wallets.forEach((wallet, index) => {
+            if (selectedWallet.name === wallet.name) {
               this.slides.slideTo(index);
             }
           })
@@ -152,18 +152,18 @@ export class HomePage {
                 // Merge owned mosaics & default mosaics
                 const myMergedMosaics = from(this.mosaicsProvider.mergeMosaics(ownedMosaics));
 
-                  myMergedMosaics.subscribe(_myMergedMosaics=> {
-                  console.log('LOG: HomePage -> init -> _myMergedMosaics', );
-                    this.mosaics = _myMergedMosaics;
-                
+                myMergedMosaics.subscribe(_myMergedMosaics => {
+                  console.log('LOG: HomePage -> init -> _myMergedMosaics');
+                  this.mosaics = _myMergedMosaics;
+
                   this.isLoading = false;
                   // Update asset info
                   console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
                   this.updateAssetsInfo(accountInfo);
 
                   // Compute wallet balance in USD
-                    console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
-                    this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
+                  console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
+                  this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
                     this.totalWalletBalance = total as number;
                     console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
                     loader.dismiss();
@@ -380,10 +380,10 @@ export class HomePage {
       coinId = 'pundi-x';
     } else if (mosaic.mosaicId === 'sft') {
       coinId = 'sportsfix';
-    }else {
+    } else {
       coinId = '';
     }
-   
+
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
       console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       let totalBalance = mosaic.amount * price;
