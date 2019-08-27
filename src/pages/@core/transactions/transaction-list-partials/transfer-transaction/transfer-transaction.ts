@@ -41,7 +41,7 @@ export class TransferTransactionComponent {
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
     this.array.push(this.tx.mosaics[0])
-    await this.mosaicsProvider.getArmedMosaic(this.array).then(valores => {
+    await this.mosaicsProvider.getOwnedMosaic(this.array).then(valores => {
       valores.forEach(element => {
         this.MOSAIC_INFO = element;
         this.AMOUNT = element.amount;

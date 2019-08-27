@@ -49,7 +49,7 @@ export class SendMosaicSelectPage {
   async ionViewWillEnter() {
 
     let filter = this.selectedMosaicc.filter(mosaics => mosaics)
-      await this.mosaicsProvider.getArmedMosaic( filter ).then(result => {
+      await this.mosaicsProvider.getOwnedMosaic( filter ).then(result => {
       filter.forEach(mosaicsI => {
           let filter2 = result.filter(mosaics =>mosaics.hex === mosaicsI.id.toHex())
           this.mosaics.push( filter2[0])
@@ -58,7 +58,7 @@ export class SendMosaicSelectPage {
   }
 
   loadDefaultMosaics() {
-    return this.mosaicsProvider.getMosaics();
+    return this.mosaicsProvider.loadDefaultMosaics();
   }
 
   ionViewDidLoad() {

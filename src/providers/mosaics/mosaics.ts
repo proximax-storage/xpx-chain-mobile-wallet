@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../coingecko/coingecko";
-import { Observable } from "rxjs";
+import { Observable, from, of, forkJoin, combineLatest } from "rxjs";
 import { DefaultMosaic, DefaultMosaic2 } from "../../models/default-mosaic";
 import { MosaicNames } from "tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames";
 import { ProximaxProvider } from "../proximax/proximax";
+import { mergeMap, map, filter, toArray } from "rxjs/operators";
 
 /*
   Generated class for the MosaicsProvider provider.
@@ -32,18 +33,18 @@ export class MosaicsProvider {
   }
 
   getDefaultMosaics(): Array<DefaultMosaic> {
-    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: 0 });
-    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: 0 });
-    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: 0 });
-    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: 0 });
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: 0 });
+    // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: 0 });
+    // const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: 0 });
+    // const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: 0 });
 
     return [
-      XPX, NPXS, SFT, XAR
+      XPX
     ];
   }
 
   getDefaultMosaics2(): Array<DefaultMosaic2> {
-    const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "0dc67fbe1cad29e3", amount: "0.000000" });
+    const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: "0.000000" });
     const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "06a9f32c9d3d6246", amount: "0.000000" });
     const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "1292a9ed863e7aa9", amount: "0.000000" });
     const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "2dba42ea2b169829", amount: "0.000000" });
@@ -57,12 +58,104 @@ export class MosaicsProvider {
     return await this.proximaxProvider.mosaicHttp.getMosaicsNames(mosaicsId).toPromise();
   }
 
-  public getMosaics(): Observable<Array<DefaultMosaic>> {
+  public loadDefaultMosaics(): Observable<Array<DefaultMosaic>> {
     return new Observable(observer => {
       let myMosaics = new Array<DefaultMosaic>();
       myMosaics = this.defaultMosaics;
       observer.next(myMosaics);
     });
+  }
+
+  public mergeMosaics(ownedMosaics: Mosaic[]): Observable<Array<DefaultMosaic>> {
+  console.log('LOG: MosaicsProvider -> mergeMosaics -> ownedMosaics', ownedMosaics);    
+
+
+    return new Observable(observer => {
+      
+      // Merge mosaic names and mosaic info
+      const mosaicIds = ownedMosaics.map(mosaic => mosaic.id);
+      const mosaicNames$ = from(this.getMosaicNames(mosaicIds));
+      const mosaicInfo$ = from(this.proximaxProvider.getMosaics(mosaicIds));
+  
+  
+      const mosaicList$ = mosaicNames$.pipe(
+        mergeMap(mosaicNames=> {
+          return mosaicInfo$.pipe(
+            map(mosaicInfo=> {
+  
+              const _mosaicNames = mosaicNames.map(names=> {
+                return {
+                  name: names.names[0].name,
+                  namespaceId: names.names[0].namespaceId,
+                  id: names.mosaicId
+                }
+              })
+  
+              const _mosaicInfo =  mosaicInfo.map(info => {
+                  return {
+                    divisibility: info.divisibility,
+                    duration: info.duration,
+                    id: info.mosaicId
+                  }
+              })
+  
+              const _ownedMosaics:Mosaic[] = ownedMosaics;
+              return from(_ownedMosaics).pipe(
+                mergeMap((mosaic:Mosaic) => {
+                  let _mosaicNames$ = from(_mosaicNames).pipe(
+                    filter(names => names.id.equals(mosaic.id))
+                  )
+                  
+                  let _mosaicInfo$ = from(_mosaicInfo).pipe(
+                    filter(info => info.id.equals(mosaic.id))
+                  )
+  
+                  return forkJoin(_mosaicNames$, _mosaicInfo$, (mName: any, mInfo: any) => {
+                    return new DefaultMosaic({
+                      namespaceId: mName.name.toString().split('.')[0], // namespaceId
+                      mosaicId: mName.name.toString().split('.')[1], // mosaicId
+                      hex: mName.id.toHex(), // mosaic hex id
+                      amount: this.getRelativeAmount1(mosaic.amount.compact(), mInfo.divisibility),
+                      // 'duration': mInfo.duration
+                    });
+                  });
+                }),
+                toArray()
+              )
+                .subscribe(myMosaicsOwned=> {
+                  console.log('LOG: MosaicsProvider -> myMosaicsOwned -> myMosaicsOwned', myMosaicsOwned);
+                  const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.defaultMosaics));
+                  console.log('LOG: MosaicsProvider -> mergeMosaics -> mergedMosaics', mergedMosaics);
+
+                  this.defaultMosaics = mergedMosaics;
+
+                  observer.next(mergedMosaics);
+              })
+
+            })
+          )
+        }),
+        toArray(),
+      )
+  
+  
+      mosaicList$.subscribe(mosaicList=>{
+      console.log('LOG: MosaicsProvider -> mergeMosaics -> mosaicList', mosaicList);
+      })
+    })
+
+  }
+
+  filterUniqueMosaic(array) {
+    let a = array.concat();
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i].hex === a[j].hex)
+          a.splice(j--, 1);
+      }
+    }
+
+    return a;
   }
 
   public setMosaicInfoWithDisivitity(mosaic: Mosaic, disivitity: MosaicInfo): DefaultMosaic2 {
@@ -117,6 +210,10 @@ export class MosaicsProvider {
 
   public getRelativeAmount(amount: number): number {
     return amount / Math.pow(10, 6);
+  }
+
+  public getRelativeAmount1(amount: number, divisibility: number): number {
+    return amount / Math.pow(10, divisibility);
   }
 
   public amountFormatter(amountParam: UInt64 | number, mosaic: MosaicInfo, manualDivisibility = '') {
@@ -180,7 +277,7 @@ export class MosaicsProvider {
     });
   }
 
-  computeTotalBalance(mosaics: Array<any>) {
+  computeTotalBalance(mosaics: Array<DefaultMosaic>) {
     return new Promise((resolve) => {
 
       function getSum(total, num) {
@@ -236,7 +333,7 @@ export class MosaicsProvider {
   }
 
 
-   async getArmedMosaic(mosacis) {
+   async getOwnedMosaic(mosacis) {
     this.mosaics = [];
     const mosaicsIds = mosacis.map(data => data.id);
     let mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();

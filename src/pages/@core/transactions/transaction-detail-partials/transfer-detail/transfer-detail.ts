@@ -27,7 +27,7 @@ export class TransferDetailComponent {
 
     // let filter = this.tx.mosaics.filter(mosaics => mosaics)
     let filter = this.mosaicsProvider.mosacisAnt.filter(mosaics => mosaics)
-    await this.mosaicsProvider.getArmedMosaic(filter).then(result => {
+    await this.mosaicsProvider.getOwnedMosaic(filter).then(result => {
       filter.forEach(mosaicsI => {
         let filter2 = result.filter(mosaics => mosaics.hex === mosaicsI.id.toHex())
         this.mosaics.push(filter2[0])

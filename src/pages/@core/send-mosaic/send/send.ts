@@ -126,7 +126,7 @@ export class SendPage {
             this.getAccountInfo(account).subscribe(async accountInfo => {
               this.mosaicWallet = accountInfo.mosaics
               this.selectedMosaic = accountInfo.mosaics
-              await this.mosaicsProvider.getArmedMosaic( this.selectedMosaic ).then(result => {
+              await this.mosaicsProvider.getOwnedMosaic( this.selectedMosaic ).then(result => {
                 result.forEach(mosaics => {
                     if (mosaics.mosaicId === 'xpx') {
                       this.mosaics = mosaics
