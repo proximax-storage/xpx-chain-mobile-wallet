@@ -14,7 +14,6 @@ import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
 import { Observable, from } from 'rxjs';
 import { animate, style, transition, trigger } from "@angular/animations";
-// import { ProximaxProvider } from '../../providers/proximax/proximax';
 
 @Component({
   selector: 'page-home',
@@ -226,8 +225,6 @@ export class HomePage {
     });
   }
 
-
-
   private getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
@@ -387,10 +384,7 @@ export class HomePage {
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
       console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       let totalBalance = mosaic.amount * price;
-      // console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
       let page = "CoinPriceChartPage";
-      // console.log("_________________________****************",  mosaic.mosaicId);
-      // console.log("_________________________****************", mosaic.namespaceId);
       const modal = this.modalCtrl.create(page, {
         mosaicHex: mosaic.hex,
         mosaicId: mosaic.mosaicId,
@@ -462,9 +456,6 @@ export class HomePage {
 
   showWalletList() {
     const page = "WalletListPage";
-
-    // this.showModal(page, {wallets: this.wallets});
-
     this.utils
       .showInsetModal(page, { wallets: this.wallets })
       .subscribe(data => {
