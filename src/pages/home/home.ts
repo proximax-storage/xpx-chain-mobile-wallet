@@ -291,8 +291,9 @@ export class HomePage {
     let selectedAccount = this.selectedWallet
     let transactions = this.confirmedTransactions;
     let total = this.totalWalletBalance;
+    let mosaics = this.mosaics;
 
-    let payload = { selectedAccount, transactions, total };
+    let payload = { selectedAccount, transactions, total, mosaics };
 
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,

@@ -57,6 +57,8 @@ export class TransactionListPage {
   accountInfo: AccountInfoWithMetaData;
   selectedAccount: any;
 
+  mosaics: any[] = [];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -77,6 +79,7 @@ export class TransactionListPage {
     this.totalBalance = payload.total;
     this.confirmedTransactions = payload.transactions;
     this.selectedAccount = payload.selectedAccount;
+    this.mosaics = payload.mosaics;
 
     if(this.confirmedTransactions === null){
       this.showEmptyMessage = true;
