@@ -10,7 +10,7 @@
     </p>
 
     <section item-right>
-      <h2 text-right ion-text color="sucess" [hidden]="!mosaics" *ngIf="owner?.address == tx?.recipient.address">
+      <h2 text-right ion-text color="success" [hidden]="!mosaics" *ngIf="owner?.address == tx?.recipient.address">
         + {{ mosaic.amount?.toString() }}
       </h2>
 
@@ -19,13 +19,13 @@
       </h2>
 
       <p text-right text-left ion-text color="black">
-        <small *ngIf="mosaic.mosaicId === 'xpx';">
+        <!-- <small *ngIf="mosaic.mosaicId === 'xpx';">
           {{ mosaic.amount * 0.00837014 | currency }}
-        </small>
+        </small> -->
 
-        <small *ngIf="mosaic.mosaicId === 'lyl';">
+        <!-- <small *ngIf="mosaic.mosaicId === 'lyl';">
           {{ mosaic.amount * 0.00436937 | currency }}
-        </small>
+        </small> -->
 
         <!-- <small *ngIf="mosaic.mosaicId !== 'lyl' || mosaic.mosaicId === 'xpx'">
           {{ mosaic.amount * 0.00436937 | currency }}
@@ -43,11 +43,11 @@
       <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
 
       <p text-wrap ion-text color="black">
-        {{ tx?.deadline.value.toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
+        {{ tx?.deadline.value.minusHours(2).toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
       </p>
 
       <p item-right>
-        {{ tx?.deadline.value.toString() | timeago  }}
+        {{ tx?.deadline.value.minusHours(2).toString() | timeago  }}
       </p>
     </ion-item>
   </ion-card-content>

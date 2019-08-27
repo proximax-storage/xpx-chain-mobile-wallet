@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { Deadline, Address } from 'tsjs-xpx-chain-sdk';
+import { Deadline, Address, TransferTransaction } from 'tsjs-xpx-chain-sdk';
 
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
+import { DefaultMosaic } from '../../../../../models/default-mosaic';
 
 /**
  * Generated class for the TransferDetailComponent component.
@@ -18,21 +19,33 @@ import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
   templateUrl: 'transfer-detail.html'
 })
 export class TransferDetailComponent {
-  @Input() tx: any;
+  @Input() tx: TransferTransaction;
+  @Input() mosaics: DefaultMosaic[] = [];
   App = App;
   owner: Address;
-  mosaics: any[] = [];
 
-  private async _getMosaics() {
+  private async _getMosaicInfo() {
 
-    // let filter = this.tx.mosaics.filter(mosaics => mosaics)
-    let filter = this.mosaicsProvider.mosacisAnt.filter(mosaics => mosaics)
-    await this.mosaicsProvider.getOwnedMosaic(filter).then(result => {
-      filter.forEach(mosaicsI => {
-        let filter2 = result.filter(mosaics => mosaics.hex === mosaicsI.id.toHex())
-        this.mosaics.push(filter2[0])
+    // Get mosaic details
+    this.mosaics = this.mosaics.filter(m1 => {
+      return this.tx.mosaics.filter(m2 => {
+        return m2.id.id.toHex() === m1.hex
       })
-    })
+    }).map(m1=>{
+      return this.tx.mosaics.map(m2 => {
+        return new DefaultMosaic(
+          {
+            namespaceId: m1.namespaceId,
+            hex: m1.hex,
+            mosaicId: m1.mosaicId,
+            amount: m2.amount.compact() / Math.pow(10, m1.divisibility),
+            divisibility: m1.divisibility
+          }
+          )
+      })
+    })[0]
+
+    console.log(this.mosaics);
   }
 
   private _setOwner() {
@@ -52,6 +65,6 @@ export class TransferDetailComponent {
 
   ngOnInit() {
     this._setOwner();
-    this._getMosaics();
+    this._getMosaicInfo();
   }
 }

@@ -404,12 +404,16 @@ export class HomePage {
   }
 
   gotoTransactionDetail(tx) {
-    let page = "TransactionDetailPage";
-    this.showModal(page, tx);
+    const page = "TransactionDetailPage";
+
+    let transactions = tx;
+    let mosaics = this.mosaics;
+    let payload = { transactions, mosaics};
+    this.showModal(page, payload);
   }
 
   showReceiveModal() {
-    let page = "ReceivePage";
+    const page = "ReceivePage";
     this.showModal(page, {});
   }
 

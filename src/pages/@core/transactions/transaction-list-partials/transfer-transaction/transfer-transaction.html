@@ -39,7 +39,7 @@
 
       <p text-right  ion-text color="black">
           <small>
-            {{ tx.deadline.value.toString() | timeago }}
+            {{ tx.deadline.value.minusHours(2).toString() | timeago }}
           </small>
         </p>
     </section>
