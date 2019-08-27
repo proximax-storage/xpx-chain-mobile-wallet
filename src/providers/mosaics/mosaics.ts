@@ -126,13 +126,13 @@ export class MosaicsProvider {
               )
                 .subscribe(myMosaicsOwned=> {
                   console.log('LOG: MosaicsProvider -> myMosaicsOwned -> myMosaicsOwned', myMosaicsOwned);
-                  console.log('LOG: MosaicsProvider -> this.defaultMosaics', this.defaultMosaics);
+                  console.log('LOG: MosaicsProvider -> this.defaultMosaics', this.getDefaultMosaics());
 
                   
-                  const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.defaultMosaics));
+                  const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.getDefaultMosaics()));
                   console.log('LOG: MosaicsProvider -> mergeMosaics -> mergedMosaics', mergedMosaics);
 
-                  this.defaultMosaics = mergedMosaics;
+                  // this.defaultMosaics = mergedMosaics;
 
                   observer.next(mergedMosaics);
               })
@@ -189,6 +189,7 @@ export class MosaicsProvider {
     return modifiedMosaic;
   }
 
+  // TODO: Remove
   public setMosaicInfo(mosaic: Mosaic): DefaultMosaic {
 
     let modifiedMosaic: DefaultMosaic;

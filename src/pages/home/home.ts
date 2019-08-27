@@ -152,20 +152,20 @@ export class HomePage {
                 const myMergedMosaics = from(this.mosaicsProvider.mergeMosaics(ownedMosaics));
 
                 myMergedMosaics.subscribe(_myMergedMosaics => {
-                  console.log('LOG: HomePage -> init -> _myMergedMosaics');
+                  console.log('6. LOG: HomePage -> init -> _myMergedMosaics');
                   this.mosaics = _myMergedMosaics;
 
                   this.isLoading = false;
                   // Update asset info
-                  console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
-                  this.updateAssetsInfo(accountInfo);
+                  // console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
+                  // this.updateAssetsInfo(accountInfo);
 
                   // Compute wallet balance in USD
                   console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
                   this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
                     this.totalWalletBalance = total as number;
                     console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
-                    loader.dismiss();
+                    // loader.dismiss();
                   });
 
                   // Show Transactions
