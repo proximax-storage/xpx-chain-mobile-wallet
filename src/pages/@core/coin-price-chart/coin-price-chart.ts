@@ -35,6 +35,7 @@ import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { WalletProvider } from '../../../providers/wallet/wallet';
 import { flatMap, toArray } from 'rxjs/operators';
+import { DefaultMosaic } from '../../../models/default-mosaic';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -90,6 +91,7 @@ export class CoinPriceChartPage {
 
   accountInfo: MultisigAccountInfo;
   isMultisig: boolean;
+  public mosaics: DefaultMosaic[] = [];
 
 
   constructor(
@@ -122,14 +124,17 @@ export class CoinPriceChartPage {
     ];
     // console.log('this.navParams.data', this.navParams.data)
     this.selectedDuration = this.durations[0];
-    this.mosaicHex = this.navParams.data['mosaicHex'];
-    this.mosaicId = this.navParams.data['mosaicId'];
-    this.namespaceId = this.navParams.data['namespaceId'];
+
+    const payload = this.navParams.data;
+    this.mosaicHex = payload.mosaicHex;
+    this.mosaicId = payload.mosaicId;
+    this.namespaceId = payload.namespaceId;
      // will be used to filter transactions
-    this.coinId = this.navParams.data['coinId'];
+    this.coinId = payload.coinId;
     // console.log(' this.coinId ',this.coinId )
-    this.selectedAccount = this.navParams.data['selectedAccount'];
-    this.confirmed = this.navParams.data['transactions'];
+    this.selectedAccount = payload.selectedAccount;
+    this.confirmed = payload.transactions;
+    this.mosaics = payload.mosaics;
 
     this.confirmed.forEach(confirmed => {
       let mosaics = confirmed.mosaics;
@@ -431,8 +436,11 @@ export class CoinPriceChartPage {
   }
 
   gotoTransactionDetail(tx) {
-    let page = "TransactionDetailPage";
-    this.showModal(page, tx);
+    const page = "TransactionDetailPage";
+    const transactions = tx;
+    const mosaics = this.mosaics; 
+    const payload = {transactions, mosaics};
+    this.showModal(page, payload);
   }
 
   /** Transaction list methods */

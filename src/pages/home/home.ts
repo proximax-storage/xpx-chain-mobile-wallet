@@ -360,35 +360,46 @@ export class HomePage {
     // console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
     // console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
 
-    let coinId: string;
+    let coinName: string;
 
     if (mosaic.mosaicId === 'xem') {
-      coinId = 'nem';
+      coinName = 'nem';
     }
     else if (mosaic.mosaicId === 'xpx') {
-      coinId = 'proximax';
+      coinName = 'proximax';
     } else if (mosaic.mosaicId === 'npxs') {
-      coinId = 'pundi-x';
+      coinName = 'pundi-x';
     } else if (mosaic.mosaicId === 'sft') {
-      coinId = 'sportsfix';
+      coinName = 'sportsfix';
     } else {
-      coinId = '';
+      coinName = '';
     }
 
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
       console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
-      let totalBalance = mosaic.amount * price;
+      const totalBalance = mosaic.amount * price;
+      const mosaicHex =  mosaic.hex;
+      const mosaicId = mosaic.mosaicId;
+      const namespaceId = mosaic.namespaceId;
+      const coinId = coinName;
+      const selectedAccount = this.selectedWallet;
+      const transactions = this.confirmedTransactions;
+      const mosaicAmount = mosaic.amount;
+      const mosaics = this.mosaics;
+      const payload = { 
+        totalBalance, 
+        mosaicHex,
+        mosaicId,
+        namespaceId,
+        coinId,
+        selectedAccount,
+        transactions,
+        mosaicAmount,
+        mosaics
+      }
       let page = "CoinPriceChartPage";
-      const modal = this.modalCtrl.create(page, {
-        mosaicHex: mosaic.hex,
-        mosaicId: mosaic.mosaicId,
-        namespaceId: mosaic.namespaceId,
-        coinId: coinId,
-        selectedAccount: this.selectedWallet,
-        transactions: this.confirmedTransactions,
-        mosaicAmount: mosaic.amount,
-        totalBalance: totalBalance
-      }, {
+      
+      const modal = this.modalCtrl.create(page, payload, {
           enableBackdropDismiss: false,
           showBackdrop: true
         });
