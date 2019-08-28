@@ -218,13 +218,6 @@ export class HomePage {
 
   }
 
-
-  private updateAssetsInfo(accountInfo: AccountInfo) {
-    accountInfo.mosaics.forEach(mosaic => {
-      const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
-    });
-  }
-
   private getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
@@ -406,9 +399,9 @@ export class HomePage {
   gotoTransactionDetail(tx) {
     const page = "TransactionDetailPage";
 
-    let transactions = tx;
-    let mosaics = this.mosaics;
-    let payload = { transactions, mosaics};
+    const transactions = tx;
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics};
     this.showModal(page, payload);
   }
 

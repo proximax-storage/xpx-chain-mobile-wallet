@@ -44,6 +44,6 @@ export class TransferTransactionComponent {
     this.MOSAIC_INFO.amount = this.tx.mosaics[0].amount.compact();
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
-    this.AMOUNT = this.mosaicsProvider.getRelativeAmount1(this.MOSAIC_INFO.amount, this.MOSAIC_INFO.divisibility)
+    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(this.MOSAIC_INFO.amount, this.MOSAIC_INFO.divisibility)
   }
 }

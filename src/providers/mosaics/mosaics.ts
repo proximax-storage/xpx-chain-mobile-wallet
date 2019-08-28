@@ -24,7 +24,6 @@ export class MosaicsProvider {
   mosaicName: string[];
   disivitity: MosaicInfo;
   defaultMosaics = Array<DefaultMosaic>();
-  defaultMosaics2 = Array<DefaultMosaic2>();
 
 
   constructor(private coingeckoProvider: CoingeckoProvider, private proximaxProvider: ProximaxProvider, ) {
@@ -40,18 +39,6 @@ export class MosaicsProvider {
 
     return [
       XPX
-    ];
-  }
-
-  // TODO: Remove
-  getDefaultMosaics2(): Array<DefaultMosaic2> {
-    const XPX = new DefaultMosaic2({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: "0.000000" });
-    const NPXS = new DefaultMosaic2({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: "0.000000" });
-    const SFT = new DefaultMosaic2({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: "0.000000" });
-    const XAR = new DefaultMosaic2({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: "0.000000" });
-
-    return [
-      XPX, NPXS, SFT, XAR
     ];
   }
 
@@ -116,7 +103,7 @@ export class MosaicsProvider {
                       namespaceId: mName.name.toString().split('.')[0], // namespaceId
                       mosaicId: mName.name.toString().split('.')[1], // mosaicId
                       hex: mName.id.toHex(), // mosaic hex id
-                      amount: this.getRelativeAmount1(mosaic.amount.compact(), mInfo.divisibility),
+                      amount: this.getRelativeAmount(mosaic.amount.compact(), mInfo.divisibility),
                       divisibility: mInfo.divisibility,
                       // 'duration': mInfo.duration
                     });
@@ -163,66 +150,8 @@ export class MosaicsProvider {
     return a;
   }
 
-  // TODO: Remove
-  public setMosaicInfoWithDisivitity(mosaic: Mosaic, disivitity: MosaicInfo): DefaultMosaic2 {
-
-    let modifiedMosaic: DefaultMosaic2;
-    let myMosaics = new Array<DefaultMosaic2>();
-    myMosaics = this.defaultMosaics2;
-
-
-    modifiedMosaic = myMosaics.find(defaultMosaic2 => {
-      return defaultMosaic2.hex == mosaic.id.toHex();
-    });
-
-    if (!modifiedMosaic) {
-      return {
-        amount: this.amountFormatter(mosaic.amount, disivitity),
-        hex: mosaic.id.toHex(),
-        mosaicId: mosaic.id.toHex(),
-        namespaceId: mosaic.id.toHex()
-      };
-    } else {
-      modifiedMosaic.amount = this.amountFormatter(mosaic.amount, disivitity);
-    }
-
-    return modifiedMosaic;
-  }
-
-  // TODO: Remove
-  public setMosaicInfo(mosaic: Mosaic): DefaultMosaic {
-
-    let modifiedMosaic: DefaultMosaic;
-    let myMosaics = new Array<DefaultMosaic>();
-    myMosaics = this.defaultMosaics;
-
-
-    modifiedMosaic = myMosaics.find(defaultMosaic => {
-      return defaultMosaic.hex == mosaic.id.toHex();
-    });
-
-    if (!modifiedMosaic) {
-      return {
-        amount: this.getRelativeAmount(mosaic.amount.compact()),
-        hex: mosaic.id.toHex(),
-        mosaicId: mosaic.id.toHex(),
-        namespaceId: mosaic.id.toHex(),
-        divisibility: 0
-      };
-    } else {
-      modifiedMosaic.amount = this.getRelativeAmount(mosaic.amount.compact());
-    }
-
-    return modifiedMosaic;
-  }
-
-  // TODO: Remove
-  public getRelativeAmount(amount: number): number {
-    return amount / Math.pow(10, 6);
-  }
-
   // TODO: Refactor
-  public getRelativeAmount1(amount: number, divisibility: number): number {
+  public getRelativeAmount(amount: number, divisibility: number): number {
     return amount / Math.pow(10, divisibility);
   }
 
@@ -238,30 +167,6 @@ export class MosaicsProvider {
       minimumFractionDigits: divisibility
     });
     return amountFormatter;
-  }
-
-  public getMosaicInfo(mosaic: Mosaic) {
-    let modifiedMosaic: any;
-    let myMosaics = new Array<DefaultMosaic>();
-
-    myMosaics = this.getDefaultMosaics();
-    console.log('LOG: MosaicsProvider -> getMosaicInfo -> this.getDefaultMosaics();', this.getDefaultMosaics());
-    modifiedMosaic = myMosaics.find(defaultMosaic => {
-      return defaultMosaic.hex == mosaic.id.toHex();
-    });
-
-    if (!modifiedMosaic) {
-      return {
-        amount: this.getRelativeAmount(mosaic.amount.compact()),
-        hex: mosaic.id.toHex(),
-        mosaicId: mosaic.id.toHex(),
-        namespaceId: mosaic.id.toHex(),
-      };
-    } else {
-      modifiedMosaic.amount = this.getRelativeAmount(mosaic.amount.compact());
-    }
-
-    return modifiedMosaic;
   }
 
   // TODO: Refactor
@@ -344,7 +249,7 @@ export class MosaicsProvider {
     }
   }
 
-  // TODO: Remove
+  // TODO: Refactor
    async getOwnedMosaic(mosacis) {
     this.mosaics = [];
     const mosaicsIds = mosacis.map(data => data.id);

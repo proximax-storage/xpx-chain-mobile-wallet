@@ -184,7 +184,10 @@ export class TransactionListPage {
 
   gotoTransactionDetail(tx) {
     let page = "TransactionDetailPage";
-    this.showModal(page, tx);
+    const transactions = tx;
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics}
+    this.showModal(page, payload);
   }
 
   dismiss() {
