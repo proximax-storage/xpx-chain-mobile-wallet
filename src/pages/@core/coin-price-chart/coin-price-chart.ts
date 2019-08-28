@@ -5,7 +5,6 @@ import { SafariViewController } from '@ionic-native/safari-view-controller';
 import {
   ActionSheetController,
   Content,
-  InfiniteScroll,
   IonicPage,
   ModalController,
   NavController,
@@ -13,14 +12,8 @@ import {
   ViewController,
 } from 'ionic-angular';
 import {
-  AccountInfo,
-  ModifyMultisigAccountTransaction,
-  SimpleWallet,
   Transaction,
   TransactionType,
-  TransferTransaction,
-  AggregateTransaction,
-  Address,
   MultisigAccountInfo,
 } from 'tsjs-xpx-chain-sdk';
 
@@ -28,13 +21,10 @@ import { GetMarketPricePipe } from '../../../pipes/get-market-price/get-market-p
 import { App } from '../../../providers/app/app';
 import { CoinPriceChartProvider } from '../../../providers/coin-price-chart/coin-price-chart';
 import { CoingeckoProvider } from '../../../providers/coingecko/coingecko';
-import { GetBalanceProvider } from '../../../providers/get-balance/get-balance';
 import { HapticProvider } from '../../../providers/haptic/haptic';
 import { NemProvider } from '../../../providers/nem/nem';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
-import { WalletProvider } from '../../../providers/wallet/wallet';
-import { flatMap, toArray } from 'rxjs/operators';
 import { DefaultMosaic } from '../../../models/default-mosaic';
 
 /**
@@ -80,9 +70,6 @@ export class CoinPriceChartPage {
   namespaceId: string;
   mosaicAmount: number;
 
-  @ViewChild(InfiniteScroll)
-  private infiniteScroll: InfiniteScroll;
-
   @ViewChild(Content) content: Content;
 
   selectedSegment: string = "transactions";
@@ -102,10 +89,7 @@ export class CoinPriceChartPage {
     public utils: UtilitiesProvider,
     private modalCtrl: ModalController,
     private nemProvider: NemProvider,
-    private walletProvider: WalletProvider,
     private viewCtrl: ViewController,
-    private getBalanceProvider: GetBalanceProvider,
-    private marketPrice: GetMarketPricePipe,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
     private actionSheetCtrl: ActionSheetController,
@@ -122,7 +106,6 @@ export class CoinPriceChartPage {
       { label: "6M", value: 182 }
 
     ];
-    // console.log('this.navParams.data', this.navParams.data)
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
@@ -131,7 +114,6 @@ export class CoinPriceChartPage {
     this.namespaceId = payload.namespaceId;
      // will be used to filter transactions
     this.coinId = payload.coinId;
-    // console.log(' this.coinId ',this.coinId )
     this.selectedAccount = payload.selectedAccount;
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
@@ -151,30 +133,6 @@ export class CoinPriceChartPage {
     
     this.mosaicAmount = this.navParams.data['mosaicAmount']; 
     this.totalBalance = this.navParams.data['totalBalance'];
-
-
-
-    // if (this.mosaicId == "sft") {
-    //   this.selectedCoin = {
-    //     "name": "SportsFix",
-    //     "symbol": "SFT",
-    //     "links": {
-    //       "homepage": ["https://sportsfix.io/"],
-    //       "announcement_url": ["https://medium.com/@sportsfix"],
-    //       "blockchain_site": ["https://bitcointalk.org/index.php?topic=4380637.msg39045279#msg39045279"],
-    //       "facebook_username": "sportsfix.io",
-    //       "twitter_screen_name": "SportsFix_io",
-    //       "telegram_channel_identifier": "SFICO"
-    //     },
-    //     "genesis_date": "2018-12-18",
-    //     "description": {
-    //       en: "SportsFix aims to transform the most powerful content in the world – SPORTS. SF presents a decentralized sports media ecosystem which aims to completely change the way fans connect and engage with sports content. In its current stage, SF is a rapidly growing over-the-top (OTT) business in Asia streaming local and international sports events to millions of fans every week and on track to become one of the most valuable video streaming platforms in the region. In our next phase, SF will be issuing SportsFix Tokens (SFT) which allows fans to participate and engage with their favourite leagues and clubs in a self-contained economy with all digital transactions employing smart contracts backed by blockchain technology."
-    //     }
-    //   }
-
-    // } else 
-    // console.log('this.mosaicId', this.mosaicId)
-    // console.log('this.namespaceId', this.namespaceId)
     
     if (this.mosaicId == 'xar') {
 
@@ -214,14 +172,10 @@ export class CoinPriceChartPage {
       }
       this.showEmptyMosaic = true;
     } else {
-      // console.info('con id ', this.coinId );
-      // if(){}
       if (this.coinId != "") {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
-          // console.log("TCL: CoinPriceChartPage -> this.coin", coin)
           this.selectedCoin = coin;
           this.showEmptyMosaic = false;
-          // console.log("TCL: CoinPriceChartPage -> this.selectedCoin", this.selectedCoin.market_data)
         });
       }
 
@@ -230,105 +184,6 @@ export class CoinPriceChartPage {
 
   }
   ionViewWillEnter() {
-
-    // /** Transaction list business logic */
-    // this.unconfirmedTransactions = null;
-    // this.confirmedTransactions = null;
-    // this.showEmptyMessage = false;
-    // this.isLoading = true;
-
-    // if (this.selectedAccount) {
-    //   this.getAccountInfo();
-    //   this.fakeList = [{}, {}];
-
-    //   this.pageable = this.nemProvider.getAllTransactionsPaginated(
-    //     this.selectedAccount.address
-    //   );
-
-
-
-    //   this.nemProvider.getUnconfirmedTransactions(this.selectedAccount.address).pipe(
-    //     flatMap(_ => _),
-    //     toArray()
-    //   ).subscribe(result => {
-    //       this.unconfirmedTransactions = result;
-    //     });
-
-    //   // temp
-    //   if (this.mosaicId != 'xem') {
-    //     this.nemProvider.getMosaicTransactions(this.selectedAccount.address).subscribe(transactions => {
-
-    //       const filteredTransactions = transactions.filter(tx => tx!._mosaics[0].mosaicId.name == this.mosaicId);
-
-    //       let mosaicInfo = [
-    //         { mosaicId: 'xpx', divisibility: 1e6 },
-    //         { mosaicId: 'npxs', divisibility: 1e6 },
-    //         { mosaicId: 'sft', divisibility: 1e6 },
-    //         { mosaicId: 'xar', divisibility: 1e4 },
-    //       ]
-
-    //       let currentMosaic = mosaicInfo.find(mosaic => mosaic.mosaicId == this.mosaicId);
-    //       console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaic", currentMosaic);
-
-
-    //       let total: number = 0;
-
-
-    //       filteredTransactions.forEach(tx => {
-    //         let amount = tx.mosaics().map(mosaic => mosaic.quantity)[0] / currentMosaic.divisibility;
-    //         console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> amount", amount);
-    //         if (tx.recipient.value === this.selectedAccount.address.plain()) {
-    //           total += amount
-    //         }
-    //         else {
-    //           total -= amount
-    //         }
-    //       })
-        
-
-    //       this.nemProvider.getXEMTransactions(this.selectedAccount.address).subscribe(transactions => {
-    //         console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
-    //         transactions.forEach(tx => {
-    //           if(tx.type == TransactionType.MODIFY_MULTISIG_ACCOUNT) {
-    //             console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> tx", tx);
-
-    //             let transaction: TransferTransaction = ((tx as AggregateTransaction).innerTransactions[0] as TransferTransaction)
-    //             let currentMosaicTransaction = transaction.mosaics.find(mosaic => mosaic.id.toHex() == this.mosaicId);
-								
-    //             if(currentMosaicTransaction ) {
-    //               console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> currentMosaicTransaction", currentMosaicTransaction);
-    //               this.confirmedTransactions.push(tx);
-    //               if ((transaction.recipient as Address).plain() === this.selectedAccount.address.plain()) {
-    //               total += currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
-    //             }
-    //             else {
-    //               total -= currentMosaicTransaction.amount.compact() / currentMosaic.divisibility;
-    //             }
-    //             }
-    //           }
-    //         })
-  
-    //       })
-
-    //       this.isLoading = false;
-    //       this.showEmptyMessage = false;
-    //       this.confirmedTransactions = filteredTransactions;
-
-
-    //       // Check transaction is empty
-    //       if (this.confirmedTransactions.length == 0) this.showEmptyMessage = true;
-    //     })
-    //   } else {
-    //     this.nemProvider.getXEMTransactions(this.selectedAccount.address).subscribe(transactions => {
-    //       this.isLoading = false;
-    //       this.showEmptyMessage = false;
-    //       this.confirmedTransactions = transactions;
-    //       console.log("LOG: CoinPriceChartPage -> ionViewWillEnter -> this.confirmedTransactions", this.confirmedTransactions);
-
-    //       if (!this.confirmedTransactions) this.showEmptyMessage = true;
-    //     })
-    //   }
-    // }
   }
 
   getAccountInfo() {
@@ -337,10 +192,8 @@ export class CoinPriceChartPage {
       this.nemProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
           if (accountInfo) {
             this.accountInfo = accountInfo;
-            // console.log("accountInfo", this.accountInfo)
             // Check if account is a cosignatory of multisig account(s)
             if (this.accountInfo.cosignatories.length > 0) {
-              // console.clear();
               // console.log("This is a multisig account");
               this.isMultisig = true;
             }
@@ -455,7 +308,6 @@ export class CoinPriceChartPage {
           this.browserTab.openUrl(link);
         } else {
           // open URL with InAppBrowser instead or SafariViewController
-
           this.safariViewController.isAvailable()
             .then((available: boolean) => {
               if (available) {
