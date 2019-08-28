@@ -57,6 +57,8 @@ export class TransactionListPage {
   accountInfo: AccountInfoWithMetaData;
   selectedAccount: any;
 
+  mosaics: any[] = [];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -77,6 +79,7 @@ export class TransactionListPage {
     this.totalBalance = payload.total;
     this.confirmedTransactions = payload.transactions;
     this.selectedAccount = payload.selectedAccount;
+    this.mosaics = payload.mosaics;
 
     if(this.confirmedTransactions === null){
       this.showEmptyMessage = true;
@@ -181,7 +184,10 @@ export class TransactionListPage {
 
   gotoTransactionDetail(tx) {
     let page = "TransactionDetailPage";
-    this.showModal(page, tx);
+    const transactions = tx;
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics}
+    this.showModal(page, payload);
   }
 
   dismiss() {

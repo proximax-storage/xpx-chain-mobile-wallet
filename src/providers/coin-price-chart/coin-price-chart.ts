@@ -297,13 +297,17 @@ export class CoinPriceChartProvider {
   }
 
   load(coin: any, duration: number, to_coin: string) {
-    // console.log(coin)
-
-    this.coingeckoProvider
+    // console.log(' coin.id coin.id', coin.id)
+    // console.log(duration)
+    // console.log(to_coin)
+    if(coin.id === 'proximax' || coin.id === 'pundi-x' || coin.id === 'sportsfix'){
+      this.coingeckoProvider
       .getPrices(coin.id, to_coin, duration)
       .subscribe(data => {
         // console.log(data);
         this.initChart(data, coin.symbol, to_coin);
       });
+    }
+    
   }
 }

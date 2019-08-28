@@ -26,26 +26,12 @@ export class NodeListPage {
   url: string;
   public blockHeight: number  = 0;
   public nodes: Array<any> = [
-    {name: "bctestnet2-cow.xpxsirius.io", endpoint:"54.189.186.124"},
-    {name: "bctestnet1-cow.xpxsirius.io", endpoint:"bctestnet1-cow.xpxsirius.io"},
-    
-
-    // {name: "hugealice.nem.ninja", endpoint:"88.99.192.82"},
-    // {name: "hugealice2.nem.ninja", endpoint:"76.9.68.110"},
-    // {name: "hugealice3.nem.ninja  ", endpoint:"176.9.20.180"},
-    // {name: "hugealice4.nem.ninja", endpoint:"199.217.118.114"},
-    // {name: "bigalice3.nem.ninja", endpoint:"62.75.171.41"},
-    // {name: "san.nem.ninja", endpoint:"167.86.96.227"},
-    // {name: "go.nem.ninja", endpoint:"167.86.95.114"},
-    // {name: "hachi.nem.ninja", endpoint:"167.86.95.115"},
-    // {name: "jusan.nem.ninja", endpoint:"167.86.96.228"},
-    // {name: "nijuichi.nem.ninja", endpoint:"167.86.96.231"},
-    // {name: "alice2.nem.ninja", endpoint:"62.75.251.134"},
-    // {name: "alice3.nem.ninja", endpoint:"62.75.163.236"},
-    // {name: "alice4.nem.ninja", endpoint:"209.126.98.204"},
-    // {name: "alice5.nem.ninja", endpoint:"108.61.182.27"},
-    // {name: "alice6.nem.ninja", endpoint:"108.61.168.86"},
-    // {name: "alice7.nem.ninja", endpoint:"104.238.161.61"},
+    {name: "bctestnet1.xpxsirius.io", endpoint:"bctestnet1.xpxsirius.io"},
+    {name: "bctestnet2.xpxsirius.io", endpoint:"bctestnet2.xpxsirius.io"},
+    {name: "bctestnet3.xpxsirius.io", endpoint:"bctestnet3.xpxsirius.io"},
+    {name: "bctestnet4.xpxsirius.io", endpoint:"bctestnet4.xpxsirius.io"},
+    {name: "bctestnet5.xpxsirius.io", endpoint:"bctestnet5.xpxsirius.io"},
+    {name: "bctestnet6.xpxsirius.io", endpoint:"bctestnet6.xpxsirius.io"},
   ];
   public node: Node;
   currentNode: string = "";

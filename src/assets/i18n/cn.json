@@ -7,6 +7,7 @@
     "APP.COMMON.PASSWROD" : "密码",
     "APP.COMMON.PASSWROD.PLACEHOLDER" : "输入密码",
     "APP.EMPTY.MOSAICS":"您的Mosaics马赛克将会在此显示。当前无马赛克。",
+    "APP.EMPTY.MOSAICS.INFO":"您的马赛克信息将显示在此处。目前没有任何信息",
     "APP.EMPTY.TRANSACTIONS":"您的交易将会在此显示。当前无交易。",
     "APP.EMPTY.CONTACT":"您的联系人将在此显示。当前无联系人。",
     "APP.LOGIN" : "登录",

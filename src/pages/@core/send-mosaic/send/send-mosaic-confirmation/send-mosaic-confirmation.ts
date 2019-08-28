@@ -1,3 +1,5 @@
+import { MosaicModel } from './../../../../../providers/transfer-transaction/mosaic.model';
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
@@ -15,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import * as BcryptJS from "bcryptjs";
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
+import { TransferTransactionProvider } from '../../../../../providers/transfer-transaction/transfer-transaction';
 
 /**
  * Generated class for the SendMosaicConfirmationPage page.
@@ -29,6 +32,7 @@ import { WalletProvider } from '../../../../../providers/wallet/wallet';
   templateUrl: 'send-mosaic-confirmation.html'
 })
 export class SendMosaicConfirmationPage {
+  generationHash: any;
   App = App;
   formGroup: FormGroup;
   currentWallet: SimpleWallet;
@@ -48,9 +52,12 @@ export class SendMosaicConfirmationPage {
     private haptic: HapticProvider,
     private translateService: TranslateService,
     private proximaxProvider: ProximaxProvider,
-    private walletProvider: WalletProvider
+    private walletProvider: WalletProvider,
+    private transferTransaction: TransferTransactionProvider
   ) {
     this.init();
+    this.generationHash = this.walletProvider.generationHash
+    console.log('-------------------------', this.generationHash)
   }
 
   ionViewWillEnter() {
@@ -96,39 +103,56 @@ export class SendMosaicConfirmationPage {
       console.log("Normal transfer");
       if (this._allowedToSendTx()) {
 
-        const acountRecipient = this.data.recipientAddress;
-        const amount = this.proximaxProvider.getAbsoluteAmount(this.data.amount);
-        const message = this.data.message;
-        const password =  this.credentials.password
-        const mosaic = this.data.mosaic.hex;
-        const common = { password: password };
+        // const acountRecipient = this.data.recipientAddress;
+        // const amount = this.proximaxProvider.getAbsoluteAmount(this.data.amount);
+        // const message = this.data.message;
+        // const password =  this.credentials.password
+        // const mosaic = this.data.mosaic.hex;
+        // const common = { password: password };
 
-        if (this.walletProvider.decrypt(common, this.data.currentWallet)) {
+        const mosaicModel = new MosaicModel();
+        mosaicModel.hexId = this.data.mosaic.hex;
+        mosaicModel.amount = this.data.amount;
 
-          const transferTransction = this.walletProvider.buildToSendTransfer(
-            common,
-            acountRecipient,
-            message,
-            amount,
-            NetworkType.TEST_NET,
-            mosaic
-          );
+        //1. Build a transfer transaction
+        this.transferTransaction.setRecipient(this.data.recipientAddress);
+        this.transferTransaction.setMosaics([mosaicModel]);
+        this.transferTransaction.setMessage(this.data.message);
+        this.transferTransaction.send().subscribe(response => {
+          this.showSuccessMessage();
+        }, (err) => {
+            this.showErrorMessage(err);
+        }, () => {
+          console.log('Done transfer transaction.');
+        });
+      
 
-          transferTransction.transactionHttp
-            .announce(transferTransction.signedTransaction)
-            .subscribe(
-              value => {
-                console.log('value ', value)
-                navigator.vibrate(500)
-        console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
-                this.showSuccessMessage()
-              },
-              async error => {
-                console.log('error ', error)
-                this.showErrorMessage(error)
-              }
-            );
-        }
+        // if (this.walletProvider.decrypt(common, this.data.currentWallet)) {
+
+        //   const transferTransction = this.walletProvider.buildToSendTransfer(
+        //     common,
+        //     acountRecipient,
+        //     message,
+        //     amount,
+        //     NetworkType.TEST_NET,
+        //     mosaic
+        //   );
+
+        //   transferTransction.transactionHttp
+        //     .announce(transferTransction.signedTransaction)
+        //     .subscribe(
+        //       value => {
+        //         console.log('value ', value)
+        //         navigator.vibrate(500)
+        // console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
+        //         this.showSuccessMessage()
+        //       },
+        //       async error => {
+        //         console.log('error ', error)
+        //         this.showErrorMessage(error)
+        //       }
+        //     );
+        // }
       } else {
         this.showGenericError();
       }

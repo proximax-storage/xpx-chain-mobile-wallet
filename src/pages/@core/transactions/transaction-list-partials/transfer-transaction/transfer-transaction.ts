@@ -1,3 +1,4 @@
+import { DefaultMosaic } from './../../../../../models/default-mosaic';
 //"type": 257
 
 import { Component, Input } from '@angular/core';
@@ -11,16 +12,18 @@ import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
   templateUrl: 'transfer-transaction.html'
 })
 export class TransferTransactionComponent {
+  hiden: boolean;
   @Input() tx: TransferTransaction; // Type conversion for better code completion
+  @Input() mosaics: DefaultMosaic[] = [] ;
   @Input() owner: string;
   @Input() status: string;
   
   App = App;
   LOGO: string = '';
   AMOUNT: number = 0;
-  MOSAIC_INFO: any;
+  MOSAIC_INFO: DefaultMosaic = null;
   STATUS:string = '';
-
+  array: any[]=[];
 
   constructor(
     private mosaicsProvider: MosaicsProvider,
@@ -31,14 +34,16 @@ export class TransferTransactionComponent {
 
   ngOnInit() {
     this.getMosaicInfo();
-    console.log("SIRIUS CHAIN WALLET: TransferTransactionComponent -> ngOnInit -> this.status", this.status)
-
   }
 
-  getMosaicInfo() {
-    this.MOSAIC_INFO = this.mosaicsProvider.getMosaicInfo(this.tx.mosaics[0]);
+  async getMosaicInfo() {
+    this.MOSAIC_INFO = this.mosaics.find(m => {
+      return m.hex == this.tx.mosaics[0].id.id.toHex();
+    });
+
+    this.MOSAIC_INFO.amount = this.tx.mosaics[0].amount.compact();
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
-    this.AMOUNT = this.MOSAIC_INFO.amount;
     this.STATUS = this.status;
+    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(this.MOSAIC_INFO.amount, this.MOSAIC_INFO.divisibility)
   }
 }

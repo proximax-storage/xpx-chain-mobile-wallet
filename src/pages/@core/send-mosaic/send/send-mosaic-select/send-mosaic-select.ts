@@ -26,13 +26,9 @@ export class SendMosaicSelectPage {
   mosaic: any[]=[];
   selectedMosaicc: any;
   App = App;
-
   selectedMosaic: any;
-  // mosaics: Array<any>;
   mosaics: any[]=[];
-
   selectedWallet: SimpleWallet;
-
   fakeList: Array<any>;
   walletAddress: Address;
 
@@ -50,23 +46,19 @@ export class SendMosaicSelectPage {
     this.selectedMosaicc = this.navParams.data.selectedMosaic;
   }
 
-  ionViewWillEnter() {
-    this.selectedMosaicc.forEach(async mosaics => { 
-      this.mosaic.push(mosaics.id)
+  async ionViewWillEnter() {
 
-      const mosaicsInfo = await this.proximaxProvider.getMosaics(this.mosaic).toPromise();
-      mosaicsInfo.forEach(mosaicsI => {
-        if (mosaics.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
-        this.disivitity = mosaicsI
-        }
+    let filter = this.selectedMosaicc.filter(mosaics => mosaics)
+      await this.mosaicsProvider.getOwnedMosaic( filter ).then(result => {
+      filter.forEach(mosaicsI => {
+          let filter2 = result.filter(mosaics =>mosaics.hex === mosaicsI.id.toHex())
+          this.mosaics.push( filter2[0])
       })
-      const mosaicInfo= this.mosaicsProvider.setMosaicInfoWithDisivitity(mosaics, this.disivitity);
-      this.mosaics.push(mosaicInfo)
     })
   }
 
   loadDefaultMosaics() {
-    return this.mosaicsProvider.getMosaics();
+    return this.mosaicsProvider.loadDefaultMosaics();
   }
 
   ionViewDidLoad() {

@@ -7,6 +7,7 @@
     "APP.COMMON.PASSWROD" : "Wachtwoord",
     "APP.COMMON.PASSWROD.PLACEHOLDER" : "Voer je wachtwoord in",
     "APP.EMPTY.MOSAICS":"Je mozaïeken worden hier weergegeven. Op dit moment zijn er geen.",
+    "APP.EMPTY.MOSAICS.INFO":"Uw mozaïekinformatie zal hier verschijnen. Er is momenteel geen informatie.",
     "APP.EMPTY.TRANSACTIONS":"Je transacties worden hier weergegeven. Op dit moment zijn er geen.",
     "APP.EMPTY.CONTACT":"Je contacten worden hier weergegeven. Op dit moment zijn er geen.",
     "APP.LOGIN" : "Inloggen",

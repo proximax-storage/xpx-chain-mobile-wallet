@@ -25,21 +25,21 @@
 
     <section item-right>
 
-      <h2 text-right ion-text color="black" *ngIf="AMOUNT == 0">
+      <!-- <h2 text-right ion-text color="black" *ngIf="!hiden">
         0
-      </h2>
+      </h2> -->
 
       <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient.plain() && AMOUNT !== 0">
-        +{{ AMOUNT  }}
+        +{{ AMOUNT | number : '1.0-6' }}
       </h2>
 
       <h2 text-right ion-text color="danger" *ngIf="owner != tx?.recipient.plain()  && AMOUNT !== 0">
-         -{{ AMOUNT }}
+         -{{ AMOUNT | number : '1.0-6' }}
       </h2>
 
       <p text-right  ion-text color="black">
           <small>
-            {{ tx.deadline.value.toString() | timeago }}
+            {{ tx.deadline.value.minusHours(2).toString() | timeago }}
           </small>
         </p>
     </section>

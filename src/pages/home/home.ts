@@ -12,9 +12,8 @@ import { SimpleWallet, Mosaic, Password, Account, AccountInfo, TransactionType, 
 import { AuthProvider } from '../../providers/auth/auth';
 import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { animate, style, transition, trigger } from "@angular/animations";
-import { ProximaxProvider } from '../../providers/proximax/proximax';
 
 @Component({
   selector: 'page-home',
@@ -86,7 +85,6 @@ export class HomePage {
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
-    private proximaxProvider: ProximaxProvider,
   ) {
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
@@ -128,6 +126,13 @@ export class HomePage {
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
           console.log("2. Selected wallet:", selectedWallet);
 
+          // Slide to selected wallet
+          this.wallets.forEach((wallet, index) => {
+            if (selectedWallet.name === wallet.name) {
+              this.slides.slideTo(index);
+            }
+          })
+
           this.selectedWallet = selectedWallet ? selectedWallet : wallets[0];
           console.log("3. LOG: HomePage -> ionViewWillEnter -> myWallet", this.selectedWallet);
 
@@ -136,82 +141,31 @@ export class HomePage {
             this.selectedAccount = account;
 
             try {
-              this.getAccountInfo(account).subscribe(accountInfo => {
+              this.walletProvider.getAccountInfo(account).subscribe(accountInfo => {
                 console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
-                const mosacis = accountInfo.mosaics
-                const mosaicsIds = mosacis.map(data => data.id);
 
-                // Load default mosaics
-                const myAssets = this.loadDefaultMosaics();
-                console.log("6. LOG: HomePage -> loadDefaultMosaics()")
-                myAssets.subscribe(async mosaics => {
-                  this.mosaics = mosaics.slice(0);
+                // Owned mosaics
+                const ownedMosaics = accountInfo.mosaics
+                console.log('Owned mosaics', ownedMosaics)
 
-                  this.mosaics.forEach(mosac => {
-                    if(mosac.amount == 0){
-                      mosac.amount = '0.000000'
-                    }
-                  });
+                // Merge owned mosaics & default mosaics
+                const myMergedMosaics = from(this.mosaicsProvider.mergeMosaics(ownedMosaics));
+
+                myMergedMosaics.subscribe(_myMergedMosaics => {
+                  console.log('6. LOG: HomePage -> init -> _myMergedMosaics');
+                  this.mosaics = _myMergedMosaics;
+
                   this.isLoading = false;
-
-                  const mosaicsInfo = await this.proximaxProvider.getMosaics(mosaicsIds).toPromise();
-                  // console.log("mosaicsInfo", mosaicsInfo)
-                  await this.mosaicsProvider.getMosaicNames(mosaicsIds).then(mosaicsNames => {
-                    mosacis.forEach(async mosacis => {
-
-                      mosaicsInfo.forEach(mosaicsI => {
-                        // console.log('------', mosaicsI)
-                        if (mosacis.id.toHex() === mosaicsI.mosaicId.id.toHex()) {
-                          this.disivitity = mosaicsI
-                          // console.log('------ mosaicsI', mosaicsI.mosaicId.id.toHex())
-                          // console.log('------ este es el completo', this.disivitity)
-                        }
-
-                      })
-                      
-                      mosaicsNames.forEach(mosaicName => {
-
-                        if (mosacis.id.toHex() === mosaicName.mosaicId.id.toHex()) {
-                          let _mosaicNames = mosaicName.names
-                          if (_mosaicNames.length > 0) {
-                            _mosaicNames.map(val => {
-                              this.mosaicName = val.split(".")
-                            })
-                          } else {
-                            this.mosaicName = [" ", mosaicName.mosaicId.id.toHex()]
-                          }
-                          this.amount = this.mosaicsProvider.amountFormatter(mosacis.amount, this.disivitity).toString();
-                          this.hex = mosaicName.mosaicId.id.toHex()
-                        }
-                        // console.log('mosacis.amount', mosacis.amount.compact())
-                        // console.log('amountamountamountamount', this.amount)
-
-                        this.mosaicInfo = {
-                          mosaicId: this.mosaicName[1],
-                          namespaceId: this.mosaicName[0],
-                          hex: this.hex,
-                          amount: this.amount,
-                          disivitity: this.disivitity['properties'].divisibility
-                        }
-                      })
-                   
-                      let filter = this.mosaics.filter(mosaic => mosaic.hex === this.mosaicInfo.hex)
-                      if (filter.length == 0) {
-                        this.mosaics.push(this.mosaicInfo)
-                      }
-                    })
-                  })
-
                   // Update asset info
-                  console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
-                  this.updateAssetsInfo(accountInfo);
+                  // console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
+                  // this.updateAssetsInfo(accountInfo);
 
                   // Compute wallet balance in USD
-                  console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", mosaics)
-                  this.mosaicsProvider.computeTotalBalance(mosaics).then(total => {
+                  console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
+                  this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
                     this.totalWalletBalance = total as number;
                     console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
-                    loader.dismiss();
+                    // loader.dismiss();
                   });
 
                   // Show Transactions
@@ -222,15 +176,18 @@ export class HomePage {
                   this.hideLoaders();
                 })
               }, err => {
+                this.hideLoaders();
                 this.showEmptyMessage();
               })
             } catch (error) {
+              this.hideLoaders();
               this.showEmptyMessage();
             }
           })
         })
         this.hideEmptyMessage();
       } else {
+        this.hideLoaders();
         this.showEmptyMessage();
       }
       this.hideLoaders();
@@ -261,18 +218,6 @@ export class HomePage {
 
   }
 
-  loadDefaultMosaics() {
-    return this.mosaicsProvider.getMosaics();
-  }
-
-  private updateAssetsInfo(accountInfo: AccountInfo) {
-    accountInfo.mosaics.forEach(mosaic => {
-      const mosaicInfo = this.mosaicsProvider.setMosaicInfo(mosaic);
-    });
-  }
-
-
-
   private getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
@@ -292,17 +237,6 @@ export class HomePage {
 
         });
     });
-  }
-
-  private getAccountInfo(account: Account): Observable<AccountInfo> {
-    return this.walletProvider.getAccountInfo(account.address.plain());
-    // return 
-    // new Observable(observer => {
-    //   const accountInfo = this.walletProvider.getAccountInfo(account.address.plain());
-    //     accountInfo.subscribe(accountInfo => {
-    //     observer.next(accountInfo);
-    // });
-    // });
   }
 
   getTransactions(account: Account) {
@@ -350,8 +284,9 @@ export class HomePage {
     let selectedAccount = this.selectedWallet
     let transactions = this.confirmedTransactions;
     let total = this.totalWalletBalance;
+    let mosaics = this.mosaics;
 
-    let payload = { selectedAccount, transactions, total };
+    let payload = { selectedAccount, transactions, total, mosaics };
 
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,
@@ -425,33 +360,46 @@ export class HomePage {
     // console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
     // console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
 
-    let coinId: string;
+    let coinName: string;
 
     if (mosaic.mosaicId === 'xem') {
-      coinId = 'nem';
+      coinName = 'nem';
     }
     else if (mosaic.mosaicId === 'xpx') {
-      coinId = 'proximax';
+      coinName = 'proximax';
     } else if (mosaic.mosaicId === 'npxs') {
-      coinId = 'pundi-x';
+      coinName = 'pundi-x';
+    } else if (mosaic.mosaicId === 'sft') {
+      coinName = 'sportsfix';
     } else {
-      coinId = '';
+      coinName = '';
     }
 
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
-      // console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
-      let totalBalance = mosaic.amount * price;
-      // console.log("LOG: HomePage -> publicgotoCoinPrice -> totalBalance", totalBalance);
+      console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
+      const totalBalance = mosaic.amount * price;
+      const mosaicHex =  mosaic.hex;
+      const mosaicId = mosaic.mosaicId;
+      const namespaceId = mosaic.namespaceId;
+      const coinId = coinName;
+      const selectedAccount = this.selectedWallet;
+      const transactions = this.confirmedTransactions;
+      const mosaicAmount = mosaic.amount;
+      const mosaics = this.mosaics;
+      const payload = { 
+        totalBalance, 
+        mosaicHex,
+        mosaicId,
+        namespaceId,
+        coinId,
+        selectedAccount,
+        transactions,
+        mosaicAmount,
+        mosaics
+      }
       let page = "CoinPriceChartPage";
-      const modal = this.modalCtrl.create(page, {
-        mosaicHex: mosaic.hex,
-        mosaicId: mosaic.mosaicId,
-        coinId: coinId,
-        selectedAccount: this.selectedWallet,
-        transactions: this.confirmedTransactions,
-        mosaicAmount: mosaic.amount,
-        totalBalance: totalBalance
-      }, {
+      
+      const modal = this.modalCtrl.create(page, payload, {
           enableBackdropDismiss: false,
           showBackdrop: true
         });
@@ -460,12 +408,16 @@ export class HomePage {
   }
 
   gotoTransactionDetail(tx) {
-    let page = "TransactionDetailPage";
-    this.showModal(page, tx);
+    const page = "TransactionDetailPage";
+
+    const transactions = tx;
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics};
+    this.showModal(page, payload);
   }
 
   showReceiveModal() {
-    let page = "ReceivePage";
+    const page = "ReceivePage";
     this.showModal(page, {});
   }
 
@@ -513,9 +465,6 @@ export class HomePage {
 
   showWalletList() {
     const page = "WalletListPage";
-
-    // this.showModal(page, {wallets: this.wallets});
-
     this.utils
       .showInsetModal(page, { wallets: this.wallets })
       .subscribe(data => {

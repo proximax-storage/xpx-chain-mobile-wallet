@@ -96,22 +96,22 @@ export class UtilitiesProvider {
   getLogo(mosaic: any) {
     if (
       mosaic.namespaceId === 'prx' &&
-      mosaic.mosaicId === 'xpx'
+      mosaic.mosaicId === 'xpx' || mosaic.mosaicId ===  '3c0f3de5298ced2d'
     ) {
       return AppConfig.LOGO.XPX;
     } else if (
       mosaic.namespaceId === 'pundix' &&
-      mosaic.mosaicId === 'npxs'
+      mosaic.mosaicId === 'npxs' || mosaic.mosaicId === '1e29b3356f3e24e5'
     ) {
       return AppConfig.LOGO.NPXS;
     } else if (
       mosaic.namespaceId === 'sportsfix' &&
-      mosaic.mosaicId === 'sft'
+      mosaic.mosaicId === 'sft' || mosaic.mosaicId === '33b0efbf4a600cc9'
     ) {
       return AppConfig.LOGO.SFT;
     } else if (
       mosaic.namespaceId === 'xarcade' &&
-      mosaic.mosaicId === 'xar'
+      mosaic.mosaicId === 'xar' || mosaic.mosaicId === '59096674da68a7e5'
     ) {
       return AppConfig.LOGO.XAR;
     } else {

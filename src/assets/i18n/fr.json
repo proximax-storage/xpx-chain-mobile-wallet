@@ -7,6 +7,7 @@
     "APP.COMMON.PASSWROD" : "Mot de passe",
     "APP.COMMON.PASSWROD.PLACEHOLDER" : "Entrez votre mot de passe",
     "APP.EMPTY.MOSAICS":"Vos mosaic apparaîtront ici. Il n'y en a pas pour le moment.",
+    "APP.EMPTY.MOSAICS.INFO":"Les informations de votre mosaïque seront affichées ici. Il n'y a actuellement aucune information.",
     "APP.EMPTY.TRANSACTIONS":"Vos transactions apparaîtront ici. Il n'y en a pas pour le moment..",
     "APP.EMPTY.CONTACT":"Vos contacts apparaîtront ici. Il n'y en a pas pour le moment.",
     "APP.LOGIN" : "Connexion",

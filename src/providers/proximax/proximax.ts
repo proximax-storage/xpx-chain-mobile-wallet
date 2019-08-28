@@ -11,6 +11,9 @@ import {
   MosaicAmountView,
   MosaicHttp,
   MosaicId,
+  NamespaceId,
+  NamespaceInfo,
+  NamespaceName,
   MosaicInfo,
   MosaicService,
   NamespaceHttp,
@@ -22,6 +25,7 @@ import {
   Transaction,
   TransactionHttp,
   QueryParams,
+  NetworkHttp,
 } from 'tsjs-xpx-chain-sdk';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
@@ -38,6 +42,7 @@ import { commonInterface, walletInterface } from '../interfaces/shared.interface
 export class ProximaxProvider {
 
   networkType: NetworkType;
+  networkHttp: NetworkHttp;
   wsNodeUrl: string;
   httpUrl: string;
   accountHttp: AccountHttp;
@@ -48,12 +53,13 @@ export class ProximaxProvider {
   transactionHttp: TransactionHttp;
 
   constructor(public http: HttpClient) {
-    this.networkType = NetworkType[AppConfig.sirius.networkType];
+    this.networkType = AppConfig.sirius.networkType;
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
+    this.networkHttp = new NetworkHttp(this.httpUrl);
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
-    this.accountHttp = new AccountHttp(this.httpUrl);
-    this.mosaicHttp = new MosaicHttp(this.httpUrl);
-    this.namespaceHttp = new NamespaceHttp(this.httpUrl);
+    this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
+    this.mosaicHttp = new MosaicHttp(this.httpUrl, this.networkHttp);
+    this.namespaceHttp = new NamespaceHttp(this.httpUrl, this.networkHttp);
     this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
     this.namespaceService = new NamespaceService(this.namespaceHttp);
     this.transactionHttp = new TransactionHttp(this.httpUrl);
@@ -83,7 +89,7 @@ export class ProximaxProvider {
       iv: iv,
     };
 
-    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    crypto.passwordToPrivatekey(common, wallet, 2);
     return common.privateKey;
   }
 
@@ -117,9 +123,19 @@ export class ProximaxProvider {
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
+
+  getNamespace(NamespaceId: NamespaceId[]): Observable<NamespaceName[]> {
+    return this.namespaceHttp.getNamespacesName(NamespaceId)
+    // return this.mosaicHttp.getMosaics(mosaicIsd);
+  }
+  
+  getLinkedMosaicId(NamespaceId: NamespaceId): Observable<MosaicId> {
+    return this.namespaceHttp.getLinkedMosaicId(NamespaceId)
+  }
+
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
-    return from([]);
-    // return this.mosaicHttp.getMosaicNames(mosaicIds);
+    // return from([]);
+    return this.mosaicHttp.getMosaicsNames(mosaicIds);
   }
 
   checkAddress(privateKey: string, net: NetworkType, address: string): boolean {

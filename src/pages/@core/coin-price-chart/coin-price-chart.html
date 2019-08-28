@@ -85,7 +85,7 @@
       (click)="gotoTransactionDetail(transaction)">        
 
       <!-- if transfer  -->
-      <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
+      <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
         [owner]="selectedAccount.address.plain()" [status]="'Confirmed'">
       </transfer-transaction>
     </ion-card>
@@ -126,7 +126,7 @@
   </div>
 
   <!-- Price Chart -->
-  <div class="" *ngIf="selectedSegment=='priceChart'">
+  <div class="" *ngIf="selectedSegment=='priceChart' && !showEmptyMosaic">
       <section text-center>
         <h1 price ion-text color="black" *ngIf="selectedCoin.market_data">
           {{ selectedCoin.market_data.current_price.usd | currency: 'USD': 'symbol': '1.2-6' }}</h1>
@@ -259,9 +259,30 @@
   
       </ion-list>
     </div>
+    <div *ngIf="showEmptyMosaic" >
+      <ion-grid padding empty >
+        <ion-row>
+          <ion-col>
+            <p>
+            </p>
+          </ion-col>
+        </ion-row>
+        <br>
+        <ion-row>
+          <ion-col>
+            <img quarter-width [src]="App.STICKERS.SORRY">
+  
+            <h6 ion-text color="grey" text-wrap>
+              <strong>{{"APP.EMPTY.MOSAICS.INFO" | translate}}</strong>
+            </h6>
+  
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
 
   <!-- Info -->
-  <div class="" *ngIf="selectedSegment=='info'">
+  <div class="" *ngIf="selectedSegment=='info' && !showEmptyMosaic">
 
     <ion-list transparent-items>
       <h2 margin-left ion-text color="dark">{{"WALLETS.DETAIL.INFO" | translate}}</h2>
