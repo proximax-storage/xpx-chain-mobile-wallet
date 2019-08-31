@@ -54,7 +54,7 @@ export class MosaicsProvider {
     });
   }
 
-  public mergeMosaics(ownedMosaics: Mosaic[]): Observable<Array<DefaultMosaic>> {
+  public getMosaicInfo(ownedMosaics: Mosaic[]): Observable<Array<DefaultMosaic>> {
   console.log('LOG: MosaicsProvider -> mergeMosaics -> ownedMosaics', ownedMosaics);    
 
 
@@ -111,17 +111,16 @@ export class MosaicsProvider {
                 }),
                 toArray()
               )
-                .subscribe(myMosaicsOwned=> {
-                  console.log('LOG: MosaicsProvider -> myMosaicsOwned -> myMosaicsOwned', myMosaicsOwned);
-                  console.log('LOG: MosaicsProvider -> this.defaultMosaics', this.getDefaultMosaics());
+                .subscribe(mosaicsInfo=> {
+                  console.log('LOG: MosaicsProvider -> mosaicsInfo -> mosaicsInfo', mosaicsInfo);
 
                   
-                  const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.getDefaultMosaics()));
-                  console.log('LOG: MosaicsProvider -> mergeMosaics -> mergedMosaics', mergedMosaics);
+                  // const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.getDefaultMosaics()));
+                  // console.log('LOG: MosaicsProvider -> mergeMosaics -> mergedMosaics', mergedMosaics);
 
                   // this.defaultMosaics = mergedMosaics;
 
-                  observer.next(mergedMosaics);
+                  observer.next(mosaicsInfo);
               })
 
             })
@@ -195,13 +194,14 @@ export class MosaicsProvider {
   }
 
   computeTotalBalance(mosaics: Array<DefaultMosaic>) {
+    const MOSAICS = mosaics;
     return new Promise((resolve) => {
 
       function getSum(total, num) {
         return total + num;
       }
 
-      const mosaicsAmountInUSD = mosaics.map(async (mosaic) => {
+      const mosaicsAmountInUSD = MOSAICS.map(async (mosaic) => {
         const price = await this.getCoinPrice(mosaic.mosaicId);
         return price * mosaic.amount;
       })

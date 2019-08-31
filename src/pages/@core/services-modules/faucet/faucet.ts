@@ -69,7 +69,7 @@ export class FaucetPage {
     // 0. Setup mosaic id
     const mosaicModel = new MosaicModel();
     mosaicModel.hexId = '3c0f3de5298ced2d';
-    mosaicModel.amount = 100;   // TODO: change to desired amount
+    mosaicModel.amount = 1;   // TODO: change to desired amount
 
     // 1. Setup sender account / faucet
     const sender = Account.createFromPrivateKey('65F5A572ADD524CA56E2D6210F1A8BE3A7C2340D4F4F6E4BFE3D36797B37DF2F', AppConfig.sirius.networkType);
