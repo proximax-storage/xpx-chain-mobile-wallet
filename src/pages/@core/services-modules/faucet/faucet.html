@@ -1,0 +1,51 @@
+<ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="black">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content background>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12></ion-col>
+
+      <ion-col col-12 text-center>
+        <h3 ion-text color="black">XPX Testnet Faucet </h3>
+        <p ion-text color="black">
+          You can only request 100 XPX for each account.
+        </p>
+      </ion-col>
+
+      <ion-col buttons padding col-12 text-center>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+          
+
+          <ion-item transparent padding>
+            <ion-label stacked>{{"SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS" | translate}}</ion-label>
+            <ion-textarea autosize row="1" formControlName="address" type="text" autocapitalize="none" placeholder="">
+            </ion-textarea>
+          </ion-item>
+          
+
+
+          <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="black">
+            Request
+          </button>
+        </form>
+      </ion-col>
+
+      <ion-col col-12></ion-col>
+      <ion-col col-12></ion-col>
+      <ion-col col-12></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
