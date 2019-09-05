@@ -37,7 +37,7 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    const TX = {...this.tx};
+    const TX = this.tx;
     const MOSAICS = [...this.mosaics]
     
     this.MOSAIC_INFO = MOSAICS.find(m => {

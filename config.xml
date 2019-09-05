@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget android-versionCode="10" id="io.proximax.siriuschainwallet" ios-CFBundleVersion="2" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="10" id="io.proximax.siriuschainwallet" ios-CFBundleVersion="7" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
 	<name>Sirius Chain Wallet</name>
 	<description>A simple and secure wallet to store, send and receive your ProximaX based digital assets. </description>
 	<author email="core.dev@proximax.io" href="http://proximax.io/">ProximaX Limited</author>
@@ -84,32 +84,31 @@
 		<splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732"/>
 	</platform>
 	<hook src="scripts/incrementBuildNum.js" type="after_build"/>
-	<engine name="android" spec="^7.0.0"/>
-	<engine name="ios" spec="^4.4.0"/>
-	<plugin name="com.darktalker.cordova.screenshot" spec="^0.1.6"/>
-	<plugin name="cordova-clipboard" spec="^1.2.1"/>
-	<plugin name="cordova-plugin-app-version" spec="^0.1.9"/>
-	<plugin name="cordova-plugin-browsertab" spec="^0.2.0"/>
-	<plugin name="cordova-plugin-decimal-key" spec="^1.1.2"/>
-	<plugin name="cordova-plugin-device" spec="^2.0.2"/>
-	<plugin name="cordova-plugin-file" spec="^6.0.1"/>
-	<plugin name="cordova-plugin-filechooser" spec="^1.2.0"/>
-	<plugin name="cordova-plugin-filepath" spec="^1.5.1"/>
-	<plugin name="cordova-plugin-ionic-keyboard" spec="^2.1.3"/>
+	<engine name="ios" spec="4.5.5"/>
+	<plugin name="cordova-plugin-whitelist" spec="^1.3.4"/>
+	<plugin name="cordova-plugin-device" spec="^2.0.3"/>
+	<plugin name="cordova-plugin-splashscreen" spec="^5.0.3"/>
 	<plugin name="cordova-plugin-ionic-webview" spec="^4.1.1">
 		<variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="27.+"/>
 	</plugin>
-	<plugin name="cordova-plugin-safariviewcontroller" spec="^1.6.0"/>
+	<plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.0"/>
 	<plugin name="cordova-plugin-secure-storage" spec="^2.6.8"/>
-	<plugin name="cordova-plugin-splashscreen" spec="^5.0.2"/>
-	<plugin name="cordova-plugin-taptic-engine" spec="^2.1.0"/>
-	<plugin name="cordova-plugin-vibration" spec="^3.1.0"/>
-	<plugin name="cordova-plugin-whitelist" spec="^1.3.3"/>
-	<plugin name="cordova-plugin-x-socialsharing" spec="^5.4.4">
+	<plugin name="cordova-clipboard" spec="^1.3.0"/>
+	<plugin name="cordova-plugin-x-socialsharing" spec="^5.4.7">
 		<variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+"/>
 	</plugin>
-	<plugin name="onesignal-cordova-plugin" spec="^2.5.0"/>
-	<plugin name="phonegap-plugin-barcodescanner" spec="^8.0.1">
+	<plugin name="cordova-plugin-file" spec="^6.0.2"/>
+	<plugin name="cordova-plugin-filepath" spec="^1.5.6"/>
+	<plugin name="cordova-plugin-filechooser" spec="^1.2.0"/>
+	<plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0">
 		<variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+"/>
 	</plugin>
+	<plugin name="cordova-plugin-vibration" spec="^3.1.1"/>
+	<plugin name="cordova-plugin-taptic-engine" spec="^2.1.0"/>
+	<plugin name="cordova-plugin-app-version" spec="^0.1.9"/>
+	<plugin name="cordova-plugin-browsertab" spec="^0.2.0"/>
+	<plugin name="cordova-plugin-safariviewcontroller" spec="^1.6.0"/>
+	<plugin name="cordova-plugin-decimal-key" spec="^1.1.2"/>
+	<plugin name="onesignal-cordova-plugin" spec="^2.5.2"/>
+	<plugin name="cordova-plugin-statusbar" spec="^2.4.3"/>
 </widget>

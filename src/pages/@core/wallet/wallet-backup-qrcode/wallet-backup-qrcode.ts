@@ -21,7 +21,6 @@ export class WalletBackupQrcodePage {
 
   privateKey: string;
   QRData: string;
-  showScreenshotButton: boolean;
   walletName: string;
   
 
@@ -36,7 +35,6 @@ export class WalletBackupQrcodePage {
       console.log("SIRIUS CHAIN WALLET: WalletBackupQrcodePage -> this.navParams.data", this.navParams.data)
       this.privateKey = this.navParams.get("privateKey");
       this.walletName = this.navParams.get("walletName");
-      this.showScreenshotButton = true;
   }
 
   ionViewDidLoad() {
