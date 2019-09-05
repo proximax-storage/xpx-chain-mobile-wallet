@@ -4,7 +4,6 @@ import { IonicPage, NavController, NavParams, ViewController } from "ionic-angul
 
 import { App } from "../../../../../providers/app/app";
 import { AuthProvider } from "../../../../../providers/auth/auth";
-import { NemProvider } from "../../../../../providers/nem/nem";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 import {
@@ -42,7 +41,6 @@ export class MosaicCreatePage {
     private alertProvider: AlertProvider,
     private walletProvider: WalletProvider,
     private utils: UtilitiesProvider,
-    private nemProvider: NemProvider,
     private viewCtrl: ViewController
   ) {
     this.init();

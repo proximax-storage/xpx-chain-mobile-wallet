@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { App } from '../../../../providers/app/app';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
@@ -37,7 +36,6 @@ export class WalletAddPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    private nemProvider: NemProvider,
     private walletProvider: WalletProvider,
     private authProvider: AuthProvider,
     private alertProvider: AlertProvider,

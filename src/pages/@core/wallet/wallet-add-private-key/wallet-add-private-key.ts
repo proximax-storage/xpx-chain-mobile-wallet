@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { App } from '../../../../providers/app/app';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
@@ -13,6 +12,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { NemProvider } from '../../../../providers/nem/nem';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -39,7 +39,8 @@ export class WalletAddPrivateKeyPage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private alertProvider: AlertProvider,
-    private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
+    private nem: NemProvider,
     private walletProvider: WalletProvider,
     private authProvider: AuthProvider,
     private utils: UtilitiesProvider,
@@ -102,6 +103,13 @@ export class WalletAddPrivateKeyPage {
     try {
       const newWallet  = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
+      const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
+      const accountInfo = this.nem.getAccountInfo(nemWallet.address).subscribe(_accountInfo => {
+        console.log('wallet de nem 1 accountInfo', _accountInfo);
+      });
+
+      // console.log('wallet de catapult', newWallet);
+     
       this.walletProvider.checkIfWalletNameExists(newWallet.name).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
@@ -156,7 +164,7 @@ export class WalletAddPrivateKeyPage {
             password = data[0];
             try {
               try {
-                let privKey = this.nemProvider.decryptPrivateKey(password, payload);
+                let privKey = this.proximaxProvider.decryptPrivateKey1(password, payload);
                 this.formGroup.patchValue({ name: payload.data.name })
                 this.formGroup.patchValue({ privateKey: privKey })
               } catch (error) {

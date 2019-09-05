@@ -14,8 +14,8 @@ import { SimpleWallet, Namespace } from "tsjs-xpx-chain-sdk";
 
 import { App } from "../../../../../providers/app/app";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
-import { NemProvider } from "../../../../../providers/nem/nem";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
+import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
 
 /**
  * Generated class for the NamespaceListPage page.
@@ -44,7 +44,7 @@ export class NamespaceListPage {
     public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
     public walletProvider: WalletProvider,
-    public nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController
@@ -62,7 +62,7 @@ export class NamespaceListPage {
         this.currentWallet = currentWallet;
       }
 
-      this.nemProvider
+      this.proximaxProvider
         .getNamespacesOwned(this.currentWallet.address)
         .subscribe(namespaces => {
           this.namespaces = namespaces;

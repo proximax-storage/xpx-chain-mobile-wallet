@@ -10,7 +10,6 @@ import {
 } from 'tsjs-xpx-chain-sdk';
 
 import { App } from '../../../../providers/app/app';
-import { NemProvider } from './../../../../providers/nem/nem';
 import { WalletProvider } from './../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { AlertProvider } from '../../../../providers/alert/alert';
@@ -66,7 +65,6 @@ export class SendPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    public nemProvider: NemProvider,
     public getBalanceProvider: GetBalanceProvider,
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,

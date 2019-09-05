@@ -16,9 +16,9 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { App } from '../../../../providers/app/app';
 import { CoingeckoProvider } from '../../../../providers/coingecko/coingecko';
 import { GetBalanceProvider } from '../../../../providers/get-balance/get-balance';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the SendMultisigPage page.
@@ -62,7 +62,7 @@ export class SendMultisigPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    public nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     public getBalanceProvider: GetBalanceProvider,
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
@@ -98,7 +98,7 @@ export class SendMultisigPage {
 
   getAccountInfo() {
     console.info("Getting account information.", this.currentWallet.address)
-    this.nemProvider.getMultisigAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
+    this.proximaxProvider.getMultisigAccountInfo(this.currentWallet.address).subscribe(accountInfo => {
         if (accountInfo) {
           this.accountInfo = accountInfo;
 

@@ -1,67 +1,97 @@
-import { Injectable } from '@angular/core';
-import { Block } from 'nem-library';
-import { Observable } from 'rxjs';
+import { Injectable, OnInit } from "@angular/core";
+
 import {
+  NEMLibrary,
+  NetworkTypes,
+  SimpleWallet,
+  Password,
+  Address,
   Account,
   AccountHttp,
-  Address,
-  Mosaic,
-  MosaicHttp,
-  MosaicId,
-  NamespaceHttp,
-  NetworkHttp,
-  NetworkType,
-  Password,
-  SimpleWallet,
-  Transaction,
-  TransactionHttp,
+  // MosaicHttp,
+  // AccountOwnedMosaicsService,
+  // MosaicTransferable,
   TransferTransaction,
-  AccountInfo,
-  MultisigAccountInfo,
-} from 'tsjs-xpx-chain-sdk';
-import { MetadataHttp } from 'tsjs-xpx-chain-sdk/dist/src/infrastructure/MetadataHttp';
+  TimeWindow,
+  XEM,
+  PlainMessage,
+  TransactionHttp,
+  NemAnnounceResult,
+  Transaction,
+  // Mosaic,
+  // MosaicService,
+  QRService,
+  QRWalletText,
+  // MosaicDefinition,
+  ServerConfig,
+  ProvisionNamespaceTransaction,
+  Pageable,
+  AccountInfoWithMetaData,
+  Namespace,
+  // MosaicDefinitionCreationTransaction,
+  PublicAccount,
+  // MosaicId,
+  // MosaicProperties,
+  // MosaicLevy,
+  // MosaicLevyType,
+  MultisigTransaction,
+  MultisigSignatureTransaction,
+  HashData,
+  ChainHttp,
+  Block,
+  NodeHttp,
+  Node,
+  AccountInfo
+} from "nem-library";
 
-import { AppConfig } from '../../app/app.config';
+import { Observable } from "rxjs";
+import { Storage } from "@ionic/storage";
 
 /*
  Generated class for the NemProvider provider.
-
  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
  for more info on providers and Angular DI.
  */
 @Injectable()
 export class NemProvider{
-  networkType: NetworkType;
-  wsNodeUrl: string;
-  httpUrl: string;
+  wallets: SimpleWallet[];
   accountHttp: AccountHttp;
+  // mosaicHttp: MosaicHttp;
   transactionHttp: TransactionHttp;
-  namespaceHttp: NamespaceHttp;
-  mosaicHttp: MosaicHttp;
-  networkHttp: NetworkHttp;
-  metadataHttp: MetadataHttp;
+  qrService: QRService;
+  // accountOwnedMosaicsService: AccountOwnedMosaicsService;
+  chainHttp: ChainHttp;
+  nodeHttp: NodeHttp;
 
-  constructor() {
-    this.networkType = AppConfig.sirius.networkType;
-    this.httpUrl = AppConfig.sirius.httpNodeUrl;
-    this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
-    this.networkHttp = new NetworkHttp(this.httpUrl);
-    this.accountHttp = new AccountHttp(this.httpUrl, null);
-    this.transactionHttp = new TransactionHttp(this.httpUrl);
-    this.namespaceHttp = new NamespaceHttp(this.httpUrl, null);
-    this.mosaicHttp = new MosaicHttp(this.httpUrl, null);
-    this.metadataHttp = new MetadataHttp(this.httpUrl, null);
+
+  constructor(private storage: Storage) {
+    NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
+    this.accountHttp = new AccountHttp();
   }
 
   /**
    * Change the network either TESTNET or MAINNET
    * @param network The network type to set: NetworkTypes.TEST_NET || NetworkTypes.MAIN_NET
    */
-  changeNetwork(network = NetworkType.MAIN_NET) { // Todo: Change to MAIN_NET for production
-  console.log("LOG: NemProvider -> changeNetwork -> changeNetwork");
-  }
+  // changeNetwork(network = NetworkTypes.TEST_NET) { // Todo: Change to MAIN_NET for production
+  //   NEMLibrary.reset();
+  //   NEMLibrary.bootstrap(network);
+  //   console.log('library', NEMLibrary.getNetworkType());
+  // }
 
-
+  /**
+   * Create Simple Wallet
+   * @param walletName wallet idenitifier for app
+   * @param password wallet's password
+   * @param selected network
+   * @return Promise with wallet created
+   */
+  // public createSimpleWallet(
+  //   walletName: string,
+  //   password: string
+  // ): SimpleWallet {
+  //   return SimpleWallet.create(walletName, new Password(password));
+  // }
 
   /**
    * Create Wallet from private key
@@ -76,8 +106,25 @@ export class NemProvider{
     password,
     privateKey
   ): SimpleWallet {
-    return;
+    return SimpleWallet.createWithPrivateKey(
+      walletName,
+      new Password(password),
+      privateKey
+    );
   }
+
+    /**
+   * Get the account info of the NEM address
+   * @param address The NEM address
+   * @return {AccountInfo}
+   */
+  public getAccountInfo(address: Address): Observable<AccountInfo> {
+    return this.accountHttp.getFromAddress(address);
+  }
+
+
+  /******************************************************++*/
+
 
   /**
    * Check if Address it is correct
@@ -87,29 +134,20 @@ export class NemProvider{
    */
 
   public checkAddress(privateKey: string, address: Address): boolean {
-    return;
+    return (
+      Account.createWithPrivateKey(privateKey).address.plain() ==
+      address.plain()
+    );
   }
 
-  /**
-   * Get the account info of the NEM address
-   * @param address The NEM address
-   * @return {AccountInfoWithMetaData}
-   */
-  public getAccountInfo(address: Address): Observable<AccountInfo> {
-    return this.accountHttp.getAccountInfo(address);
-  }
-
-  public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
-    return this.accountHttp.getMultisigAccountInfo(address);
-  }
 
   /**
    * Get the namespaces owned by the NEM address
    * @param address The NEM address
    * @return {Namespace[]}
    */
-  public getNamespacesOwned(address: Address): Observable<any[]> {
-    return;
+  public getNamespacesOwned(address: Address): Observable<Namespace[]> {
+    return this.accountHttp.getNamespaceOwnedByAddress(address);
   }
 
   /**
@@ -117,9 +155,9 @@ export class NemProvider{
    * @param address The NEM address
    * @return {MosaicDefinition[]}
    */
-  public getMosaicsOwned(address: Address): Observable<any[]> {
-    return;
-  }
+  // public getMosaicsOwned(address: Address): Observable<MosaicDefinition[]> {
+  //   return this.accountHttp.getMosaicCreatedByAddress(address);
+  // }
 
   /**
    * Gets private key from password and account
@@ -127,8 +165,8 @@ export class NemProvider{
    * @param wallet
    * @return promise with selected wallet
    */
-  public passwordToPrivateKey(password: string, wallet: SimpleWallet): Account {
-    return wallet.open((new Password(password)));
+  public passwordToPrivateKey(password: string, wallet: SimpleWallet): string {
+    return wallet.unlockPrivateKey(new Password(password));
   }
 
   /**
@@ -140,9 +178,31 @@ export class NemProvider{
 
   public decryptPrivateKey(
     password: string,
-    encriptedData: any
+    encriptedData: QRWalletText
   ): string {
-    return;
+    return this.qrService.decryptWalletQRText(
+      new Password(password),
+      encriptedData
+    );
+  }
+
+  /**
+   * Generate Address QR Text
+   * @param address address
+   * @return Address QR Text
+   */
+  public generateWalletQRText(password: string, wallet: SimpleWallet): string {
+    const PASSWORD = new Password(password);
+    return this.qrService.generateWalletQRText(PASSWORD, wallet);
+  }
+
+  /**
+   * Generate Address QR Text
+   * @param address address
+   * @return Address QR Text
+   */
+  public generateAddressQRText(address: Address): string {
+    return this.qrService.generateAddressQRText(address);
   }
 
   /**
@@ -155,9 +215,7 @@ export class NemProvider{
     amount: number,
     message: string
   ): string {
-
-   
-    return;
+    return this.qrService.generateTransactionQRText(address, amount, message);
   }
 
   /**
@@ -165,36 +223,28 @@ export class NemProvider{
    * @param address address to check balance
    * @return Promise with mosaics information
    */
-  public getBalance(address: Address): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      // this.nodeHttp.getActiveNodes().subscribe(nodes => {
-      //   resolve(nodes);
-      // });
-    })
-  }
+  // public getBalance(address: Address): Promise<MosaicTransferable[]> {
+  //   return this.accountOwnedMosaicsService.fromAddress(address).toPromise();
+  // }
 
   /**
    * Get mosaics from a namespace
    * @param namespace namespace to get the mosaics
    * @return Promise with mosaics from a given namespace
    */
-  public getMosaics(namespace: string): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      // this.nodeHttp.getActiveNodes().subscribe(nodes => {
-      //   resolve(nodes);
-      // });
-    })
-  }
+  // public getMosaics(namespace: string): Promise<MosaicDefinition[]> {
+  //   return this.mosaicHttp.getAllMosaicsGivenNamespace(namespace).toPromise();
+  // }
 
   /**
    * Formats levy given mosaic object
    * @param mosaic mosaic object
    * @return Promise with levy fee formated
    */
-  public formatLevy(mosaic: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-    })
-  }
+  // public formatLevy(mosaic: MosaicTransferable): Promise<number> {
+  //   let mosaicService = new MosaicService(new MosaicHttp());
+  //   return mosaicService.calculateLevy(mosaic).toPromise();
+  // }
 
   /**
    * Check if acount belongs it is valid, has 40 characters and belongs to network
@@ -202,7 +252,14 @@ export class NemProvider{
    * @return Return prepared transaction
    */
   public isValidAddress(address: Address): boolean {
-    return false;
+    // Reset recipient data
+    let success = true;
+    // From documentation: Addresses have always a length of 40 characters.
+    if (!address || address.plain().length != 40) success = false;
+
+    //if raw data, clean address and check if it is from network
+    if (address.network() != NEMLibrary.getNetworkType()) success = false;
+    return success;
   }
 
   /**
@@ -217,7 +274,12 @@ export class NemProvider{
     amount: number,
     message: string
   ): TransferTransaction {
-    return;
+    return TransferTransaction.create(
+      TimeWindow.createWithDeadline(),
+      recipientAddress,
+      new XEM(amount),
+      PlainMessage.create(message)
+    );
   }
 
   /**
@@ -227,19 +289,18 @@ export class NemProvider{
    * @param message message
    * @return Promise containing prepared transaction
    */
-  public prepareMosaicTransaction(
-    recipientAddress: Address,
-    mosaicsTransferable: any[],
-    message: string
-  ): TransferTransaction {
-    return 
-    // TransferTransaction.createWithMosaics(
-    //   TimeWindow.createWithDeadline(),
-    //   recipientAddress,
-    //   mosaicsTransferable,
-    //   PlainMessage.create(message)
-    // );
-  }
+  // public prepareMosaicTransaction(
+  //   recipientAddress: Address,
+  //   mosaicsTransferable: MosaicTransferable[],
+  //   message: string
+  // ): TransferTransaction {
+  //   return TransferTransaction.createWithMosaics(
+  //     TimeWindow.createWithDeadline(),
+  //     recipientAddress,
+  //     mosaicsTransferable,
+  //     PlainMessage.create(message)
+  //   );
+  // }
 
   /**
    * Prepares provision namespace transaction
@@ -248,15 +309,14 @@ export class NemProvider{
    * @param message message
    * @return Promise containing prepared transaction
    */
-  public prepareNamespaceTransaction(
-    namespace: string
-  ): any {
-    return;
-    // ProvisionNamespaceTransaction.create(
-    //   TimeWindow.createWithDeadline(),
-    //   namespace
-    // );
-  }
+  // public prepareNamespaceTransaction(
+  //   namespace: string
+  // ): ProvisionNamespaceTransaction {
+  //   return ProvisionNamespaceTransaction.create(
+  //     TimeWindow.createWithDeadline(),
+  //     namespace
+  //   );
+  // }
 
   /**
    * Prepares provision namespace transaction
@@ -265,17 +325,16 @@ export class NemProvider{
    * @param message message
    * @return Promise containing prepared transaction
    */
-  public prepareSubNamespaceTransaction(
-    subNamespace: string,
-    parentNamespace: string
-  ): any {
-    return;
-    // ProvisionNamespaceTransaction.create(
-    //   TimeWindow.createWithDeadline(),
-    //   subNamespace,
-    //   parentNamespace
-    // );
-  }
+  // public prepareSubNamespaceTransaction(
+  //   subNamespace: string,
+  //   parentNamespace: string
+  // ): ProvisionNamespaceTransaction {
+  //   return ProvisionNamespaceTransaction.create(
+  //     TimeWindow.createWithDeadline(),
+  //     subNamespace,
+  //     parentNamespace
+  //   );
+  // }
 
   /**
    * Prepares mosaic definition creation transaction
@@ -291,62 +350,62 @@ export class NemProvider{
    * @param levyMosaic { MosaicId }
    * @param levyFee { number }
    */
-  public prepareMosaicCreationTransaction(
-    account: any,
-    namespace: string,
-    mosaic: string,
-    description: string,
-    divisibility: number,
-    supply: number,
-    transferrable: boolean,
-    supplyMutable: boolean,
-    hasLevy?: boolean,
-    levyMosaic?: MosaicId,
-    levyFee?: number
-  ): any {
-    // let tx: MosaicDefinitionCreationTransaction;
+  // public prepareMosaicCreationTransaction(
+  //   account: AccountInfoWithMetaData,
+  //   namespace: string,
+  //   mosaic: string,
+  //   description: string,
+  //   divisibility: number,
+  //   supply: number,
+  //   transferrable: boolean,
+  //   supplyMutable: boolean,
+  //   hasLevy?: boolean,
+  //   levyMosaic?: MosaicId,
+  //   levyFee?: number
+  // ): MosaicDefinitionCreationTransaction {
+  //   let tx: MosaicDefinitionCreationTransaction;
 
-    // if (!hasLevy) {
-    //   tx = MosaicDefinitionCreationTransaction.create(
-    //     TimeWindow.createWithDeadline(),
-    //     new MosaicDefinition(
-    //       PublicAccount.createWithPublicKey(account.publicAccount.publicKey),
-    //       new MosaicId(namespace, mosaic),
-    //       description,
-    //       new MosaicProperties(
-    //         divisibility,
-    //         supply,
-    //         transferrable,
-    //         supplyMutable
-    //       ),
-    //       null
-    //     )
-    //   );
-    // } else {
-    //   tx = MosaicDefinitionCreationTransaction.create(
-    //     TimeWindow.createWithDeadline(),
-    //     new MosaicDefinition(
-    //       PublicAccount.createWithPublicKey(account.publicAccount.publicKey),
-    //       new MosaicId(namespace, mosaic),
-    //       description,
-    //       new MosaicProperties(
-    //         divisibility,
-    //         supply,
-    //         transferrable,
-    //         supplyMutable
-    //       ),
-    //       new MosaicLevy(
-    //         MosaicLevyType.Percentil,
-    //         account.publicAccount.address,
-    //         levyMosaic,
-    //         levyFee
-    //       )
-    //     )
-    //   );
-    // }
+  //   if (!hasLevy) {
+  //     tx = MosaicDefinitionCreationTransaction.create(
+  //       TimeWindow.createWithDeadline(),
+  //       new MosaicDefinition(
+  //         PublicAccount.createWithPublicKey(account.publicAccount.publicKey),
+  //         new MosaicId(namespace, mosaic),
+  //         description,
+  //         new MosaicProperties(
+  //           divisibility,
+  //           supply,
+  //           transferrable,
+  //           supplyMutable
+  //         ),
+  //         null
+  //       )
+  //     );
+  //   } else {
+  //     tx = MosaicDefinitionCreationTransaction.create(
+  //       TimeWindow.createWithDeadline(),
+  //       new MosaicDefinition(
+  //         PublicAccount.createWithPublicKey(account.publicAccount.publicKey),
+  //         new MosaicId(namespace, mosaic),
+  //         description,
+  //         new MosaicProperties(
+  //           divisibility,
+  //           supply,
+  //           transferrable,
+  //           supplyMutable
+  //         ),
+  //         new MosaicLevy(
+  //           MosaicLevyType.Percentil,
+  //           account.publicAccount.address,
+  //           levyMosaic,
+  //           levyFee
+  //         )
+  //       )
+  //     );
+  //   }
 
-    return;
-  }
+  //   return tx;
+  // }
 
   /**
    * Send transaction into the blockchain
@@ -359,11 +418,10 @@ export class NemProvider{
     transaction: any,
     wallet: SimpleWallet,
     password: string
-  ): Observable<any> {
-    // let account = wallet.open(new Password(password));
-    // let signedTransaction = account.signTransaction(transaction);
-    //  this.transactionHttp.announceTransaction(signedTransaction);
-     return
+  ): Observable<NemAnnounceResult> {
+    let account = wallet.open(new Password(password));
+    let signedTransaction = account.signTransaction(transaction);
+    return this.transactionHttp.announceTransaction(signedTransaction);
   }
 
   /**
@@ -379,19 +437,18 @@ export class NemProvider{
     publickKey: string,
     wallet: SimpleWallet,
     password: string
-  ): Observable<any> {
-    // const multisigAccountPublicKey: string = publickKey;
+  ): Observable<NemAnnounceResult> {
+    const multisigAccountPublicKey: string = publickKey;
 
-    // const multisigTransaction: MultisigTransaction = MultisigTransaction.create(
-    //   TimeWindow.createWithDeadline(),
-    //   transaction,
-    //   PublicAccount.createWithPublicKey(multisigAccountPublicKey)
-    // );
+    const multisigTransaction: MultisigTransaction = MultisigTransaction.create(
+      TimeWindow.createWithDeadline(),
+      transaction,
+      PublicAccount.createWithPublicKey(multisigAccountPublicKey)
+    );
 
-    // let account = wallet.open(new Password(password));
-    // let signedTransaction = account.signTransaction(multisigTransaction);
-    //  this.transactionHttp.announceTransaction(signedTransaction);+
-     return;
+    let account = wallet.open(new Password(password));
+    let signedTransaction = account.signTransaction(multisigTransaction);
+    return this.transactionHttp.announceTransaction(signedTransaction);
   }
 
   /**
@@ -404,20 +461,20 @@ export class NemProvider{
  */
   public signMultisigTransaction(
     address: Address,
-    hash: any,
+    hash: HashData,
     wallet: SimpleWallet,
     password: string
-  ): Observable<any> {
-    return;
-    // const multisigTransaction: MultisigSignatureTransaction = MultisigSignatureTransaction.create(
-    //   TimeWindow.createWithDeadline(),
-    //   address,
-    //   hash
-    // )
+  ): Observable<NemAnnounceResult> {
 
-    // let account = wallet.open(new Password(password));
-    // let signedTransaction = account.signTransaction(multisigTransaction);
-    // return this.transactionHttp.announceTransaction(signedTransaction);
+    const multisigTransaction: MultisigSignatureTransaction = MultisigSignatureTransaction.create(
+      TimeWindow.createWithDeadline(),
+      address,
+      hash
+    )
+
+    let account = wallet.open(new Password(password));
+    let signedTransaction = account.signTransaction(multisigTransaction);
+    return this.transactionHttp.announceTransaction(signedTransaction);
   }
 
   /**
@@ -425,30 +482,29 @@ export class NemProvider{
    * @param mosaics array of mosaics
    * @return Promise with altered transaction
    */
-  public getMosaicsDefinition(
-    mosaics: Mosaic[]
-  ): Observable<any> {
-    return;
-    // Observable.from(mosaics)
-    //   .flatMap((mosaic: Mosaic) => {
-    //     if (XEM.MOSAICID.equals(mosaic.mosaicId))
-    //       return Observable.of(
-    //         new XEM(mosaic.quantity / Math.pow(10, XEM.DIVISIBILITY))
-    //       );
-    //     else {
-    //       return this.mosaicHttp
-    //         .getMosaicDefinition(mosaic.mosaicId)
-    //         .map(mosaicDefinition => {
-    //           return MosaicTransferable.createWithMosaicDefinition(
-    //             mosaicDefinition,
-    //             mosaic.quantity /
-    //             Math.pow(10, mosaicDefinition.properties.divisibility)
-    //           );
-    //         });
-    //     }
-    //   })
-    //   .toArray();
-  }
+  // public getMosaicsDefinition(
+  //   mosaics: Mosaic[]
+  // ): Observable<MosaicTransferable[]> {
+  //   return Observable.from(mosaics)
+  //     .flatMap((mosaic: Mosaic) => {
+  //       if (XEM.MOSAICID.equals(mosaic.mosaicId))
+  //         return Observable.of(
+  //           new XEM(mosaic.quantity / Math.pow(10, XEM.DIVISIBILITY))
+  //         );
+  //       else {
+  //         return this.mosaicHttp
+  //           .getMosaicDefinition(mosaic.mosaicId)
+  //           .map(mosaicDefinition => {
+  //             return MosaicTransferable.createWithMosaicDefinition(
+  //               mosaicDefinition,
+  //               mosaic.quantity /
+  //               Math.pow(10, mosaicDefinition.properties.divisibility)
+  //             );
+  //           });
+  //       }
+  //     })
+  //     .toArray();
+  // }
 
   
   /**
@@ -457,15 +513,13 @@ export class NemProvider{
    * @return Promise with account transactions
    */
   public getAllTransactions(address: Address): Observable<Transaction[]> {
-    return;
-    //  this.accountHttp.allTransactions(address, {
-    //   pageSize: 100
-    // });
+    return this.accountHttp.allTransactions(address, {
+      pageSize: 100
+    });
   }
   
   public getMosaicTransactions(address: Address) : Observable<any[]> {
-    return
-    /*  new Observable(observer => {
+    return new Observable(observer => {
         this.accountHttp.allTransactions(address, {
           pageSize: 100
         }).subscribe(transactions=> {
@@ -474,22 +528,21 @@ export class NemProvider{
             //call complete if you want to close this stream (like a promise)
             observer.complete();
         })
-    }); */
+    });
   }
 
   public getXEMTransactions(address: Address) : Observable<Transaction[]> {
-    return
-    //  new Observable(observer => {
-    //     this.accountHttp.allTransactions(address, {
-    //       pageSize: 100
-    //     }).subscribe(transactions=> {
-		// 				console.log("LOG: NemProvider -> transactions", transactions);
-    //         let mosaicTransactions =  transactions.filter(tx=> (tx as any)._mosaics === undefined || (tx as any)._mosaics[0].mosaicId.name == 'xem');
-    //         observer.next(mosaicTransactions);
-    //         //call complete if you want to close this stream (like a promise)
-    //         observer.complete();
-    //     })
-    // });
+    return new Observable(observer => {
+        this.accountHttp.allTransactions(address, {
+          pageSize: 100
+        }).subscribe(transactions=> {
+						console.log("LOG: NemProvider -> transactions", transactions);
+            let mosaicTransactions =  transactions.filter(tx=> (tx as any)._mosaics === undefined || (tx as any)._mosaics[0].mosaicId.name == 'xem');
+            observer.next(mosaicTransactions);
+            //call complete if you want to close this stream (like a promise)
+            observer.complete();
+        })
+    });
   }
 
   // TODO: Page size
@@ -500,11 +553,10 @@ export class NemProvider{
    */
   public getAllTransactionsPaginated(
     address: Address
-  ): any {
-    return;
-    // this.accountHttp.allTransactionsPaginated(address, {
-    //   pageSize: 100
-    // });
+  ): Pageable<Transaction[]> {
+    return this.accountHttp.allTransactionsPaginated(address, {
+      pageSize: 100
+    });
   }
 
   /**
@@ -515,23 +567,22 @@ export class NemProvider{
   public getUnconfirmedTransactions(
     address: Address
   ): Observable<Transaction[]> {
-    // return this.accountHttp.unconfirmedTransactions(address);
-    return;
+    return this.accountHttp.unconfirmedTransactions(address);
   }
 
   public getBlockHeight(): Promise<Block> {
     return new Promise((resolve, reject) => {
-      // this.chainHttp.getBlockchainLastBlock().subscribe(block => {
-      //   resolve(block);
-      // });
+      this.chainHttp.getBlockchainLastBlock().subscribe(block => {
+        resolve(block);
+      });
     })
   }
 
   public getActiveNodes(): Promise<Array<Node>> {
     return new Promise((resolve, reject) => {
-      // this.nodeHttp.getActiveNodes().subscribe(nodes => {
-      //   resolve(nodes);
-      // });
+      this.nodeHttp.getActiveNodes().subscribe(nodes => {
+        resolve(nodes);
+      });
     })
 
 
@@ -539,12 +590,11 @@ export class NemProvider{
 
   public getActiveNode(): Promise<Node> {
     return new Promise((resolve, reject) => {
-      // this.nodeHttp.getNodeInfo().subscribe(node => {
-      //   resolve(node);
-      // });
+      this.nodeHttp.getNodeInfo().subscribe(node => {
+        resolve(node);
+      });
 
     })
   }
-
 
 }

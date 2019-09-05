@@ -4,7 +4,6 @@ import { IonicPage, NavController, NavParams, ViewController } from "ionic-angul
 
 import { App } from "../../../../../providers/app/app";
 import { AuthProvider } from "../../../../../providers/auth/auth";
-import { NemProvider } from "../../../../../providers/nem/nem";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 import {
@@ -13,6 +12,7 @@ import {
   ProvisionNamespaceTransaction
 } from "nem-library";
 import { AlertProvider } from "../../../../../providers/alert/alert";
+import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
 
 /**
  * Generated class for the NamespaceCreatePage page.
@@ -43,7 +43,7 @@ export class NamespaceCreatePage {
     private alertProvider: AlertProvider,
     private walletProvider: WalletProvider,
     private utils: UtilitiesProvider,
-    private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     private viewController: ViewController
   ) {
     this.init();
@@ -58,7 +58,7 @@ export class NamespaceCreatePage {
       }
 
       // Create ProvisionNamespaceTransaction to get the sinkAddress, fee and rentalFee.
-      this.namespaceTx = this.nemProvider.prepareNamespaceTransaction("");
+      this.namespaceTx = this.proximaxProvider.prepareNamespaceTransaction("");
 
       const fee = this.namespaceTx.fee / 1000000;
       const rentalFee = this.namespaceTx.rentalFee / 1000000;
@@ -99,12 +99,12 @@ export class NamespaceCreatePage {
     let tx: ProvisionNamespaceTransaction;
 
     if (form.parentNamespace) {
-      tx = this.nemProvider.prepareSubNamespaceTransaction(
+      tx = this.proximaxProvider.prepareSubNamespaceTransaction(
         form.name,
         form.parentNamespace
       );
     } else {
-      tx = this.nemProvider.prepareNamespaceTransaction(form.name);
+      tx = this.proximaxProvider.prepareNamespaceTransaction(form.name);
     }
 
     // this.nemProvider

@@ -3,8 +3,8 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the ReceiveQrCodePage page.
@@ -25,7 +25,7 @@ export class ReceiveQrCodePage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     private walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
     public viewCtrl: ViewController
@@ -55,7 +55,7 @@ export class ReceiveQrCodePage {
   }
 
   getQRCode() {
-    let QRCode: any = this.nemProvider.generateInvoiceQRText(
+    let QRCode: any = this.proximaxProvider.generateInvoiceQRText(
       this.currentWallet.address,
       this.data.amount,
       this.data.message

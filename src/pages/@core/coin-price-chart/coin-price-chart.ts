@@ -30,12 +30,13 @@ import { CoinPriceChartProvider } from '../../../providers/coin-price-chart/coin
 import { CoingeckoProvider } from '../../../providers/coingecko/coingecko';
 import { GetBalanceProvider } from '../../../providers/get-balance/get-balance';
 import { HapticProvider } from '../../../providers/haptic/haptic';
-import { NemProvider } from '../../../providers/nem/nem';
+import { ProximaxProvider } from '../../../providers/proximax/proximax';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { WalletProvider } from '../../../providers/wallet/wallet';
 import { flatMap, toArray } from 'rxjs/operators';
 import { DefaultMosaic } from '../../../models/default-mosaic';
+
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -101,7 +102,7 @@ export class CoinPriceChartPage {
     public coinPriceChartProvider: CoinPriceChartProvider,
     public utils: UtilitiesProvider,
     private modalCtrl: ModalController,
-    private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     private walletProvider: WalletProvider,
     private viewCtrl: ViewController,
     private getBalanceProvider: GetBalanceProvider,
@@ -334,7 +335,7 @@ export class CoinPriceChartPage {
   getAccountInfo() {
     // console.info("Getting account information.", this.selectedAccount.address)
     try {
-      this.nemProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
+      this.proximaxProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
           if (accountInfo) {
             this.accountInfo = accountInfo;
             // console.log("accountInfo", this.accountInfo)

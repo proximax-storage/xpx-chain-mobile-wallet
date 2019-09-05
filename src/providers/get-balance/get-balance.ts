@@ -1,4 +1,3 @@
-import { NemProvider } from './../nem/nem';
 import { Injectable } from '@angular/core';
 
 import {
@@ -22,7 +21,9 @@ import { CoingeckoProvider } from '../coingecko/coingecko';
 */
 @Injectable()
 export class GetBalanceProvider {
-  constructor(private nemProvider: NemProvider, private coingeckoProvider: CoingeckoProvider,) {
+  constructor(
+    private coingeckoProvider: CoingeckoProvider,
+  ) {
     console.log('Hello GetBalanceProvider Provider');
   }
 
