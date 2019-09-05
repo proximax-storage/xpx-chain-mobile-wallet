@@ -25,12 +25,12 @@
               <ion-avatar item-start>
                 <img [src]="utils.getLogo(data.mosaic)">
               </ion-avatar>
-              <h2 text-uppercase ion-text color="black">{{ data.mosaic.mosaicId.name }}</h2>
-              <p text-uppercase ion-text color="black">{{ data.mosaic.mosaicId.namespaceId }}</p>
+              <h2 text-uppercase ion-text color="dark">{{ data.mosaic.mosaicId.name }}</h2>
+              <p text-uppercase ion-text color="dark">{{ data.mosaic.mosaicId.namespaceId }}</p>
 
               <section item-right>
-                <h2 ion-text color="black">{{ data.amount | number:'1.2' }}</h2>
-                <p text-right text-left ion-text color="black">
+                <h2 ion-text color="dark">{{ data.amount | number:'1.2' }}</h2>
+                <p text-right text-left ion-text color="dark">
                   <small>
                     {{ data.amount * 0.19 | currency }}
                   </small>
@@ -42,8 +42,8 @@
           <!-- Note -->
           <ion-card>
             <ion-item>
-              <h2 ion-text color="black">Note</h2>
-              <p ion-text text-wrap color="black">
+              <h2 ion-text color="dark">Note</h2>
+              <p ion-text text-wrap color="dark">
                 <span *ngIf="data.message">
                   {{ data.message }}
                 </span>

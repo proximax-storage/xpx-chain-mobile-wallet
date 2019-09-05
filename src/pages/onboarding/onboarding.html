@@ -10,7 +10,7 @@
     <ion-slide *ngFor="let slide of slides">
       <ion-toolbar transparent>
         <ion-buttons end>
-          <!-- <button ion-button color="black" (click)="ionSlide.slideTo(6, 1000)">Skip</button> -->
+          <!-- <button ion-button color="dark" (click)="ionSlide.slideTo(6, 1000)">Skip</button> -->
         </ion-buttons>
       </ion-toolbar>
       <ion-grid>
@@ -19,8 +19,8 @@
             <img [ngClass]="{ 'small-image': slide.isSmall }" [src]="slide.image" class="slide-image" />
           </ion-col>
           <ion-col col-12 align-self-start>
-            <h2 ion-text color="black" class="slide-title" [innerHTML]="slide.title"></h2>
-            <p text-justify ion-text color="black" [innerHTML]="slide.description"></p>
+            <h2 ion-text color="dark" class="slide-title" [innerHTML]="slide.title"></h2>
+            <p text-justify ion-text color="dark" [innerHTML]="slide.description"></p>
           </ion-col>
 
           <ion-col col-12></ion-col>
@@ -37,8 +37,8 @@
                   <img  [src]="App.SLIDES.SLIDE6" class="small-image" />
                 </ion-col>
                 <ion-col col-12 align-self-start>
-                  <h2 ion-text color="black" class="slide-title">{{"SETTINGS.WALLET_GUIDE.PAGE5.TITLE" | translate}}</h2>
-                  <p text-justify ion-text color="black"><br>&nbsp;<br>{{"SETTINGS.WALLET_GUIDE.PAGE5.CONTENT1" | translate}} <a href="https://t.me/@ProximaXio">@ProximaXio</a>.</p>
+                  <h2 ion-text color="dark" class="slide-title">{{"SETTINGS.WALLET_GUIDE.PAGE5.TITLE" | translate}}</h2>
+                  <p text-justify ion-text color="dark"><br>&nbsp;<br>{{"SETTINGS.WALLET_GUIDE.PAGE5.CONTENT1" | translate}} <a href="https://t.me/@ProximaXio">@ProximaXio</a>.</p>
                 </ion-col>
                 
               </ion-row>

@@ -8,11 +8,11 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">{{"WALLETS.SEND" | translate}}</span>
+      <span ion-text color="dark">{{"WALLETS.SEND" | translate}}</span>
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -28,7 +28,7 @@
 
       <!-- Price -->
       <section title text-center>
-        <h2 price ion-text color="black" *ngIf="selectedCoin">
+        <h2 price ion-text color="dark" *ngIf="selectedCoin">
             {{'WALLETS.SEND.AMOUNT' | translate}}</h2>
       </section>
 
@@ -54,7 +54,7 @@
         </ion-card>
 
       <section total text-center>
-        <h2 price ion-text color="black" *ngIf="selectedCoin">
+        <h2 price ion-text color="dark" *ngIf="selectedCoin">
           ≈ {{ selectedCoin?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }}</h2>
           <div *ngIf="msgErrorBalance !== ''">
                 <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
@@ -69,13 +69,13 @@
           <ion-avatar item-start>
             <img [src]="utils.getLogo(mosaics)">
           </ion-avatar>
-          <h2 text-uppercase ion-text color="black" >{{ mosaics.mosaicId }}</h2>
-          <p text-uppercase ion-text color="black">{{ mosaics.namespaceId }}</p>
+          <h2 text-uppercase ion-text color="dark" >{{ mosaics.mosaicId }}</h2>
+          <p text-uppercase ion-text color="dark">{{ mosaics.namespaceId }}</p>
 
           <section item-right>
-            <!-- <h2 ion-text color="black">{{ mosaics?.amount | number:'1.2' }}</h2> -->
-            <h2 ion-text color="black">{{  mosaics?.amount }}</h2>
-            <p text-right text-left ion-text color="black">
+            <!-- <h2 ion-text color="dark">{{ mosaics?.amount | number:'1.2' }}</h2> -->
+            <h2 ion-text color="dark">{{  mosaics?.amount }}</h2>
+            <p text-right text-left ion-text color="dark">
               <small>
                 {{  selectedCoin?.market_data.current_price.usd * mosaics?.amount | currency: 'USD': 'symbol': '1.2-6' }}
               </small>
@@ -93,7 +93,7 @@
       <!-- Recipient -->
 
       <ion-item select-contact no-lines>
-        <ion-label ion-text color="black"></ion-label>
+        <ion-label ion-text color="dark"></ion-label>
         <ion-select [selectOptions]="{
     title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate,
     subTitle: ''        
@@ -108,8 +108,8 @@
       <ion-card *ngIf="addressSourceType.to === 'contact'" (click)="selectContact('to')">
         <ion-item>
           <img item-left logo-small [src]="App.USER">
-          <h2 ion-text color="black">{{ form.get('recipientName').value || "WALLETS.SEND.ADDRESS.OPTION2" | translate }}</h2>
-          <p small ion-text color="black">
+          <h2 ion-text color="dark">{{ form.get('recipientName').value || "WALLETS.SEND.ADDRESS.OPTION2" | translate }}</h2>
+          <p small ion-text color="dark">
             {{ form.get('recipientAddress').value || '' }}</p>
         </ion-item>
       </ion-card>
@@ -132,7 +132,7 @@
       <!-- Note -->
       <ion-card>
         <ion-item no-border>
-          <ion-textarea ion-text color="black" autosize rows="2" ion-text color="black" formControlName="message"
+          <ion-textarea ion-text color="dark" autosize rows="2" ion-text color="dark" formControlName="message"
             placeholder="{{'WALLETS.SEND.NOTES' | translate}}"></ion-textarea>
         </ion-item>
       </ion-card>

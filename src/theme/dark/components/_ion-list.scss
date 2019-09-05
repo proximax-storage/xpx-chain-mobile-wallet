@@ -36,14 +36,14 @@ ion-list[transparent-items] {
     }
 
     h2:not([ion-text]), ion-icon {
-      color: darken(color($colors, dark), 10%);
+      color: color($colors, dark);
     }
     // ion-icon:not([item-left]) {
     //   color: lighten(color($colors, light), 10%);
     // }
 
     p:not([ion-text]) {
-      color: darken(color($colors, dark), 1%);
+      color: color($colors, dark);
     }
 
     p[small] {
@@ -160,7 +160,7 @@ ion-list[title] {
 ion-card[balance] {
   border-radius: 0.5rem;
   background: rgba(224, 224, 224, 0.43);
-  color: #000;
+  color: color($colors, dark);
   ion-card-content{
     padding: 0px;
     ion-list > ion-item > .item-inner > .input-wrapper > ion-label {

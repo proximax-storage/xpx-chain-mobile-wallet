@@ -8,7 +8,7 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">New wallet</span>
+      <span ion-text color="dark">New wallet</span>
     </ion-title>
   </ion-navbar>
 
@@ -20,7 +20,7 @@
     <ion-card *ngFor="let option of options" [attr.selected]="selectedOption === option.value ? true : null" (click)="onSelect(option)">
       <ion-item>
         <ion-icon item-left [name]="option.icon"></ion-icon>
-        <h2 ion-text color="black">{{ option.name }}</h2>
+        <h2 ion-text color="dark">{{ option.name }}</h2>
         <p text-wrap>{{ option.description }}</p>
         <ion-icon item-right ion-text color="grey" name="ios-arrow-forward"></ion-icon>
       </ion-item>

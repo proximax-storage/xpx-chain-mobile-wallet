@@ -1,5 +1,5 @@
 <!-- <ion-card-header time-stamp-header>
-  <p float-left ion-text color="black">
+  <p float-left ion-text color="dark">
     {{ tx.otherTransaction.timeWindow.timeStamp.toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
   </p>
 
@@ -8,8 +8,8 @@
   *ngIf="tx.otherTransaction.containsMosaics && !tx.otherTransaction.containsMosaics()">
   <ion-item>
     <img logo-small item-left [src]="utils.getLogo(tx.otherTransaction.xem())">
-    <h2 ion-text color="black">XEM</h2>
-    <p ion-text color="black">
+    <h2 ion-text color="dark">XEM</h2>
+    <p ion-text color="dark">
       <small>
         NEM
       </small>
@@ -24,7 +24,7 @@
         -{{ amount | number: '1.6-6' }}
       </h2>
 
-      <p float-right ion-text color="black">
+      <p float-right ion-text color="dark">
         <small>{{ tx.otherTransaction.timeWindow.timeStamp.toString() | timeago }}</small>
       </p>
     </section>
@@ -32,7 +32,7 @@
 
   <ion-item transaction-status>
     <section item-left>
-      <p float-left ion-text color="black">
+      <p float-left ion-text color="dark">
         <small>Multisig</small>
       </p>
     </section>
@@ -57,8 +57,8 @@
   <ion-card-header reduce-multisig-tx-header *ngFor="let mosaic of mosaics">
     <ion-item>
       <img logo-small item-left [src]="utils.getLogo(mosaic)">
-      <h2 ion-text text-uppercase color="black">{{ mosaic.mosaicId.name }}</h2>
-      <p ion-text color="black" text-uppercase>
+      <h2 ion-text text-uppercase color="dark">{{ mosaic.mosaicId.name }}</h2>
+      <p ion-text color="dark" text-uppercase>
         <small>
           {{ mosaic.mosaicId.namespaceId }}
         </small>
@@ -75,7 +75,7 @@
           -{{ mosaic.amount?.toString() | number: '1.6-6' }}
         </h2>
   
-        <p float-right ion-text color="black">
+        <p float-right ion-text color="dark">
           <small>{{ tx.otherTransaction.timeWindow.timeStamp.toString() | timeago }}</small>
         </p>
       </section>
@@ -83,7 +83,7 @@
   
     <ion-item transaction-status>
       <section item-left>
-        <p float-left ion-text color="black">
+        <p float-left ion-text color="dark">
           <small>Multisig</small>
         </p>
       </section>

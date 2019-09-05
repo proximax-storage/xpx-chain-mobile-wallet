@@ -8,7 +8,7 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">Select Mosaic</span>
+      <span ion-text color="dark">Select Mosaic</span>
     </ion-title>
   </ion-navbar>
 
@@ -20,13 +20,13 @@
       *ngFor="let mosaic of mosaics" (click)="onSelect(mosaic);onSubmit()">
       <ion-item>
         <img logo-medium item-left [src]="utils.getLogo(mosaic)">
-        <h2 text-uppercase ion-text color="black">{{ mosaic.mosaicId }}</h2>
-        <p text-uppercase ion-text color="black">{{ mosaic.namespaceId }}</p>
+        <h2 text-uppercase ion-text color="dark">{{ mosaic.mosaicId }}</h2>
+        <p text-uppercase ion-text color="dark">{{ mosaic.namespaceId }}</p>
 
         <section item-right>
-          <!-- <h2 ion-text color="black">{{ mosaic.amount | number:'1.2' }}</h2> -->
-          <h2 ion-text color="black">{{ mosaic.amount }}</h2>
-          <p text-right text-left ion-text color="black"  *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
+          <!-- <h2 ion-text color="dark">{{ mosaic.amount | number:'1.2' }}</h2> -->
+          <h2 ion-text color="dark">{{ mosaic.amount }}</h2>
+          <p text-right text-left ion-text color="dark"  *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
             <small>
               {{ mosaic.amount * marketPrice | currency : 'USD' : 'symbol' : '1.2-6' }}
             </small>

@@ -8,11 +8,11 @@
 
     <ion-navbar transparent>
       <ion-title>
-        <span ion-text color="black">{{"SETTINGS.NODES" | translate}}</span>
+        <span ion-text color="dark">{{"SETTINGS.NODES" | translate}}</span>
       </ion-title>
   
       <ion-buttons end>
-        <button ion-button icon-only (click)="dismiss()" color="black">
+        <button ion-button icon-only (click)="dismiss()" color="dark">
           <ion-icon name="close"></ion-icon>
         </button>
       </ion-buttons>
@@ -29,11 +29,11 @@
     <ion-card>
       <ion-card-content no-padding>
         <ion-list transparent-items>
-            <!-- <h6 padding black>
+            <!-- <h6 padding dark>
                 Nodes are distributed across a widespread network and carry out a variety of tasks such as maintaining the a copy of a blockchain records and to process transactions.
             </h6> -->
 
-          <!-- <h6 padding black>
+          <!-- <h6 padding dark>
                <strong> Please be aware that switching to an invalid custom node will cause instability to the app.</strong>
              </h6> -->
            
@@ -50,7 +50,7 @@
           </ion-item>
 
           <ion-item select-node no-lines>
-            <ion-label ion-text color="black"><strong>{{"SETTINGS.NODES" | translate}}:</strong></ion-label>
+            <ion-label ion-text color="dark"><strong>{{"SETTINGS.NODES" | translate}}:</strong></ion-label>
             <ion-select (ionChange)="onChange()" [(ngModel)]="selectedNode" [selectOptions]="{
                   title: 'SETTINGS.NODES.SELECT' | translate,
                   subTitle: ''        
@@ -62,7 +62,7 @@
           <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
 
           <ion-item no-lines>
-            <ion-label ion-text color="black"><strong>{{"SETTINGS.NODES.CUSTOM" | translate}}:</strong></ion-label>
+            <ion-label ion-text color="dark"><strong>{{"SETTINGS.NODES.CUSTOM" | translate}}:</strong></ion-label>
             <ion-input type="text" formControlName="ipAddress"
               placeholder="{{'SETTINGS.NODES.CUSTOM_IP' | translate}}"></ion-input>
             <button clear item-right ion-button icon-only type="submit" [disabled]="formGroup.invalid">
@@ -82,7 +82,7 @@
 
   <ion-row>
       <ion-col col-12 text-center>
-        <button half-width gradient-button color-5 ion-button icon-end no-margin color="black" (click)="dismiss()">
+        <button half-width gradient-button color-5 ion-button icon-end no-margin color="dark" (click)="dismiss()">
           {{"WALLETS.BUTTON.DONE" | translate}}
         </button>
       </ion-col>
