@@ -1,4 +1,4 @@
-<ion-content background no-margin>
+<ion-content background>
   <ion-refresher (ionRefresh)="doRefresh($event)" class="margin-bottom:30px;">
     <ion-refresher-content pullingIcon="arrow-round-up" refreshingSpinner="ios">
     </ion-refresher-content>
@@ -20,9 +20,9 @@
   <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
     <ion-slide *ngFor="let wallet of wallets"
       [attr.selected]="selectedWallet?.name === wallet?.name ? true : null"
-      (click)="showWalletDetails();onWalletSelect(wallet)" (press)="showWalletList()">
-      <div class="wallet">
-        <div class="wallet-content" [ngClass]="wallet.walletColor">
+       (press)="showWalletList()">
+      <div class="wallet" >
+        <div class="wallet-content" [ngClass]="wallet.walletColor" (click)="showWalletDetails(wallet)">
           <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-wallet-white.png">
 
           <div *ngIf="!tablet">
@@ -66,57 +66,6 @@
     </ion-segment>
   </ion-grid>
 
-  <!-- <div *ngIf="menu=='wallets'">
-    <ion-list transparent-items *ngIf="!isLoading">
-        <ion-card no-margin-bottom *ngFor="let wallet of wallets; let i = index" (click)="onWalletSelect(wallet)"
-          (press)="onWalletPress(wallet)">
-        <ion-card-header no-padding>
-          <ion-item>
-            <ion-icon color="dark" name="fi-wallet" item-start></ion-icon>
-            <h2 text-uppercase ion-text color="dark"><strong>{{ wallet.name }}</strong></h2>
-            <p ion-text color="dark">{{ wallet.address.plain() }}</p>
-          </ion-item>
-        </ion-card-header>
-      </ion-card>
-      <section margin-top text-center *ngIf="!showEmptyMosaic">
-        <button no-margin gradient-button circle color-5 (click)="showAddWalletPrompt()">
-          <ion-icon name="md-add"></ion-icon>
-        </button>
-        <p text-wrap ion-text color="dark">{{"WALLETS.CREATE.NEW.TITLE" | translate}}</p>
-      </section>
-    </ion-list>
-
-         <section *ngIf="!mosaics && isLoading">
-           <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
-             <skeleton-loader></skeleton-loader>
-           </ion-card>
-           <ion-card no-border>
-             <ion-item text-center>
-               <ion-spinner name="dots"></ion-spinner>
-             </ion-item>
-           </ion-card>
-         </section>
-
-
-    <ion-grid padding empty *ngIf="showEmptyMosaic">
-      <ion-row>
-        <ion-col>
-          <p>
-          </p>
-        </ion-col>
-      </ion-row>
-      <br>
-      <ion-row>
-        <ion-col>
-          <img quarter-width [src]="AppConfig.STICKERS.SORRY">
-          <h6 ion-text color="grey" text-wrap>
-            <strong>{{"APP.EMPTY.WALLETS" | translate}}</strong>
-          </h6>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div> -->
-
   <div *ngIf="menu=='mosaics'">
     <ion-list transparent-items *ngIf="!isLoading">
       <ion-card no-margin-bottom *ngFor="let mosaic of mosaics" (click)="gotoCoinPrice(mosaic)">
@@ -127,10 +76,6 @@
             <p ion-text color="dark">{{ mosaic.namespaceId | uppercase }}</p>
             <section text-right item-right>
               <h2 ion-text color="dark">{{ mosaic.amount | number : '1.6-6'}}</h2>
-              <!-- <p text-right ion-text color="dark"
-                *ngIf="(mosaic.mosaicId | getMarketPrice | async) as marketPrice">
-                {{ marketPrice | currency: 'USD' : 'symbol' : '1.0-6' }}
-              </p> -->
             </section>
           </ion-item>
         </ion-card-header>
@@ -169,8 +114,6 @@
 
 
   <div *ngIf="menu=='transactions'">
-   
-
     <!-- Unconfirmed Transactions -->
     <div *ngIf="unconfirmedTransactions?.length>0">
       <ion-list transparent-items *ngIf="!isLoading">
