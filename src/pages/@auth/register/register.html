@@ -11,9 +11,9 @@
   <ion-grid>
     <ion-row>
       <ion-col col-12 text-center>
-        <img logo src="assets/imgs/xpx-logo-black.png">
-        <h3 ion-text color="black">{{"APP.SIGNUP" | translate}}</h3>
-        <p ion-text color="black">
+        <img logo src="assets/imgs/logo-proximax-sirius-wallet.svg">
+        <h3 ion-text color="dark">{{"APP.SIGNUP" | translate}}</h3>
+        <p ion-text color="dark">
           {{"APP.SIGNUP.DESC" | translate}}
         </p>
       </ion-col>
@@ -31,7 +31,7 @@
               placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
             <button type="button" (click)="showHidePassword($event)"  clear item-right ion-button icon-only>
-              <ion-icon item-right color="black" [name]="passwordIcon">
+              <ion-icon item-right color="dark" [name]="passwordIcon">
               </ion-icon>
             </button>
           </ion-item>
@@ -42,7 +42,7 @@
             </ion-input>
 
             <!-- <button (click)="showHideConfirmPassword($event)" clear item-right ion-button icon-only>
-              <ion-icon item-right color="black" [name]="confirmPasswordIcon">
+              <ion-icon item-right color="dark" [name]="confirmPasswordIcon">
               </ion-icon>
             </button> -->
 
@@ -58,7 +58,7 @@
           <br>&nbsp;<br>
 
           <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formGroup.invalid"
-            type="submit" color="black">
+            type="submit" color="dark">
             {{"APP.SIGNUP" | translate}}
             </button>
         </form>

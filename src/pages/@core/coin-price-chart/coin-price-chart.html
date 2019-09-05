@@ -8,13 +8,13 @@
 
   <ion-navbar transparent no-border-bottom>
     <ion-title *ngIf="selectedCoin">
-      <span text-uppercase ion-text color="black">
+      <span text-uppercase ion-text color="dark">
         {{ selectedCoin.name }} ({{ selectedCoin.symbol }})
       </span>
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -128,7 +128,7 @@
   <!-- Price Chart -->
   <div class="" *ngIf="selectedSegment=='priceChart' && !showEmptyMosaic">
       <section text-center>
-        <h1 price ion-text color="black" *ngIf="selectedCoin.market_data">
+        <h1 price ion-text color="dark" *ngIf="selectedCoin.market_data">
           {{ selectedCoin.market_data.current_price.usd | currency: 'USD': 'symbol': '1.2-6' }}</h1>
         <!-- 24h -->
         <button gradient-button tiny width-auto no-margin
@@ -327,7 +327,7 @@
         <ion-item (click)="openLink('https:facebook.com/'+selectedCoin.links.facebook_username)">
           <ion-icon item-start item-left name="logo-facebook"></ion-icon>
           <p item-left ion-text color="dark">{{"WALLETS.DETAIL.FACEBOOK" | translate}}</p>
-          <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+          <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
         </ion-item>
       </ion-card>
 
@@ -335,7 +335,7 @@
         <ion-item (click)="openLink('https:twitter.com/'+ selectedCoin.links.twitter_screen_name)">
           <ion-icon item-start item-left name="logo-twitter"></ion-icon>
           <p item-left ion-text color="dark">{{"WALLETS.DETAIL.TWITTER" | translate}}</p>
-          <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+          <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
 
         </ion-item>
       </ion-card>
@@ -344,7 +344,7 @@
         <ion-item (click)="openLink('https:t.me/'+selectedCoin.links.telegram_channel_identifier)">
           <ion-icon item-start item-left name="paper-plane"></ion-icon>
           <p item-left ion-text color="dark">{{"SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM" | translate}}</p>
-          <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+          <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
         </ion-item>
       </ion-card>
     </ion-list>

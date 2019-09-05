@@ -2,8 +2,8 @@
 <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
   <ion-item>
     <img logo-small item-left [src]="utils.getLogo(mosaic)">
-    <h2 ion-text text-uppercase color="black">{{ mosaic.mosaicId }}</h2>
-    <p text-uppercase ion-text color="black">
+    <h2 ion-text text-uppercase color="dark">{{ mosaic.mosaicId }}</h2>
+    <p text-uppercase ion-text color="dark">
       <small>
         {{ mosaic.namespaceId }}
       </small>
@@ -18,7 +18,7 @@
         - {{ mosaic.amount?.toString()  }}
       </h2>
 
-      <p text-right text-left ion-text color="black">
+      <p text-right text-left ion-text color="dark">
         <!-- <small *ngIf="mosaic.mosaicId === 'xpx';">
           {{ mosaic.amount * 0.00837014 | currency }}
         </small> -->
@@ -40,9 +40,9 @@
 <ion-card no-margin-bottom>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
 
-      <p text-wrap ion-text color="black">
+      <p text-wrap ion-text color="dark">
         {{ tx?.deadline.value.minusHours(2).toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
       </p>
 
@@ -58,7 +58,7 @@
 <ion-card no-margin-bottom (click)="utils.copy(tx?.signer.address.address, 'sender')">
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">
+      <h2 ion-text color="dark">
         {{"WALLETS.TRANSACTION.DETAIL.SENDER" | translate}}
       </h2>
       <p text-wrap> {{ tx?.signer.address.address }}</p>
@@ -73,7 +73,7 @@
 <ion-card no-margin-bottom (click)="utils.copy(tx?.recipient.value, 'receiver')">
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">
+      <h2 ion-text color="dark">
           {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
       </h2>
       <p text-wrap> {{ tx?.recipient.address }}</p>
@@ -88,9 +88,9 @@
 <ion-card no-margin-bottom>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
 
-      <p text-wrap ion-text color="black">
+      <p text-wrap ion-text color="dark">
         {{ tx?.maxFee.compact() }} XPX
       </p>
     </ion-item>
@@ -102,9 +102,9 @@
 <ion-card no-margin-bottom>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.BLOCK" | translate}}</h2>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.BLOCK" | translate}}</h2>
 
-      <p text-wrap ion-text color="black">
+      <p text-wrap ion-text color="dark">
         {{ tx?.transactionInfo?.height.compact()}}
       </p>
     </ion-item>
@@ -116,7 +116,7 @@
 <ion-card no-margin-bottom (click)="utils.copy(tx?.transactionInfo?.hash?.data, 'hash')">
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</h2>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</h2>
 
       <p text-wrap>
         {{ tx?.transactionInfo?.hash }}
@@ -130,17 +130,17 @@
 <ion-card no-margin-bottom (click)="utils.copy(tx.message.payload, 'message')">
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
 
-      <p text-wrap ion-text color="black" *ngIf="tx.message.payload && tx?.message?.type == 0">
+      <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0">
         {{ tx?.message?.payload }}
       </p>
 
-      <p text-wrap ion-text color="black" color="black" *ngIf="tx.message.type == 1">
+      <p text-wrap ion-text color="dark" color="dark" *ngIf="tx.message.type == 1">
         {{"WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE" | translate}}
       </p>
 
-      <p ion-text color="black" *ngIf="!tx.message.payload">
+      <p ion-text color="dark" *ngIf="!tx.message.payload">
           {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
       </p> 
     </ion-item>

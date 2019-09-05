@@ -56,7 +56,7 @@ page-send {
   section[title] {
     h2 {
       // margin-top: -2.3rem !important;
-      color: #000 !important;
+      color: color($colors, dark) !important;
       font-size: 1.9rem !important;
       margin-bottom: -2rem;
     }
@@ -85,7 +85,7 @@ page-send {
   // End - Multisig select
   ion-label[title] {
     font-size: 1.8rem !important;
-    color: #000 !important;
+    color: color($colors, dark) !important;
   }
 
   // Select contact

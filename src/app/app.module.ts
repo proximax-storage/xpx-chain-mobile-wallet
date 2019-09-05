@@ -51,7 +51,6 @@ import { MarkdownModule } from '@ngx-markdown/core';
 import { TapticEngine } from '@ionic-native/taptic-engine';
 import { AppVersion } from '@ionic-native/app-version';
 import { HapticProvider } from '../providers/haptic/haptic';
-import { Screenshot } from '@ionic-native/screenshot';
 import { PinProvider } from '../providers/pin/pin';
 import { ForgeProvider } from '../providers/forge/forge';
 import { BrowserTab } from '@ionic-native/browser-tab';
@@ -138,7 +137,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     TapticEngine,
     AppVersion,
     HapticProvider,
-    Screenshot,
     PinProvider,
     ForgeProvider,
     BrowserTab,

@@ -13,9 +13,9 @@
       <ion-col col-12></ion-col>
 
       <ion-col col-12 text-center>
-        <img logo src="assets/imgs/xpx-logo-black.png">
-        <h3 ion-text color="black">{{"APP.LOGIN" | translate}}</h3>
-        <p ion-text color="black">{{"APP.LOGIN.DESC" | translate}}</p>
+        <img logo src="assets/imgs/logo-proximax-sirius-wallet.svg">
+        <h3 ion-text color="dark">{{"APP.LOGIN" | translate}}</h3>
+        <p ion-text color="dark">{{"APP.LOGIN.DESC" | translate}}</p>
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
@@ -30,24 +30,24 @@
             <ion-input formControlName="password" [type]="passwordType" placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
             <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
-              <ion-icon item-right color="black" [name]="passwordIcon">
+              <ion-icon item-right color="dark" [name]="passwordIcon">
               </ion-icon>
             </button>
           </ion-item>
 
           <!-- <section text-right padding-bottom>
             <button small ion-button clear type="button" (click)="gotoForgotPassword()">
-              <span ion-text color="black">
+              <span ion-text color="dark">
                 Forgot Password?
               </span>
             </button>
           </section> -->
 
-          <!-- <button gradient-button small color-5 [disabled]="formGroup.invalid" type="submit" color="black">
+          <!-- <button gradient-button small color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
               <ion-icon name="ios-arrow-forward"></ion-icon>
           </button> -->
           <br><br>
-          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formGroup.invalid" type="submit" color="black">
+          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formGroup.invalid" type="submit" color="dark">
               {{"APP.LOGIN" | translate}}
           </button>
         </form>

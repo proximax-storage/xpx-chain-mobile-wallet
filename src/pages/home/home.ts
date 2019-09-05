@@ -86,6 +86,7 @@ export class HomePage {
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
   ) {
+    this.fakeList = [{}, {}];
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
 
@@ -149,19 +150,19 @@ export class HomePage {
                 console.log('Owned mosaics', ownedMosaics)
 
                 // Merge owned mosaics & default mosaics
-                const myMergedMosaics = from(this.mosaicsProvider.mergeMosaics(ownedMosaics));
+                const myMergedMosaics = from(this.mosaicsProvider.getMosaicInfo(ownedMosaics));
 
                 myMergedMosaics.subscribe(_myMergedMosaics => {
                   console.log('6. LOG: HomePage -> init -> _myMergedMosaics');
                   this.mosaics = _myMergedMosaics;
 
-                  this.isLoading = false;
+                  // this.isLoading = false;
                   // Update asset info
                   // console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
                   // this.updateAssetsInfo(accountInfo);
 
                   // Compute wallet balance in USD
-                  console.log("8. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
+                  console.log("7. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
                   this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
                     this.totalWalletBalance = total as number;
                     console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
@@ -169,25 +170,24 @@ export class HomePage {
                   });
 
                   // Show Transactions
-                  console.log("9. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
+                  console.log("8. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
                   this.getTransactions(account);
                   this.getTransactionsUnconfirmed(account);
-                  console.log('-------- getTransactions', account)
-                  this.hideLoaders();
+                  // this.hideLoaders();
                 })
               }, err => {
-                this.hideLoaders();
+                // this.hideLoaders();
                 this.showEmptyMessage();
               })
             } catch (error) {
-              this.hideLoaders();
+              // this.hideLoaders();
               this.showEmptyMessage();
             }
           })
         })
         this.hideEmptyMessage();
       } else {
-        this.hideLoaders();
+        // this.hideLoaders();
         this.showEmptyMessage();
       }
       this.hideLoaders();
@@ -209,7 +209,6 @@ export class HomePage {
     this.isLoading = false;
   }
   showLoaders() {
-    this.fakeList = [{}, {}];
     this.isLoading = true;
     this.showEmptyTransaction = true;
     this.showEmptyMosaic = true;
@@ -275,7 +274,6 @@ export class HomePage {
     this.walletProvider.setSelectedWallet(this.selectedWallet).then(() => {
       this.init();
 
-      this.menu = "mosaics";
     });
   }
 
@@ -442,7 +440,7 @@ export class HomePage {
         this.isLoading = false;
         refresher.complete();
       }
-    }, 2000);
+    }, 1500);
   }
 
   slideChanged() {

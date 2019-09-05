@@ -10,8 +10,8 @@
       *ngFor="let lang of languages" (click)="onSelect(lang)">
       <ion-item>
         <img logo-medium item-left [src]="utils.getFlag(lang)">
-        <h2 text-uppercase ion-text color="black">{{ lang.name }}</h2>
-        <p text-uppercase ion-text color="black">({{ lang.value }})</p>
+        <h2 text-uppercase ion-text color="dark">{{ lang.name }}</h2>
+        <p text-uppercase ion-text color="dark">({{ lang.value }})</p>
       </ion-item>
     </ion-card>
   </ion-list>

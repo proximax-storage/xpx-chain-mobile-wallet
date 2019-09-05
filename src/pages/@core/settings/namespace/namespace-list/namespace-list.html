@@ -8,11 +8,11 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">Namespaces</span>
+      <span ion-text color="dark">Namespaces</span>
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -45,7 +45,7 @@
     <ion-card *ngFor="let namespace of namespaces" [attr.selected]="selectedData.name === namespace.name ? true : null" (click)="onSelect(namespace)">
       <ion-item>
         <ion-icon item-left name="git-network"></ion-icon>
-        <h2 ion-text color="black">{{ namespace.name }}</h2>
+        <h2 ion-text color="dark">{{ namespace.name }}</h2>
       </ion-item>
     </ion-card>
   </ion-list>

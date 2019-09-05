@@ -13,13 +13,13 @@
 <!-- <ion-header no-border>
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">
+      <span ion-text color="dark">
         Export Wallet & Private Key
       </span>
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -29,11 +29,11 @@
 <ion-header no-border>
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">{{"WALLETS.EXPORT.BACKUP_WALLET" | translate}}</span>
+      <span ion-text color="dark">{{"WALLETS.EXPORT.BACKUP_WALLET" | translate}}</span>
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -51,7 +51,7 @@
         <img quarter-width [src]="App.STICKERS.HINT">
       </ion-card-header>
       <ion-card-content>
-        <h4 text-wrap text-justify ion-text color="black">
+        <h4 text-wrap text-justify ion-text color="dark">
           {{"WALLETS.EXPORT.PRIVATE_KEY_DESC" | translate}}
         </h4>
       </ion-card-content>
@@ -64,25 +64,25 @@
 
             <ion-card (click)="gotoQRCodePage()">
               <ion-item>
-                <ion-icon item-left ion-text color="black" name="ios-barcode-outline"></ion-icon>
-                <h2 ion-text color="black">{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE" | translate}}</h2>
-                <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+                <ion-icon item-left ion-text color="dark" name="ios-barcode-outline"></ion-icon>
+                <h2 ion-text color="dark">{{"WALLETS.EXPORT.BACKUP_WALLET.QRCODE" | translate}}</h2>
+                <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
               </ion-item>
             </ion-card>
 
             <ion-card (click)="copy()">
               <ion-item>
-                <ion-icon item-left ion-text color="black" name="ios-copy-outline"></ion-icon>
-                <h2 ion-text color="black">{{"WALLETS.EXPORT.COPY_PRIVATE_KEY" | translate}}</h2>
-                <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+                <ion-icon item-left ion-text color="dark" name="ios-copy-outline"></ion-icon>
+                <h2 ion-text color="dark">{{"WALLETS.EXPORT.COPY_PRIVATE_KEY" | translate}}</h2>
+                <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
               </ion-item>
             </ion-card>
 
             <ion-card (click)="share()">
               <ion-item>
-                <ion-icon item-left ion-text color="black" name="ios-share-outline"></ion-icon>
-                <h2 ion-text color="black">{{"WALLETS.EXPORT.EXPORT_PRIVATE_KEY" | translate}}</h2>
-                <ion-icon item-right ion-text color="black" name="ios-arrow-forward"></ion-icon>
+                <ion-icon item-left ion-text color="dark" name="ios-share-outline"></ion-icon>
+                <h2 ion-text color="dark">{{"WALLETS.EXPORT.EXPORT_PRIVATE_KEY" | translate}}</h2>
+                <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
               </ion-item>
             </ion-card>
           </ion-list>
@@ -90,7 +90,7 @@
       </ion-row>
       <ion-row>
         <ion-col col-12 text-center>
-          <button medium gradient-button color-5 ion-button icon-end no-margin color="black" (click)="dismiss()">
+          <button medium gradient-button color-5 ion-button icon-end no-margin color="dark" (click)="dismiss()">
               {{"WALLETS.BUTTON.DONE" | translate}}
           </button>
         </ion-col>
@@ -113,7 +113,7 @@
             <img quarter-width [src]="App.STICKERS.HINT">
           </ion-card-header>
           <ion-card-content>
-            <h4 text-wrap text-justify ion-text color="black">
+            <h4 text-wrap text-justify ion-text color="dark">
               We strongly recommend that you back up your wallet and private key. It is your responsibility to save
               these in a secure place. ProximaX does not store any of your data, so we cannot help you recover your
               wallet or gain access to your digital assets in the event of human error or a system failure.
@@ -142,7 +142,7 @@
 
       <ion-row>
         <ion-col col-12 text-center>
-          <button medium gradient-button color-5 ion-button icon-end no-margin color="black" (click)="gotoQRCodePage()">
+          <button medium gradient-button color-5 ion-button icon-end no-margin color="dark" (click)="gotoQRCodePage()">
             Export via QR code
           </button>
         </ion-col>
