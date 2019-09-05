@@ -123,8 +123,8 @@
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 text-uppercase ion-text color="black"><strong>{{ mosaic.mosaicId }}</strong></h2>
-            <p text-uppercase ion-text color="black">{{ mosaic.namespaceId }}</p>
+            <h2 ion-text color="black">{{ mosaic.mosaicId | uppercase}}</h2>
+            <p ion-text color="black">{{ mosaic.namespaceId | uppercase }}</p>
             <section text-right item-right>
               <h2 ion-text color="black">{{ mosaic.amount | number : '1.6-6'}}</h2>
               <!-- <p text-right ion-text color="black"
@@ -169,32 +169,23 @@
 
 
   <div *ngIf="menu=='transactions'">
-    <!-- Skeleton loader -->
-    <ion-list transparent-items *ngIf="isLoading">
-      <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
-        <skeleton-loader></skeleton-loader>
-      </ion-card>
-      <ion-card no-border>
-        <ion-item text-center>
-          <ion-spinner name="dots"></ion-spinner>
-        </ion-item>
-      </ion-card>
-    </ion-list>
-    <!-- ./Skeleton loader -->
+   
 
     <!-- Unconfirmed Transactions -->
-    <ion-list transparent-items *ngIf="!isLoading">
-      <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy"
-        (click)="gotoTransactionDetail(transaction)">        
-        <!-- if transfer  -->
-        <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
-          [owner]="selectedAccount.address.plain()" [status]="'Unconfirmed'">
-        </transfer-transaction>
-      </ion-card>
-    </ion-list>
+    <div *ngIf="unconfirmedTransactions?.length>0">
+      <ion-list transparent-items *ngIf="!isLoading">
+        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy"
+          (click)="gotoTransactionDetail(transaction)">
+          <!-- if transfer  -->
+          <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
+            [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Unconfirmed'">
+          </transfer-transaction>
+        </ion-card>
+      </ion-list>
+    </div>
 
     <!-- Transactions -->
-    <ion-list transparent-items *ngIf="!isLoading">
+    <ion-list transparent-items *ngIf="!isLoading && confirmedTransactions">
       <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy"
         (click)="gotoTransactionDetail(transaction)">        
 
@@ -205,6 +196,20 @@
         </transfer-transaction>
       </ion-card>
     </ion-list>
+    
+     <!-- Skeleton loader -->
+     <section *ngIf="isLoading">
+       <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
+         <skeleton-loader></skeleton-loader>
+       </ion-card>
+       <ion-card no-border>
+         <ion-item text-center>
+           <ion-spinner name="dots"></ion-spinner>
+         </ion-item>
+       </ion-card>
+     </section>
+     <!-- ./Skeleton loader -->
+
     <ion-grid padding empty *ngIf="showEmptyTransaction">
       <ion-row>
         <ion-col>
