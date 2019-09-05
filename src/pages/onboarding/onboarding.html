@@ -19,8 +19,8 @@
             <img [ngClass]="{ 'small-image': slide.isSmall }" [src]="slide.image" class="slide-image" />
           </ion-col>
           <ion-col col-12 align-self-start>
-            <h2 ion-text color="dark" class="slide-title" [innerHTML]="slide.title"></h2>
-            <p text-justify ion-text color="dark" [innerHTML]="slide.description"></p>
+            <h2 ion-text color="dark" class="slide-title" [innerHTML]="slide.title | noSanitize"></h2>
+            <p text-justify ion-text color="dark" [innerHTML]="slide.description | noSanitize"></p>
           </ion-col>
 
           <ion-col col-12></ion-col>

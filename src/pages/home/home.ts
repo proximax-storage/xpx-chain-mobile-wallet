@@ -102,7 +102,7 @@ export class HomePage {
     this.init();
   }
 
-  private init() {
+  async init() {
 
     let options:LoadingOptions = {
       content: 'Loading...'
@@ -268,17 +268,20 @@ export class HomePage {
     this.isLoading = false;
   }
 
-  onWalletSelect(wallet) {
+  async onWalletSelect(wallet) {
     console.log("LOG: HomePage -> onWalletSelect -> wallet", wallet);
-    this.selectedWallet = wallet;
-    this.walletProvider.setSelectedWallet(this.selectedWallet).then(() => {
-      this.init();
-
+    if(this.selectedWallet===wallet) {
+      this.selectedWallet = wallet;
+    }
+    await this.walletProvider.setSelectedWallet(wallet).then(async () => {
+      await this.init();
     });
   }
 
-  showWalletDetails() {
+  async showWalletDetails(wallet) {
+    this.selectedWallet = wallet;
     let page = 'TransactionListPage';
+    
     let selectedAccount = this.selectedWallet
     let transactions = this.confirmedTransactions;
     let total = this.totalWalletBalance;
@@ -290,7 +293,8 @@ export class HomePage {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
-    modal.present();
+    await modal.present();
+
   }
 
   onWalletPress(wallet) {
@@ -335,8 +339,8 @@ export class HomePage {
     actionSheet.present();
   }
 
-  showAddWalletPrompt() {
-    this.alertProvider.showAddWalletPrompt().then(option => {
+  async showAddWalletPrompt() {
+    await this.alertProvider.showAddWalletPrompt().then(option => {
       if (option === 'create') {
         this.navCtrl.push('WalletAddPage');
       } else {
