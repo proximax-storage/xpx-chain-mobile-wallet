@@ -56,5 +56,4 @@ export class NemProvider{
   //   return this.accountHttp.getMosaicCreatedByAddress(address);
   // }
 
-
 }
