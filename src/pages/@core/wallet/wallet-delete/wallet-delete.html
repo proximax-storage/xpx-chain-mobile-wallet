@@ -11,7 +11,7 @@
 
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -27,14 +27,14 @@
         <h3 ion-text color="danger">
             {{"WALLETS.DELETE.WARNING" | translate: {walletName: selectedWallet.name } }}
         </h3>
-        <p ion-text color="black">
+        <p ion-text color="dark">
             {{"WALLETS.DELETE.DESC" | translate}}
         </p>
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-          <button gradient-button color-5 type="submit" color="black">
+          <button gradient-button color-5 type="submit" color="dark">
             {{"WALLETS.BUTTON.CONTINUE" | translate}}
           </button>
         </form>

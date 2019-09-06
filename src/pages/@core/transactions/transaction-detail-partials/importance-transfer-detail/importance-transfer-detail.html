@@ -2,8 +2,8 @@
 <ion-card>
   <ion-item>
     <img logo-small item-left [src]="App.LOGO.NEM">
-    <h2 ion-text color="black">XEM</h2>
-    <p ion-text color="black">
+    <h2 ion-text color="dark">XEM</h2>
+    <p ion-text color="dark">
       <small>
         NEM
       </small>
@@ -11,7 +11,7 @@
 
     <section text-right item-right>
       <h2 ion-text color="danger">- {{ tx.fee | formatXEM }} </h2>
-      <p text-right text-left ion-text color="black">
+      <p text-right text-left ion-text color="dark">
         <small>
           {{ tx.fee | formatXEM| currency }}
         </small>
@@ -25,9 +25,9 @@
 <ion-card>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">Date</h2>
+      <h2 ion-text color="dark">Date</h2>
 
-      <p text-wrap ion-text color="black">
+      <p text-wrap ion-text color="dark">
         {{ tx.timeWindow.timeStamp.toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
       </p>
 
@@ -43,7 +43,7 @@
 <ion-card>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">Action</h2>
+      <h2 ion-text color="dark">Action</h2>
 
       <p ion-text color="success" *ngIf="tx.mode == 1">
         Activate harvesting
@@ -61,9 +61,9 @@
 <ion-card>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">Fee</h2>
+      <h2 ion-text color="dark">Fee</h2>
 
-      <p text-wrap ion-text color="black">
+      <p text-wrap ion-text color="dark">
         {{ tx.fee | formatXEM }} XEM
       </p>
     </ion-item>
@@ -75,9 +75,9 @@
 <ion-card>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">Block</h2>
+      <h2 ion-text color="dark">Block</h2>
 
-      <p text-wrap ion-text color="black">
+      <p text-wrap ion-text color="dark">
         {{ tx?.transactionInfo?.height | number }}
       </p>
     </ion-item>
@@ -89,7 +89,7 @@
 <ion-card (click)="utils.copy(tx?.transactionInfo?.hash?.data, 'hash')">
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="black">Hash</h2>
+      <h2 ion-text color="dark">Hash</h2>
 
       <p text-wrap>
         {{ tx?.transactionInfo?.hash?.data }}

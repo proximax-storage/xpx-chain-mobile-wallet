@@ -1,0 +1,8 @@
+ion-segment{
+    >ion-segment-button{
+        &.segment-activated {
+            border-color: color($colors, primary) !important;
+            opacity: 1 !important;
+        }
+    }
+}

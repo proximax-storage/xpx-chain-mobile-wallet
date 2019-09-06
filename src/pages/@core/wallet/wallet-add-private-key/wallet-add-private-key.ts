@@ -104,12 +104,12 @@ export class WalletAddPrivateKeyPage {
       const newWallet  = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
-      const accountInfo = this.nem.getAccountInfo(nemWallet.address).subscribe(_accountInfo => {
-        console.log('wallet de nem 1 accountInfo', _accountInfo);
-      });
+      // const accountInfo = this.nem.getAccountInfo(nemWallet.address).subscribe(_accountInfo => {
+      //   console.log('wallet de nem 1 accountInfo', _accountInfo);
+      // });
 
-      // console.log('wallet de catapult', newWallet);
-     
+      console.log('wallet de catapult', newWallet);
+      console.log('wallet de nem 1 ', nemWallet);
       this.walletProvider.checkIfWalletNameExists(newWallet.name).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');

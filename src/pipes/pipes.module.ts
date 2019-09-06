@@ -9,6 +9,7 @@ import { GetMarketPricePipe } from './get-market-price/get-market-price';
 import { NemAddressPrettyPipe } from './nem-address-pretty/nem-address-pretty';
 import { ShortNumPipe } from './short-num/short-num';
 import { FormatImportancePipe } from './format-importance/format-importance';
+import { NoSanitizePipe } from './no-sanitize/no-sanitize';
 @NgModule({
   declarations: [FormatXemPipe, FormatMosaicPipe, FormatLevyPipe,
     TimeagoPipe,
@@ -17,7 +18,8 @@ import { FormatImportancePipe } from './format-importance/format-importance';
     GetMarketPricePipe,
     NemAddressPrettyPipe,
     ShortNumPipe,
-    FormatImportancePipe],
+    FormatImportancePipe,
+    NoSanitizePipe],
   imports: [],
   exports: [FormatXemPipe, FormatMosaicPipe, FormatLevyPipe,
     TimeagoPipe,
@@ -26,7 +28,8 @@ import { FormatImportancePipe } from './format-importance/format-importance';
     GetMarketPricePipe,
     NemAddressPrettyPipe,
     ShortNumPipe,
-    FormatImportancePipe],
+    FormatImportancePipe,
+    NoSanitizePipe],
   providers: [FormatXemPipe, FormatMosaicPipe, FormatLevyPipe]
 })
 export class PipesModule {}

@@ -8,7 +8,7 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">Import wallet</span>
+      <span ion-text color="dark">Import wallet</span>
     </ion-title>
   </ion-navbar>
 
@@ -22,7 +22,7 @@
         <img logo-small item-left *ngIf="isImage" [src]="utils.getLogo(mosaic)">
         <ion-icon item-left *ngIf="!isImage" [name]="option.icon"></ion-icon>
 
-        <h2 ion-text color="black">{{ option.name }}</h2>
+        <h2 ion-text color="dark">{{ option.name }}</h2>
 
         <ion-icon item-right ion-text color="grey" name="ios-arrow-forward"></ion-icon>
       </ion-item>

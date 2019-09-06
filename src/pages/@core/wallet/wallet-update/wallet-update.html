@@ -7,7 +7,7 @@
 <ion-header no-border>
   <ion-navbar transparent>
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -19,14 +19,14 @@
     <ion-row>
 
       <ion-col col-12 text-center>
-        <h3 ion-text color="black">
+        <h3 ion-text color="dark">
           <!-- Update
           <u>{{ selectedWallet.name }}</u>
           wallet -->
 
           {{"WALLETS.EDIT.PROMPT" | translate: {walletName: selectedWallet.name } }}
         </h3>
-        <p ion-text color="black">
+        <p ion-text color="dark">
           {{"WALLETS.EDIT.DESC" | translate}}
         </p>
       </ion-col>
@@ -49,7 +49,7 @@
       </ion-col>
       <ion-col col-12 text-center>
         <br>
-        <h3 ion-text color="black">{{"WALLETS.COMMON.CHOOSE_COLOR" | translate}}</h3>
+        <h3 ion-text color="dark">{{"WALLETS.COMMON.CHOOSE_COLOR" | translate}}</h3>
       </ion-col>
       <ion-col text-center>
         <div class="color-palette">
@@ -98,7 +98,7 @@
           </ion-item>
 
 
-          <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="black">
+          <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
               {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>

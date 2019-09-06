@@ -8,11 +8,11 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="black">Wallets</span>
+      <span ion-text color="dark">Wallets</span>
     </ion-title>
 
     <ion-buttons right>
-      <button ion-button icon-only ion-text color="black" (click)="dismiss()">
+      <button ion-button icon-only ion-text color="dark" (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -27,8 +27,8 @@
       <ion-card-header no-padding>
         <ion-item>
           <ion-icon color="dark" name="fi-wallet" item-start></ion-icon>
-          <h2 text-uppercase ion-text color="black"><strong>{{ wallet?.name }}</strong></h2>
-          <p ion-text color="black">{{ wallet?.address.plain() }}</p>
+          <h2 text-uppercase ion-text color="dark"><strong>{{ wallet?.name }}</strong></h2>
+          <p ion-text color="dark">{{ wallet?.address.plain() }}</p>
         </ion-item>
       </ion-card-header>
     </ion-card>
@@ -37,7 +37,7 @@
            <button no-margin gradient-button circle color-5 (click)="showAddWalletPrompt()">
              <ion-icon name="md-add"></ion-icon>
            </button>
-           <p text-wrap ion-text color="black">{{"WALLETS.CREATE.NEW.TITLE" | translate}}</p>
+           <p text-wrap ion-text color="dark">{{"WALLETS.CREATE.NEW.TITLE" | translate}}</p>
          </section>
   </ion-list>
 

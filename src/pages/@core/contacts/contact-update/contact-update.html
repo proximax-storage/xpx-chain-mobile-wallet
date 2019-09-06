@@ -7,7 +7,7 @@
 <ion-header no-border>
   <ion-navbar transparent>
     <ion-buttons end>
-      <button ion-button icon-only (click)="dismiss()" color="black">
+      <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -22,8 +22,8 @@
       <ion-col col-12></ion-col>
 
       <ion-col col-12 text-center>
-        <h3 ion-text color="black">{{"SERVICES.ADDRESS_BOOK.UPDATE.TITLE" | translate}}</h3>
-        <p ion-text color="black">
+        <h3 ion-text color="dark">{{"SERVICES.ADDRESS_BOOK.UPDATE.TITLE" | translate}}</h3>
+        <p ion-text color="dark">
             {{"SERVICES.ADDRESS_BOOK.UPDATE.SUBTITLE" | translate}}
         </p>
       </ion-col>
@@ -47,7 +47,7 @@
             <ion-input formControlName="telegram" type="text" autocapitalize="none" placeholder=""></ion-input>
           </ion-item>
 
-          <button gradient-button  color-5 [disabled]="formGroup.invalid" type="submit" color="black">
+          <button gradient-button  color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
               {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>
