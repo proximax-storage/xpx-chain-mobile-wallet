@@ -133,6 +133,27 @@ export class WalletProvider {
   }
 
   /**
+   * Store wallet
+   * @param walletC
+   * @param walletN
+   * @return Promise with stored wallet
+   */
+  public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
+
+    console.log('walletC', walletC)
+    console.log('walletN', walletN)
+    let result = [];
+    return this.authProvider.getUsername().then(username => {
+        let walletsNis = [];
+        result.push({wallet: walletC, walletNis1: walletN, walletColor: walletColor});
+
+        walletsNis[username] = result;
+        this.storage.set('walletsNis1', walletsNis);
+        return walletC;
+    });
+  }
+
+  /**
    * Update the wallet name of the given wallet.
    * @param wallet The wallet to change the name.
    * @param newWalletName The new name for the wallet.
