@@ -77,6 +77,8 @@ export class WalletAddPrivateKeyPage {
       privateKey: ['', [Validators.minLength(3), Validators.required]]
     });
 
+    console.log('LOG: WalletAddPrivateKeyPage -> init -> this.navParams.data', this.navParams.data);
+
     if (this.navParams.data) {
       this.formGroup.setValue(this.navParams.data);
     }

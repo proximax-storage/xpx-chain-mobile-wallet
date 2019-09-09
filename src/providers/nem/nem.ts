@@ -6,25 +6,30 @@ import {
   AccountHttp,
   Password,
   SimpleWallet,
-
-
+  Address,
+  AccountInfoWithMetaData,
+  AssetDefinition,
+  AccountOwnedAssetService,
+  AssetHttp,
+  AssetTransferable,
 } from "nem-library";
 
-import { Observable } from "nem-library/node_modules/rxjs";
 import { Storage } from "@ionic/storage";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class NemProvider{
+  
   wallets: SimpleWallet[];
   accountHttp: AccountHttp;
+  assetHttp: AssetHttp;
   // mosaicHttp: MosaicHttp;
   // accountOwnedMosaicsService: AccountOwnedMosaicsService;
-
-
 
   constructor(private storage: Storage) {
     NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
     this.accountHttp = new AccountHttp();
+    this.assetHttp = new AssetHttp();
   }
 
   /**
@@ -47,6 +52,14 @@ export class NemProvider{
     );
   }
 
+  getAccountInfo(address: Address): Observable<AccountInfoWithMetaData> {
+    return this.accountHttp.getFromAddress(address);
+  }
+
+  getOwnedMosaics(address: Address): Observable<AssetTransferable[]> {
+    let accountOwnedMosaics = new AccountOwnedAssetService(this.accountHttp, this.assetHttp);
+    return accountOwnedMosaics.fromAddress(address);
+  }
   /**
    * Get the mosaics owned by thee NEM address
    * @param address The NEM address

@@ -94,12 +94,20 @@ export class UtilitiesProvider {
    * @param mosaic The mosaic object for querying the logo
    */
   getLogo(mosaic: any) {
+    console.log('LOG: getLogo -> mosaic', mosaic);
     if (
       mosaic.namespaceId === 'prx' &&
       mosaic.mosaicId === 'xpx' || mosaic.mosaicId ===  '3c0f3de5298ced2d'
     ) {
       return AppConfig.LOGO.XPX;
     } else if (
+      (mosaic.namespaceId as string).toLowerCase() === 'proximax' &&
+      (mosaic.mosaicId as string).toLowerCase() === 'xpx'
+    ) {
+      return AppConfig.LOGO.XPX;
+    }
+    
+    else if (
       mosaic.namespaceId === 'pundix' &&
       mosaic.mosaicId === 'npxs' || mosaic.mosaicId === '1e29b3356f3e24e5'
     ) {
