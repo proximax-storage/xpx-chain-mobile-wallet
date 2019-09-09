@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
@@ -13,6 +13,7 @@ import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { NemProvider } from '../../../../providers/nem/nem';
+import { SimpleWallet } from 'nem-library';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -27,6 +28,7 @@ import { NemProvider } from '../../../../providers/nem/nem';
 })
 export class WalletAddPrivateKeyPage {
 
+  nemWallet: SimpleWallet;
   App = App;
   formGroup: FormGroup;
 
@@ -48,7 +50,8 @@ export class WalletAddPrivateKeyPage {
     private barcodeScanner: BarcodeScanner,
     private alertCtrl: AlertController,
     private storage: Storage,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private modalCtrl: ModalController
   ) {
     this.walletColor = 'wallet-1';
     this.init();
@@ -78,6 +81,8 @@ export class WalletAddPrivateKeyPage {
       privateKey: ['', [Validators.minLength(3), Validators.required]]
     });
 
+    console.log('LOG: WalletAddPrivateKeyPage -> init -> this.navParams.data', this.navParams.data);
+
     if (this.navParams.data) {
       this.formGroup.setValue(this.navParams.data);
     }
@@ -102,37 +107,34 @@ export class WalletAddPrivateKeyPage {
 
   onSubmit(form) {
     try {
-      const newWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
+      const catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
       this.walletProvider
-        .storeWallet(newWallet, this.walletColor)
+        .storeWallet(catapultWallet, this.walletColor)
         .then(_ => {
-          return this.walletProvider.setSelectedWallet(newWallet);
+          return this.walletProvider.setSelectedWallet(catapultWallet);
         }).then(_ => {
-          // TODO: Backup page
-          // this.gotoBackup(newWallet); 
           this.goHome();
         });
 
-      const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
+      this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
 
-      this.walletProvider.checkIfWalletNameExists(newWallet.name).then(value => {
+      this.walletProvider.checkIfWalletNameExists(catapultWallet.name).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
         } else {
 
-          this.nem.getMosaicsOwned(nemWallet.address)
+          this.nem.getOwnedMosaics(this.nemWallet.address)
             .subscribe(mosacis => {
-              const data = mosacis.data
+              console.log('mosacis', mosacis)
+              for (let index = 0; index < mosacis.length; index++) {
+                const element = mosacis[index];
 
-              for (let index = 0; index < data.length; index++) {
-                const element = data[index];
-
-                if (element.mosaicId.name === 'xpx') {
-                  // console.log('elemento de mosaico', element)
-                  // console.log('wallet nis1 ', nemWallet)
+                if (element.assetId.name === 'xpx') {
+                  console.log('elemento de mosaico', element)
+                  console.log('wallet nis1 ', this.nemWallet)
                   this.walletProvider
-                    .storeWalletNis1(newWallet, nemWallet, this.walletColor)
+                    .storeWalletNis1(catapultWallet, this.nemWallet, this.walletColor)
                     .then(_ => {
                       this.showSwap();
                       // console.log('ALERT PARA EL SWAP NIS 1');
@@ -166,12 +168,27 @@ export class WalletAddPrivateKeyPage {
         {
           text: 'Yes',
           handler: () => {
-            console.log('Buy clicked');
+            this.showWalletInfoPage(this.nemWallet)
           }
         }
       ]
     });
     alert.present();
+  }
+
+  showWalletInfoPage(wallet: SimpleWallet) {
+    const page = "WalletInfoPage"
+    this.showModal(page, {
+      wallet: wallet
+    });
+  }
+  
+  showModal(page, params) {
+    const modal = this.modalCtrl.create(page, { data: params }, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+    modal.present();
   }
 
 

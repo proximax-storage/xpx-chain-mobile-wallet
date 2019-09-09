@@ -132,24 +132,28 @@ export class WalletProvider {
     });
   }
 
-  /**
+
+    /**
    * Store wallet
    * @param walletC
    * @param walletN
    * @return Promise with stored wallet
    */
-  public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
 
-    console.log('walletC', walletC)
-    console.log('walletN', walletN)
+  public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
     let result = [];
     return this.authProvider.getUsername().then(username => {
-        let walletsNis = [];
-        result.push({wallet: walletC, walletNis1: walletN, walletColor: walletColor});
+      return this.getLocalWalletsNis1().then(value => {
+        let wallets = value;
+        result = wallets[username];
 
-        walletsNis[username] = result;
-        this.storage.set('walletsNis1', walletsNis);
-        return walletC;
+        result.push({wallet: walletC, walletNis1: walletN,  walletColor: walletColor});
+
+        wallets[username] = result;
+
+        this.storage.set('walletsNis1', wallets);
+        return walletN;
+      });
     });
   }
 
@@ -287,6 +291,35 @@ export class WalletProvider {
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
               return { wallet:<SimpleWallet>(walletFile.wallet), walletColor: walletFile.walletColor};
+            }
+          });
+
+          _wallets[username] = walletsMap;
+        } else {
+          _wallets[username] = [];
+        }
+
+        return _wallets;
+      });
+    });
+  }
+  /**
+   * Get loaded wallets from localStorage
+   */
+  public getLocalWalletsNis1(): Promise<any> {
+    return this.authProvider.getUsername().then(username => {
+      return this.storage.get('walletsNis1').then(wallets => {
+        let _wallets = wallets ? wallets : {};
+				// console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
+        const WALLETS = _wallets[username] ? _wallets[username] : [];
+
+        if (wallets) {
+          const walletsMap = WALLETS.map(walletFile => {
+            if (walletFile.name) {
+              return 
+              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
+            } else {
+              return { wallet:<SimpleWallet>(walletFile.wallet), walletNis1:<SimpleWallet>(walletFile.walletNis1), walletColor: walletFile.walletColor};
             }
           });
 

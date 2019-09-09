@@ -9,25 +9,32 @@ import {
   Password,
   SimpleWallet,
   Address,
+  AccountInfoWithMetaData,
+  AssetDefinition,
+  AccountOwnedAssetService,
+  AssetHttp,
+  AssetTransferable,
   ServerConfig,
 } from "nem-library";
 
 import { Observable } from "rxjs";
 
-
 @Injectable()
 export class NemProvider{
-  network: NetworkTypes;
+  
   wallets: SimpleWallet[];
   accountHttp: AccountHttp;
+  assetHttp: AssetHttp;
 
-  constructor(private storage: Storage, private http: HttpClient) {
+  constructor(private storage: Storage) {
+    let serverConfig: ServerConfig[];
+    serverConfig = [{protocol: "http", domain: "18.231.166.212", port: 7890} as ServerConfig]
 
     NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
-      this.accountHttp = new AccountHttp([{protocol: "http", domain:"18.231.166.212", port: 7890}]);
-      console.log('this.accountHttp', this.accountHttp)
+    this.accountHttp = new AccountHttp(serverConfig);
+    this.assetHttp = new AssetHttp(serverConfig);
+  }
 
-}
   /**
    * Create Wallet from private key
    * @param walletName wallet idenitifier for app
@@ -48,13 +55,13 @@ export class NemProvider{
     );
   }
 
-  public getAccountInfo(address: Address): Observable<any> {
+  getAccountInfo(address: Address): Observable<AccountInfoWithMetaData> {
     return this.accountHttp.getFromAddress(address);
   }
 
-  public getMosaicsOwned(address: Address): Observable<any>{
-    let url = "http://18.231.166.212:7890/account/mosaic/owned?address=" + address.plain();
-    let headers = new HttpHeaders();
-    return this.http.get(url, { headers: headers });
+  getOwnedMosaics(address: Address): Observable<AssetTransferable[]> {
+    let accountOwnedMosaics = new AccountOwnedAssetService(this.accountHttp, this.assetHttp);
+    return accountOwnedMosaics.fromAddress(address);
   }
+
 }

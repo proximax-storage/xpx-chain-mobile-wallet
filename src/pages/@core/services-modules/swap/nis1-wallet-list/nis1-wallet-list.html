@@ -1,0 +1,38 @@
+<ion-header no-border>
+
+  <ion-navbar transparent>
+    <ion-title>
+      <span ion-text color="dark">NIS1 Wallets</span>
+    </ion-title>
+
+    <ion-buttons right>
+      <button ion-button icon-only ion-text color="dark" (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content no-margin>
+  <ion-list transparent-items *ngIf="!isLoading">
+    <ion-card no-margin-bottom *ngFor="let wallet of wallets; let i = index">
+      <ion-card-header no-padding>
+        <ion-item>
+          <ion-icon color="dark" name="fi-wallet" item-start></ion-icon>
+          <h2 text-uppercase ion-text color="dark"><strong>{{ wallet['walletNis1']?.name }}</strong></h2>
+          <p ion-text color="dark">{{  wallet['walletNis1']?.address.value }}</p>
+        </ion-item>
+      </ion-card-header>
+    </ion-card>
+
+    <section margin-top text-center>
+      <button no-margin gradient-button circle color-5 (click)="importNis1Wallet()">
+        <ion-icon name="md-add"></ion-icon>
+      </button>
+      <p text-wrap ion-text color="dark">Import NIS1 Wallet</p>
+    </section>
+  </ion-list>
+
+  <section spacing></section>
+</ion-content>
