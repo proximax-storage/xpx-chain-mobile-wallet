@@ -23,7 +23,8 @@ import {
   TransferTransaction,
   TimeWindow,
   TransactionHttp,
-  NemAnnounceResult
+  NemAnnounceResult,
+  AssetId
 } from "nem-library";
 
 
@@ -85,60 +86,33 @@ export class NemProvider{
       password: password.value,
       privateKey: ''
     };
-  
-    console.log(' console.log(common)', common)
     const wallet = {
       encrypted: encryptedKey,
       iv: iv,
     };
-    console.log('wallet', wallet)
     crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
-    console.log('wallet common', common)
+    // console.log('wallet common', common)
     return common.privateKey;
   }
  
-    /**
-   * Prepares mosaic transaction
-   * @param recipientAddress recipientAddress
-   * @param mosaicsTransferable mosaicsTransferable
-   * @param message message
-   * @return Promise containing prepared transaction
-   */
+  createAccountPrivateKey(privateKey: string) {
+    return Account.createWithPrivateKey(privateKey);
+  }
 
-   
-  public prepareMosaicTransaction(
-    recipientAddress: Address,
-    mosaicsTransferable: AssetTransferable[],
-    message: PlainMessage
-  ): TransferTransaction {
-    console.log('realizandoswap process', message)
+  async createTransaction(message: PlainMessage, assetId: AssetId, quantity: number) {
+    const resultAssets = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
+    // console.log('\n\n\n\nValue resultAssets:\n', resultAssets, '\n\n\n\nEnd value\n\n');
     return TransferTransaction.createWithAssets(
       TimeWindow.createWithDeadline(),
-      recipientAddress,
-      mosaicsTransferable,
+      new Address(AppConfig.swap.address),
+      [resultAssets],
       message
     );
   }
 
-  /**
-   * Send transaction into the blockchain
-   * @param transferTransaction transferTransaction
-   * @param wallet wallet
-   * @param password password
-   * @return Promise containing sent transaction
-   */
-  public confirmTransaction(
-    transaction: any,
-    privateKey: string
-  ): Observable<NemAnnounceResult> {
-    console.log('----------------------------', privateKey)
-    const account = Account.createWithPrivateKey(privateKey);
-    // let account = wallet.open(new Password(password));
-    let signedTransaction = account.signTransaction(transaction);
-    console.log('signedTransaction', signedTransaction)
-    return this.transactionHttp.announceTransaction(signedTransaction);
+  anounceTransaction(transferTransaction: TransferTransaction, cosignerAccount: Account) {
+    const signedTransaction = cosignerAccount.signTransaction(transferTransaction);
+    // console.log('\n\n\n\nValue signedTransaction:\n', signedTransaction, '\n\n\n\nEnd value\n\n');
+    return this.transactionHttp.announceTransaction(signedTransaction).toPromise();
   }
-
-
-  
 }

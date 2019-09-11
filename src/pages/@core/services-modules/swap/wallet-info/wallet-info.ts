@@ -1,15 +1,15 @@
 import { CoingeckoProvider } from './../../../../../providers/coingecko/coingecko';
-import { SimpleWallet, AssetDefinition, XEM, AssetTransferable, Address, TransferTransaction, PublicAccount, PlainMessage} from 'nem-library';
+import { SimpleWallet, AssetDefinition, XEM, AssetTransferable, Address, TransferTransaction, PublicAccount, PlainMessage } from 'nem-library';
 import { NemProvider } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthProvider } from '../../../../../providers/auth/auth';
-import { AppConfig} from '../../../../../app/app.config'
+import { AppConfig } from '../../../../../app/app.config'
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { Password } from 'tsjs-xpx-chain-sdk';
 
@@ -26,7 +26,9 @@ import { Password } from 'tsjs-xpx-chain-sdk';
   templateUrl: 'wallet-info.html',
 })
 export class WalletInfoPage {
- 
+
+  transferTransaction: TransferTransaction;
+  hash: any;
   walletC: any;
   message: PlainMessage;
   selectedMosaic: AssetTransferable;
@@ -56,7 +58,6 @@ export class WalletInfoPage {
   App = App;
   decimalCount: number;
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -72,6 +73,7 @@ export class WalletInfoPage {
     private alertCtrl: AlertController,
     private authProvider: AuthProvider,
     private haptic: HapticProvider,
+    private modalCtrl: ModalController,
   ) {
 
     // Show loader
@@ -81,7 +83,6 @@ export class WalletInfoPage {
     let loader = this.loadingCtrl.create(options);
     loader.present();
 
-    
     this.wallet = this.navParams.data.data.wallet;
     this.walletC = this.navParams.data.data.walletC;
     this.address = new Address(this.wallet.address.value);
@@ -115,8 +116,6 @@ export class WalletInfoPage {
     })
 
     loader.dismiss();
-
-    
   }
 
   confirmSwap() {
@@ -143,61 +142,47 @@ export class WalletInfoPage {
     alert.present();
   }
 
-  onSubmit() {
-    this.amount = this.form.get('amount').value
+  async onSubmit() {
+    let quantity = this.form.get('amount').value;
     const recipient = new Address(this.recipient)
-    let transferTransaction = this._prepareTx(recipient);
 
     if (this.multisig) {
-      console.log('es multifirma esta vaina', transferTransaction);
-  
+      // console.log('es multifirma', transferTransaction);
+
     } else {
 
-    console.log(transferTransaction);
-
-    console.log('this._allowedToSendTx()', this._allowedToSendTx())
-    if (this._allowedToSendTx()) {
-      
-      this.nemProvider
-        .confirmTransaction(
-          transferTransaction,
-          this.credentials.privateKey
-        )
-        .subscribe(
-          value => {
-            console.log('hash', value)
+      if (this._allowedToSendTx()) {
+        const account = this.nemProvider.createAccountPrivateKey(this.credentials.privateKey);
+        const transaction = await this.nemProvider.createTransaction(this.message, this.selectedMosaic.assetId, quantity);
+        this.transferTransaction = transaction;
+        this.nemProvider.anounceTransaction(transaction, account)
+          .then(resp => {
+            this.hash = resp.transactionHash;
             this.showSuccessMessage()
-          },
-          error => {
-            console.log('erororrrr al enviar',error)
+          })
+          .catch(error => {
             this.showErrorMessage(error)
-          }
-        );
-    } else {
-      this.showGenericError();
+          });
+      } else {
+        this.showGenericError();
+      }
     }
   }
-    // Show confirm transaction
-  }
-
 
   clearPlaceholder() {
     this.amountPlaceholder = "";
   }
 
-  onAmountChange(){
+  onAmountChange() {
     this.form.get('amount').valueChanges.subscribe(value => {
-        if (value > this.mosaic.balance) {
-          console.log('Insuffwalleticient balance.');
-
-          const message = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
-          this.alertProvider.showMessage(message);
-          this.amount = 0;
-        }
+      if (value > this.mosaic.balance) {
+        const message = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
+        this.alertProvider.showMessage(message);
+        this.amount = 0;
       }
+    }
     );
   }
-  
 
   init() {
     // Initialize form
@@ -214,7 +199,7 @@ export class WalletInfoPage {
         return m.assetId.name === 'xpx' && m.assetId.namespaceId === 'prx'
       })
       // console.log('LOG: WalletInfoPage -> ownedMosaics -> xpx', xpx);
-      if(xpx) {
+      if (xpx) {
         const XPX = xpx[0];
         this.selectedMosaic = XPX;
         this.mosaic = {
@@ -226,7 +211,7 @@ export class WalletInfoPage {
     })
   }
 
-  getAccountInfo(address: Address) {  
+  getAccountInfo(address: Address) {
     try {
       this.nemProvider
         .getAccountInfo(address)
@@ -236,61 +221,31 @@ export class WalletInfoPage {
             // // Check if account is a cosignatory of multisig account(s)
             console.log("This is a multisig account", accountInfo.cosignatoryOf);
             if (accountInfo.cosignatoryOf.length > 0) {
-              // this.multisig = true;
-              // console.clear();
               console.log("This is a multisig account");
               // this.isMultisig = true;
             }
           }
-
         }, (err: any) => {
           console.log(err)
           // this.isMultisig = false;
         });
-
     } catch (error) {
       console.log(error);
     }
-
   }
 
-  private _prepareTx(recipient: Address): TransferTransaction {
-    let transferTransaction: TransferTransaction;
-      const MOSAIC_TRANSFERRABLE = [
-        new AssetTransferable(
-          this.selectedMosaic.assetId,
-          this.selectedMosaic.properties,
-          this.amount,
-          this.selectedMosaic.levy
-        )
-      ];
-      console.log('realizandoswap proces MOSAIC_TRANSFERRABLE', MOSAIC_TRANSFERRABLE)
-      transferTransaction = this.nemProvider.prepareMosaicTransaction(
-        recipient,
-        MOSAIC_TRANSFERRABLE,
-        this.message
-      );
-    console.log('transferTransaction', transferTransaction);
-    return transferTransaction;
-  }
-  
-    /**
-   * User checking if it can do the send transaction.
-   */
+  /**
+ * User checking if it can do the send transaction.
+ */
   private _allowedToSendTx() {
-    console.log('this.credentials.password', this.credentials.password)
     if (this.credentials.password) {
-      console.log('entro en condicion')
       try {
-        console.log('entro en try')
         const password = new Password(this.credentials.password)
-        console.log('entro en password', password)
         this.credentials.privateKey = this.nemProvider.decryptPrivateKey(
           password,
           this.walletC.encryptedPrivateKey.encryptedKey,
           this.walletC.encryptedPrivateKey.iv
         );
-        console.log('this.credentials.privateKey', this.credentials.privateKey)
         return true;
       } catch (err) {
         return false;
@@ -300,13 +255,6 @@ export class WalletInfoPage {
   }
 
   showSuccessMessage() {
-    this.haptic.notification({ type: 'success' });
-    this.alertProvider.showMessage(
-      `You have successfully sent ${
-        this.amount
-      } ${this.selectedMosaic.assetId.name.toUpperCase()}`
-    );
-    this.utils.setTabIndex(2);
     this.navCtrl.setRoot(
       'TabsPage',
       {},
@@ -315,47 +263,66 @@ export class WalletInfoPage {
         direction: 'backward'
       }
     );
+    this.showWalletCertificate(this.message, this.hash, this.transferTransaction);
+  }
+
+  showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction) {
+    const page = "WalletTransactionsPage"
+    this.showModal(page, {
+      publicKey: publicKey,
+      transactionHash: hash,
+      timestamp: transaction
+    });
+
+  }
+
+  showModal(page, params) {
+    const modal = this.modalCtrl.create(page, { data: params }, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+    modal.present();
   }
 
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });
     console.log(error);
-              if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-                this.alertProvider.showMessage(
-                  'Sorry, you don\'t have enough balance to continue the transaction.'
-                );
-              } else if (
-                error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
-              ) {
-                this.alertProvider.showMessage(
-                  'The note you entered is too long. Please try again.'
-                );
-              } else if (error.statusCode == 404) {
-                this.alertProvider.showMessage(
-                  'This address does not belong to this network'
-                );
-              } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
-                this.alertProvider.showMessage(
-                  'Transaction is not allowed for multisignature enabled wallets.'
-                );
-              } else {
-                // this.alertProvider.showMessage(
-                //   'An error occured. Please try again.'
-                // );
-                this.alertProvider.showMessage(
-                  error
-                );
-              }
-             }
+    if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
+      this.alertProvider.showMessage(
+        'Sorry, you don\'t have enough balance to continue the transaction.'
+      );
+    } else if (
+      error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
+    ) {
+      this.alertProvider.showMessage(
+        'The note you entered is too long. Please try again.'
+      );
+    } else if (error.statusCode == 404) {
+      this.alertProvider.showMessage(
+        'This address does not belong to this network'
+      );
+    } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
+      this.alertProvider.showMessage(
+        'Transaction is not allowed for multisignature enabled wallets.'
+      );
+    } else {
+      // this.alertProvider.showMessage(
+      //   'An error occured. Please try again.'
+      // );
+      this.alertProvider.showMessage(
+        error
+      );
+    }
+  }
 
-             showGenericError() {
-              this.translateService.get('APP.ERROR').subscribe(
-                value => {
-                  let alertTitle = value;
-                  this.alertProvider.showMessage(alertTitle);
-                });
-          
-            }
+  showGenericError() {
+    this.translateService.get('APP.ERROR').subscribe(
+      value => {
+        let alertTitle = value;
+        this.alertProvider.showMessage(alertTitle);
+      });
+
+  }
 
   dismiss() {
     this.viewCtrl.dismiss();

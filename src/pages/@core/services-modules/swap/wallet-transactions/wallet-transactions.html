@@ -4,15 +4,75 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
+<ion-header no-border>
 
-  <ion-navbar>
-    <ion-title>wallet-transactions</ion-title>
+  <ion-navbar transparent>
+    <ion-title>
+      <span ion-text color="dark">{{ name }}</span>
+    </ion-title>
+
+
+    <ion-buttons right>
+      <button ion-button icon-only ion-text color="dark" (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
+<ion-content fullscreen background padding>
+  <section wallets>
+    <ion-card balance>
+      <ion-card-content>
+        <br>
+        <div>
+          <h1 wallet-name>
+            <span style="padding-left: 16px;" wallet-name >{{ timestampTittle }}</span>
+          </h1>
+          <ion-list transparent-items>
+            <ion-item>
+              <p text-justify address>{{ timestamp}} </p>
+            </ion-item>
+          </ion-list>
+        </div>
 
-<ion-content padding>
+        <div>
+          <h1 wallet-name>
+            <span style="padding-left: 16px;" wallet-name >{{ publicKeyTittle }}</span>
+          </h1>
+          <ion-list transparent-items>
+            <ion-item>
+              <p text-justify address>{{ publicKey }} </p>
+            </ion-item>
+          </ion-list>
+        </div>
 
+          <h1 wallet-name>
+            <span style="padding-left: 16px;" wallet-name >{{ hash }}</span>
+          </h1>
+          <ion-list transparent-items>
+            <ion-item (click)="copy(selectedAccount.address.plain())">
+              <ion-icon name='ios-copy-outline' item-end></ion-icon>
+              <p text-justify address>{{ transactionHash }} </p>
+            </ion-item>
+          </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+      <ion-grid normal>
+        <ion-row>
+          <ion-col>
+            <button (click)="dismiss()" gradient-button full color-5 ion-button icon-start no-margin>
+              Cancel
+            </button>
+          </ion-col>
+          <ion-col>
+            <button (click)="printCertificate()" gradient-button full color-6 ion-button icon-end no-margin>
+              Print
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 </ion-content>

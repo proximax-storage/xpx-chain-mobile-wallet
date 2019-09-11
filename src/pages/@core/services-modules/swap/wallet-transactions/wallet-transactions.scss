@@ -1,3 +1,6 @@
 page-wallet-transactions {
 
+    h1[wallet-name] {
+        color: color($colors, secondary); 
+      }
 }
