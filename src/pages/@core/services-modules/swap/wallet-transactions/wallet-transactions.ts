@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import * as jsPDF from 'jspdf';
 import * as qrcode from 'qrcode-generator';
+import { Clipboard } from '@ionic-native/clipboard';
+import { ToastProvider } from '../../../../../providers/toast/toast';
 
 /**
  * Generated class for the WalletTransactionsPage page.
@@ -32,6 +34,8 @@ export class WalletTransactionsPage {
     public navCtrl: NavController, 
     public navParams: NavParams, 
     public viewCtrl: ViewController,
+    private clipboard: Clipboard,
+    private toastProvider: ToastProvider,
   ) {
 
     this.params = this.navParams.data.data;
@@ -53,6 +57,12 @@ export class WalletTransactionsPage {
 
     // console.log('urlurlurl', url)
     return qr.createDataURL()
+  }
+
+  copy(val) {
+    this.clipboard.copy(val).then(_ => {
+      this.toastProvider.show('Your hash has been successfully copied to the clipboard', 3, true);
+    });
   }
 
   printCertificate() {
