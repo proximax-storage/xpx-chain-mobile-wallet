@@ -92,7 +92,8 @@ export class NemProvider{
       iv: iv,
     };
     console.log('wallet', wallet)
-    crypto.passwordToPrivatekey(common, wallet, 2);
+    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    console.log('wallet common', common)
     return common.privateKey;
   }
  
@@ -130,6 +131,7 @@ export class NemProvider{
     transaction: any,
     privateKey: string
   ): Observable<NemAnnounceResult> {
+    console.log('----------------------------', privateKey)
     const account = Account.createWithPrivateKey(privateKey);
     // let account = wallet.open(new Password(password));
     let signedTransaction = account.signTransaction(transaction);

@@ -134,6 +134,7 @@ export class WalletProvider {
   public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
     let result = [];
     return this.authProvider.getUsername().then(username => {
+      console.log('username',username)
       return this.getLocalWalletsNis().then(value => {
         let wallets = value;
         result = wallets[username];

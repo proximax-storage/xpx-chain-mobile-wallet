@@ -26,6 +26,7 @@ import { Password } from 'tsjs-xpx-chain-sdk';
   templateUrl: 'wallet-info.html',
 })
 export class WalletInfoPage {
+ 
   walletC: any;
   message: PlainMessage;
   selectedMosaic: AssetTransferable;
@@ -42,6 +43,7 @@ export class WalletInfoPage {
   };
   form: FormGroup;
   amount: number = 0;
+  multisig: boolean = false;
   amountPlaceholder: string;
   periodCount: number;
   msgErrorBalance: any;
@@ -82,11 +84,7 @@ export class WalletInfoPage {
     
     this.wallet = this.navParams.data.data.wallet;
     this.walletC = this.navParams.data.data.walletC;
-    console.log('********************************* this.wallet', this.wallet);
-    console.log('********************************* this.walletC', this.walletC);
-    this.address = new Address(this.wallet.address.value)
-     console.log('********************************* address',  this.address);
-    console.log('LOG: WalletInfoPage -> constructor -> wallet', this.wallet);
+    this.address = new Address(this.wallet.address.value);
 
     // 0. initialize form
     this.init();
@@ -150,9 +148,16 @@ export class WalletInfoPage {
     const recipient = new Address(this.recipient)
     let transferTransaction = this._prepareTx(recipient);
 
+    if (this.multisig) {
+      console.log('es multifirma esta vaina', transferTransaction);
+  
+    } else {
+
     console.log(transferTransaction);
 
+    console.log('this._allowedToSendTx()', this._allowedToSendTx())
     if (this._allowedToSendTx()) {
+      
       this.nemProvider
         .confirmTransaction(
           transferTransaction,
@@ -160,6 +165,7 @@ export class WalletInfoPage {
         )
         .subscribe(
           value => {
+            console.log('hash', value)
             this.showSuccessMessage()
           },
           error => {
@@ -170,6 +176,7 @@ export class WalletInfoPage {
     } else {
       this.showGenericError();
     }
+  }
     // Show confirm transaction
   }
 
@@ -227,7 +234,9 @@ export class WalletInfoPage {
           if (accountInfo) {
             this.message = PlainMessage.create(accountInfo.publicAccount.publicKey);
             // // Check if account is a cosignatory of multisig account(s)
+            console.log("This is a multisig account", accountInfo.cosignatoryOf);
             if (accountInfo.cosignatoryOf.length > 0) {
+              // this.multisig = true;
               // console.clear();
               console.log("This is a multisig account");
               // this.isMultisig = true;
