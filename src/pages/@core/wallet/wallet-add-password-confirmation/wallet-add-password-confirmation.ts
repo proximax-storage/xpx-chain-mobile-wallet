@@ -9,6 +9,7 @@ import {
 } from 'tsjs-xpx-chain-sdk';
 
 import { AlertProvider } from '../../../../providers/alert/alert';
+import { NemProvider } from './../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 
 /**
@@ -33,6 +34,7 @@ export class WalletAddPasswordConfirmationPage {
     public formBuilder: FormBuilder,
     public alertProvider: AlertProvider,
     public authProvider: AuthProvider,
+    public nemProvider: NemProvider,
     public utils: UtilitiesProvider,
   ) {
     this.init();

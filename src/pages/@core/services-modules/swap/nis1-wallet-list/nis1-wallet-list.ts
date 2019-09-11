@@ -3,6 +3,7 @@ import { WalletProvider } from './../../../../../providers/wallet/wallet';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { App } from '../../../../../providers/app/app';
+import { SimpleWallet } from 'nem-library';
 
 
 /**
@@ -29,9 +30,14 @@ export class Nis1WalletListPage {
     private walletProvider: WalletProvider,
     private modalCtrl: ModalController
     ) {
+     this.getWallet();
+  }
 
-      this.walletProvider.getLocalWalletsNis1().then(wallets => {
+  getWallet(){
+ this.walletProvider.getLocalWalletsNis().then(wallets => {
         this.wallets = wallets['luis'];
+
+        console.log('this.walletsthis.wallets', this.wallets)
       });
   }
 
@@ -59,4 +65,15 @@ export class Nis1WalletListPage {
     modal.present();
   }
   
+  openWalletNis1(nemWallet){
+    this.showWalletInfoPage(nemWallet.walletNis1, nemWallet.wallet);
+  }
+
+  showWalletInfoPage(wallet: SimpleWallet, walletC: SimpleWallet) {
+    const page = "WalletInfoPage"
+    this.showModal(page, {
+      wallet: wallet,
+      walletC: walletC
+    });
+  }
 }

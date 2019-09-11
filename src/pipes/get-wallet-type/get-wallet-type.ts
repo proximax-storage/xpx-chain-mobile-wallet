@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { NemProvider } from '../../providers/nem/nem';
 import { Observable } from 'rxjs';
 import { Address } from 'nem-library';
 
@@ -18,9 +19,7 @@ export class GetWalletTypePipe implements PipeTransform {
     // return this.getAccountType(value);
   }
 
-  constructor(
-    
-  ) {}
+  constructor(private nemProvider: NemProvider) {}
 
   // private getAccountType(rawAddress: string): Observable<any> {
   //   const ADDRESS = new Address(rawAddress);

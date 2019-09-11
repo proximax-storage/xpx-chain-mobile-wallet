@@ -10,7 +10,7 @@ import { ProximaxProvider } from '../../providers/proximax/proximax';
   name: 'formatLevy',
 })
 export class FormatLevyPipe implements PipeTransform {
-  constructor(public proximaxProvider: ProximaxProvider,) {
+  constructor(private proximaxProvider: ProximaxProvider,) {
   }
 
   transform(value): any {

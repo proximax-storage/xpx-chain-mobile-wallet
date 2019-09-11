@@ -132,8 +132,7 @@ export class WalletProvider {
     });
   }
 
-
-    /**
+     /**
    * Store wallet
    * @param walletC
    * @param walletN
@@ -143,7 +142,7 @@ export class WalletProvider {
   public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
     let result = [];
     return this.authProvider.getUsername().then(username => {
-      return this.getLocalWalletsNis1().then(value => {
+      return this.getLocalWalletsNis().then(value => {
         let wallets = value;
         result = wallets[username];
 
@@ -156,7 +155,6 @@ export class WalletProvider {
       });
     });
   }
-
   /**
    * Update the wallet name of the given wallet.
    * @param wallet The wallet to change the name.
@@ -303,14 +301,15 @@ export class WalletProvider {
       });
     });
   }
-  /**
+
+    /**
    * Get loaded wallets from localStorage
    */
-  public getLocalWalletsNis1(): Promise<any> {
+  public getLocalWalletsNis(): Promise<any> {
     return this.authProvider.getUsername().then(username => {
       return this.storage.get('walletsNis1').then(wallets => {
         let _wallets = wallets ? wallets : {};
-				// console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
+				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
         const WALLETS = _wallets[username] ? _wallets[username] : [];
 
         if (wallets) {
@@ -332,7 +331,7 @@ export class WalletProvider {
       });
     });
   }
-
+  
   /**
    * Get loaded wallets from localStorage
    */

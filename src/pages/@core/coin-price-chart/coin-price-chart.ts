@@ -22,13 +22,10 @@ import { App } from '../../../providers/app/app';
 import { CoinPriceChartProvider } from '../../../providers/coin-price-chart/coin-price-chart';
 import { CoingeckoProvider } from '../../../providers/coingecko/coingecko';
 import { HapticProvider } from '../../../providers/haptic/haptic';
-import { ProximaxProvider } from '../../../providers/proximax/proximax';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { DefaultMosaic } from '../../../models/default-mosaic';
-import { WalletProvider } from '../../../providers/wallet/wallet';
-// import { NemProvider } from '../../../providers/nem/nem';
-
+import { ProximaxProvider } from '../../../providers/proximax/proximax';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -92,8 +89,6 @@ export class CoinPriceChartPage {
     public utils: UtilitiesProvider,
     private modalCtrl: ModalController,
     private proximaxProvider: ProximaxProvider,
-    private walletProvider: WalletProvider,
-    // private nemProvider: NemProvider,
     private viewCtrl: ViewController,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,

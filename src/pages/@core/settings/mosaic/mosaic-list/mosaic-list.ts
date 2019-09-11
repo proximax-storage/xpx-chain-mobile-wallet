@@ -14,6 +14,7 @@ import { SimpleWallet } from "nem-library";
 
 import { App } from "../../../../../providers/app/app";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
+import { NemProvider } from "../../../../../providers/nem/nem";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 
 /**
@@ -43,6 +44,7 @@ export class MosaicListPage {
     public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
     public walletProvider: WalletProvider,
+    public nemProvider: NemProvider,
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController

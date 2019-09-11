@@ -104,22 +104,23 @@ export class ImportWalletPage {
     try {
       const catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
       console.log('LOG: ImportWalletPage -> onSubmit -> catapultWallet', catapultWallet);
+      this.walletProvider
+        .storeWallet(catapultWallet, this.walletColor)
+        .then(_ => {
+          return this.walletProvider.setSelectedWallet(catapultWallet);
+        });
 
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
       console.log('LOG: ImportWalletPage -> onSubmit -> nemWallet', nemWallet);
       this.nem.getOwnedMosaics(nemWallet.address)
       .subscribe(mosacis => {
-        console.log('mosacis', mosacis)
         for (let index = 0; index < mosacis.length; index++) {
           const element = mosacis[index];
 
           if (element.assetId.name === 'xpx') {
-            console.log('elemento de mosaico', element)
-            console.log('wallet nis1 ', nemWallet)
             this.walletProvider
               .storeWalletNis1(catapultWallet, nemWallet, this.walletColor)
               .then(_ => {
-               // Display wallet info
               this.showWalletInfoPage(nemWallet);
               });
           } else {

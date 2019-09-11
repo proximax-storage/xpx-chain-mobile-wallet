@@ -5,6 +5,7 @@ import { App } from './../../../../providers/app/app';
 import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet-backup';
 import { SocialSharing } from '../../../../../node_modules/@ionic-native/social-sharing';
 import { AuthProvider } from '../../../../providers/auth/auth';
+import { NemProvider } from '../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { WalletProvider } from '../../../../providers/wallet/wallet';

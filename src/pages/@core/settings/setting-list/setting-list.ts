@@ -6,6 +6,7 @@ import { Clipboard } from "@ionic-native/clipboard";
 import { SimpleWallet, AccountInfoWithMetaData } from "nem-library";
 
 import { WalletProvider } from "../../../../providers/wallet/wallet";
+import { NemProvider } from "../../../../providers/nem/nem";
 import { ToastProvider } from "./../../../../providers/toast/toast";
 import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
 import { AppVersion } from '@ionic-native/app-version';

@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 
 import { Address, MosaicId, Transaction } from 'tsjs-xpx-chain-sdk';
 
+import { NemProvider } from '../../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
@@ -72,6 +73,7 @@ export class TransferTransactionFilterComponent {
   }
 
   constructor(
+    private nemProvider: NemProvider,
     private wallet: WalletProvider,
     public utils: UtilitiesProvider
   ) {

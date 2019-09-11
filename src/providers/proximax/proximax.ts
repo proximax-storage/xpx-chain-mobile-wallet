@@ -85,6 +85,7 @@ export class ProximaxProvider {
       privateKey: ''
     };
 
+    
     const wallet: walletInterface = {
       encrypted: encryptedKey,
       iv: iv,
@@ -94,6 +95,7 @@ export class ProximaxProvider {
     return common.privateKey;
   }
 
+  
     /**
    * Decrypt private key
    * @param password password

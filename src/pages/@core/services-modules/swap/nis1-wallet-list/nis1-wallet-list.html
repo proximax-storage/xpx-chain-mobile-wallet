@@ -18,7 +18,7 @@
   <ion-list transparent-items *ngIf="!isLoading">
     <ion-card no-margin-bottom *ngFor="let wallet of wallets; let i = index">
       <ion-card-header no-padding>
-        <ion-item>
+        <ion-item (click)="openWalletNis1(wallet)">
           <ion-icon color="dark" name="fi-wallet" item-start></ion-icon>
           <h2 text-uppercase ion-text color="dark"><strong>{{ wallet['walletNis1']?.name }}</strong></h2>
           <p ion-text color="dark">{{  wallet['walletNis1']?.address.value }}</p>

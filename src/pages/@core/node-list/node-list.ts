@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
+import { NemProvider } from '../../../providers/nem/nem';
 import { Node, NodeEndpoint, ServerConfig, Protocol } from 'nem-library';
 import { Storage } from '@ionic/storage';
 import { AlertProvider } from '../../../providers/alert/alert';
@@ -44,6 +45,7 @@ export class NodeListPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
+    private nem: NemProvider,
     private storage: Storage,
     private viewCtrl: ViewController,
     private formBuilder: FormBuilder,

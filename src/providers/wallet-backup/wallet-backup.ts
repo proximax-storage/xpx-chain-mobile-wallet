@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { File } from '@ionic-native/file';
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
+
+import { NemProvider } from '../nem/nem';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
 import { AlertProvider } from '../alert/alert';
@@ -21,6 +23,7 @@ export class WalletBackupProvider {
     private clipboard: Clipboard,
     private socialSharing: SocialSharing,
     private authProvider: AuthProvider,
+    private nemProvider: NemProvider,
     private toastProvider: ToastProvider,
     private alertProvider: AlertProvider,
     private translateService: TranslateService

@@ -3,6 +3,7 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { IonicPage, ModalController, NavController, NavParams, ViewController } from 'ionic-angular';
 import { AccountInfo, SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
+import { NemProvider } from '../../../../providers/nem/nem';
 import { ToastProvider } from '../../../../providers/toast/toast';
 import { AuthProvider } from './../../../../providers/auth/auth';
 import { TranslateService } from '@ngx-translate/core';

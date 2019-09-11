@@ -130,7 +130,7 @@ export class WalletAddPrivateKeyPage {
               for (let index = 0; index < mosacis.length; index++) {
                 const element = mosacis[index];
 
-                if (element.assetId.name === 'xpx') {
+                if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
                   console.log('elemento de mosaico', element)
                   console.log('wallet nis1 ', this.nemWallet)
                   this.walletProvider
@@ -155,8 +155,10 @@ export class WalletAddPrivateKeyPage {
 
   showSwap() {
     let alert = this.alertCtrl.create({
-      title: 'Swap NIS 1',
-      message: 'Se ha detectado que la llave privada importada posee una cuenta en NIS 1 con saldo XPX, desea realizar el Swap a sirius wallet?',
+      title: 'Swap Process',
+      message: 'You recently imported Private Key  Has some assets on the NIS1 Blockchain' +
+      'Would you like to your assets to your Sirius Wallet?',
+      //Warning! This process might take few hours. If you choose to proceed, you wil receive a ticket with the transaction hash for your reference and follow up.
       buttons: [
         {
           text: 'Cancel',

@@ -20,6 +20,7 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { App } from '../providers/app/app';
 import { ComponentsModule } from '../components/components.module';
 import { AuthProvider } from '../providers/auth/auth';
+import { NemProvider } from '../providers/nem/nem';
 import { WalletProvider } from '../providers/wallet/wallet';
 import { AlertProvider } from '../providers/alert/alert';
 import { GetBalanceProvider } from '../providers/get-balance/get-balance';
@@ -63,7 +64,6 @@ import { TransactionsProvider } from '../providers/transactions/transactions';
 import { HelperProvider } from '../providers/helper/helper';
 import { Vibration } from '@ionic-native/vibration';
 import { TransferTransactionProvider } from '../providers/transfer-transaction/transfer-transaction';
-import { NemProvider } from '../providers/nem/nem';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -114,6 +114,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DecimalPipe,
     App,
     AuthProvider,
+    NemProvider,
     WalletProvider,
     AlertProvider,
     GetBalanceProvider,
@@ -144,7 +145,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     MosaicsProvider,
     MosaicsProvider,
     ProximaxProvider,
-    NemProvider,
     TransactionsProvider,
     HelperProvider,
     Vibration,
