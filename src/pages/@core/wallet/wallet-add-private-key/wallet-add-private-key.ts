@@ -28,6 +28,7 @@ import { SimpleWallet } from 'nem-library';
 })
 export class WalletAddPrivateKeyPage {
 
+  catapultWallet: any;
   nemWallet: SimpleWallet;
   App = App;
   formGroup: FormGroup;
@@ -107,19 +108,19 @@ export class WalletAddPrivateKeyPage {
 
   onSubmit(form) {
     try {
-      const catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
+      this.catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
       this.walletProvider
-        .storeWallet(catapultWallet, this.walletColor)
+        .storeWallet(this.catapultWallet, this.walletColor)
         .then(_ => {
-          return this.walletProvider.setSelectedWallet(catapultWallet);
+          return this.walletProvider.setSelectedWallet(this.catapultWallet);
         }).then(_ => {
           this.goHome();
         });
 
       this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
 
-      this.walletProvider.checkIfWalletNameExists(catapultWallet.name).then(value => {
+      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
         } else {
@@ -134,7 +135,7 @@ export class WalletAddPrivateKeyPage {
                   console.log('elemento de mosaico', element)
                   console.log('wallet nis1 ', this.nemWallet)
                   this.walletProvider
-                    .storeWalletNis1(catapultWallet, this.nemWallet, this.walletColor)
+                    .storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor)
                     .then(_ => {
                       this.showSwap();
                       // console.log('ALERT PARA EL SWAP NIS 1');
@@ -170,7 +171,7 @@ export class WalletAddPrivateKeyPage {
         {
           text: 'Yes',
           handler: () => {
-            this.showWalletInfoPage(this.nemWallet)
+            this.showWalletInfoPage(this.nemWallet, this.catapultWallet)
           }
         }
       ]
@@ -178,10 +179,11 @@ export class WalletAddPrivateKeyPage {
     alert.present();
   }
 
-  showWalletInfoPage(wallet: SimpleWallet) {
+  showWalletInfoPage(wallet: SimpleWallet, walletC) {
     const page = "WalletInfoPage"
     this.showModal(page, {
-      wallet: wallet
+      wallet: wallet,
+      walletC: walletC
     });
   }
   

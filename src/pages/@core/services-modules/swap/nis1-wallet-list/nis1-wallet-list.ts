@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { App } from '../../../../../providers/app/app';
 import { SimpleWallet } from 'nem-library';
+import { AuthProvider } from '../../../../../providers/auth/auth';
 
 
 /**
@@ -28,16 +29,21 @@ export class Nis1WalletListPage {
     public navParams: NavParams,
     private viewCtrl: ViewController,
     private walletProvider: WalletProvider,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authProvider: AuthProvider, 
     ) {
      this.getWallet();
   }
 
   getWallet(){
  this.walletProvider.getLocalWalletsNis().then(wallets => {
-        this.wallets = wallets['luis'];
+  this.authProvider.getUsername().then(username => { 
+    this.wallets = wallets[username];
+    console.log('this.walletsthis.wallets', this.wallets)
+  })
+        
 
-        console.log('this.walletsthis.wallets', this.wallets)
+        
       });
   }
 

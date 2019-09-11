@@ -19,7 +19,6 @@ import {
   ServerConfig,
   PublicAccount,
   PlainMessage,
-  AssetId,
   Account,
   TransferTransaction,
   TimeWindow,
@@ -87,12 +86,13 @@ export class NemProvider{
       privateKey: ''
     };
   
+    console.log(' console.log(common)', common)
     const wallet = {
       encrypted: encryptedKey,
       iv: iv,
     };
-
-    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    console.log('wallet', wallet)
+    crypto.passwordToPrivatekey(common, wallet, 2);
     return common.privateKey;
   }
  

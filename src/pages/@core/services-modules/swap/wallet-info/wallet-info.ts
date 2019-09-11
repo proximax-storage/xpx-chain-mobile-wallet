@@ -79,10 +79,11 @@ export class WalletInfoPage {
     let loader = this.loadingCtrl.create(options);
     loader.present();
 
-    console.log('*********************************', this.navParams.data.data);
+    
     this.wallet = this.navParams.data.data.wallet;
     this.walletC = this.navParams.data.data.walletC;
-    console.log('********************************* --------------', this.wallet.address.value);
+    console.log('********************************* this.wallet', this.wallet);
+    console.log('********************************* this.walletC', this.walletC);
     this.address = new Address(this.wallet.address.value)
      console.log('********************************* address',  this.address);
     console.log('LOG: WalletInfoPage -> constructor -> wallet', this.wallet);
@@ -162,6 +163,7 @@ export class WalletInfoPage {
             this.showSuccessMessage()
           },
           error => {
+            console.log('erororrrr al enviar',error)
             this.showErrorMessage(error)
           }
         );
@@ -273,6 +275,7 @@ export class WalletInfoPage {
       try {
         console.log('entro en try')
         const password = new Password(this.credentials.password)
+        console.log('entro en password', password)
         this.credentials.privateKey = this.nemProvider.decryptPrivateKey(
           password,
           this.walletC.encryptedPrivateKey.encryptedKey,

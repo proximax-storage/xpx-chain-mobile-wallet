@@ -31,16 +31,8 @@ export class WalletProvider {
     private proximaxProvider: ProximaxProvider,
     private http: HttpClient,) {
       this.httpUrl = AppConfig.sirius.httpNodeUrl;
-      this.getNodoBlock();
   }
 
-  getNodoBlock(){
-    const url1 = this.httpUrl+ "/block/1";
-    this.http.get(url1).subscribe(response => {
-      console.log('********************* ', response['meta'].generationHash)
-      this.generationHash = response['meta'].generationHash
-    });
-  }
     /**
    * Create Simple Wallet
    * @param walletName wallet idenitifier for app

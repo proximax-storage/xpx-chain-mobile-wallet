@@ -121,7 +121,7 @@ export class ImportWalletPage {
             this.walletProvider
               .storeWalletNis1(catapultWallet, nemWallet, this.walletColor)
               .then(_ => {
-              this.showWalletInfoPage(nemWallet);
+              this.showWalletInfoPage(nemWallet, catapultWallet);
               });
           } else {
 
@@ -136,10 +136,11 @@ export class ImportWalletPage {
     }
   }
 
-  showWalletInfoPage(wallet: SimpleWallet) {
+  showWalletInfoPage(wallet: SimpleWallet, walletC: any) {
     const page = "WalletInfoPage"
     this.showModal(page, {
-      wallet: wallet
+      wallet: wallet,
+      walletC: walletC
     });
   }
 
