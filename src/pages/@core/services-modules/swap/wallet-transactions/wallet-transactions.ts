@@ -97,16 +97,16 @@ export class WalletTransactionsPage {
     doc.text(this.publicKey, 30, 150, { maxWidth: 300 });
 
     doc.setTextColor('#316eb5')
-    doc.text('Transaction Hash:', 30, 190);
+    doc.text('NIS1 Transaction Hash:', 30, 190);
     doc.setTextColor('#000000');
     doc.text(this.transactionHash, 30, 200, { maxWidth: 300 });
 
     doc.setTextColor('#316eb5')
-    doc.text('QR Transaction Code:', 30, 230);
+    doc.text('NIS1 QR Transaction code:', 30, 230);
     doc.addImage(this.qrCreate(), 'PNG', 30, 240);
 
     doc.setTextColor('#000000');
-    doc.text('Please note:  the swap process may take a few hours to complete.', 30, 330);
+    doc.text('Please note:  The swap process may take a few hours to complete.', 30, 330);
     doc.save('Swap_Certificate.pdf')
   }
 
