@@ -82,7 +82,7 @@ export class WalletTransactionsPage {
 
     doc.setFontSize(14);
     doc.setTextColor('#316eb5');
-    doc.text('Timestamp:', 30, 80);
+    doc.text('NIS1 Timestamp:', 30, 80);
     doc.setTextColor('#000000');
     doc.text(this.timestamp, 30, 90);
 
