@@ -99,7 +99,7 @@ export class WalletTransactionsPage {
     doc.addImage(this.qrCreate(), 'PNG', 30, 230);
 
     doc.setTextColor('#000000');
-    doc.text(' Warning! this process might take few hours.', 30, 320);
+    doc.text('Please note:  this process may take a few hours to complete.', 30, 320);
     doc.save('Swap_Certificate.pdf')
   }
 
