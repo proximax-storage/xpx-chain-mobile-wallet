@@ -12,6 +12,7 @@ import { AuthProvider } from '../../../../../providers/auth/auth';
 import { AppConfig } from '../../../../../app/app.config'
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { Password } from 'tsjs-xpx-chain-sdk';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the WalletInfoPage page.
@@ -27,6 +28,7 @@ import { Password } from 'tsjs-xpx-chain-sdk';
 })
 export class WalletInfoPage {
 
+  accountPuclic: any;
   transferTransaction: TransferTransaction;
   hash: any;
   walletC: any;
@@ -63,6 +65,7 @@ export class WalletInfoPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     private loadingCtrl: LoadingController,
     private formBuilder: FormBuilder,
     public platform: Platform,
@@ -152,9 +155,13 @@ export class WalletInfoPage {
     } else {
 
       if (this._allowedToSendTx()) {
+        this.accountPuclic = this.proximaxProvider.getPublicAccountFromPrivateKey(this.credentials.privateKey, AppConfig.sirius.networkType)
+        console.log('this.puclic publicKey', this.accountPuclic.publicKey)
         const account = this.nemProvider.createAccountPrivateKey(this.credentials.privateKey);
-        const transaction = await this.nemProvider.createTransaction(this.message, this.selectedMosaic.assetId, quantity);
+        console.log('this.account', account)
+        const transaction = await this.nemProvider.createTransaction(this.accountPuclic.publicKey , this.selectedMosaic.assetId, quantity);
         this.transferTransaction = transaction;
+        console.log('this.account', this.transferTransaction)
         this.nemProvider.anounceTransaction(transaction, account)
           .then(resp => {
             this.hash = resp.transactionHash;
@@ -212,11 +219,13 @@ export class WalletInfoPage {
   }
 
   getAccountInfo(address: Address) {
+    console.log("This is a multisig account", address)
     try {
       this.nemProvider
         .getAccountInfo(address)
         .subscribe(accountInfo => {
           if (accountInfo) {
+            console.log("This is a multisig account", accountInfo);
             this.message = PlainMessage.create(accountInfo.publicAccount.publicKey);
             // // Check if account is a cosignatory of multisig account(s)
             console.log("This is a multisig account", accountInfo.cosignatoryOf);
@@ -335,7 +344,7 @@ export class WalletInfoPage {
     return 0;
   }
 
-  checkAllowedInput(e) {
+  checkAllowedInput(e) {this.message
     const AMOUNT = this.form.get('amount').value;
     console.log("LOG: SendPage -> checkAllowedInput -> AMOUNT", AMOUNT);
 
