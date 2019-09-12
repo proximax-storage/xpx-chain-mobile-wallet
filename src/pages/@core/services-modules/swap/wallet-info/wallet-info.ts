@@ -263,15 +263,16 @@ export class WalletInfoPage {
         direction: 'backward'
       }
     );
-    this.showWalletCertificate(this.message, this.hash, this.transferTransaction);
+    this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.walletC.address);
   }
 
-  showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction) {
+  showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction, address: Address) {
     const page = "WalletTransactionsPage"
     this.showModal(page, {
       publicKey: publicKey,
       transactionHash: hash,
-      timestamp: transaction
+      timestamp: transaction,
+      address: address
     });
 
   }

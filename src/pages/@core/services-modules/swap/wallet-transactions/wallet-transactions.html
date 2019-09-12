@@ -8,7 +8,7 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="dark">{{ name }}</span>
+      <span ion-text color="dark">Swap Certificate</span>
     </ion-title>
 
 
@@ -28,7 +28,7 @@
         <br>
         <div>
           <h1 wallet-name>
-            <span style="padding-left: 16px;" wallet-name >{{ timestampTittle }}</span>
+            <span style="padding-left: 16px;" wallet-name >Date</span>
           </h1>
           <ion-list transparent-items>
             <ion-item>
@@ -38,23 +38,35 @@
         </div>
 
         <div>
+            <h1 wallet-name>
+              <span style="padding-left: 16px;" wallet-name > Sirius Address </span>
+            </h1>
+            <ion-list transparent-items>
+                <ion-item (click)="copy(address, 'address')">
+                  <ion-icon name='ios-copy-outline' item-end></ion-icon>
+                  <p text-justify address>{{ address }} </p>
+                </ion-item>
+              </ion-list>
+          </div>
+        <div>
           <h1 wallet-name>
-            <span style="padding-left: 16px;" wallet-name >{{ publicKeyTittle }}</span>
+            <span style="padding-left: 16px;" wallet-name >Public Key</span>
           </h1>
           <ion-list transparent-items>
-            <ion-item>
-              <p text-justify address>{{ publicKey }} </p>
+              <ion-item (click)="copy(publicKey, 'publicKey')">
+                  <ion-icon name='ios-copy-outline' item-end></ion-icon>
+              <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ publicKey }} </p>
             </ion-item>
           </ion-list>
         </div>
 
           <h1 wallet-name>
-            <span style="padding-left: 16px;" wallet-name >{{ hash }}</span>
+            <span style="padding-left: 16px;" wallet-name >Hash</span>
           </h1>
           <ion-list transparent-items>
-            <ion-item (click)="copy(hash)">
+            <ion-item (click)="copy(hash, 'hash')">
               <ion-icon name='ios-copy-outline' item-end></ion-icon>
-              <p text-justify address>{{ transactionHash }} </p>
+              <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ transactionHash }} </p>
             </ion-item>
           </ion-list>
       </ion-card-content>
