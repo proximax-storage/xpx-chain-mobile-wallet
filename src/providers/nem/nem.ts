@@ -104,7 +104,7 @@ export class NemProvider{
     // console.log('\n\n\n\nValue resultAssets:\n', resultAssets, '\n\n\n\nEnd value\n\n');
     return TransferTransaction.createWithAssets(
       TimeWindow.createWithDeadline(),
-      new Address(AppConfig.swap.address),
+      new Address(AppConfig.swap.burnAccountAddress),
       [resultAssets],
       message
     );

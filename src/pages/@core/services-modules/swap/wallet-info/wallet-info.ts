@@ -36,7 +36,7 @@ export class WalletInfoPage {
   total: number;
   address: Address;
   wallet: any;
-  recipient = AppConfig.swap.address
+  recipient = AppConfig.swap.burnAccountAddress
   optionsXPX = {
     prefix: '',
     thousands: ',',
