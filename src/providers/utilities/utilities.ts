@@ -94,7 +94,10 @@ export class UtilitiesProvider {
    * @param mosaic The mosaic object for querying the logo
    */
   getLogo(mosaic: any) {
-    if (
+    // console.log('mosaic', mosaic);
+    if (mosaic === undefined || mosaic === null){
+      return AppConfig.LOGO.DEFAULT;
+    } else if (
       mosaic.namespaceId === 'prx' &&
       mosaic.mosaicId === 'xpx' || mosaic.mosaicId ===  '3c0f3de5298ced2d'
     ) {
