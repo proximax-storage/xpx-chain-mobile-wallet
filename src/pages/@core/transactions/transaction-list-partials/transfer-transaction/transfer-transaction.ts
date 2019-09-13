@@ -39,11 +39,10 @@ export class TransferTransactionComponent {
   async getMosaicInfo() {
     const TX = this.tx;
     const MOSAICS = [...this.mosaics]
-    
-    this.MOSAIC_INFO = MOSAICS.find(m => {
-      return m.hex == TX.mosaics[0].id.id.toHex();
-    });
 
+    this.MOSAIC_INFO = MOSAICS.find(m => {
+      return m.hex == TX.mosaics[0].id.id.toHex() || TX.mosaics[0].id.id.toHex() == TX.mosaics[0].id.id.toHex();
+    });
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
     this.AMOUNT = this.mosaicsProvider.getRelativeAmount(TX.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
