@@ -14,7 +14,7 @@ import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 export class TransferTransactionComponent {
   hiden: boolean;
   @Input() tx: TransferTransaction; // Type conversion for better code completion
-  @Input() mosaics: DefaultMosaic[] = [] ;
+  @Input() mosaics: any[] = [] ;
   @Input() owner: string;
   @Input() status: string;
   
@@ -38,7 +38,21 @@ export class TransferTransactionComponent {
 
   async getMosaicInfo() {
     const TX = this.tx;
+    console.log('tx', TX)
     const MOSAICS = [...this.mosaics]
+    
+
+    this.array.push(TX.mosaics) 
+    if (this.array && this.array.length > 0) {
+      let valor = await this.mosaicsProvider.searchInfoMosaics(this.array);
+      console.log('array --------------------------', this.array)
+    }
+
+
+
+    
+    
+
 
     this.MOSAIC_INFO = MOSAICS.find(m => {
       return m.hex == TX.mosaics[0].id.id.toHex() || TX.mosaics[0].id.id.toHex() == TX.mosaics[0].id.id.toHex();
