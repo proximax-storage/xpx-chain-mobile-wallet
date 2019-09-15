@@ -53,7 +53,7 @@ export class WalletInfoPage {
   msgErrorBalance: any;
   coinGecko: any;
   mosaic: { namespaceId: string; mosaicId: string; balance: number; } = {
-    namespaceId: 'proximax',
+    namespaceId: 'prx',
     mosaicId: 'xpx',
     balance: 0
   };
@@ -125,7 +125,7 @@ export class WalletInfoPage {
     let total = this.coinGecko.market_data.current_price.usd * Number(this.form.get('amount').value);
     let alert = this.alertCtrl.create({
       title: 'Confirm Swap',
-      message: 'Warning! this process might take few hours. If you choose to proceed, you wil receive a ticket with the transaction hash for your reference and follow up',
+      message: 'Please note! The swap process may take a few hours to complete. If you choose to proceed, you will receive a ticket with your swap transaction has for your reference',
       buttons: [
         {
           text: 'Cancel',

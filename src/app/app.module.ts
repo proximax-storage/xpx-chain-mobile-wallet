@@ -64,6 +64,7 @@ import { TransactionsProvider } from '../providers/transactions/transactions';
 import { HelperProvider } from '../providers/helper/helper';
 import { Vibration } from '@ionic-native/vibration';
 import { TransferTransactionProvider } from '../providers/transfer-transaction/transfer-transaction';
+import { FileTransfer } from '@ionic-native/file-transfer';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -148,7 +149,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TransactionsProvider,
     HelperProvider,
     Vibration,
-    TransferTransactionProvider
+    TransferTransactionProvider,
+    FileTransfer
   ]
 })
 export class AppModule {}

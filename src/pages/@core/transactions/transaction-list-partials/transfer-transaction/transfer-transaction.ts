@@ -42,11 +42,11 @@ export class TransferTransactionComponent {
     const MOSAICS = [...this.mosaics]
     
 
-    this.array.push(TX.mosaics) 
-    if (this.array && this.array.length > 0) {
-      let valor = await this.mosaicsProvider.searchInfoMosaics(this.array);
-      console.log('array --------------------------', this.array)
-    }
+    // this.array.push(TX.mosaics) 
+    // if (this.array && this.array.length > 0) {
+    //   let valor = await this.mosaicsProvider.searchInfoMosaics(this.array);
+    //   console.log('array --------------------------', this.array)
+    // }
 
 
 
