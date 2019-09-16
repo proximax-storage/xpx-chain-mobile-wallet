@@ -111,7 +111,7 @@
     "zone.js": "0.8.26"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "3.1.9",
+    "@ionic/app-scripts": "3.2.4",
     "@types/js-base64": "^2.3.1",
     "@types/uniqid": "^4.1.2",
     "cz-conventional-changelog": "^2.1.0",

@@ -276,6 +276,17 @@ export class ProximaxProvider {
   }
 
     /**
+   * Get namespace id
+   *
+   * @param {any} id
+   * @returns
+   * @memberof ProximaxProvider
+   */
+  getNamespaceId(id: string | number[]): NamespaceId {
+    return new NamespaceId(id);
+  }
+
+    /**
    * Formats levy given mosaic object
    * @param mosaic mosaic object
    * @return Promise with levy fee formated

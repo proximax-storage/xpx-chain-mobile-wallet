@@ -42,7 +42,7 @@
           <br>
 
           <h1 color="dark" text-center> {{(mosaicAmount? mosaicAmount:0) }} <span style="font-size: 18px;" text-uppercase>{{mosaicId}}</span></h1>
-          <h2 color="dark"  text-center>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
+          <h2 color="dark" text-center>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
 
             <ion-list transparent-items>
                 <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
