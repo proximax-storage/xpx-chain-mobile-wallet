@@ -5,8 +5,8 @@
     </button>
   </ion-fab> -->
 
-  <ion-tab [root]="tab1Root" tabTitle="{{'WALLETS.TITLE' | translate}}" tabIcon="fi-wallet"></ion-tab>
-  <ion-tab [root]="tab2Root" (ionSelect)="clearNotification()" tabTitle="{{'NOTIFICATIONS' | translate}}" tabIcon="fi-notification"  [tabBadge]='notificationCount' tabBadgeStyle="danger"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="{{'SERVICES' | translate}}" tabIcon="fi-services"></ion-tab>
-    <ion-tab [root]="tab4Root" tabTitle="{{'SETTINGS' | translate}}" tabIcon="fi-settings"></ion-tab>
+  <ion-tab [root]="tab1Root" tabTitle="{{'WALLETS.TITLE' | translate}}" tabIcon="custom-account"></ion-tab>
+  <ion-tab [root]="tab2Root" (ionSelect)="clearNotification()" tabTitle="{{'NOTIFICATIONS' | translate}}" tabIcon="custom-notifications"  [tabBadge]='notificationCount' tabBadgeStyle="danger"></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="{{'SERVICES' | translate}}" tabIcon="custom-services"></ion-tab>
+    <ion-tab [root]="tab4Root" tabTitle="{{'SETTINGS' | translate}}" tabIcon="custom-settings"></ion-tab>
 </ion-tabs>

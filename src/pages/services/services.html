@@ -23,7 +23,7 @@
   <!-- Uncomment to add Address Book -->
   <ion-card (click)="goto('ContactListPage')">
     <ion-item>
-      <ion-icon item-left name="fi-contact"></ion-icon>
+      <ion-icon item-left name="custom-address"></ion-icon>
       <h2>{{"SERVICES.ADDRESS_BOOK.TITLE" | translate}}</h2>
       <p text-wrap>{{"SERVICES.ADDRESS_BOOK.DESC" | translate}}</p>
     </ion-item>
@@ -32,7 +32,7 @@
   <!-- Uncomment to add multisig -->
   <ion-card (click)="showModal('MultisigSupportPage')">
     <ion-item>
-      <ion-icon item-left name="git-network"></ion-icon>
+      <ion-icon item-left name="custom-multisig"></ion-icon>
       <h2>{{"SERVICES.MULTISIGN_SUPPORT.TITLE" | translate}}</h2>
       <p text-wrap>{{"SERVICES.MULTISIGN_SUPPORT.DESC" | translate}}</p>
     </ion-item>
@@ -40,7 +40,7 @@
 
   <ion-card (click)="goto('FaucetPage')">
     <ion-item>
-      <ion-icon item-left name="ios-square-outline"></ion-icon>
+      <ion-icon item-left name="custom-faucet"></ion-icon>
       <h2>XPX Testnet Faucet</h2>
       <p text-wrap>This faucet uses a public Testnet where you can send transactions without spending real money.</p>
     </ion-item>
@@ -48,7 +48,7 @@
 
   <ion-card (click)="goto('Nis1WalletListPage')">
     <ion-item>
-      <ion-icon item-left name="ios-swap"></ion-icon>
+      <ion-icon item-left name="custom-swap"></ion-icon>
       <h2>NIS1 to Sirius Swap</h2>
       <p text-wrap>Migrate XPX from NIS1 to Sirius blockchain.</p>
     </ion-item>
