@@ -104,30 +104,41 @@ export class ImportWalletPage {
     try {
       const catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
       console.log('LOG: ImportWalletPage -> onSubmit -> catapultWallet', catapultWallet);
-      this.walletProvider
-        .storeWallet(catapultWallet, this.walletColor)
-        .then(_ => {
-          return this.walletProvider.setSelectedWallet(catapultWallet);
-        });
-
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
-      console.log('LOG: ImportWalletPage -> onSubmit -> nemWallet', nemWallet);
-      this.nem.getOwnedMosaics(nemWallet.address)
-      .subscribe(mosacis => {
-        for (let index = 0; index < mosacis.length; index++) {
-          const element = mosacis[index];
-
-          if (element.assetId.name === 'xpx') {
-            this.walletProvider
-              .storeWalletNis1(catapultWallet, nemWallet, this.walletColor)
-              .then(_ => {
-              this.showWalletInfoPage(nemWallet, catapultWallet);
-              });
-          } else {
-
+      
+      this.walletProvider.checkIfWalletNameExists(catapultWallet.name).then(value => {
+        if (value) {
+          this.alertProvider.showMessage('This wallet name already exists. Please try again.');
+        } else {
+          
+          this.walletProvider
+          .storeWallet(catapultWallet, this.walletColor)
+          .then(_ => {
+            return this.walletProvider.setSelectedWallet(catapultWallet);
+          });
+  
+        
+        console.log('LOG: ImportWalletPage -> onSubmit -> nemWallet', nemWallet);
+        this.nem.getOwnedMosaics(nemWallet.address)
+        .subscribe(mosacis => {
+          for (let index = 0; index < mosacis.length; index++) {
+            const element = mosacis[index];
+  
+            if (element.assetId.name === 'xpx') {
+              this.walletProvider
+                .storeWalletNis1(catapultWallet, nemWallet, this.walletColor)
+                .then(_ => {
+                this.showWalletInfoPage(nemWallet, catapultWallet);
+                });
+            } else {
+  
+            }
           }
+        });
         }
       });
+
+
       
 
     }

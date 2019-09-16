@@ -110,20 +110,20 @@ export class WalletAddPrivateKeyPage {
     try {
       this.catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
-      this.walletProvider
-        .storeWallet(this.catapultWallet, this.walletColor)
-        .then(_ => {
-          return this.walletProvider.setSelectedWallet(this.catapultWallet);
-        }).then(_ => {
-          this.goHome();
-        });
-
       this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
 
       this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
         } else {
+
+          this.walletProvider
+        .storeWallet(this.catapultWallet, this.walletColor)
+        .then(_ => {
+          return this.walletProvider.setSelectedWallet(this.catapultWallet);
+        }).then(_ => {
+          this.goHome();
+        });
 
           this.nem.getOwnedMosaics(this.nemWallet.address)
             .subscribe(mosacis => {
