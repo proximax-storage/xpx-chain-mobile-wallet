@@ -157,9 +157,7 @@ export class WalletAddPrivateKeyPage {
   showSwap() {
     let alert = this.alertCtrl.create({
       title: 'Swap Process',
-      message: 'You recently imported Private Key  Has some assets on the NIS1 Blockchain' +
-      'Would you like to your assets to your Sirius Wallet?',
-      //Warning! This process might take few hours. If you choose to proceed, you wil receive a ticket with the transaction hash for your reference and follow up.
+      message: 'You recently imported private key  has some assets on the NIS1 (NEM) blockchain. Would you like to transfer these assets to Sirius Chain and make them available in the Sirius wallet?',
       buttons: [
         {
           text: 'Cancel',
