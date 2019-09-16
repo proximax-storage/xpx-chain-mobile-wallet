@@ -106,11 +106,11 @@ export class ImportWalletPage {
       console.log('LOG: ImportWalletPage -> onSubmit -> catapultWallet', catapultWallet);
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
       
-      this.walletProvider.checkIfWalletNameExists(catapultWallet.name).then(value => {
+      this.walletProvider.checkIfWalletNameExists(catapultWallet.name, catapultWallet.address.plain()).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
         } else {
-          
+
           this.walletProvider
           .storeWallet(catapultWallet, this.walletColor)
           .then(_ => {

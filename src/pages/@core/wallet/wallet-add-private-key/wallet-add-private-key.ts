@@ -112,7 +112,7 @@ export class WalletAddPrivateKeyPage {
 
       this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
 
-      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name).then(value => {
+      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
         } else {

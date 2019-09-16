@@ -223,14 +223,15 @@ export class WalletProvider {
    * @param walletName
    * @return Promise that resolves a boolean if exists
    */
-  public checkIfWalletNameExists(walletName: string): Promise<boolean> {
+  public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
 
     return this.authProvider.getUsername().then(username => {
       return this.getLocalWallets().then(wallets => {
         const _wallets = wallets[username];
         for (var i = 0; i < _wallets.length; i++) {
-          if (_wallets[i].wallet.name === walletName) {
+          console.log('wallet storage', _wallets[i])
+          if (_wallets[i].wallet.name === walletName || _wallets[i].wallet.address.address === walletAddress) {
             exists = true;
             break;
           }
