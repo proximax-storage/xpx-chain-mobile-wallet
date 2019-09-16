@@ -42,7 +42,8 @@
   <ion-list transparent-items *ngIf="contacts && contacts.length">
     <ion-card *ngFor="let contact of contacts" (click)="onSelect(contact)" (press)="onPress(contact)">
         <ion-item>
-          <img item-left logo-small [src]="App.USER">
+          <!-- <img item-left logo-small [src]="App.USER"> -->
+          <ion-icon item-start ion-text color="dark" name="custom-account"></ion-icon>
           <h2 ion-text color="dark">{{ contact.name }}</h2>
           <p small ion-text color="dark">{{ contact.address }}</p>
           <ion-icon item-end ion-text color="dark" name="ios-arrow-forward"></ion-icon>

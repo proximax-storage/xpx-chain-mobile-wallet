@@ -46,7 +46,7 @@
 
             <ion-list transparent-items>
                 <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
-                    <ion-icon name='ios-copy-outline' item-end></ion-icon>
+                    <ion-icon name='custom-copy' item-end></ion-icon>
                     <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
                 </ion-item>
               </ion-list>
