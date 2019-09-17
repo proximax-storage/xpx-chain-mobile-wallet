@@ -466,6 +466,7 @@ export class HomePage {
   }
 
   showWalletList() {
+    this.haptic.impact({ type: 'heavy' });
     const page = "WalletListPage";
     this.utils
       .showInsetModal(page, { wallets: this.wallets })

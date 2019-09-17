@@ -87,7 +87,7 @@ export class PrivateKeyPage {
         null
       )
       .then(_ => {
-        // this.dismiss();
+        this.dismiss();
       });
   }
 
