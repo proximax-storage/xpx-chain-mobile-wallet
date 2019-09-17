@@ -136,5 +136,71 @@ $text-input-placeholder-color: lighten(color($colors, grey), 20%);
 // @import "noto-sans";
 
 
+ion-icon {
+  &[class*="custom-"] {
+    //mask-size: contain;
+   // mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: currentColor;
+    width: 1em;
+    height: 1em;
+  }
+
+  &[class*="custom-account"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-accounts-gray.svg);
+  }
+  &[class*="custom-notifications"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-notification-gray.svg);
+  }
+  &[class*="custom-services"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-services-gray.svg);
+  }
+  &[class*="custom-settings"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-settings-gray.svg);
+  }
+  &[class*="custom-address"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-address-book-gray.svg);
+  }
+  &[class*="custom-multisig"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-multisig-gray.svg);
+  }
+  &[class*="custom-faucet"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-faucet-gray.svg);
+  }
+  &[class*="custom-swap"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-swap-gray.svg);
+  }
+  &[class*="custom-guide"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-wallet-guide-green.svg);
+  }
+  &[class*="custom-nodes"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-node-gray.svg);
+  }
+  &[class*="custom-languaje"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-languages-gray.svg);
+  }
+  &[class*="custom-reset"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-recovery-pin-gray.svg);
+  }
+  &[class*="custom-logout"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-sign-out-gray.svg);
+  }
+  &[class*="custom-balance"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-balance-green.svg);
+  }
+  &[class*="custom-copy"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-copy-gray.svg);
+  }
+  &[class*="custom-export"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-export-gray.svg);
+  }
+  &[class*="custom-qrcode"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-qr-code-gray.svg);
+  }
+  &[class*="custom-pvkey"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-private-key-gray.svg);
+  }
+  
+}
 
 

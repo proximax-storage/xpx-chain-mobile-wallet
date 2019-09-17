@@ -110,20 +110,20 @@ export class WalletAddPrivateKeyPage {
     try {
       this.catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
-      this.walletProvider
+      this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
+
+      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
+        if (value) {
+          this.alertProvider.showMessage('This wallet name already exists. Please try again.');
+        } else {
+
+          this.walletProvider
         .storeWallet(this.catapultWallet, this.walletColor)
         .then(_ => {
           return this.walletProvider.setSelectedWallet(this.catapultWallet);
         }).then(_ => {
           this.goHome();
         });
-
-      this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
-
-      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name).then(value => {
-        if (value) {
-          this.alertProvider.showMessage('This wallet name already exists. Please try again.');
-        } else {
 
           this.nem.getOwnedMosaics(this.nemWallet.address)
             .subscribe(mosacis => {
@@ -157,9 +157,7 @@ export class WalletAddPrivateKeyPage {
   showSwap() {
     let alert = this.alertCtrl.create({
       title: 'Swap Process',
-      message: 'You recently imported Private Key  Has some assets on the NIS1 Blockchain' +
-      'Would you like to your assets to your Sirius Wallet?',
-      //Warning! This process might take few hours. If you choose to proceed, you wil receive a ticket with the transaction hash for your reference and follow up.
+      message: 'You recently imported private key  has some assets on the NIS1 (NEM) blockchain. Would you like to transfer these assets to Sirius Chain and make them available in the Sirius wallet?',
       buttons: [
         {
           text: 'Cancel',

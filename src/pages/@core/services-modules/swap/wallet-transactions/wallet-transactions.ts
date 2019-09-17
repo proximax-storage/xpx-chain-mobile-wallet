@@ -5,8 +5,8 @@ import * as qrcode from 'qrcode-generator';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../../../../../providers/toast/toast';
 import { Address } from 'tsjs-xpx-chain-sdk';
-
-
+import { File } from '@ionic-native/file';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/';
 /**
  * Generated class for the WalletTransactionsPage page.
  *
@@ -20,7 +20,8 @@ import { Address } from 'tsjs-xpx-chain-sdk';
   templateUrl: 'wallet-transactions.html',
 })
 export class WalletTransactionsPage {
-
+  fileTransfer: FileTransferObject = this.transfer.create();
+  fecha: string;
   address: any;
   timestamp: string;
   publicKey: any;
@@ -35,8 +36,10 @@ export class WalletTransactionsPage {
     public viewCtrl: ViewController,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
+    private file: File,
+    private transfer: FileTransfer
   ) {
-
+    
     this.params = this.navParams.data.data;
     console.log('this.params this.params', this.params);
     this.publicKey = this.params.publicKey.payload;
@@ -44,7 +47,9 @@ export class WalletTransactionsPage {
     let address = Address.createFromRawAddress(this.params.address.address);
     this.address = address.pretty();
     console.log('this.address', this.address);
-    this.timestamp = `${this.params.timestamp.timeWindow.timeStamp._date._year}-${this.params.timestamp.timeWindow.timeStamp._date._month}-${this.params.timestamp.timeWindow.timeStamp._date._day} ${this.params.timestamp.timeWindow.timeStamp._time._hour}:${this.params.timestamp.timeWindow.timeStamp._time._minute}:${this.params.timestamp.timeWindow.timeStamp._time._second}`
+    this.timestamp = `${this.params.timestamp.timeWindow.timeStamp._date._year}-${this.params.timestamp.timeWindow.timeStamp._date._month}-${this.params.timestamp.timeWindow.timeStamp._date._day} ${this.params.timestamp.timeWindow.timeStamp._time._hour}:${this.params.timestamp.timeWindow.timeStamp._time._minute}:${this.params.timestamp.timeWindow.timeStamp._time._second}`;
+
+    this.fecha = `${this.params.timestamp.timeWindow.timeStamp._date._year}-${this.params.timestamp.timeWindow.timeStamp._date._month}-${this.params.timestamp.timeWindow.timeStamp._date._day}-${this.params.timestamp.timeWindow.timeStamp._time._hour}:${this.params.timestamp.timeWindow.timeStamp._time._minute}`
   }
 
   ionViewDidLoad() {
@@ -68,47 +73,77 @@ export class WalletTransactionsPage {
   }
 
   printCertificate() {
+    // 
     let doc = new jsPDF({
       orientation: 'landscape',
       unit: 'px',
       format: [800, 475]
     });
 
-    doc.addImage(this.img, 'JPG', 0, 0, 600, 360)
-    doc.setFontSize(30);
-    doc.setTextColor('#316eb5');
-    doc.text('Swap Certificate', 30, 50);
-    doc.line(30, 60, 300, 60, 'S')
+    doc.addImage(this.img, 'JPG', 0, 0, 600, 360);
+    doc.setFontSize(24);
+    doc.setTextColor('#00000');
+    doc.text('Swap Process Certificate', 30, 50);
+    doc.line(30, 60, 300, 60, 'S');
 
     doc.setFontSize(14);
-    doc.setTextColor('#316eb5');
-    doc.text('NIS1 Timestamp:', 30, 80);
-    doc.setTextColor('#000000');
-    doc.text(this.timestamp, 30, 90);
+    doc.setTextColor('#00000');
+    doc.setFontType('bold');
+    doc.text('Sirius Account:', 30, 90);
+    doc.setFontType('normal');
+    doc.text(this.address, 30, 105);
 
-    doc.setTextColor('#316eb5');
-    doc.text('Sirius Address:', 30, 110);
-    doc.setTextColor('#000000');
-    doc.text(this.address, 30, 120);
+    doc.setFontType('bold');
+    doc.text('NIS1 Timestamp:', 30, 130);
+    doc.setFontType('normal');
+    doc.text(this.timestamp, 130, 131);
 
-    doc.setTextColor('#316eb5')
-    doc.text('NIS1 Public Key:', 30, 140);
-    doc.setTextColor('#000000');
-    doc.text(this.publicKey, 30, 150, { maxWidth: 300 });
 
-    doc.setTextColor('#316eb5')
-    doc.text('NIS1 Transaction Hash:', 30, 190);
-    doc.setTextColor('#000000');
-    doc.text(this.transactionHash, 30, 200, { maxWidth: 300 });
+    doc.setFontType('bold');
+    doc.text('NIS1 Public Key:', 30, 155);
+    doc.setFontType('normal');
+    doc.text(this.publicKey, 30, 170, { maxWidth: 300 });
 
-    doc.setTextColor('#316eb5')
-    doc.text('NIS1 QR Transaction code:', 30, 230);
-    doc.addImage(this.qrCreate(), 'PNG', 30, 240);
+    doc.addImage(this.qrCreate(), 'jpg', 30, 210, 100, 100);
 
-    doc.setTextColor('#000000');
-    doc.text('Please note:  The swap process may take a few hours to complete.', 30, 330);
-    doc.save('Swap_Certificate.pdf')
+    doc.setFontType('bold');
+    doc.text('NIS1 Transaction Hash:', 140, 230);
+    doc.setFontType('normal');
+    doc.text(this.transactionHash, 140, 245, { maxWidth: 190 });
+
+    doc.text('Note: the swap process may take a few hours to complete.', 30, 330);
+    // let Pdf =  doc.save('Swap_Certificate.pdf')
+
+    let blob = doc.output('blob', {type: 'application/pdf'});
+    //     let pdfOutput = doc.output();
+    // let buffer = new ArrayBuffer(pdfOutput.length);
+    // let array = new Uint8Array(buffer);
+    // for (var i = 0; i < pdfOutput.length; i++) {
+    //   array[i] = pdfOutput.charCodeAt(i);
+    // }
+
+    const directory = this.file.externalRootDirectory + '/Download';
+    this.file.writeFile(directory,"Swap_Certificate"+this.fecha+".pdf", blob, {'replace':true}) 
+    // this.file.writeFile(this.file.dataDirectory,"Swap_Certificate"+this.fecha+".pdf",buffer, {'append':false})
+    .then((success)=>{
+
+              console.log("File created successfly" + JSON.stringify(success))
+              // if The file successfuly created , i want to download it
+              this.fileTransfer.download(directory+"Swap_Certificate"+this.fecha+".pdf" ,directory+"Swap_Certificate"+this.fecha+".pdf")
+                .then((entry)=>{
+                  console.log("Download Success " + JSON.stringify(entry))
+  
+                })
+                .catch((error)=>{
+                  console.log("Download error " + JSON.stringify(error))
+                })
+    })
+    .catch((error)=>{
+      console.log("Error creating File " + JSON.stringify(error))
+    });
   }
+
+
 
   dismiss() {
     this.viewCtrl.dismiss();

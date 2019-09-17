@@ -132,7 +132,7 @@
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
 
-      <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0">
+      <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0 && !messageShow">
         {{ tx?.message?.payload }}
       </p>
 
@@ -143,6 +143,9 @@
       <p ion-text color="dark" *ngIf="!tx.message.payload">
           {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
       </p> 
+      <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0 && messageShow">
+        {{ message.message }}
+    </p> 
     </ion-item>
   </ion-card-content>
 </ion-card>

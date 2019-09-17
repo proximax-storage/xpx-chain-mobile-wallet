@@ -36,7 +36,7 @@
         <ion-list transparent-items>
           <ion-card>
             <ion-item>
-              <ion-icon item-left name="ios-key-outline"></ion-icon>
+              <ion-icon item-left name="custom-address"></ion-icon>
               <p text-wrap *ngIf="address">{{ address }}</p>
 
               <section text-center>
@@ -50,13 +50,13 @@
               <ion-col col-6>
                 <button gradient-button medium color-5 ion-button icon-end no-margin (click)="copy()">
                     {{"WALLETS.BUTTON.COPY" | translate}}
-                  <ion-icon name="ios-copy-outline"></ion-icon>
+                  <ion-icon name="custom-copy"></ion-icon>
                 </button>
               </ion-col>
               <ion-col col-6>
                 <button gradient-button medium color-5 ion-button icon-end no-margin (click)="share()">
                     {{"WALLETS.BUTTON.EXPORT" | translate}}
-                  <ion-icon name="ios-share-outline"></ion-icon>
+                  <ion-icon name="custom-export"></ion-icon>
                 </button>
               </ion-col>
               <ion-col col-2></ion-col>
