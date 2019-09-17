@@ -23,9 +23,30 @@ export class TransferDetailComponent {
   @Input() mosaics: DefaultMosaic[] = [];
   App = App;
   owner: Address;
+  message: any;
+  messageShow = false;
+
+  constructor(
+    private wallet: WalletProvider,
+    public utils: UtilitiesProvider,
+    public mosaicsProvider: MosaicsProvider,
+    private proximaxProvider: ProximaxProvider,
+  ) {
+    // console.log(this.tx);
+  }
+
+  ngOnInit() {
+    this._setOwner();
+    this._getMosaicInfo();
+  }
+
+  private _setOwner() {
+    this.wallet.getSelectedWallet().then(wallet => {
+      this.owner = wallet.address;
+    });
+  }
 
   private async _getMosaicInfo() {
-
     // Get mosaic details
     this.mosaics = this.mosaics.filter(m1 => {
       return this.tx.mosaics.filter(m2 => {
@@ -45,26 +66,18 @@ export class TransferDetailComponent {
       })
     })[0]
 
-    console.log(this.mosaics);
+     const valid = this.IsJsonString(this.tx.message.payload);
+
+     if(valid){
+      this.message = JSON.parse(this.tx.message.payload);
+      if(this.message.message){
+        this.messageShow = true
+        return this.message;
+      }
+     } else {
+      this.messageShow = false
+     }
   }
 
-  private _setOwner() {
-    this.wallet.getSelectedWallet().then(wallet => {
-      this.owner = wallet.address;
-    });
-  }
-
-  constructor(
-    private wallet: WalletProvider,
-    public utils: UtilitiesProvider,
-    public mosaicsProvider: MosaicsProvider,
-    private proximaxProvider: ProximaxProvider,
-  ) {
-    // console.log(this.tx);
-  }
-
-  ngOnInit() {
-    this._setOwner();
-    this._getMosaicInfo();
-  }
+  IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; } 
 }

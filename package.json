@@ -86,6 +86,7 @@
     "ionic-angular": "3.9.2",
     "ionic-tooltips": "2.0.1",
     "ionicons": "3.0.0",
+    "javac": "^1.0.0",
     "js-base64": "2.4.5",
     "jspdf": "^1.5.3",
     "lodash": "4.17.10",
