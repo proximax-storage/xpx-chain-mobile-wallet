@@ -26,7 +26,7 @@
     "@angular/platform-browser-dynamic": "5.2.10",
     "@ionic-native/app-version": "^4.20.0",
     "@ionic-native/barcode-scanner": "4.20.0",
-    "@ionic-native/browser-tab": "4.20.0",
+    "@ionic-native/browser-tab": "^4.20.0",
     "@ionic-native/clipboard": "^4.20.0",
     "@ionic-native/core": "4.20.0",
     "@ionic-native/device": "4.8.0",
