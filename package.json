@@ -36,7 +36,7 @@
     "@ionic-native/keyboard": "4.20.0",
     "@ionic-native/onesignal": "4.20.0",
     "@ionic-native/qr-scanner": "4.20.0",
-    "@ionic-native/safari-view-controller": "4.20.0",
+    "@ionic-native/safari-view-controller": "^4.20.0",
     "@ionic-native/screenshot": "4.20.0",
     "@ionic-native/secure-storage": "4.8.0",
     "@ionic-native/social-sharing": "4.9.2",
