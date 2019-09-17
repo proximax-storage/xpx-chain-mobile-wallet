@@ -1,4 +1,15 @@
+.ios {
+
+  page-con-price-chart {
+    .big-margin-top {
+      >.scroll-content {
+        margin-top: 280px !important;
+      }
+    }
+  }
+}
 page-coin-price-chart {
+
   #container {
     display: block;
     width: 100%;
