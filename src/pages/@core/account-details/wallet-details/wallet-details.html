@@ -34,19 +34,19 @@
         <ion-list transparent-items>
 
             <ion-item *ngIf="selectedAccount">
-                <ion-icon name='fi-wallet' item-start></ion-icon>
+                <ion-icon name='custom-account' item-start></ion-icon>
                 {{"WALLETS.WALLET_NAME" | translate}}:
                 <span item-end>{{selectedAccount?.name }}</span>
             </ion-item>
 
             <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
-                <ion-icon name='ios-cash-outline' item-start></ion-icon>
+                <ion-icon name='custom-balance' item-start></ion-icon>
                 {{"WALLETS.BALANCE" | translate}}:
                 <span item-end *ngIf="selectedAccount">${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</span>
             </ion-item>
 
             <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
-                <ion-icon name='ios-paper-outline' item-start></ion-icon>
+                <ion-icon name='custom-address' item-start></ion-icon>
                 {{"WALLETS.ADDRESS" | translate}}:
                 <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
             </ion-item>

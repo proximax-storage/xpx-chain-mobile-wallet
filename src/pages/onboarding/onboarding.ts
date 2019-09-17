@@ -125,22 +125,7 @@ export class OnboardingPage {
           `,
         isSmall: true,
         image: App.SLIDES.SLIDE4
-      },
-      // {
-      //   title: 'What’s the upside?',
-      //   description:
-      //     `The purpose of cryptocurrency is to allow people to manage their funds in an anonymous and secure way, from any location without relying on third parties.
-
-      //     <br> <br>
-
-      //     On the blockchain, your funds are not controlled by any bank. You are the only one who has access to your funds and you can instantly transfer to any other address on the blockchain without depending on any authorizations, permissions or limits.
-          
-      //     <br> <br>
-
-      //     Your public address and your private keys are the only pieces of information you need to hold to manage your funds from anywhere in the world.`,
-      //   isSmall: true,
-      //   image: App.SLIDES.SLIDE5
-      // }
+      }
     ];
   }
 

@@ -111,7 +111,7 @@ export class WalletUpdatePage {
           this.goBack();
         });
     } else {
-      this.walletProvider.checkIfWalletNameExists(form.name).then(isExist => {
+      this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
 				console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
         if (isExist) {
         this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');

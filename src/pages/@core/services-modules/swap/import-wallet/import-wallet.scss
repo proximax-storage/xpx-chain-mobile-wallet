@@ -1,0 +1,157 @@
+page-import-wallet {
+
+     .wallet {
+         width: 100% !important;
+     }
+
+     .wallet-content {
+         width: 100% !important;
+     }
+
+     .color-palette {
+         display: flex;
+         justify-content: center;
+     }
+
+     .color-box {
+         width: 60px;
+     }
+
+     /* Button style */
+     @mixin button-styles {
+         width: 40px;
+         height: 40px;
+         margin: 0 auto;
+         border: none;
+         border-radius: 7px;
+         padding: 18px 18px;
+         font-size: 16px;
+         text-transform: uppercase;
+         cursor: pointer;
+         box-shadow: 0 0 4px #999;
+         outline: none;
+         background-position: center;
+         transition: background 0.8s;
+     }
+
+     button[one] {
+         @include button-styles();
+         background-color: color($colors, wallet-1);
+
+         &:hover {
+             background: color($colors, wallet-1) radial-gradient(circle, transparent 1%, color($colors, wallet-1) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-1), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[two] {
+         @include button-styles();
+         background-color: color($colors, wallet-2);
+
+         &:hover {
+             background: color($colors, wallet-2) radial-gradient(circle, transparent 1%, color($colors, wallet-2) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-2), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[three] {
+         @include button-styles();
+         background-color: color($colors, wallet-3);
+
+         &:hover {
+             background: color($colors, wallet-3) radial-gradient(circle, transparent 1%, color($colors, wallet-3) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-3), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[four] {
+         @include button-styles();
+         background-color: color($colors, wallet-4);
+
+         &:hover {
+             background: color($colors, wallet-4) radial-gradient(circle, transparent 1%, color($colors, wallet-4) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-4), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[five] {
+         @include button-styles();
+         background-color: color($colors, wallet-5);
+
+         &:hover {
+             background: color($colors, wallet-5) radial-gradient(circle, transparent 1%, color($colors, wallet-5) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-5), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[six] {
+         @include button-styles();
+         background-color: color($colors, wallet-6);
+
+         &:hover {
+             background: color($colors, wallet-6) radial-gradient(circle, transparent 1%, color($colors, wallet-6) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-6), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[seven] {
+         @include button-styles();
+         background-color: color($colors, wallet-7);
+
+         &:hover {
+             background: color($colors, wallet-7) radial-gradient(circle, transparent 1%, color($colors, wallet-7) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-7), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+     button[eight] {
+         @include button-styles();
+         background-color: color($colors, wallet-8);
+
+         &:hover {
+             background: color($colors, wallet-8) radial-gradient(circle, transparent 1%, color($colors, wallet-8) 1%) center/15000%;
+         }
+
+         &:active {
+             background-color: lighten(color($colors, wallet-8), 10%);
+             background-size: 100%;
+             transition: background 0s;
+         }
+     }
+
+}

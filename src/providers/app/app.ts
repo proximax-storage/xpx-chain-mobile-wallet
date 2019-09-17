@@ -12,16 +12,15 @@ export class App {
   private static ASSETS = "assets/imgs";
   public static STICKERS = {
     SORRY: `${App.ASSETS}/stickers/sorry.png`,
-    HINT: `${App.ASSETS}/stickers/idea.png`,
+    HINT: `${App.ASSETS}/stickers/icon-private-key-export-full-color-80h.svg`,
     INVALID: `${App.ASSETS}/stickers/invalid.png`
   };
   public static SLIDES = {
-    SLIDE1: `${App.ASSETS}/slides/xpx-slide-1.png`,
-    SLIDE2: `${App.ASSETS}/slides/xpx-slide-2.png`,
-    SLIDE3: `${App.ASSETS}/slides/xpx-slide-3.png`,
-    SLIDE4: `${App.ASSETS}/slides/xpx-slide-4.png`,
-    SLIDE5: `${App.ASSETS}/slides/xpx-slide-5.png`,
-    SLIDE6: `${App.ASSETS}/slides/xpx-slide-5.png`
+    SLIDE1: `${App.ASSETS}/slides/logo-proximax-sirius-wallet-beta.svg`,
+    SLIDE2: `${App.ASSETS}/slides/icon-private-key-full-color-80h.svg`,
+    SLIDE3: `${App.ASSETS}/slides/icon-storage-full-color-80h.svg`,
+    SLIDE4: `${App.ASSETS}/slides/icon-blockchain-full-color-80h.svg`,
+    SLIDE5: `${App.ASSETS}/slides/icon-full-control-assets-full-color-80h.svg`
   };
   public static LOGO = {
     XPX: `assets/imgs/mosaics/xpx.png`,

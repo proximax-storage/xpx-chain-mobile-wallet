@@ -26,6 +26,7 @@ import {
   TransactionHttp,
   QueryParams,
   NetworkHttp,
+  MultisigAccountInfo,
 } from 'tsjs-xpx-chain-sdk';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
@@ -84,6 +85,7 @@ export class ProximaxProvider {
       privateKey: ''
     };
 
+    
     const wallet: walletInterface = {
       encrypted: encryptedKey,
       iv: iv,
@@ -91,6 +93,21 @@ export class ProximaxProvider {
 
     crypto.passwordToPrivatekey(common, wallet, 2);
     return common.privateKey;
+  }
+
+  
+    /**
+   * Decrypt private key
+   * @param password password
+   * @param encriptedData Object containing private_key encrypted and salt
+   * @return Decrypted private key
+   */
+
+  public decryptPrivateKey1(
+    password: string,
+    encriptedData: any
+  ): string {
+    return;
   }
 
   getAccountInfo(address: Address): Observable<AccountInfo> {
@@ -131,6 +148,10 @@ export class ProximaxProvider {
   
   getLinkedMosaicId(NamespaceId: NamespaceId): Observable<MosaicId> {
     return this.namespaceHttp.getLinkedMosaicId(NamespaceId)
+  }
+
+    public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
+    return this.accountHttp.getMultisigAccountInfo(address);
   }
 
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
@@ -194,6 +215,84 @@ export class ProximaxProvider {
   }
 
 
+  /**
+   * Generate Address QR Text
+   * @param address address
+   * @return Address QR Text
+   */
+  public generateInvoiceQRText(
+    address: Address,
+    amount: number,
+    message: string
+  ): string {
 
+   
+    return;
+  }
 
+    /**
+   * Prepares provision namespace transaction
+   * @param recipientAddress recipientAddress
+   * @param mosaicsTransferable mosaicsTransferable
+   * @param message message
+   * @return Promise containing prepared transaction
+   */
+  public prepareSubNamespaceTransaction(
+    subNamespace: string,
+    parentNamespace: string
+  ): any {
+    return;
+    // ProvisionNamespaceTransaction.create(
+    //   TimeWindow.createWithDeadline(),
+    //   subNamespace,
+    //   parentNamespace
+    // );
+  }
+
+    /**
+   * Prepares provision namespace transaction
+   * @param recipientAddress recipientAddress
+   * @param mosaicsTransferable mosaicsTransferable
+   * @param message message
+   * @return Promise containing prepared transaction
+   */
+  public prepareNamespaceTransaction(
+    namespace: string
+  ): any {
+    return;
+    // ProvisionNamespaceTransaction.create(
+    //   TimeWindow.createWithDeadline(),
+    //   namespace
+    // );
+  }
+
+    /**
+   * Get the namespaces owned by the NEM address
+   * @param address The NEM address
+   * @return {Namespace[]}
+   */
+  public getNamespacesOwned(address: Address): Observable<any[]> {
+    return;
+  }
+
+    /**
+   * Get namespace id
+   *
+   * @param {any} id
+   * @returns
+   * @memberof ProximaxProvider
+   */
+  getNamespaceId(id: string | number[]): NamespaceId {
+    return new NamespaceId(id);
+  }
+
+    /**
+   * Formats levy given mosaic object
+   * @param mosaic mosaic object
+   * @return Promise with levy fee formated
+   */
+  public formatLevy(mosaic: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+    })
+  }
 }

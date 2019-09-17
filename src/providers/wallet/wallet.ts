@@ -31,16 +31,8 @@ export class WalletProvider {
     private proximaxProvider: ProximaxProvider,
     private http: HttpClient,) {
       this.httpUrl = AppConfig.sirius.httpNodeUrl;
-      this.getNodoBlock();
   }
 
-  getNodoBlock(){
-    const url1 = this.httpUrl+ "/block/1";
-    this.http.get(url1).subscribe(response => {
-      console.log('********************* ', response['meta'].generationHash)
-      this.generationHash = response['meta'].generationHash
-    });
-  }
     /**
    * Create Simple Wallet
    * @param walletName wallet idenitifier for app
@@ -108,7 +100,6 @@ export class WalletProvider {
     });
   };
 
-
   /**
    * Store wallet
    * @param wallet
@@ -124,21 +115,41 @@ export class WalletProvider {
         result.push({wallet: wallet, walletColor: walletColor});
 
         wallets[username] = result;
-
-
         this.storage.set('wallets', wallets);
         return wallet;
       });
     });
   }
 
+     /**
+   * Store wallet
+   * @param walletC
+   * @param walletN
+   * @return Promise with stored wallet
+   */
+
+  public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
+    let result = [];
+    return this.authProvider.getUsername().then(username => {
+      return this.getLocalWalletsNis().then(value => {
+        let wallets = value;
+        result = wallets[username];
+
+        result.push({wallet: walletC, walletNis1: walletN,  walletColor: walletColor});
+
+        wallets[username] = result;
+
+        this.storage.set('walletsNis1', wallets);
+        return walletN;
+      });
+    });
+  }
   /**
    * Update the wallet name of the given wallet.
    * @param wallet The wallet to change the name.
    * @param newWalletName The new name for the wallet.
    */
   public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor:string) {
-    console.log(walletColor);
     // return;
     return this.authProvider.getUsername().then(username => {
       return this.getLocalWallets().then(wallets => {
@@ -212,14 +223,15 @@ export class WalletProvider {
    * @param walletName
    * @return Promise that resolves a boolean if exists
    */
-  public checkIfWalletNameExists(walletName: string): Promise<boolean> {
+  public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
 
     return this.authProvider.getUsername().then(username => {
       return this.getLocalWallets().then(wallets => {
         const _wallets = wallets[username];
         for (var i = 0; i < _wallets.length; i++) {
-          if (_wallets[i].wallet.name === walletName) {
+          console.log('wallet storage', _wallets[i])
+          if (_wallets[i].wallet.name === walletName || _wallets[i].wallet.address.address === walletAddress) {
             exists = true;
             break;
           }
@@ -279,6 +291,36 @@ export class WalletProvider {
     });
   }
 
+    /**
+   * Get loaded wallets from localStorage
+   */
+  public getLocalWalletsNis(): Promise<any> {
+    return this.authProvider.getUsername().then(username => {
+      return this.storage.get('walletsNis1').then(wallets => {
+        let _wallets = wallets ? wallets : {};
+				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
+        const WALLETS = _wallets[username] ? _wallets[username] : [];
+
+        if (wallets) {
+          const walletsMap = WALLETS.map(walletFile => {
+            if (walletFile.name) {
+              return 
+              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
+            } else {
+              return { wallet:<SimpleWallet>(walletFile.wallet), walletNis1:<SimpleWallet>(walletFile.walletNis1), walletColor: walletFile.walletColor};
+            }
+          });
+
+          _wallets[username] = walletsMap;
+        } else {
+          _wallets[username] = [];
+        }
+
+        return _wallets;
+      });
+    });
+  }
+  
   /**
    * Get loaded wallets from localStorage
    */

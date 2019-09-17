@@ -47,7 +47,7 @@ export class FaucetPage {
       if (this.proximaxProvider.isValidAddress(ADDRESS)) {
         this.sendXPXTo(ADDRESS);
 
-        const message = "100 XPX will be sent to your account."
+        const message = "10 XPX will be sent to your account."
         this.toastCtrl.create({
           message: message,
           duration: 2000

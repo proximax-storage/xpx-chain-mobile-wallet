@@ -15,6 +15,7 @@ import {
   Transaction,
   TransactionType,
   MultisigAccountInfo,
+  MosaicId,
 } from 'tsjs-xpx-chain-sdk';
 
 import { GetMarketPricePipe } from '../../../pipes/get-market-price/get-market-price';
@@ -22,10 +23,11 @@ import { App } from '../../../providers/app/app';
 import { CoinPriceChartProvider } from '../../../providers/coin-price-chart/coin-price-chart';
 import { CoingeckoProvider } from '../../../providers/coingecko/coingecko';
 import { HapticProvider } from '../../../providers/haptic/haptic';
-import { NemProvider } from '../../../providers/nem/nem';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { DefaultMosaic } from '../../../models/default-mosaic';
+import { ProximaxProvider } from '../../../providers/proximax/proximax';
+import { MosaicsProvider } from '../../../providers/mosaics/mosaics';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -79,6 +81,7 @@ export class CoinPriceChartPage {
   accountInfo: MultisigAccountInfo;
   isMultisig: boolean;
   public mosaics: DefaultMosaic[] = [];
+  array: any[]=[];
 
 
   constructor(
@@ -88,14 +91,15 @@ export class CoinPriceChartPage {
     public coinPriceChartProvider: CoinPriceChartProvider,
     public utils: UtilitiesProvider,
     private modalCtrl: ModalController,
-    private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
     private viewCtrl: ViewController,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
     private actionSheetCtrl: ActionSheetController,
     private haptic: HapticProvider,
     private browserTab: BrowserTab,
-    private safariViewController: SafariViewController
+    private safariViewController: SafariViewController,
+    private mosaicsProvider: MosaicsProvider,
   ) { 
     this.selectedSegment = 'transactions';
     this.durations = [
@@ -120,10 +124,14 @@ export class CoinPriceChartPage {
 
     this.confirmed.forEach(confirmed => {
       let mosaics = confirmed.mosaics;
-      mosaics.forEach(mosac => {
-        if(mosac.id.toHex() === this.mosaicHex){
-          this.confirmedTransactions.push(confirmed)
+      mosaics.forEach(async mosac => {
+         const array = [(new MosaicId([mosac['id'].id.lower, mosac['id'].id.higher]))]
+         await this.mosaicsProvider.searchInfoMosaics(array).then( valor => { 
+          if(mosac.id.toHex() === this.mosaicHex || valor[0].mosaicNames.names[0].namespaceId.toHex() == mosac.id.id.toHex()){
+            this.confirmedTransactions.push(confirmed);
+            this.showEmptyMessage = false;
         }
+         });
       });
     });
     
@@ -178,10 +186,7 @@ export class CoinPriceChartPage {
           this.showEmptyMosaic = false;
         });
       }
-
     }
-
-
   }
   ionViewWillEnter() {
   }
@@ -189,9 +194,10 @@ export class CoinPriceChartPage {
   getAccountInfo() {
     // console.info("Getting account information.", this.selectedAccount.address)
     try {
-      this.nemProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
+      this.proximaxProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
           if (accountInfo) {
             this.accountInfo = accountInfo;
+            console.log('this.accountInfo', this.accountInfo)
             // Check if account is a cosignatory of multisig account(s)
             if (this.accountInfo.cosignatories.length > 0) {
               // console.log("This is a multisig account");

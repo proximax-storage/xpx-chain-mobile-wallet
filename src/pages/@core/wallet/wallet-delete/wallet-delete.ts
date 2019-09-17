@@ -81,8 +81,6 @@ export class WalletDeletePage {
   }
 
   dismiss() {
-    this.viewCtrl.dismiss().then(_=> {
-      this.goBack();
-    })
+    this.viewCtrl.dismiss();
   }
 }

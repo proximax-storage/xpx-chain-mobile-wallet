@@ -84,8 +84,8 @@ export class WalletBackupPage {
 
   share() {
       this.socialSharing.share(
-      this.privateKey, null, null);
-      this.goHome();
+      this.privateKey, null, null)
+      // this.goHome();
   }
 
   gotoQRCodePage() {

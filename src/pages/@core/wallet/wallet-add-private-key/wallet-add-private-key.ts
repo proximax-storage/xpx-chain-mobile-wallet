@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 
 import { App } from '../../../../providers/app/app';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
@@ -13,6 +12,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { NemProvider } from '../../../../providers/nem/nem';
+import { SimpleWallet } from 'nem-library';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -26,27 +27,32 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
   templateUrl: 'wallet-add-private-key.html'
 })
 export class WalletAddPrivateKeyPage {
+
+  catapultWallet: any;
+  nemWallet: SimpleWallet;
   App = App;
   formGroup: FormGroup;
 
   PASSWORD: string;
 
   walletColor: string = "wallet-1";
-  walletName:string = "Primary";
+  walletName: string = "Primary";
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private alertProvider: AlertProvider,
-    private nemProvider: NemProvider,
+    private proximaxProvider: ProximaxProvider,
+    private nem: NemProvider,
     private walletProvider: WalletProvider,
     private authProvider: AuthProvider,
     private utils: UtilitiesProvider,
-    private barcodeScanner : BarcodeScanner,
+    private barcodeScanner: BarcodeScanner,
     private alertCtrl: AlertController,
     private storage: Storage,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private modalCtrl: ModalController
   ) {
     this.walletColor = 'wallet-1';
     this.init();
@@ -76,6 +82,8 @@ export class WalletAddPrivateKeyPage {
       privateKey: ['', [Validators.minLength(3), Validators.required]]
     });
 
+    console.log('LOG: WalletAddPrivateKeyPage -> init -> this.navParams.data', this.navParams.data);
+
     if (this.navParams.data) {
       this.formGroup.setValue(this.navParams.data);
     }
@@ -100,32 +108,91 @@ export class WalletAddPrivateKeyPage {
 
   onSubmit(form) {
     try {
-      const newWallet  = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
+      this.catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
 
-      this.walletProvider.checkIfWalletNameExists(newWallet.name).then(value => {
+      this.nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
+
+      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
         if (value) {
           this.alertProvider.showMessage('This wallet name already exists. Please try again.');
         } else {
 
           this.walletProvider
-            .storeWallet(newWallet, this.walletColor)
-            .then(_ => {
-              return this.walletProvider.setSelectedWallet(newWallet);
-            }).then(_ => {
-              // TODO: Backup page
-              // this.gotoBackup(newWallet); 
-              this.goHome();
+        .storeWallet(this.catapultWallet, this.walletColor)
+        .then(_ => {
+          return this.walletProvider.setSelectedWallet(this.catapultWallet);
+        }).then(_ => {
+          this.goHome();
+        });
+
+          this.nem.getOwnedMosaics(this.nemWallet.address)
+            .subscribe(mosacis => {
+              console.log('mosacis', mosacis)
+              for (let index = 0; index < mosacis.length; index++) {
+                const element = mosacis[index];
+
+                if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
+                  console.log('elemento de mosaico', element)
+                  console.log('wallet nis1 ', this.nemWallet)
+                  this.walletProvider
+                    .storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor)
+                    .then(_ => {
+                      this.showSwap();
+                      // console.log('ALERT PARA EL SWAP NIS 1');
+                    });
+                } else {
+
+                }
+              }
             });
-
         }
-
-
       });
     }
     catch (error) {
       this.alertProvider.showMessage("Invalid private key. Please try again.");
     }
   }
+
+
+  showSwap() {
+    let alert = this.alertCtrl.create({
+      title: 'Swap Process',
+      message: 'You recently imported private key  has some assets on the NIS1 (NEM) blockchain. Would you like to transfer these assets to Sirius Chain and make them available in the Sirius wallet?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.showWalletInfoPage(this.nemWallet, this.catapultWallet)
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  showWalletInfoPage(wallet: SimpleWallet, walletC) {
+    const page = "WalletInfoPage"
+    this.showModal(page, {
+      wallet: wallet,
+      walletC: walletC
+    });
+  }
+  
+  showModal(page, params) {
+    const modal = this.modalCtrl.create(page, { data: params }, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+    modal.present();
+  }
+
 
   scan() {
     this.storage.set("isQrActive", true);
@@ -138,37 +205,37 @@ export class WalletAddPrivateKeyPage {
       let alertCtrl = this.alertCtrl.create();
       alertCtrl.setTitle('Import wallet');
       alertCtrl.setSubTitle('');
-  
+
       alertCtrl.addInput({
         type: 'password',
         label: 'Password',
-        min:'6',
+        min: '6',
         placeholder: 'Enter your password'
       });
 
       alertCtrl.addButton('Cancel');
-  
+
       alertCtrl.addButton({
         text: 'Verify',
         handler: data => {
-          if(data) {
+          if (data) {
             console.log(data);
             password = data[0];
             try {
               try {
-                let privKey = this.nemProvider.decryptPrivateKey(password, payload);
+                let privKey = this.proximaxProvider.decryptPrivateKey1(password, payload);
                 this.formGroup.patchValue({ name: payload.data.name })
                 this.formGroup.patchValue({ privateKey: privKey })
               } catch (error) {
                 console.log('Error', error);
-                
+
                 if (error.toString().indexOf('Password must be at least 6 characters') >= 0) {
                   this.alertProvider.showMessage("Password must be at least 6 characters");
                 } else {
                   this.alertProvider.showMessage("Invalid password. Please try again.");
                 }
               }
-              
+
             } catch (error) {
               console.log(error);
               this.alertProvider.showMessage("Invalid private key. Please try again.");
@@ -176,21 +243,21 @@ export class WalletAddPrivateKeyPage {
           }
         }
       });
-  
+
       alertCtrl.present();
-     }).catch(err => {
-          console.log('Error', err);
-          if (err.toString().indexOf('Access to the camera has been prohibited; please enable it in the Settings app to continue.') >= 0) {
-            let message = "Camera access is disabled. Please enable it in the Settings app."
-            this.alertProvider.showMessage(message);
-          }
-     });
+    }).catch(err => {
+      console.log('Error', err);
+      if (err.toString().indexOf('Access to the camera has been prohibited; please enable it in the Settings app to continue.') >= 0) {
+        let message = "Camera access is disabled. Please enable it in the Settings app."
+        this.alertProvider.showMessage(message);
+      }
+    });
   }
 
   updateName() {
-		let name = this.formGroup.value.name
-		console.log("LOG: WalletAddPage -> updateName -> name", name);
-    if(name) {
+    let name = this.formGroup.value.name
+    console.log("LOG: WalletAddPage -> updateName -> name", name);
+    if (name) {
       this.walletName = name;
     } else {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;

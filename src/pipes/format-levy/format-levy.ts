@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { NemProvider } from '../../providers/nem/nem';
+import { ProximaxProvider } from '../../providers/proximax/proximax';
 
 /**
  * Generated class for the FormatLevyPipe pipe.
@@ -10,10 +10,10 @@ import { NemProvider } from '../../providers/nem/nem';
   name: 'formatLevy',
 })
 export class FormatLevyPipe implements PipeTransform {
-  constructor(public nem: NemProvider) {
+  constructor(private proximaxProvider: ProximaxProvider,) {
   }
 
   transform(value): any {
-      return this.nem.formatLevy(value);
+      return this.proximaxProvider.formatLevy(value);
   }
 }
