@@ -50,25 +50,7 @@
                 {{"WALLETS.ADDRESS" | translate}}:
                 <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
             </ion-item>
-
-            <!-- <ion-item *ngIf="accountInfo && accountInfo.publicAccount" (click)="copy(accountInfo.publicAccount.publicKey)">
-                <ion-icon name='ios-key-outline' item-start></ion-icon>
-                {{"WALLETS.PUBLIC_KEY" | translate}}:
-                <p text-justify  *ngIf="selectedAccount">{{ accountInfo.publicAccount.publicKey }} </p>
-            </ion-item>
-
-            <ion-item *ngIf="accountInfo" (click)="copy(accountInfo.importance)">
-                <ion-icon name='ios-cloud-upload-outline' item-start></ion-icon>
-                {{"WALLETS.IMPORTANCE_SCORE" | translate}}:
-                <p text-wrap item-end *ngIf="selectedAccount">
-                    {{ ((accountInfo.importance | formatImportance)[0] | number:'1.0-0') + '.' + (accountInfo.importance | formatImportance)[1]
-                    }} * 10</p>
-            </ion-item>
-            <ion-item *ngIf="accountInfo" (click)="copy(accountInfo.balance.vestedBalance)">
-                <ion-icon name='ios-pulse-outline' item-start></ion-icon>
-                {{"WALLETS.VESTED_BALANCE" | translate}}:
-                <p text-wrap item-end *ngIf="selectedAccount">{{ accountInfo.balance.vestedBalance | formatXEM }} XEM</p>
-            </ion-item> -->
+          
           </ion-list>
 
         <ion-row>
