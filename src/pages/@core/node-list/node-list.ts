@@ -67,16 +67,15 @@ export class NodeListPage {
   }
 
   getInfo() {
-    this.storage.get('node').then(node => {
-      const domain = JSON.parse(node).domain
+     this.storage.get('node').then(node => {
 
-      const url = "http://" + domain + ":3000/chain/height";
+      const url = JSON.parse(node) + "/chain/height"
       this.http.get(url).subscribe(response => {
         const height = new UInt64(response['height']).compact()
         this.blockHeight = height;
       });
 
-      const url1 = "http://" + domain + ":3000/node/info";
+      const url1 = JSON.parse(node) + "/node/info";
       this.http.get(url1).subscribe(response => {
         this.currentNode = response['host']
       });
@@ -96,14 +95,10 @@ export class NodeListPage {
     
   }
 
-   switchNode(protocol="http", host:string, port=3000){
-    console.log('consulta getNodeInfo', protocol + '--' + host + '--' + port)
-
-    let serverConfig: ServerConfig = { protocol: protocol as Protocol, domain: host, port: port};
-    console.log("LOG: NodeListPage -> onChange -> serverConfig", serverConfig);
-
-    this.storage.set("node", JSON.stringify(serverConfig)).then( _=>{
-      console.log(_);
+   switchNode(protocol="https", host:string){
+    //let serverConfig: ServerConfig = { protocol: protocol as Protocol, domain: host};
+    let node = protocol + '://' + host
+    this.storage.set("node", JSON.stringify(node)).then( _=>{
       const alertTitle = this.translateService.instant("SETTINGS.NODES.SWITCH", {'host' : host} );
       this.alertProvider.showMessage(alertTitle)
       setTimeout(()=> {
@@ -126,17 +121,17 @@ export class NodeListPage {
       content: 'Pinging ' + ipaddress
     });
     this.loading.present();
-    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
-    {
+    // if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
+    // {
       try {
 
-        let url = "http://" + ipaddress + ":3000/node/info";
+        let url = "https://" + ipaddress + "/node/info";
           let headers = new HttpHeaders();
           this.http.get(url, { headers: headers })
             .toPromise()
             .then(response => { 
               console.log("LOG: NodeListPage -> response", response);
-              this.switchNode("http", ipaddress, 3000)
+              this.switchNode("https", ipaddress)
               this.loading.dismiss();
              })
             .catch((response: Response) => {
@@ -147,9 +142,9 @@ export class NodeListPage {
       } catch (error) {
 				console.log("LOG: NodeListPage -> error", error);
       }
-    } else {
-      this.alertProvider.showMessage("The IP Address provided is invalid!");
-    }
+    // } else {
+    //   this.alertProvider.showMessage("The IP Address provided is invalid!");
+    // }
   } 
 
   ionViewDidLoad() {

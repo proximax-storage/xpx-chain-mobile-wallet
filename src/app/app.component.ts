@@ -7,6 +7,7 @@ import { UtilitiesProvider } from "../providers/utilities/utilities";
 import { OneSignal } from "@ionic-native/onesignal";
 import { Keyboard } from "@ionic-native/keyboard";
 import { TranslateService } from '@ngx-translate/core';
+import { AppConfig } from '../app/app.config';
 
 @Component({
   templateUrl: "app.html"
@@ -40,6 +41,8 @@ export class MyApp {
         document.body.classList.remove('keyboard-is-open');
       });
 
+      this.getNode();
+
       this.initGetRoot().then(rootPage => {
         this.rootPage = rootPage;
 
@@ -62,7 +65,8 @@ export class MyApp {
     return Promise.all([
       this.storage.get("isFirstAppOpen"),
       this.storage.get("isLoggedIn"),
-      this.storage.get("isAccountCreated")
+      this.storage.get("isAccountCreated"),
+      
     ]).then(results => {
       const isFirstAppOpen = results[0] === null ? true : !!results[0];
       const isLoggedIn = results[1];
@@ -78,6 +82,15 @@ export class MyApp {
         return "RegisterPage";
       }
     });
+  }
+
+  getNode(){
+    this.storage.get("node").then(nodeStorage => {
+      if(nodeStorage === null || nodeStorage === undefined){
+        this.storage.set("node", JSON.stringify(AppConfig.sirius.httpNodeUrl));
+      }
+    })
+
   }
 
   initOnPauseResume() {

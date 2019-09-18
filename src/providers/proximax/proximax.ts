@@ -32,6 +32,7 @@ import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicName
 
 import { AppConfig } from '../../app/app.config';
 import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the ProximaxProvider provider.
@@ -53,17 +54,29 @@ export class ProximaxProvider {
   namespaceService: NamespaceService;
   transactionHttp: TransactionHttp;
 
-  constructor(public http: HttpClient) {
-    this.networkType = AppConfig.sirius.networkType;
-    this.httpUrl = AppConfig.sirius.httpNodeUrl;
-    this.networkHttp = new NetworkHttp(this.httpUrl);
-    this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
-    this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
-    this.mosaicHttp = new MosaicHttp(this.httpUrl, this.networkHttp);
-    this.namespaceHttp = new NamespaceHttp(this.httpUrl, this.networkHttp);
-    this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
-    this.namespaceService = new NamespaceService(this.namespaceHttp);
-    this.transactionHttp = new TransactionHttp(this.httpUrl);
+
+  constructor(public http: HttpClient, private storage: Storage,) {
+  
+
+    this.storage.get("node").then( nodeStorage=>{
+      if(nodeStorage === null || nodeStorage=== undefined){
+        this.httpUrl = AppConfig.sirius.httpNodeUrl;
+      } else {
+        this.httpUrl = nodeStorage;
+      }
+      
+      this.networkType = AppConfig.sirius.networkType;
+      this.httpUrl = JSON.parse(this.httpUrl)
+      this.networkHttp = new NetworkHttp(this.httpUrl);
+      this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
+      this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
+      this.mosaicHttp = new MosaicHttp(this.httpUrl, this.networkHttp);
+      this.namespaceHttp = new NamespaceHttp(this.httpUrl, this.networkHttp);
+      this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
+      this.namespaceService = new NamespaceService(this.namespaceHttp);
+      this.transactionHttp = new TransactionHttp(this.httpUrl);
+
+    })
   }
 
   createPassword(value) {
