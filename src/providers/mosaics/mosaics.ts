@@ -112,15 +112,8 @@ export class MosaicsProvider {
                 toArray()
               )
                 .subscribe(mosaicsInfo=> {
-                  console.log('LOG: MosaicsProvider -> mosaicsInfo -> mosaicsInfo', mosaicsInfo);
-
-                  
-                  // const mergedMosaics = this.filterUniqueMosaic(myMosaicsOwned.concat(this.getDefaultMosaics()));
-                  // console.log('LOG: MosaicsProvider -> mergeMosaics -> mergedMosaics', mergedMosaics);
-
-                  // this.defaultMosaics = mergedMosaics;
-
-                  observer.next(mosaicsInfo);
+                  const mergedMosaics = this.filterUniqueMosaic(mosaicsInfo.concat(this.getDefaultMosaics()));
+                  observer.next(mergedMosaics);
               })
 
             })
