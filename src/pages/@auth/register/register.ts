@@ -25,7 +25,7 @@ export class RegisterPage implements OnInit {
   formGroup: FormGroup;
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
-
+  passwordMin = 8;
   confirmPasswordType: string = "password";
   confirmPasswordIcon: string = "ios-eye-outline";
 
@@ -55,13 +55,13 @@ export class RegisterPage implements OnInit {
   init() {
     this.formGroup = this.formBuilder.group({
       email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(this.passwordMin)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(this.passwordMin)]],
     });
 
     this.formGroup.valueChanges.subscribe(form => {
-      if(this.formGroup.controls.password.value === '' && this.formGroup.controls.confirmPassword.value !== ''){
-        this.passDisabled = true; 
+      if (this.formGroup.controls.password.value === '' && this.formGroup.controls.confirmPassword.value !== '') {
+        this.passDisabled = true;
         this.formGroup.patchValue({
           confirmPassword: ''
         })
@@ -71,53 +71,59 @@ export class RegisterPage implements OnInit {
     });
   }
 
-  validate(){
-    this.checkPasswords(this.formGroup.controls.confirmPassword.value) 
+  validate() {
+    this.checkPasswords(this.formGroup.controls.confirmPassword.value);
   }
-  
-    checkPasswords(value) {
-      let pass = this.formGroup.controls.password.value;
-      let confirmPass = value;
+
+  checkPasswords(value) {
+    let pass = this.formGroup.controls.password.value;
+    let confirmPass = value;
 
     return pass === confirmPass
       ? null
       : this.formGroup.setErrors([{ passwordMismatch: true }]);
   }
 
+  minPasswords() {
+    let pass = this.formGroup.controls.password.value;
+    return pass.length < this.passwordMin
+      ? this.formGroup.setErrors([{ passwordMin: true }])
+      : null;
+  }
   onSubmit(form) {
-    if(this.formGroup.status == "VALID") {
+    if (this.formGroup.status == "VALID") {
       // if(form.password === form.confirmPassword) {
-        this.authProvider
-          .register(form.email, form.password)
-          .then(status => {
-						console.log("LOG: RegisterPage -> onSubmit -> status", status);
-            if(status === "duplicate") {
-              this.alertProvider.showMessage("Account already exist. Please try again.");
-              this.haptic.notification({ type: 'error' });
-            } else {
-              this.haptic.notification({ type: 'success' });
-              this.navCtrl.setRoot(
-                'TabsPage',
-                {},
-                {
-                  animate: true,
-                  direction: 'forward'
-                }
-              );
-              return this.utils.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage' });
-            }
-          })
-          .then(_ => {
-            this.authProvider.setSelectedAccount(form.email, form.password);
-          })
+      this.authProvider
+        .register(form.email, form.password)
+        .then(status => {
+          console.log("LOG: RegisterPage -> onSubmit -> status", status);
+          if (status === "duplicate") {
+            this.alertProvider.showMessage("Account already exist. Please try again.");
+            this.haptic.notification({ type: 'error' });
+          } else {
+            this.haptic.notification({ type: 'success' });
+            this.navCtrl.setRoot(
+              'TabsPage',
+              {},
+              {
+                animate: true,
+                direction: 'forward'
+              }
+            );
+            return this.utils.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage' });
+          }
+        })
+        .then(_ => {
+          this.authProvider.setSelectedAccount(form.email, form.password);
+        })
       // } else {
       //   alert("Please make sure you confirm your password.");
       // }
     }
-   
+
   }
 
-  showHidePassword(e: Event){
+  showHidePassword(e: Event) {
     e.preventDefault();
     this.passwordType = this.passwordType === "password" ? "text" : "password";
     this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
@@ -138,5 +144,5 @@ export class RegisterPage implements OnInit {
     });
   }
 
-  
+
 }
