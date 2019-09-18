@@ -205,7 +205,7 @@ export class SendPage {
       senderName: '',
       senderAddress: [''],
       recipientName: '',
-      recipientAddress: ['', Validators.required],
+      recipientAddress: ['', [Validators.required, Validators.minLength(40), Validators.maxLength(46)]],
       isMosaicTransfer: [false, Validators.required],
       message: [''],
       amount: ['', Validators.required],
@@ -230,23 +230,28 @@ export class SendPage {
 
   subscribeValue() {
     // Account recipient
-    // this.form.get('recipientAddress').valueChanges.subscribe(
-    //   value => {
-    //     const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
+    this.form.get('recipientAddress').valueChanges.subscribe(
+      value => {
+        console.log('value', value)
+        const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
-    //     if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-    //       if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, accountRecipient)) {
-    //         this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
-    //       } else {
-    //         this.msgErrorUnsupported = '';
-    //       }
-    //     } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
-    //       this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
-    //     } else {
-    //       this.msgErrorUnsupported = '';
-    //     }
-    //   }
-    // );
+        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
+            // this.blockSendButton = true;
+            this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+          } else {
+            // this.blockSendButton = false;
+            this.msgErrorUnsupported = '';
+          }
+        } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
+          // this.blockSendButton = true;
+          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
+        } else {
+          // this.blockSendButton = false;
+          this.msgErrorUnsupported = '';
+        }
+      }
+    );
 
     this.form.get('amount').valueChanges.subscribe(
       value => {
