@@ -67,7 +67,6 @@ export class WalletDeletePage {
       {},
       {
         animate: true,
-        // direction: 'forward'
       }
     );
   }
@@ -77,10 +76,10 @@ export class WalletDeletePage {
     await this.walletProvider
       .deleteWallet(this.selectedWallet)
     await this.walletProvider.unsetSelectedWallet();
-    return this.dismiss();
+    return this.goBack();
   }
 
   dismiss() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss()
   }
 }

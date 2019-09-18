@@ -253,7 +253,7 @@ export class WalletProvider {
           const selectedWallet = wallets[username];
           _wallet = <SimpleWallet>(selectedWallet);
         } else {
-          _wallet = {};
+          _wallet = null;
         }
 
         return _wallet;
@@ -402,7 +402,7 @@ export class WalletProvider {
       this.storage.get('selectedWallet').then(selectedWallet => {
         delete selectedWallet[email];
 
-        this.storage.set('selectedWallet', selectedWallet);
+        this.storage.set('selectedWallet', null);
       });
     });
   }
