@@ -18,6 +18,7 @@
     "APP.SIGNUP.CONFIRM_PASSWORD" : "Confirm Password",
     "APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER" : "Confirm your password",
     "APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE" : "Password mismatch",
+    "APP.SIGNUP.PASSWORD_MIN.MESSAGE" : "Minimum characters allowed {{Min}} ",
     "APP.PIN.SETUP.TITLE" : "6-digit Pin Setup",
     "APP.PIN.SETUP.DESC" : "Please select a 6-digit pin to access your wallet. \n IMPORTANT: Do not forget this pin because we will not be able to recover it for you.",
     "APP.PIN.VERIFY.TITLE" : "Re-enter PIN",

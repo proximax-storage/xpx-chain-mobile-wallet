@@ -38,7 +38,7 @@
           </ion-item>
           <div *ngIf="formGroup.invalid" color="danger">
               <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors">
-                <strong>{{ (error.passwordMin ? 'min error' :'') }}</strong>
+                <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
               </p>
             </div>
 
