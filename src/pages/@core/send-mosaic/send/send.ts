@@ -355,7 +355,7 @@ export class SendPage {
       //   );
       // } else {
         // Compute total
-        // let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
+        let message = this.form.get('message').value;
         const prueba = this.selectedCoin.market_data.current_price.usd;
         console.log('por este multiploca', prueba)
         let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
@@ -367,7 +367,8 @@ export class SendPage {
           mosaic: this.selectedMosaic,
           currentWallet: this.currentWallet,
           transactionType: 'normal',
-          total: total
+          total: total,
+          message: message
         }, {
             enableBackdropDismiss: false,
             showBackdrop: true
