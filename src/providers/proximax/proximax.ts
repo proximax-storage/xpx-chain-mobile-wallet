@@ -61,11 +61,6 @@ export class ProximaxProvider {
     this.networkType = AppConfig.sirius.networkType;
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
 
-      console.log('-----------------------this.networkType ', this.networkType )
-      
-      
-
-
     this.storage.get("node").then( nodeStorage=>{
       if(nodeStorage === null || nodeStorage=== undefined){
         this.httpUrl = AppConfig.sirius.httpNodeUrl;
@@ -73,7 +68,6 @@ export class ProximaxProvider {
         this.httpUrl = nodeStorage ;
       }
 
-      console.log('----------------------- this.httpUrl ',  this.httpUrl )
       this.httpUrl = this.httpUrl 
       this.networkHttp = new NetworkHttp(this.httpUrl);
       this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
