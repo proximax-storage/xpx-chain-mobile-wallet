@@ -51,7 +51,7 @@ export class ContactAddPage {
   init() {
     this.formGroup = this.formBuilder.group({
       name: ['', [Validators.minLength(3), Validators.required, Validators.pattern(this.alfaNumberPattern)]],
-      address: ['', [Validators.minLength(40), Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      address: ['', [Validators.minLength(40), Validators.maxLength(46),Validators.required, Validators.pattern(this.alfaNumberPattern)]],
       telegram: ['', [Validators.pattern(this.alfaNumberPattern)]]
     });
 
@@ -69,17 +69,10 @@ export class ContactAddPage {
     // Account recipient
     this.formGroup.get('address').valueChanges.subscribe(
       value => {
-        console.log('value', value)
         const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
-        console.log('accountRecipient 1', accountRecipient)
-        // const accountSelected = (this.formGroup.get('contact').value) ? this.formGroup.get('contact').value.split('-').join('') : '';
-        // if ((accountSelected !== '') && (accountSelected !== accountRecipient)) {
-        //   this.formGroup.get('contact').patchValue('');
-        // }
 
         if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-          console.log('accountRecipient', accountRecipient)
-          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.wallet.plain(), accountRecipient)) {
+          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
             // this.blockSendButton = true;
             this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
           } else {

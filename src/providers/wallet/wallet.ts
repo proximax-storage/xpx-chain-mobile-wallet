@@ -24,6 +24,7 @@ export class WalletProvider {
   wallet: any;
   publicAccount: PublicAccount;
   wallets: SimpleWallet[];
+  selectedWallet: any;
 
   constructor(
     private storage: Storage, 
@@ -251,6 +252,7 @@ export class WalletProvider {
         let _wallet = null;
         if (wallets) {
           const selectedWallet = wallets[username];
+          this.selectedWallet = selectedWallet
           _wallet = <SimpleWallet>(selectedWallet);
         } else {
           _wallet = null;

@@ -41,16 +41,16 @@
   <ion-card (click)="goto('FaucetPage')">
     <ion-item>
       <ion-icon item-left name="custom-faucet"></ion-icon>
-      <h2>XPX Testnet Faucet</h2>
-      <p text-wrap>This faucet uses a public Testnet where you can send transactions without spending real money.</p>
+      <h2> {{ "SERVICES.TESTNET_FAUCET.TITLE" | translate }}</h2>
+      <p text-wrap>{{ "SERVICES.TESTNET_FAUCET.DESC" | translate}}</p>
     </ion-item>
   </ion-card>
 
   <ion-card (click)="goto('Nis1WalletListPage')">
     <ion-item>
       <ion-icon item-left name="custom-swap"></ion-icon>
-      <h2>NIS1 to Sirius Swap</h2>
-      <p text-wrap>Migrate XPX from NIS1 to Sirius blockchain.</p>
+      <h2>{{ "SERVICES.SWAP_PROCESS.TITLE" | translate }}</h2>
+      <p text-wrap>{{ "SERVICES.SWAP_PROCESS.DESC" | translate}}</p>
     </ion-item>
   </ion-card>
 

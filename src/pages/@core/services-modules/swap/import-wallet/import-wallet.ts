@@ -103,12 +103,11 @@ export class ImportWalletPage {
   onSubmit(form) {
     try {
       const catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
-      console.log('LOG: ImportWalletPage -> onSubmit -> catapultWallet', catapultWallet);
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
       
       this.walletProvider.checkIfWalletNameExists(catapultWallet.name, catapultWallet.address.plain()).then(value => {
         if (value) {
-          this.alertProvider.showMessage('This wallet name already exists. Please try again.');
+          this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
         } else {
 
           this.walletProvider
@@ -118,7 +117,6 @@ export class ImportWalletPage {
           });
   
         
-        console.log('LOG: ImportWalletPage -> onSubmit -> nemWallet', nemWallet);
         this.nem.getOwnedMosaics(nemWallet.address)
         .subscribe(mosacis => {
           for (let index = 0; index < mosacis.length; index++) {
@@ -143,7 +141,7 @@ export class ImportWalletPage {
 
     }
     catch (error) {
-      this.alertProvider.showMessage("Invalid private key. Please try again.");
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
     }
   }
 

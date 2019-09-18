@@ -28,7 +28,7 @@
 
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
-            <ion-input formControlName="password" [type]="passwordType"
+            <ion-input formControlName="password" [type]="passwordType" (ionChange)="minPasswords()"
               placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
             <button type="button" (click)="showHidePassword($event)"  clear item-right ion-button icon-only>
@@ -36,6 +36,11 @@
               </ion-icon>
             </button>
           </ion-item>
+          <div *ngIf="formGroup.invalid" color="danger">
+              <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors">
+                <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
+              </p>
+            </div>
 
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.SIGNUP.CONFIRM_PASSWORD" | translate}}</ion-label>
