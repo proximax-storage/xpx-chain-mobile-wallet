@@ -18,7 +18,7 @@
     "APP.SIGNUP.CONFIRM_PASSWORD": "确认密码",
     "APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER": "确认您的密码",
     "APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE": "密码不符",
-    "APP.SIGNUP.PASSWORD_MIN.MESSAGE": "允许的最小字符数 {{Min}} ",
+    "APP.SIGNUP.PASSWORD_MIN.MESSAGE": "允许的最小字符数 ({{Min}}) ",
     "APP.PIN.SETUP.TITLE": "设置6位密码",
     "APP.PIN.SETUP.DESC": "请为您的钱包设置6位登录密码。重要提示：请勿遗忘该密码，如若遗忘将无法找回。",
     "APP.PIN.VERIFY.TITLE": "重新输入密码",
