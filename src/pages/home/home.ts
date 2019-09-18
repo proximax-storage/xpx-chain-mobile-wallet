@@ -86,13 +86,7 @@ export class HomePage {
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
   ) {
-    this.fakeList = [{}, {}];
-    this.totalWalletBalance = 0;
-    this.menu = "mosaics";
-
-    if (window.screen.width >= 768) { // 768px portrait
-      this.tablet = true;
-    }
+    
 
   }
 
@@ -103,6 +97,13 @@ export class HomePage {
   }
 
   async init() {
+    this.fakeList = [{}, {}];
+    this.totalWalletBalance = 0;
+    this.menu = "mosaics";
+
+    if (window.screen.width >= 768) { // 768px portrait
+      this.tablet = true;
+    }
 
     let options:LoadingOptions = {
       content: 'Loading...'
@@ -125,19 +126,39 @@ export class HomePage {
       if (this.wallets.length > 0) {
 
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
-          console.log("2. Selected wallet:", selectedWallet);
+          // console.log("2. Selected wallet:", JSON.stringify(selectedWallet, null, 4));
+
+          
+
+          // console.log('LOG: HomePage -> init -> selectedWallet', JSON.stringify(selectedWallet, null, 4));
+          
+
+          if (selectedWallet) {
+            if (Array.isArray(selectedWallet)) {
+              console.log('LOG: HomePage -> init -> selectedWallet', JSON.stringify(selectedWallet, null, 2));
+              this.selectedWallet = selectedWallet ? selectedWallet[0] : wallets[0];
+              console.log("3. LOG: HomePage -> ionViewWillEnter -> myWallet", this.selectedWallet[0]);
+            } else {
+              this.selectedWallet = selectedWallet ? selectedWallet : wallets[0];
+              console.log("3. LOG: HomePage -> ionViewWillEnter -> myWallet", this.selectedWallet);
+            }
+          } else {
+            this.selectedWallet = wallets[0];
+            console.log('LOG: HomePage -> init -> this.selectedWallet', JSON.stringify(this.selectedWallet, null, 2));
+          }
 
           // Slide to selected wallet
           this.wallets.forEach((wallet, index) => {
-            if (selectedWallet.name === wallet.name) {
+            if (this.selectedWallet.name === wallet.name) {
               this.slides.slideTo(index);
             }
           })
 
-          this.selectedWallet = selectedWallet ? selectedWallet : wallets[0];
-          console.log("3. LOG: HomePage -> ionViewWillEnter -> myWallet", this.selectedWallet);
+          
 
-          this.getAccount(selectedWallet).subscribe(account => {
+
+
+          this.getAccount(this.selectedWallet).subscribe(account => {
             console.log("4. LOG: HomePage -> ionViewWillEnter -> account", account);
             this.selectedAccount = account;
 
@@ -170,7 +191,7 @@ export class HomePage {
                   });
 
                   // Show Transactions
-                  console.log("8. LOG: HomePage -> getTransactions -> selectedWallet", selectedWallet);
+                  console.log("8. LOG: HomePage -> getTransactions -> selectedWallet", this.selectedWallet);
                   this.getTransactions(account);
                   this.getTransactionsUnconfirmed(account);
                   // this.hideLoaders();
@@ -293,7 +314,9 @@ export class HomePage {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
-    await modal.present();
+    await modal.present().then(_=> {
+      this.init();
+    })
 
   }
 
