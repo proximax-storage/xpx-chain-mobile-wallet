@@ -162,7 +162,6 @@
     "SERVICES.TESTNET_FAUCET.TITLE" : "Red de prueba faucet XPX",
     "SERVICES.TESTNET_FAUCET.SUBTITLE":"Solo puede solicitar 10 XPX para cada cuenta.",
     "SERVICES.TESTNET_FAUCET.DESC" : "Esta llave utiliza un Testnet público donde puede enviar transacciones sin gastar dinero real.",
-    
     "SERVICES.SWAP_PROCESS.TITLE" : "Intercambiar NIS1 a Sirius",
     "SERVICES.SWAP_PROCESS.DESC" : "Migre XPX de NIS1 a la cadena de bloques Sirius.",
     "SERVICES.SWAP_PROCESS.LIST.TITLE" : "Cuentas NIS1",
@@ -177,8 +176,6 @@
     "SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE" : "¡Tenga en cuenta! El proceso de intercambio puede tardar algunas horas en completarse. Si elige continuar, recibirá un ticket con su transacción de intercambio para su referencia.",
     "SERVICES.SWAP_PROCESS.SIRIUS_WALLET": "Dirección de Sirius",
     "SERVICES.SWAP_PROCESS.CERTIFICATE": "Certificado de intercambio",
-
-
     "SETTINGS" : "Ajustes",
     "SETTINGS.WALLET_GUIDE" : "Guía de la wallet",
     "SETTINGS.WALLET_GUIDE.DESC" : "Lo que necesita saber para tomar las medidas adecuadas para asegurar su wallet. ",

@@ -133,7 +133,6 @@
     "WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" : "No message",
     "WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE" : "Encrypted",
     "WALLETS.MULTISIGTRANSACTION.DETAIL.COSIGN" : "Cosign transaction",
-
     "NOTIFICATIONS" : "Notifications",
     "SERVICES" : "Services",
     "SERVICES.ADDRESS_BOOK.TITLE" : "Address Book",
@@ -164,7 +163,6 @@
     "SERVICES.TESTNET_FAUCET.TITLE" : "XPX Testnet Faucet",
     "SERVICES.TESTNET_FAUCET.SUBTITLE":"You can only request 10 XPX for each account.",
     "SERVICES.TESTNET_FAUCET.DESC" : "This faucet uses a public Testnet where you can send transactions without spending real money.",
-
     "SERVICES.SWAP_PROCESS.TITLE" : "NIS1 to Sirius Swap",
     "SERVICES.SWAP_PROCESS.DESC" : "Migrate XPX from NIS1 to Sirius blockchain.",
     "SERVICES.SWAP_PROCESS.LIST.TITLE" : "NIS1 Accounts",
@@ -179,7 +177,6 @@
     "SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE" : "Please note! The swap process may take a few hours to complete. If you choose to proceed, you will receive a ticket with your swap transaction has for your reference",
     "SERVICES.SWAP_PROCESS.SIRIUS_WALLET": "Sirius Address",
     "SERVICES.SWAP_PROCESS.CERTIFICATE": "Swap Certificate",
-
     "SETTINGS" : "Settings",
     "SETTINGS.WALLET_GUIDE" : "Wallet Guide",
     "SETTINGS.WALLET_GUIDE.DESC" : "What you need to know to take appropriate steps to secure your wallet. ",
