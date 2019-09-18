@@ -20,7 +20,7 @@
       <ion-col col-12></ion-col>
 
       <ion-col col-12 text-center>
-        <h3 ion-text color="dark">Step 1: Import NIS1 Wallet</h3>
+        <h3 ion-text color="dark"> {{ "SERVICES.SWAP_PROCESS.STEP1.TITLE" | translate}} </h3>
         <p ion-text color="dark">
           {{"WALLETS.CREATE.IMPORT.DESC" | translate}}
         </p>
@@ -110,7 +110,7 @@
           </ion-item>
 
           <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
-            Next
+            {{"WALLETS.BUTTON.CONTINUE" | translate}}
           </button>
 
 

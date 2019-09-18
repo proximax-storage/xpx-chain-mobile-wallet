@@ -114,7 +114,7 @@ export class WalletAddPrivateKeyPage {
 
       this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
         if (value) {
-          this.alertProvider.showMessage('This wallet name already exists. Please try again.');
+          this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
         } else {
 
           this.walletProvider
@@ -149,25 +149,25 @@ export class WalletAddPrivateKeyPage {
       });
     }
     catch (error) {
-      this.alertProvider.showMessage("Invalid private key. Please try again.");
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
     }
   }
 
 
   showSwap() {
     let alert = this.alertCtrl.create({
-      title: 'Swap Process',
-      message: 'You recently imported private key  has some assets on the NIS1 (NEM) blockchain. Would you like to transfer these assets to Sirius Chain and make them available in the Sirius wallet?',
+      title: this.translateService.instant("WALLETS.IMPORT.SWAP_TITLE"),
+      message: this.translateService.instant("WALLETS.IMPORT.SWAP_MESSAGE"),
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
           }
         },
         {
-          text: 'Yes',
+          text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
           handler: () => {
             this.showWalletInfoPage(this.nemWallet, this.catapultWallet)
           }

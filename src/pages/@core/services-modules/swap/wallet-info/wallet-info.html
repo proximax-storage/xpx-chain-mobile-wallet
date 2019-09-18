@@ -24,11 +24,9 @@
 <ion-content fullscreen background padding >
 
   <div text-center>
-    <h3 ion-text color="dark">Step 2: Enter XPX amount</h3>
+    <h3 ion-text color="dark">{{ "SERVICES.SWAP_PROCESS.STEP2.TITLE" | translate}}</h3>
     <p ion-text color="dark">
-      Your NIS1 XPX will be converted to ProximaX Sirius XPX.
-      Your new XPX will be sent to your Sirius wallet which will be auto created for you by the system. <br>
-      This process may take several hours to complete.
+      {{ "SERVICES.SWAP_PROCESS.STEP2.SUBTITLE" | translate}}
     </p>
   </div>
 
@@ -75,7 +73,7 @@
         <!-- Mosaic -->
         <!-- (click)="selectMosaic()" -->
         <ion-card no-margin-bottom>
-          <ion-label padding-left> Current balance (NIS1):
+          <ion-label padding-left> {{ "SERVICES.SWAP_PROCESS.STEP2.BALANCE" | translate}}
 </ion-label>
           <ion-item mosaic>
             <ion-avatar item-start>
@@ -100,11 +98,11 @@
 
         <!-- Recipient -->
         <ion-card>
-          <ion-label padding-left>Recipient:
+          <ion-label padding-left> {{ "SERVICES.SWAP_PROCESS.STEP2.RECIPIENT" | translate}}
           </ion-label>
           <ion-item>
             <img item-left logo-small [src]="App.USER">
-            <h2 ion-text color="dark">ProximaX Burn Account</h2>
+            <h2 ion-text color="dark">{{ "SERVICES.SWAP_PROCESS.STEP2.ACCOUNT_PROXIMAX" | translate}}</h2>
             <p small ion-text color="dark">{{ recipient }}</p>
           </ion-item>
         </ion-card>

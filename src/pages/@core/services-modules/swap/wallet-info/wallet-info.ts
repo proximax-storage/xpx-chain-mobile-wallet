@@ -124,18 +124,18 @@ export class WalletInfoPage {
   confirmSwap() {
     let total = this.coinGecko.market_data.current_price.usd * Number(this.form.get('amount').value);
     let alert = this.alertCtrl.create({
-      title: 'Confirm Swap',
-      message: 'Please note! The swap process may take a few hours to complete. If you choose to proceed, you will receive a ticket with your swap transaction has for your reference',
+      title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
+      message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
           }
         },
         {
-          text: 'Yes',
+          text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
           handler: () => {
             this.onSubmit()
           }
