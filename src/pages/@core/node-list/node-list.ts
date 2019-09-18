@@ -69,13 +69,13 @@ export class NodeListPage {
   getInfo() {
      this.storage.get('node').then(node => {
 
-      const url = JSON.parse(node) + "/chain/height"
+      const url = node + "/chain/height"
       this.http.get(url).subscribe(response => {
         const height = new UInt64(response['height']).compact()
         this.blockHeight = height;
       });
 
-      const url1 = JSON.parse(node) + "/node/info";
+      const url1 = node + "/node/info";
       this.http.get(url1).subscribe(response => {
         this.currentNode = response['host']
       });
@@ -98,7 +98,7 @@ export class NodeListPage {
    switchNode(protocol="https", host:string){
     //let serverConfig: ServerConfig = { protocol: protocol as Protocol, domain: host};
     let node = protocol + '://' + host
-    this.storage.set("node", JSON.stringify(node)).then( _=>{
+    this.storage.set("node", node).then( _=>{
       const alertTitle = this.translateService.instant("SETTINGS.NODES.SWITCH", {'host' : host} );
       this.alertProvider.showMessage(alertTitle)
       setTimeout(()=> {

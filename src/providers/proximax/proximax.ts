@@ -58,24 +58,31 @@ export class ProximaxProvider {
   constructor(public http: HttpClient, private storage: Storage,) {
   
 
+    this.networkType = AppConfig.sirius.networkType;
+    this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
+
+      console.log('-----------------------this.networkType ', this.networkType )
+      
+      
+
+
     this.storage.get("node").then( nodeStorage=>{
       if(nodeStorage === null || nodeStorage=== undefined){
         this.httpUrl = AppConfig.sirius.httpNodeUrl;
       } else {
-        this.httpUrl = nodeStorage;
+        this.httpUrl = nodeStorage ;
       }
-      
-      this.networkType = AppConfig.sirius.networkType;
-      this.httpUrl = JSON.parse(this.httpUrl)
+
+      console.log('----------------------- this.httpUrl ',  this.httpUrl )
+      this.httpUrl = this.httpUrl 
       this.networkHttp = new NetworkHttp(this.httpUrl);
-      this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
       this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
       this.mosaicHttp = new MosaicHttp(this.httpUrl, this.networkHttp);
       this.namespaceHttp = new NamespaceHttp(this.httpUrl, this.networkHttp);
       this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
       this.namespaceService = new NamespaceService(this.namespaceHttp);
       this.transactionHttp = new TransactionHttp(this.httpUrl);
-
+    
     })
   }
 

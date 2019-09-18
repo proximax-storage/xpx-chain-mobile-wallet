@@ -87,7 +87,7 @@ export class MyApp {
   getNode(){
     this.storage.get("node").then(nodeStorage => {
       if(nodeStorage === null || nodeStorage === undefined){
-        this.storage.set("node", JSON.stringify(AppConfig.sirius.httpNodeUrl));
+        this.storage.set("node", AppConfig.sirius.httpNodeUrl);
       }
     })
 
