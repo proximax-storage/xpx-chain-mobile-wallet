@@ -76,6 +76,8 @@ export class SendMosaicConfirmationPage {
     this.data = this.navParams.data;
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
+    console.log('***********************', this.data)
+
 
     // Initialize private data
     this.authProvider.getPassword().then(password => {

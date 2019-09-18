@@ -5,6 +5,7 @@ import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, D
 import { MosaicModel } from './mosaic.model';
 import { Observable } from 'rxjs';
 import { AuthProvider } from '../auth/auth';
+import { Storage } from '@ionic/storage';
 import { ConfirmedTransactionListener } from 'nem-library';
 
 /*
@@ -15,11 +16,18 @@ import { ConfirmedTransactionListener } from 'nem-library';
 */
 @Injectable()
 export class TransferTransactionProvider {
+  httpNodeUrl: any;
 
   constructor(
     private walletProvider: WalletProvider,
-    private authProvider: AuthProvider
+    private authProvider: AuthProvider,
+    private storage: Storage,
     ){
+
+      this.storage.get("node").then( nodeStorage=>{
+        
+          this.httpNodeUrl = nodeStorage ;
+        });
 
   }
 
@@ -61,7 +69,7 @@ export class TransferTransactionProvider {
   }
 
   private buildPlainMessage(): PlainMessage {
-    return PlainMessage.create(EmptyMessage.payload.toString());
+    return PlainMessage.create(this._message.toString());
   }
 
   build(): TransferTransaction {
@@ -89,7 +97,7 @@ export class TransferTransactionProvider {
       this.checkTransaction(signedTxn);
 
       // 5. Announce transaction
-      const transactionHttp = new TransactionHttp(AppConfig.sirius.httpNodeUrl);
+      const transactionHttp = new TransactionHttp(this.httpNodeUrl);
       transactionHttp.announce(signedTxn).subscribe(response => {
         observer.next(response);
       }, (err) => {
@@ -107,7 +115,7 @@ export class TransferTransactionProvider {
   }
 
   private checkTransaction(txn: SignedTransaction): Promise<boolean> {
-    const transactionHttp = new TransactionHttp(AppConfig.sirius.httpNodeUrl);
+    const transactionHttp = new TransactionHttp(this.httpNodeUrl);
 
     return new Promise((resolve) => {
       setTimeout(async () => {
