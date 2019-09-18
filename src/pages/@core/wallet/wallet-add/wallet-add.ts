@@ -46,7 +46,7 @@ export class WalletAddPage {
     private translateService : TranslateService,
   ) {
     this.init();
-    this.walletColor = "wallet-4";
+    this.walletColor = "wallet-1";
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
   }
 
