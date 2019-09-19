@@ -88,6 +88,7 @@
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT": "Select a multisig account",
     "WALLETS.SEND.ADDRESS": "Address",
     "WALLETS.SEND.ADDRESS.UNSOPPORTED": "This address does not belong to this network",
+    "WALLETS.SEND.ADDRESS.INVALID": "Invalid address",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE": "Address input options",
     "WALLETS.SEND.ADDRESS.OPTION1": "Enter manually",
     "WALLETS.SEND.ADDRESS.OPTION2": "Select from address book",

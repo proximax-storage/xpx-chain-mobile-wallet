@@ -87,6 +87,7 @@
     "WALLETS.SEND.SELECT_MULTISIG_ACCOUNT":"Seleccione una cuenta multisig",
     "WALLETS.SEND.ADDRESS" : "Dirección",
     "WALLETS.SEND.ADDRESS.UNSOPPORTED" : "Esta dirección no pertenece a esta red.",
+    "WALLETS.SEND.ADDRESS.INVALID" : "Dirección inválida.",
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "Opciones de entrada de dirección",
     "WALLETS.SEND.ADDRESS.OPTION1" : "Ingresar manualmente",
     "WALLETS.SEND.ADDRESS.OPTION2" : "Seleccione de la libreta de direcciones",
