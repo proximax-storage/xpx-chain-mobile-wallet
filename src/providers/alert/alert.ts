@@ -59,7 +59,7 @@ export class AlertProvider {
       this.haptic.selection();
 
     let alert = this.alertCtrl.create();
-    const alertTitle = this.translateService.instant("WALLETS.CREATE.NEW");
+    const alertTitle = this.translateService.instant("WALLETS.CREATE");
     alert.setTitle(alertTitle);
     alert.setSubTitle('');
 
