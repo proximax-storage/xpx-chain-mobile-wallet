@@ -151,7 +151,7 @@
     "SERVICES.ADDRESS_BOOK.DELETE.WARNING": "Continuing this action will delete this contact from your address book and it cannot be undone.",
     "SERVICES.ADDRESS_BOOK.CONFIRM_REMOVE": "Are you sure you want to remove {{contact.name}}?",
     "SERVICES.MULTISIGN_SUPPORT.TITLE": "Multisig Support",
-    "SERVICES.MULTISIGN_SUPPORT.DESC": "Info on how multisig is currently compatible with the application",
+    "SERVICES.MULTISIGN_SUPPORT.DESC": "Info on how multisig is currently compatible with the application.",
     "SERVICES.MULTISIGN_SUPPORT.TITLE1": "Right now, the following are supported by the app:",
     "SERVICES.MULTISIGN_SUPPORT.CONTENT1": "Sending multisig transactions",
     "SERVICES.MULTISIGN_SUPPORT.CONTENT2": "Signing multisig transactions",

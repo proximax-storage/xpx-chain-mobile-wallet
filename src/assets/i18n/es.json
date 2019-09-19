@@ -152,7 +152,7 @@
     "SERVICES.ADDRESS_BOOK.DELETE.WARNING":"Continuar con esta acción eliminará este contacto de su libreta de direcciones y no se podrá deshacer.",
     "SERVICES.ADDRESS_BOOK.CONFIRM_REMOVE":"¿Estás seguro de que deseas eliminar {{contact.name}}?",
     "SERVICES.MULTISIGN_SUPPORT.TITLE" : "Soporte Multisig",
-    "SERVICES.MULTISIGN_SUPPORT.DESC" : "Información sobre cómo multisig es actualmente compatible con la aplicación",
+    "SERVICES.MULTISIGN_SUPPORT.DESC" : "Información sobre cómo multisig es actualmente compatible con la aplicación.",
     "SERVICES.MULTISIGN_SUPPORT.TITLE1" : "En este momento, los siguientes son compatibles con la aplicación:",
     "SERVICES.MULTISIGN_SUPPORT.CONTENT1" : "Enviando transacciones multisig",
     "SERVICES.MULTISIGN_SUPPORT.CONTENT2" : "Firma de transacciones multisig",
