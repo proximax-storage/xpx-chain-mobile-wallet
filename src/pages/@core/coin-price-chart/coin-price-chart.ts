@@ -82,6 +82,7 @@ export class CoinPriceChartPage {
   isMultisig: boolean;
   public mosaics: DefaultMosaic[] = [];
   array: any[]=[];
+  account: any;
 
 
   constructor(
@@ -113,6 +114,8 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
+
+    console.log('**************', payload)
     this.mosaicHex = payload.mosaicHex;
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
@@ -121,6 +124,9 @@ export class CoinPriceChartPage {
     this.selectedAccount = payload.selectedAccount;
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
+    this.account = payload.selectedAccount;
+
+    console.log('acount ****', this.account )
 
     this.confirmed.forEach(confirmed => {
       let mosaics = confirmed.mosaics;
@@ -242,7 +248,13 @@ export class CoinPriceChartPage {
 
   showReceiveModal() {
     let page = "ReceivePage";
-    this.showModal(page, {});
+    const modal = this.modalCtrl.create(page, this.account, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+    modal.present();
+    // this.showModal(page, this.account, {
+    // });
   }
 
   showSendModal() {
