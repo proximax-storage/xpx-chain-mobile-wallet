@@ -8,7 +8,7 @@
 
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="dark">Wallets</span>
+      <span ion-text color="dark">{{ "WALLETS.TITLE" | translate}}</span>
     </ion-title>
 
     <ion-buttons right>
@@ -33,12 +33,12 @@
       </ion-card-header>
     </ion-card>
 
-         <section margin-top text-center *ngIf="!showEmptyMosaic">
+         <!-- <section margin-top text-center *ngIf="!showEmptyMosaic">
            <button no-margin gradient-button circle color-5 (click)="showAddWalletPrompt()">
              <ion-icon name="md-add"></ion-icon>
            </button>
            <p text-wrap ion-text color="dark">{{"WALLETS.CREATE.NEW.TITLE" | translate}}</p>
-         </section>
+         </section> -->
   </ion-list>
 
   <section spacing></section>
