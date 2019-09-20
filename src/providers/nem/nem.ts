@@ -3,6 +3,7 @@ import { Storage } from "@ionic/storage";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AppConfig } from '../../app/app.config';
 import { crypto } from 'js-xpx-chain-library';
+import * as js_joda_1 from 'js-joda';
 
 import {
   NEMLibrary,
@@ -32,7 +33,7 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class NemProvider{
-  
+  js_joda_1 = require("js-joda");
   transactionHttp: TransactionHttp;
   wallets: SimpleWallet[];
   accountHttp: AccountHttp;
@@ -46,6 +47,8 @@ export class NemProvider{
     this.accountHttp = new AccountHttp(serverConfig);
     this.assetHttp = new AssetHttp(serverConfig);
     this.transactionHttp = new TransactionHttp(serverConfig);
+
+   
   }
 
   /**
@@ -103,16 +106,29 @@ export class NemProvider{
     const resultAssets = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
     // console.log('\n\n\n\nValue resultAssets:\n', resultAssets, '\n\n\n\nEnd value\n\n');
     return TransferTransaction.createWithAssets(
-      TimeWindow.createWithDeadline(),
+      // TimeWindow.createWithDeadline(),
+      this.createWithDeadline(),
       new Address(AppConfig.swap.burnAccountAddress),
       [resultAssets],
       PlainMessage.create(message)
     );
   }
 
+  createWithDeadline(deadline = 2, chronoUnit = js_joda_1.ChronoUnit.HOURS) {
+    const currentTimeStamp = (new Date()).getTime() -600000;
+    const timeStampDateTime = js_joda_1.LocalDateTime.ofInstant(js_joda_1.Instant.ofEpochMilli(currentTimeStamp), js_joda_1.ZoneId.SYSTEM);
+    const deadlineDateTime = timeStampDateTime.plus(deadline, chronoUnit);
+    if (deadline <= 0) {
+        throw new Error("deadline should be greater than 0");
+    }
+    else if (timeStampDateTime.plus(24, js_joda_1.ChronoUnit.HOURS).compareTo(deadlineDateTime) != 1) {
+        throw new Error("deadline should be less than 24 hours");
+    }
+    return new TimeWindow(timeStampDateTime, deadlineDateTime);
+}
+
   anounceTransaction(transferTransaction: TransferTransaction, cosignerAccount: Account) {
     const signedTransaction = cosignerAccount.signTransaction(transferTransaction);
-    // console.log('\n\n\n\nValue signedTransaction:\n', signedTransaction, '\n\n\n\nEnd value\n\n');
     return this.transactionHttp.announceTransaction(signedTransaction).toPromise();
   }
 }

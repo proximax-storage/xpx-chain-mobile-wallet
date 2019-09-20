@@ -235,7 +235,7 @@ export class SendPage {
         console.log('value', value)
         const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
-        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40 ) {
           if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
             // this.blockSendButton = true;
             this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
@@ -243,12 +243,9 @@ export class SendPage {
             // this.blockSendButton = false;
             this.msgErrorUnsupported = '';
           }
-        } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
-          // this.blockSendButton = true;
-          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
-          // this.blockSendButton = false;
-          this.msgErrorUnsupported = '';
+          // this.blockSendButton = true;
+          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID");
         }
       }
     );
