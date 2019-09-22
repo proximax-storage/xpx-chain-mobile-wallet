@@ -223,5 +223,6 @@
     "SETTINGS.LANGUAGE.KOREAN" : "Koreaans",
     "SETTINGS.LANGUAGE.DUTCH" : "Nederlands",
     "SETTINGS.LANGUAGE.RUSSIAN" : "Russisch",
+    "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamese",
     "SETTINGS.LOGOUT" : "Afmelden"
 }

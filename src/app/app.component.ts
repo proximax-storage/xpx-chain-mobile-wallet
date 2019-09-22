@@ -286,6 +286,10 @@ export class MyApp {
               this.translateService.use('ru');
               break;
             }
+            case "vt": {
+              this.translateService.use('vt');
+              break;
+            }
             default: { 
               this.translateService.use('en');
             }
