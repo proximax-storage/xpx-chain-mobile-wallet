@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { NemProvider } from '../../../../providers/nem/nem';
 import { SimpleWallet } from 'nem-library';
+import { Password } from 'tsjs-xpx-chain-sdk';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -223,9 +224,15 @@ export class WalletAddPrivateKeyPage {
             password = data[0];
             try {
               try {
-                let privKey = this.proximaxProvider.decryptPrivateKey1(password, payload);
-                this.formGroup.patchValue({ name: payload.data.name })
-                this.formGroup.patchValue({ privateKey: privKey })
+                // let privKey = this.proximaxProvider.decryptPrivateKey1(password, payload);
+                const encryptedWallet =  payload;
+                const myWallet = this.walletProvider.convertToSimpleWallet(encryptedWallet)
+                // Unlock wallet to get an account using user's password 
+                const account = myWallet.open(new Password(password));
+
+
+                this.formGroup.patchValue({ name: '' })
+                this.formGroup.patchValue({ privateKey: account.privateKey })
               } catch (error) {
                 console.log('Error', error);
 
