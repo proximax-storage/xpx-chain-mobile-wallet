@@ -390,8 +390,8 @@ export class SendPage {
       console.log('Barcode data', barcodeData);
       barcodeData.format = "QR_CODE";
       let payload = JSON.parse(barcodeData.text);
-      this.form.patchValue({ recipientName: payload.data.name })
-      this.form.patchValue({ recipientAddress: payload.data.addr })
+      // this.form.patchValue({ recipientName: payload.data.name })
+      this.form.patchValue({ recipientAddress: payload.data })
       // this.storage.set('isModalShown', false);
     }).catch(err => {
       console.log('Error', err);
