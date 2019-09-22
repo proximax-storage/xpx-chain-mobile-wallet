@@ -211,7 +211,7 @@ export class WalletAddPrivateKeyPage {
         type: 'password',
         label: 'Password',
         min: '6',
-        placeholder: 'Enter your password'
+        placeholder: 'Enter your account\'s password'
       });
 
       alertCtrl.addButton('Cancel');
