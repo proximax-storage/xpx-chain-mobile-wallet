@@ -39,14 +39,14 @@ export class LanguagePage {
       const RUSSIAN = this.translateService.instant("SETTINGS.LANGUAGE.RUSSIAN");
 
       this.languages = [
-        {value: 'en', name: ENGLISH, icon:'en'},
         {value: 'cn', name: CHINESE, icon:'en'},
-        {value: 'es', name: SPANISH, icon:'en'},
+        {value: 'nl', name: DUTCH, icon:'en'},
+        {value: 'en', name: ENGLISH, icon:'en'},
         {value: 'fr', name: FRENCH, icon:'en'},
         {value: 'jp', name: JAPANESE, icon:'en'},
         {value: 'kr', name: KOREAN, icon:'kr'},
-        {value: 'nl', name: DUTCH, icon:'en'},
         {value: 'ru', name: RUSSIAN, icon:'en'},
+        {value: 'es', name: SPANISH, icon:'en'},
       ]
 			console.log("LOG: LanguagePage -> this.navParams.data", this.navParams.data);
       this.selectedLanguage = this.navParams.data.selectedLanguage
