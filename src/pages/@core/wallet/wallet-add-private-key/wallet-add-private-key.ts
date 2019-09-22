@@ -123,7 +123,8 @@ export class WalletAddPrivateKeyPage {
         .then(_ => {
           return this.walletProvider.setSelectedWallet(this.catapultWallet);
         }).then(_ => {
-          this.goHome();
+          // this.goHome();
+          this.gotoBackup(this.catapultWallet);
         });
 
           this.nem.getOwnedMosaics(this.nemWallet.address)
@@ -229,8 +230,9 @@ export class WalletAddPrivateKeyPage {
                 let walletPassword: string = payload.password;
                 let privateKey:string = payload.privateKey;
 
+                // verify previous wallet password vs. entered password
                 if(password === walletPassword) {
-                  const account = this.proximaxProvider.createFromPrivateKey(walletName, password, privateKey);
+                  const account = this.proximaxProvider.createFromPrivateKey(walletName, this.PASSWORD, privateKey);
                   console.log("TCL: scan -> account", account)
                   this.formGroup.patchValue({ name: walletName })
                   this.formGroup.patchValue({ privateKey: account.privateKey })
