@@ -32,7 +32,7 @@
     "WALLETS.PUBLIC_KEY" : "Mã công khai",
     "WALLETS.VESTED_BALANCE" : "Số dư không khả dụng",
     "WALLETS.MORE_DETAILS" : "Xem thêm chi tiết",
-    "WALLETS.IMPORT.NAME_EXISTS" : "Tên tài khoản này đã tồn tại. Vui lòng thử lại",
+    "WALLETS.IMPORT.NAME_EXISTS" : "Tai khoản nay đa được đăng ky. Vui lòng thử lại",
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID" : "Mã cá nhân không đúng, Vui lòng thử lại",
     "WALLETS.IMPORT.SWAP_TITLE" : "Quy trình chuyển đổi",
     "WALLETS.IMPORT.SWAP_MESSAGE" : "Bạn hiện tại đã nhập vào Mã cá nhân có tài sản trên NIS1(NEM) blockchain. Bạn có muốn chuyển khoản này sang Sirius Chain để sử dụng trong ví Sirius?",
