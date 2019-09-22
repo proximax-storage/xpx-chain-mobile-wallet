@@ -220,5 +220,6 @@
     "SETTINGS.LANGUAGE.KOREAN": "корейский язык",
     "SETTINGS.LANGUAGE.DUTCH": "Голландский",
     "SETTINGS.LANGUAGE.RUSSIAN": "русский",
+    "SETTINGS.LANGUAGE.VIETNAMESE": "вьетнамский",
     "SETTINGS.LOGOUT" : "Выйти"
 }
