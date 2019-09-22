@@ -167,7 +167,7 @@ export class CoinPriceChartPage {
         }
       }
       this.showEmptyMosaic = true;
-    } else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
+    }  else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -183,12 +183,16 @@ export class CoinPriceChartPage {
         "description": {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
-      }
+      } 
       this.showEmptyMosaic = true;
     } else {
       if (this.coinId != "") {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
           this.selectedCoin = coin;
+          if (coin.id == 'proximax') {
+            this.selectedCoin.links.announcement_url = ["https://blog.proximax.com"]
+            this.selectedCoin.links.blockchain_site = ["https://bctestnetexplorer.xpxsirius.io/#/"]
+          }
           this.showEmptyMosaic = false;
         });
       }
