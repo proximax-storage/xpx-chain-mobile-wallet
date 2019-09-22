@@ -387,11 +387,11 @@ export class SendPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-      console.log('Barcode data', barcodeData);
+      console.log('Barcode data', JSON.stringify(barcodeData, null, 4));
       barcodeData.format = "QR_CODE";
-      let payload = JSON.parse(barcodeData.text);
+      // let payload = JSON.parse(barcodeData.text);
       // this.form.patchValue({ recipientName: payload.data.name })
-      this.form.patchValue({ recipientAddress: payload.data })
+      this.form.patchValue({ recipientAddress: barcodeData.text })
       // this.storage.set('isModalShown', false);
     }).catch(err => {
       console.log('Error', err);
