@@ -32,7 +32,7 @@
     "WALLETS.IMPORTANCE_SCORE": "重要性评分",
     "WALLETS.VESTED_BALANCE": "归属平衡",
     "WALLETS.MORE_DETAILS": "更多细节",
-    "WALLETS.IMPORT.NAME_EXISTS": "用户名已存在，请重试",
+    "WALLETS.IMPORT.NAME_EXISTS": "此帐户已经存在。",
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID": "不合法的私钥，请重试",
     "WALLETS.IMPORT.SWAP_TITLE": "交换流程",
     "WALLETS.IMPORT.SWAP_MESSAGE": "您当前所导入的私钥在NIS1(NEM)区块链上拥有资产。您是否愿意将这些资产传输到天狼星链上，使得天狼星钱包可以兼容它们？",

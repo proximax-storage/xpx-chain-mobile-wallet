@@ -32,7 +32,7 @@
     "WALLETS.PUBLIC_KEY" : "Llave pública",
     "WALLETS.VESTED_BALANCE" : "Saldo adquirido",
     "WALLETS.MORE_DETAILS" : "Más detalles",
-    "WALLETS.IMPORT.NAME_EXISTS" : "Este nombre de cuenta ya existe.",
+    "WALLETS.IMPORT.NAME_EXISTS" : "Esta cuenta ya existe.",
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID" : "Llave privada inválida. Inténtalo de nuevo.",
     "WALLETS.IMPORT.SWAP_TITLE" : "Proceso de intercambio",
     "WALLETS.IMPORT.SWAP_MESSAGE" : "Su llave privada recientemente importada tiene algunos activos en la cadena de bloques NIS1 (NEM). ¿Desea transferir estos activos a Sirius Chain y ponerlos a disposición en la billetera Sirius?",

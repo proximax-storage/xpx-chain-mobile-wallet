@@ -32,7 +32,7 @@
     "WALLETS.IMPORTANCE_SCORE" : "Оценка важности",
     "WALLETS.VESTED_BALANCE" : "Надежный баланс",
     "WALLETS.MORE_DETAILS" : "Подробнее",
-    "WALLETS.IMPORT.NAME_EXISTS":"Это имя учетной записи уже существует. Пожалуйста, попробуйте еще раз.",
+    "WALLETS.IMPORT.NAME_EXISTS":"Этот аккаунт уже существует. Пожалуйста, попробуйте еще раз.",
 "WALLETS.IMPORT.PRIVATE_KEY_INVALID":"Неверный приватный ключ. Пожалуйста, попробуйте еще раз.",
 "WALLETS.IMPORT.SWAP_TITLE":"Процесс обмена",
 "WALLETS.IMPORT.SWAP_MESSAGE":"Недавно импортированный приватный ключ содержит некоторые активы в блокчейне NIS1 (NEM). Вы хотите перевести эти активы в сеть Sirius и сделать их доступными в кошельке Sirius?",

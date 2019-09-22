@@ -198,9 +198,8 @@ export class WalletAddPrivateKeyPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-      console.info('Barcode data', barcodeData);
+      console.info('Barcode data', JSON.stringify(barcodeData, null, 4));
       let password: string;
-      let payload = JSON.parse(barcodeData.text);
 
 
       let alertCtrl = this.alertCtrl.create();
@@ -224,18 +223,22 @@ export class WalletAddPrivateKeyPage {
             password = data[0];
             try {
               try {
-                // let privKey = this.proximaxProvider.decryptPrivateKey1(password, payload);
-                const encryptedWallet =  payload;
-                const myWallet = this.walletProvider.convertToSimpleWallet(encryptedWallet)
-                // Unlock wallet to get an account using user's password 
-                const account = myWallet.open(new Password(password));
+                const payload = JSON.parse(barcodeData.text);
+                console.log("TCL: scan -> payload", payload)
+                let walletName:string = payload.walletName;
+                let walletPassword: string = payload.password;
+                let privateKey:string = payload.privateKey;
 
-
-                this.formGroup.patchValue({ name: '' })
-                this.formGroup.patchValue({ privateKey: account.privateKey })
+                if(password === walletPassword) {
+                  const account = this.proximaxProvider.createFromPrivateKey(walletName, password, privateKey);
+                  console.log("TCL: scan -> account", account)
+                  this.formGroup.patchValue({ name: walletName })
+                  this.formGroup.patchValue({ privateKey: account.privateKey })
+                } else {
+                  this.alertProvider.showMessage("Invalid password. Please try again.");
+                }                
               } catch (error) {
                 console.log('Error', error);
-
                 if (error.toString().indexOf('Password must be at least 6 characters') >= 0) {
                   this.alertProvider.showMessage("Password must be at least 6 characters");
                 } else {

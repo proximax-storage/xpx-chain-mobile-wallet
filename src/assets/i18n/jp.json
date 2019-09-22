@@ -32,7 +32,7 @@
     "WALLETS.IMPORTANCE_SCORE" : "重要性スコア",
     "WALLETS.VESTED_BALANCE" : "既得残高",
     "WALLETS.MORE_DETAILS" : "詳細",
-    "WALLETS.IMPORT.NAME_EXISTS":"このアカウント名は既に存在しています。名前を変えてやり直してください",
+    "WALLETS.IMPORT.NAME_EXISTS":"このアカウントは既に存在します。",
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID":"無効なプライベートキーです。もう一度やり直してください",
     "WALLETS.IMPORT.SWAP_TITLE":"スワッププロセス",
     "WALLETS.IMPORT.SWAP_MESSAGE":"あなたが最近インポートしたNIS1(NEM)ブロックチェーンにはアセットがあります。これらのアセットをSiriusチェーンに移動し、Siriusウォレットでも利用可能にしますか？",
