@@ -82,6 +82,7 @@ export class CoinPriceChartPage {
   isMultisig: boolean;
   public mosaics: DefaultMosaic[] = [];
   array: any[]=[];
+  account: any;
 
 
   constructor(
@@ -113,6 +114,8 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
+
+    console.log('**************', payload)
     this.mosaicHex = payload.mosaicHex;
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
@@ -121,6 +124,9 @@ export class CoinPriceChartPage {
     this.selectedAccount = payload.selectedAccount;
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
+    this.account = payload.selectedAccount;
+
+    console.log('acount ****', this.account )
 
     this.confirmed.forEach(confirmed => {
       let mosaics = confirmed.mosaics;
@@ -161,7 +167,7 @@ export class CoinPriceChartPage {
         }
       }
       this.showEmptyMosaic = true;
-    } else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
+    }  else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -177,12 +183,16 @@ export class CoinPriceChartPage {
         "description": {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
-      }
+      } 
       this.showEmptyMosaic = true;
     } else {
       if (this.coinId != "") {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
           this.selectedCoin = coin;
+          if (coin.id == 'proximax') {
+            this.selectedCoin.links.announcement_url = ["https://blog.proximax.com"]
+            this.selectedCoin.links.blockchain_site = ["https://bctestnetexplorer.xpxsirius.io/#/"]
+          }
           this.showEmptyMosaic = false;
         });
       }
@@ -242,7 +252,13 @@ export class CoinPriceChartPage {
 
   showReceiveModal() {
     let page = "ReceivePage";
-    this.showModal(page, {});
+    const modal = this.modalCtrl.create(page, this.account, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+    modal.present();
+    // this.showModal(page, this.account, {
+    // });
   }
 
   showSendModal() {

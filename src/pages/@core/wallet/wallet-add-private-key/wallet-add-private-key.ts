@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { NemProvider } from '../../../../providers/nem/nem';
 import { SimpleWallet } from 'nem-library';
+import { Password } from 'tsjs-xpx-chain-sdk';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -122,7 +123,8 @@ export class WalletAddPrivateKeyPage {
         .then(_ => {
           return this.walletProvider.setSelectedWallet(this.catapultWallet);
         }).then(_ => {
-          this.goHome();
+          // this.goHome();
+          this.gotoBackup(this.catapultWallet);
         });
 
           this.nem.getOwnedMosaics(this.nemWallet.address)
@@ -197,9 +199,8 @@ export class WalletAddPrivateKeyPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-      console.info('Barcode data', barcodeData);
+      console.info('Barcode data', JSON.stringify(barcodeData, null, 4));
       let password: string;
-      let payload = JSON.parse(barcodeData.text);
 
 
       let alertCtrl = this.alertCtrl.create();
@@ -210,7 +211,7 @@ export class WalletAddPrivateKeyPage {
         type: 'password',
         label: 'Password',
         min: '6',
-        placeholder: 'Enter your password'
+        placeholder: 'Enter your account\'s password'
       });
 
       alertCtrl.addButton('Cancel');
@@ -223,12 +224,23 @@ export class WalletAddPrivateKeyPage {
             password = data[0];
             try {
               try {
-                let privKey = this.proximaxProvider.decryptPrivateKey1(password, payload);
-                this.formGroup.patchValue({ name: payload.data.name })
-                this.formGroup.patchValue({ privateKey: privKey })
+                const payload = JSON.parse(barcodeData.text);
+                console.log("TCL: scan -> payload", payload)
+                let walletName:string = payload.walletName;
+                let walletPassword: string = payload.password;
+                let privateKey:string = payload.privateKey;
+
+                // verify previous wallet password vs. entered password
+                if(password === walletPassword) {
+                  const account = this.proximaxProvider.createFromPrivateKey(walletName, this.PASSWORD, privateKey);
+                  console.log("TCL: scan -> account", account)
+                  this.formGroup.patchValue({ name: walletName })
+                  this.formGroup.patchValue({ privateKey: account.privateKey })
+                } else {
+                  this.alertProvider.showMessage("Invalid password. Please try again.");
+                }                
               } catch (error) {
                 console.log('Error', error);
-
                 if (error.toString().indexOf('Password must be at least 6 characters') >= 0) {
                   this.alertProvider.showMessage("Password must be at least 6 characters");
                 } else {

@@ -42,6 +42,7 @@ export class App {
     KR: `assets/imgs/flags/kr.png`,
     NL: `assets/imgs/flags/nl.png`,
     RU: `assets/imgs/flags/ru.png`,
+    VT: `assets/imgs/flags/vt.png`,
   };
 
   constructor(public http: HttpClient) {

@@ -117,11 +117,16 @@ export class ProximaxProvider {
    * @return Decrypted private key
    */
 
-  public decryptPrivateKey1(
+  public createFromPrivateKey(
+    walletName: string,
     password: string,
-    encriptedData: any
-  ): string {
-    return;
+    privateKey: string
+  ): Account {
+    const _password = new Password(password);
+    const wallet = SimpleWallet.createFromPrivateKey(walletName, _password, privateKey, NetworkType.MIJIN_TEST);
+    const account = wallet.open(_password);
+    console.log('Your account address is:', account.address.pretty(), 'and its private key', account.privateKey);
+    return account;
   }
 
   getAccountInfo(address: Address): Observable<AccountInfo> {

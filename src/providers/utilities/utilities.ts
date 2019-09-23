@@ -141,6 +141,8 @@ export class UtilitiesProvider {
       return AppConfig.FLAGS.NL;
     } else if (lang.value == "ru") {
       return AppConfig.FLAGS.RU;
+    } else if (lang.value == "vt") {
+      return AppConfig.FLAGS.VT;
     } 
   }
 

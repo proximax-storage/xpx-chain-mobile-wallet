@@ -235,7 +235,7 @@ export class SendPage {
         console.log('value', value)
         const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
-        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40 ) {
           if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
             // this.blockSendButton = true;
             this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
@@ -243,12 +243,9 @@ export class SendPage {
             // this.blockSendButton = false;
             this.msgErrorUnsupported = '';
           }
-        } else if (!this.form.get('recipientAddress').getError("required") && this.form.get('recipientAddress').valid) {
-          // this.blockSendButton = true;
-          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
-          // this.blockSendButton = false;
-          this.msgErrorUnsupported = '';
+          // this.blockSendButton = true;
+          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID");
         }
       }
     );
@@ -390,11 +387,11 @@ export class SendPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-      console.log('Barcode data', barcodeData);
+      console.log('Barcode data', JSON.stringify(barcodeData, null, 4));
       barcodeData.format = "QR_CODE";
-      let payload = JSON.parse(barcodeData.text);
-      this.form.patchValue({ recipientName: payload.data.name })
-      this.form.patchValue({ recipientAddress: payload.data.addr })
+      // let payload = JSON.parse(barcodeData.text);
+      // this.form.patchValue({ recipientName: payload.data.name })
+      this.form.patchValue({ recipientAddress: barcodeData.text })
       // this.storage.set('isModalShown', false);
     }).catch(err => {
       console.log('Error', err);

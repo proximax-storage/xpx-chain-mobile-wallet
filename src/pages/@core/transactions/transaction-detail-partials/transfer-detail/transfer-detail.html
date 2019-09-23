@@ -70,7 +70,7 @@
 <!-- ./Sender -->
 
 <!-- Receiver -->
-<ion-card no-margin-bottom (click)="utils.copy(tx?.recipient.value, 'receiver')">
+<ion-card no-margin-bottom (click)="utils.copy(tx?.recipient.address, 'receiver')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">
@@ -113,7 +113,7 @@
 <!-- ./Block -->
 
 <!-- Hash -->
-<ion-card no-margin-bottom (click)="utils.copy(tx?.transactionInfo?.hash?.data, 'hash')">
+<ion-card no-margin-bottom (click)="utils.copy(tx?.transactionInfo?.hash, 'hash')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</h2>
@@ -127,7 +127,7 @@
 <!-- ./Hash -->
 
 <!-- Message -->
-<ion-card no-margin-bottom (click)="utils.copy(tx.message.payload, 'message')">
+<ion-card no-margin-bottom *ngIf="!messageShow" (click)="utils.copy(tx.message.payload, 'message')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
@@ -143,7 +143,15 @@
       <p ion-text color="dark" *ngIf="!tx.message.payload">
           {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
       </p> 
-      <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0 && messageShow">
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+
+<ion-card no-margin-bottom *ngIf="messageShow" (click)="utils.copy(message.message , 'message')">
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
+      <p text-wrap ion-text color="dark">
         {{ message.message }}
     </p> 
     </ion-item>

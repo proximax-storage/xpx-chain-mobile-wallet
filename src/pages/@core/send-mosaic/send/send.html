@@ -119,7 +119,7 @@
           <ion-input formControlName="recipientAddress" type="text" value=""
             placeholder="{{'WALLETS.SEND.ADDRESS' | translate}}"></ion-input>
           <button clear item-right ion-button icon-only (click)="scan()">
-            <ion-icon color="white" name="custom-address"></ion-icon>
+            <ion-icon color="white" name="custom-qrcode"></ion-icon>
           </button>
         </ion-item>
       </ion-card>
@@ -142,7 +142,7 @@
   </ion-list>
 
   <section text-center>
-    <button gradient-button half color-6 ion-button icon-end no-margin [disabled]="msgErrorBalance || msgErrorUnsupported" (click)="onSubmit()">
+    <button gradient-button half color-6 ion-button icon-end no-margin [disabled]="msgErrorBalance || msgErrorUnsupported || form.invalid" (click)="onSubmit()">
         {{"WALLETS.SEND" | translate}}
       <ion-icon name="arrow-round-up"></ion-icon>
     </button>
