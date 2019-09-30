@@ -34,6 +34,8 @@ export class ImportWalletPage {
   walletColor: string = "wallet-1";
   walletName: string = "Primary";
 
+  tablet: boolean = false;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -73,6 +75,10 @@ export class ImportWalletPage {
   }
 
   init() {
+    if (window.screen.width >= 768) { // 768px portrait
+      this.tablet = true;
+    }
+    
     this.formGroup = this.formBuilder.group({
       name: ['', [Validators.minLength(3), Validators.required]],
       privateKey: ['', [Validators.minLength(3), Validators.required]]
