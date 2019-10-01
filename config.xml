@@ -23,7 +23,7 @@
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="KeyboardResizeMode" value="ionic" />
-    <config-file parent="NSCameraUsageDescription" target="*-Info.plist">
+    <config-file parent="NSCameraUsageDescription" target="*---">
         <string>need camera access to scan QR Codes</string>
     </config-file>
     <platform name="android">

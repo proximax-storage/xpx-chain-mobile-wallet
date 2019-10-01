@@ -25,6 +25,10 @@
           {{"WALLETS.CREATE.IMPORT.DESC" | translate}}
         </p>
 
+        <button (click)="scan()" gradient-button color-5  type="button" color="black">
+            {{"WALLETS.CREATE.IMPORT.QR_SCAN" | translate}}
+          </button>
+
       </ion-col>
 
       <ion-col>
@@ -133,8 +137,12 @@
             <p ion-text color="dark">
               {{"WALLETS.CREATE.IMPORT.DESC" | translate}}
             </p>
-    
-          </ion-col>
+
+            <button (click)="scan()" gradient-button color-5  type="button" color="black">
+                {{"WALLETS.CREATE.IMPORT.QR_SCAN" | translate}}
+              </button>
+          
+          </ion-col>          
     
           <ion-col>
             <div class="wallet">
