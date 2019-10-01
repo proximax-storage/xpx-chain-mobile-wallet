@@ -64,7 +64,7 @@
             <span style="padding-left: 16px;" wallet-name >{{ "WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</span>
           </h1>
           <ion-list transparent-items>
-            <ion-item (click)="copy(hash, 'hash')">
+            <ion-item (click)="copy(transactionHash, 'hash')">
               <ion-icon name='custom-copy' item-end></ion-icon>
               <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ transactionHash }} </p>
             </ion-item>
@@ -80,11 +80,11 @@
               {{"WALLETS.BUTTON.DONE" | translate}}
             </button>
           </ion-col>
-          <!-- <ion-col>
-            <button (click)="printCertificate()" gradient-button full color-6 ion-button icon-end no-margin>
-              Print
+          <ion-col>
+            <button (click)="save()" gradient-button full color-6 ion-button icon-end no-margin>
+              {{"WALLETS.BUTTON.SAVE" | translate}}
             </button>
-          </ion-col> -->
+          </ion-col>
         </ion-row>
       </ion-grid>
 </ion-content>

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo, NamespaceId } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../coingecko/coingecko";
 import { Observable, from, forkJoin } from "rxjs";
-import { DefaultMosaic, DefaultMosaic2 } from "../../models/default-mosaic";
+import { DefaultMosaic } from "../../models/default-mosaic";
 import { MosaicNames } from "tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames";
 import { ProximaxProvider } from "../proximax/proximax";
 import { mergeMap, map, filter, toArray } from "rxjs/operators";
@@ -33,9 +33,9 @@ export class MosaicsProvider {
 
   getDefaultMosaics(): Array<DefaultMosaic> {
     const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: 0, divisibility:0 });
-    const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
-    const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: 0, divisibility:0 });
-    const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: 0, divisibility:0 });
+    // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
+    // const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: 0, divisibility:0 });
+    // const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: 0, divisibility:0 });
 
     return [
       XPX

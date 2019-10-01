@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { App, NavController, NavParams, ViewController, ActionSheetController, AlertController, Platform, ModalController, Slides, LoadingController, LoadingOptions } from 'ionic-angular';
+import { App, NavController, NavParams, ViewController, ActionSheetController, Platform, ModalController, Slides, LoadingController, LoadingOptions } from 'ionic-angular';
 
 import { App as AppConfig } from '../../providers/app/app';
 import { WalletProvider } from '../../providers/wallet/wallet';

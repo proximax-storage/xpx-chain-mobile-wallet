@@ -65,6 +65,11 @@ import { HelperProvider } from '../providers/helper/helper';
 import { Vibration } from '@ionic-native/vibration';
 import { TransferTransactionProvider } from '../providers/transfer-transaction/transfer-transaction';
 import { FileTransfer } from '@ionic-native/file-transfer';
+import { Screenshot } from '@ionic-native/screenshot';
+import { PhotoLibrary } from '@ionic-native/photo-library';
+import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
+import { Diagnostic } from '@ionic-native/diagnostic';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -150,7 +155,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     HelperProvider,
     Vibration,
     TransferTransactionProvider,
-    FileTransfer
+    FileTransfer,
+    Screenshot,
+    PhotoLibrary,
+    Base64ToGallery,
+    Diagnostic,
   ]
 })
 export class AppModule {}
