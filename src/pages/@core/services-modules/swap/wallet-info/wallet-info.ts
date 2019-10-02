@@ -28,7 +28,7 @@ import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 })
 export class WalletInfoPage {
 
-  accountPuclic: any;
+  publicAccount: any;
   transferTransaction: TransferTransaction;
   hash: any;
   walletC: any;
@@ -122,6 +122,8 @@ export class WalletInfoPage {
   }
 
   confirmSwap() {
+    
+
     let total = this.coinGecko.market_data.current_price.usd * Number(this.form.get('amount').value);
     let alert = this.alertCtrl.create({
       title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
@@ -143,9 +145,16 @@ export class WalletInfoPage {
       ]
     });
     alert.present();
+    
   }
 
   async onSubmit() {
+    let options:LoadingOptions = {
+      content: 'Initiating swap...'
+    };
+    let loader = this.loadingCtrl.create(options);
+
+    loader.present();
     let quantity = this.form.get('amount').value;
     const recipient = new Address(this.recipient)
 
@@ -155,17 +164,18 @@ export class WalletInfoPage {
     } else {
 
       if (this._allowedToSendTx()) {
-        this.accountPuclic = this.proximaxProvider.getPublicAccountFromPrivateKey(this.credentials.privateKey, AppConfig.sirius.networkType)
-        console.log('this.puclic publicKey', this.accountPuclic.publicKey)
+        this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.credentials.privateKey, AppConfig.sirius.networkType)
+        console.log('this.publicAccount publicKey', this.publicAccount.publicKey)
         const account = this.nemProvider.createAccountPrivateKey(this.credentials.privateKey);
         console.log('this.account', account)
-        const transaction = await this.nemProvider.createTransaction(this.accountPuclic.publicKey , this.selectedMosaic.assetId, quantity);
+        const transaction = await this.nemProvider.createTransaction(this.publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
         this.transferTransaction = transaction;
         console.log('this.account', this.transferTransaction)
         this.nemProvider.anounceTransaction(transaction, account)
           .then(resp => {
             this.hash = resp.transactionHash;
             this.showSuccessMessage()
+            loader.dismiss();
           })
           .catch(error => {
             this.showErrorMessage(error)
@@ -174,6 +184,7 @@ export class WalletInfoPage {
         this.showGenericError();
       }
     }
+    
   }
 
   clearPlaceholder() {
@@ -219,7 +230,7 @@ export class WalletInfoPage {
   }
 
   getAccountInfo(address: Address) {
-    console.log("This is a multisig account", address)
+    // console.log("This is a multisig account", address)
     try {
       this.nemProvider
         .getAccountInfo(address)
@@ -264,30 +275,33 @@ export class WalletInfoPage {
   }
 
   showSuccessMessage() {
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {},
-      {
-        animate: true,
-        direction: 'backward'
-      }
-    );
+    console.log("NIS1 transaction has been made.")
+    // this.navCtrl.setRoot(
+    //   'TabsPage',
+    //   {},
+    //   {
+    //     animate: true,
+    //     direction: 'backward'
+    //   }
+    // );
     this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.walletC.address);
   }
 
   showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction, address: Address) {
-    const page = "WalletTransactionsPage"
+    const page = "SwapCertificatePage"
     this.showModal(page, {
       publicKey: publicKey,
       transactionHash: hash,
-      timestamp: transaction,
+      timestamp: transaction.timeWindow.timeStamp,
       address: address
     });
 
   }
 
   showModal(page, params) {
-    const modal = this.modalCtrl.create(page, { data: params }, {
+    console.log("TCL: showModal -> params", params)
+    console.log("Showing modal");
+    const modal = this.modalCtrl.create(page, params , {
       enableBackdropDismiss: false,
       showBackdrop: true
     });

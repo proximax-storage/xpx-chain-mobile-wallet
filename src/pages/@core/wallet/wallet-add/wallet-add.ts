@@ -33,6 +33,8 @@ export class WalletAddPage {
   walletColor:string = "wallet-4";
   walletName: string = "Primary";
 
+  tablet: boolean = false;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -63,6 +65,11 @@ export class WalletAddPage {
   }
 
   init() {
+
+    if (window.screen.width >= 768) { // 768px portrait
+      this.tablet = true;
+    }
+
     this.formGroup = this.formBuilder.group({
       name: ['', [Validators.minLength(3), Validators.required]]
     });

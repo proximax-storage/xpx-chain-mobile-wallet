@@ -25,7 +25,9 @@ import {
   TimeWindow,
   TransactionHttp,
   NemAnnounceResult,
-  AssetId
+  AssetId,
+  QRWalletText,
+  QRService
 } from "nem-library";
 
 
@@ -38,6 +40,7 @@ export class NemProvider{
   wallets: SimpleWallet[];
   accountHttp: AccountHttp;
   assetHttp: AssetHttp;
+  qrService: QRService;
 
   constructor(private storage: Storage) {
     let serverConfig: ServerConfig[];
@@ -47,6 +50,7 @@ export class NemProvider{
     this.accountHttp = new AccountHttp(serverConfig);
     this.assetHttp = new AssetHttp(serverConfig);
     this.transactionHttp = new TransactionHttp(serverConfig);
+    this.qrService = new QRService();
 
    
   }
@@ -82,6 +86,16 @@ export class NemProvider{
   
   public passwordToPrivateKey(password: string, wallet: SimpleWallet): string {
     return wallet.unlockPrivateKey(new Password(password));
+  }
+
+  public decryptPrivateKeyViaQrCode(
+    password: string,
+    encriptedData: QRWalletText
+  ): string {
+    return this.qrService.decryptWalletQRText(
+      new Password(password),
+      encriptedData
+    );
   }
 
   decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
