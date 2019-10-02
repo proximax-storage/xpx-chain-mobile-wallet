@@ -14,7 +14,7 @@
     "APP.LOGIN": "Login",
     "APP.LOGIN.DESC": "Log into your account to access your wallet.",
     "APP.SIGNUP": "Sign Up",
-    "APP.SIGNUP.DESC": "Create an account to access the full features of the wallet.",
+    "APP.SIGNUP.DESC": "Setup your wallet login credentials to access to its full features.",
     "APP.SIGNUP.CONFIRM_PASSWORD": "Confirm Password",
     "APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER": "Confirm your password",
     "APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE": "Password mismatch",
