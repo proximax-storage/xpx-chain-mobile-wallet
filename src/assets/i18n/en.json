@@ -68,7 +68,7 @@
     "WALLETS.EDIT.DESC": "To save your changes, update the info below and press Save.",
     "WALLETS.DELETE": "Delete account",
     "WALLETS.DELETE.WARNING": "You are about to delete {{walletName}} account!",
-    "WALLETS.DELETE.DESC": "Continuing this action will delete the account from your wallet and it cannot be undone.  Please make sure you backup your wallet first so that you can recover it anytime.",
+    "WALLETS.DELETE.DESC": "Continuing this action will delete the account from your wallet and it cannot be undone.  Please make sure you backup your account and private key first so that you can recover it anytime.",
     "WALLETS.COMMON.CHOOSE_COLOR": "Choose account colour",
     "WALLETS.COMMON.LABEL.WALLET_NAME": "Account name",
     "WALLETS.COMMON.PLACEHOLDER.WALLET_NAME": "Enter your account name",
