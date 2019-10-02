@@ -1,11 +1,12 @@
 import { WalletProvider } from './../../../../providers/wallet/wallet';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Haptic, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, Haptic, AlertController, AlertOptions } from 'ionic-angular';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../../../../providers/toast/toast';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../providers/auth/auth';
+import { e } from '@angular/core/src/render3';
 
 
 /**
@@ -43,11 +44,12 @@ export class WalletBackupQrcodePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WalletBackupQrcodePage');
-
-    let alertCtrl = this.alertCtrl.create();
+    let options:AlertOptions = {
+      enableBackdropDismiss: false
+    }
+    let alertCtrl = this.alertCtrl.create(options);
       alertCtrl.setTitle('Export wallet');
       alertCtrl.setSubTitle('');
-
       alertCtrl.addInput({
         type: 'password',
         label: 'Password',
@@ -55,7 +57,14 @@ export class WalletBackupQrcodePage {
         placeholder: 'Enter your account\'s password'
       });
 
-      alertCtrl.addButton('Cancel');
+      alertCtrl.addButton({
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          this.dismiss();
+          this.dismiss();
+        }
+      });
 
       alertCtrl.addButton({
         text: 'OK',
@@ -71,6 +80,7 @@ export class WalletBackupQrcodePage {
                 this.QRData = JSON.stringify({walletName: this.walletName, password: password, privateKey: this.privateKey}); 
               } else {
                 this.alertProvider.showMessage("Invalid password. Please try again.");
+                this.dismiss();
               }
             });
             
@@ -85,13 +95,15 @@ export class WalletBackupQrcodePage {
                 } else {
                   this.alertProvider.showMessage("Invalid password. Please try again.");
                 }
+                this.dismiss();
               }
 
             } catch (error) {
               console.log(error);
               this.alertProvider.showMessage("Invalid private key. Please try again.");
+              this.dismiss();
             }
-          }
+          } 
         }
       });
 

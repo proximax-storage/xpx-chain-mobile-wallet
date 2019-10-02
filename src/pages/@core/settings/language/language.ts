@@ -40,15 +40,15 @@ export class LanguagePage {
       const VIETNAMESE = this.translateService.instant("SETTINGS.LANGUAGE.VIETNAMESE");
 
       this.languages = [
-        {value: 'cn', name: CHINESE, icon:'en'},
-        {value: 'nl', name: DUTCH, icon:'en'},
+        {value: 'cn', name: CHINESE, icon:'cn'},
+        {value: 'nl', name: DUTCH, icon:'nl'},
         {value: 'en', name: ENGLISH, icon:'en'},
-        {value: 'fr', name: FRENCH, icon:'en'},
-        {value: 'jp', name: JAPANESE, icon:'en'},
+        {value: 'fr', name: FRENCH, icon:'fr'},
+        {value: 'jp', name: JAPANESE, icon:'jp'},
         {value: 'kr', name: KOREAN, icon:'kr'},
-        {value: 'ru', name: RUSSIAN, icon:'en'},
-        {value: 'vt', name: VIETNAMESE, icon:'en'},
-        {value: 'es', name: SPANISH, icon:'en'},
+        {value: 'ru', name: RUSSIAN, icon:'ru'},
+        {value: 'es', name: SPANISH, icon:'es'},
+        {value: 'vt', name: VIETNAMESE, icon:'vt'},
       ]
 			console.log("LOG: LanguagePage -> this.navParams.data", this.navParams.data);
       this.selectedLanguage = this.navParams.data.selectedLanguage
