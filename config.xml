@@ -115,7 +115,6 @@
         <variable name="PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
     </plugin>
-    <plugin name="cordova-plugin-file" spec="^6.0.2" />
     <plugin name="cordova-plugin-filepath" spec="^1.5.6" />
     <plugin name="cordova-plugin-filechooser" spec="^1.2.0" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0">
@@ -129,11 +128,6 @@
     <plugin name="cordova-plugin-decimal-key" spec="^1.1.2" />
     <plugin name="onesignal-cordova-plugin" spec="^2.6.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
-    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
-    <plugin name="com.darktalker.cordova.screenshot" spec="~0.1.5" />
-    <plugin name="cordova-plugin-photo-library" spec="^2.2.1">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="To save screenshots of transactions" />
-    </plugin>
     <plugin name="cordova-base64-to-gallery" spec="^4.1.3" />
     <plugin name="cordova.plugins.diagnostic" spec="^5.0.0" />
 </widget>
