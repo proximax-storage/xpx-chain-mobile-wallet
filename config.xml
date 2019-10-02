@@ -23,9 +23,6 @@
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="KeyboardResizeMode" value="ionic" />
-    <config-file parent="NSBluetoothAlwaysUsageDescription" target="*-Info.plist">
-        <string>Our app does not request this permission or utilize this functionality but it is included in our info.plist since our app utilizes the ionic native permissions library, which references this permission in its code.</string>
-    </config-file>
     <config-file parent="NSCameraUsageDescription" target="*-Info.plist">
         <string>need camera access to scan QR Codes</string>
     </config-file>
@@ -129,5 +126,4 @@
     <plugin name="onesignal-cordova-plugin" spec="^2.6.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
     <plugin name="cordova-base64-to-gallery" spec="^4.1.3" />
-    <plugin name="cordova.plugins.diagnostic" spec="^5.0.0" />
 </widget>

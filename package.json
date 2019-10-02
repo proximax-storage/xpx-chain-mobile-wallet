@@ -83,7 +83,6 @@
     "cordova-plugin-vibration": "^3.1.1",
     "cordova-plugin-whitelist": "^1.3.4",
     "cordova-plugin-x-socialsharing": "^5.4.7",
-    "cordova.plugins.diagnostic": "^5.0.0",
     "crypto-js": "3.1.9-1",
     "es6-promise-plugin": "^4.2.2",
     "highcharts": "6.1.1",
@@ -154,8 +153,7 @@
       "cordova-plugin-decimal-key": {},
       "onesignal-cordova-plugin": {},
       "cordova-plugin-statusbar": {},
-      "cordova-base64-to-gallery": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova-base64-to-gallery": {}
     },
     "platforms": [
       "android"
