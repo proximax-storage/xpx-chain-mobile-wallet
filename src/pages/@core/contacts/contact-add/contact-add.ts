@@ -50,7 +50,7 @@ export class ContactAddPage {
 
   init() {
     this.formGroup = this.formBuilder.group({
-      name: ['', [Validators.minLength(3), Validators.required, Validators.pattern(this.alfaNumberPattern)]],
+      name: ['', [Validators.minLength(3), Validators.required]],
       address: ['', [Validators.minLength(40), Validators.maxLength(46),Validators.required, Validators.pattern(this.alfaNumberPattern)]],
       telegram: ['', [Validators.pattern(this.alfaNumberPattern)]]
     });
