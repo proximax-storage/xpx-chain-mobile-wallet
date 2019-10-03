@@ -48,13 +48,13 @@ export class WalletBackupQrcodePage {
       enableBackdropDismiss: false
     }
     let alertCtrl = this.alertCtrl.create(options);
-      alertCtrl.setTitle('Export wallet');
+      alertCtrl.setTitle('Backup your account');
       alertCtrl.setSubTitle('');
       alertCtrl.addInput({
         type: 'password',
         label: 'Password',
         min: '6',
-        placeholder: 'Enter your account\'s password'
+        placeholder: 'Enter your wallet\'s password'
       });
 
       alertCtrl.addButton({

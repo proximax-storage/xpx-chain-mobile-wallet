@@ -26,12 +26,9 @@ export class NodeListPage {
   url: string;
   public blockHeight: number  = 0;
   public nodes: Array<any> = [
-    {name: "bctestnet1.xpxsirius.io", endpoint:"bctestnet1.xpxsirius.io"},
-    {name: "bctestnet2.xpxsirius.io", endpoint:"bctestnet2.xpxsirius.io"},
-    {name: "bctestnet3.xpxsirius.io", endpoint:"bctestnet3.xpxsirius.io"},
-    {name: "bctestnet4.xpxsirius.io", endpoint:"bctestnet4.xpxsirius.io"},
-    {name: "bctestnet5.xpxsirius.io", endpoint:"bctestnet5.xpxsirius.io"},
-    {name: "bctestnet6.xpxsirius.io", endpoint:"bctestnet6.xpxsirius.io"},
+    {name: "bctestnet1.brimstone.xpxsirius.io", endpoint:"bctestnet1.brimstone.xpxsirius.io"},
+    {name: "bctestnet2.brimstone.xpxsirius.io", endpoint:"bctestnet2.brimstone.xpxsirius.io"},
+    {name: "bctestnet3.brimstone.xpxsirius.io", endpoint:"bctestnet3.brimstone.xpxsirius.io"},
   ];
   public node: Node;
   currentNode: string = "";
