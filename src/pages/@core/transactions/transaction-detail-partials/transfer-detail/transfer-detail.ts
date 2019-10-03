@@ -79,5 +79,9 @@ export class TransferDetailComponent {
      }
   }
 
+  getRelativeAmount(amount) {
+    return amount / Math.pow(10, 6);
+  }
+
   IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; } 
 }

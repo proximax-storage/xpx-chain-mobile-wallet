@@ -91,7 +91,7 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
 
       <p text-wrap ion-text color="dark">
-        {{ tx?.maxFee.compact() }} XPX
+        {{ getRelativeAmount(tx?.maxFee.compact()) }} XPX
       </p>
     </ion-item>
   </ion-card-content>
