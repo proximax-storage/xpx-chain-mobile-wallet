@@ -19,20 +19,18 @@ import { DefaultMosaic } from '../../../../../models/default-mosaic';
   templateUrl: 'transfer-detail.html'
 })
 export class TransferDetailComponent {
-  @Input() tx: TransferTransaction;
+  @Input() tx: any;
   @Input() mosaics: DefaultMosaic[] = [];
-  App = App;
-  owner: Address;
-  message: any;
-  messageShow = false;
+  public App = App;
+  public ownerAddress: any;
+  public message: any;
+  public messageShow = false;
 
   constructor(
     private wallet: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
-    private proximaxProvider: ProximaxProvider,
   ) {
-    // console.log(this.tx);
   }
 
   ngOnInit() {
@@ -42,7 +40,7 @@ export class TransferDetailComponent {
 
   private _setOwner() {
     this.wallet.getSelectedWallet().then(wallet => {
-      this.owner = wallet.address;
+      this.ownerAddress = wallet.address;
     });
   }
 

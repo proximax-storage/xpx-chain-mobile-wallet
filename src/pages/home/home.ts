@@ -14,6 +14,7 @@ import { MosaicsProvider } from '../../providers/mosaics/mosaics';
 import { TransactionsProvider } from '../../providers/transactions/transactions';
 import { Observable, from } from 'rxjs';
 import { animate, style, transition, trigger } from "@angular/animations";
+import { DefaultMosaic } from '../../models/default-mosaic';
 
 @Component({
   selector: 'page-home',
@@ -32,9 +33,7 @@ import { animate, style, transition, trigger } from "@angular/animations";
   providers: [GetMarketPricePipe]
 })
 export class HomePage {
-  mosaicInfo: { mosaicId: string; namespaceId: string; hex: string; amount: string; disivitity: any; };
   amount: string;
-  disivitity: MosaicInfo;
   hex: string;
 
   mosaicName: string[];
@@ -45,8 +44,8 @@ export class HomePage {
   menu = 'mosaics';
   AppConfig = AppConfig;
 
-  mosaics: Array<any>;
-  wallets: SimpleWallet[];
+  mosaics: Array<DefaultMosaic> = [];
+  wallets: Array<SimpleWallet> = [];
 
   fakeList: Array<any>;
   data: any[] = [];
@@ -55,8 +54,8 @@ export class HomePage {
   App = App;
   TransactionType = TransactionType;
 
-  unconfirmedTransactions: Array<Transaction>;
-  confirmedTransactions: Array<any>;
+  unconfirmedTransactions: Array<Transaction> = [];
+  confirmedTransactions: Array<any> = [];
   showEmptyTransaction: boolean = false;
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
@@ -124,15 +123,7 @@ export class HomePage {
       console.log("1. LOG: HomePage -> ionViewWillEnter -> this.wallets", this.wallets);
 
       if (this.wallets.length > 0) {
-
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
-          // console.log("2. Selected wallet:", JSON.stringify(selectedWallet, null, 4));
-
-          
-
-          // console.log('LOG: HomePage -> init -> selectedWallet', JSON.stringify(selectedWallet, null, 4));
-          
-
           if (selectedWallet) {
             if (Array.isArray(selectedWallet)) {
               console.log('LOG: HomePage -> init -> selectedWallet', JSON.stringify(selectedWallet, null, 2));
@@ -154,10 +145,7 @@ export class HomePage {
             }
           })
 
-          
-
-
-
+        
           this.getAccount(this.selectedWallet).subscribe(account => {
             console.log("4. LOG: HomePage -> ionViewWillEnter -> account", account);
             this.selectedAccount = account;
@@ -176,11 +164,6 @@ export class HomePage {
                 myMergedMosaics.subscribe(_myMergedMosaics => {
                   console.log('6. LOG: HomePage -> init -> _myMergedMosaics');
                   this.mosaics = _myMergedMosaics;
-
-                  // this.isLoading = false;
-                  // Update asset info
-                  // console.log("7. LOG: HomePage -> updateAssetsInfo", accountInfo)
-                  // this.updateAssetsInfo(accountInfo);
 
                   // Compute wallet balance in USD
                   console.log("7. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)

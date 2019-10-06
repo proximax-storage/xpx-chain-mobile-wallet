@@ -59,7 +59,7 @@
     "WALLETS.CREATE.NEW.DESC": "To create new account, enter your name.",
     "WALLETS.CREATE.IMPORT": "Import account",
     "WALLETS.CREATE.IMPORT.TITLE": "Import account",
-    "WALLETS.CREATE.IMPORT.DESC": "To import your account, enter your name and paste your private key or scan QR code.",
+    "WALLETS.CREATE.IMPORT.DESC": "To import your account, scan QR code or enter  private key.",
     "WALLETS.CREATE.IMPORT.QR_SCAN": "Scan QR code",
     "WALLETS.CREATE.IMPORT.PRIVATE_KEY.LABEL": "Private key",
     "WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER": "Enter your private key",

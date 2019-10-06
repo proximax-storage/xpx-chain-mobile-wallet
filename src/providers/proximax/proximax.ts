@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { crypto } from 'js-xpx-chain-library';
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
   Account,
@@ -12,7 +11,6 @@ import {
   MosaicHttp,
   MosaicId,
   NamespaceId,
-  NamespaceInfo,
   NamespaceName,
   MosaicInfo,
   MosaicService,
@@ -27,6 +25,7 @@ import {
   QueryParams,
   NetworkHttp,
   MultisigAccountInfo,
+  Crypto,
 } from 'tsjs-xpx-chain-sdk';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
@@ -57,7 +56,6 @@ export class ProximaxProvider {
 
   constructor(public http: HttpClient, private storage: Storage,) {
   
-
     this.networkType = AppConfig.sirius.networkType;
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
 
@@ -105,7 +103,7 @@ export class ProximaxProvider {
       iv: iv,
     };
 
-    crypto.passwordToPrivatekey(common, wallet, 2);
+    Crypto.passwordToPrivateKey(common, wallet, 2);
     return common.privateKey;
   }
 
