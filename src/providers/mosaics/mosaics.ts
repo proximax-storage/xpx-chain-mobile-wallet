@@ -32,7 +32,7 @@ export class MosaicsProvider {
   }
 
   getDefaultMosaics(): Array<DefaultMosaic> {
-    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "3c0f3de5298ced2d", amount: 0, divisibility:0 });
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "13bfc518e40549d7", amount: 0, divisibility:0 });
     // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
     // const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: 0, divisibility:0 });
     // const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: 0, divisibility:0 });
@@ -67,7 +67,7 @@ export class MosaicsProvider {
   
   
       const mosaicList$ = mosaicNames$.pipe(
-        mergeMap(mosaicNames=> {
+        mergeMap(mosaicNames => {
           return mosaicInfo$.pipe(
             map(mosaicInfo=> {
   
@@ -89,7 +89,7 @@ export class MosaicsProvider {
   
               const _ownedMosaics:Mosaic[] = ownedMosaics;
               return from(_ownedMosaics).pipe(
-                mergeMap((mosaic:Mosaic) => {
+                mergeMap(mosaic => {
                   let _mosaicNames$ = from(_mosaicNames).pipe(
                     filter(names => names.id.equals(mosaic.id))
                   )

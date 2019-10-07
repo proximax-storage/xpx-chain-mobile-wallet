@@ -6,15 +6,16 @@
     <p text-uppercase ion-text color="dark">
       <small>
         {{ mosaic.namespaceId }}
+        
       </small>
     </p>
 
     <section item-right>
-      <h2 text-right ion-text color="success" [hidden]="!mosaics" *ngIf="owner?.address == tx?.recipient.address">
+      <h2 text-right ion-text color="success" [hidden]="mosaics" *ngIf="ownerAddress?.ADDRESS == tx?.recipient?.address">
         + {{ mosaic.amount?.toString() }}
       </h2>
 
-      <h2 text-right ion-text color="danger" [hidden]="!mosaics" *ngIf="owner?.address != tx?.recipient.address">
+      <h2 text-right ion-text color="danger" [hidden]="!mosaics" *ngIf="ownerAddress?.ADDRESS  != tx?.recipient?.address">
         - {{ mosaic.amount?.toString()  }}
       </h2>
 
@@ -55,13 +56,13 @@
 <!-- ./Date -->
 
 <!-- Sender -->
-<ion-card no-margin-bottom (click)="utils.copy(tx?.signer.address.address, 'sender')">
+<ion-card no-margin-bottom (click)="utils.copy(tx?.signer.address, 'sender')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">
         {{"WALLETS.TRANSACTION.DETAIL.SENDER" | translate}}
       </h2>
-      <p text-wrap> {{ tx?.signer.address.address }}</p>
+      <p text-wrap> {{ tx?.signer.address.plain() }}</p>
 
       <!-- <p text-wrap> {{ tx?.signer.address.address | nemAddressPretty | searchContact: tx?.signer.address.address | async }}</p> -->
     </ion-item>
@@ -70,13 +71,13 @@
 <!-- ./Sender -->
 
 <!-- Receiver -->
-<ion-card no-margin-bottom (click)="utils.copy(tx?.recipient.address, 'receiver')">
+<ion-card no-margin-bottom (click)="utils.copy(tx?.recipient, 'receiver')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">
           {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
       </h2>
-      <p text-wrap> {{ tx?.recipient.address }}</p>
+      <p text-wrap> {{ tx?.recipient?.address }}</p>
 
       <!-- <p text-wrap> {{ tx?.recipient.value | nemAddressPretty | searchContact: tx?.recipient.value | async }}</p> -->
     </ion-item>
@@ -91,7 +92,7 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
 
       <p text-wrap ion-text color="dark">
-        {{ tx?.maxFee.compact() }} XPX
+        {{ getRelativeAmount(tx?.maxFee.compact()) }} XPX
       </p>
     </ion-item>
   </ion-card-content>

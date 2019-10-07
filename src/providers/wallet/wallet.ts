@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { AuthProvider } from '../auth/auth';
 import { SimpleWallet, Password, Address, EncryptedPrivateKey, 
   AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
-  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, Crypto, NetworkCurrencyMosaic} from 'tsjs-xpx-chain-sdk';
+  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, NetworkCurrencyMosaic} from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
@@ -411,43 +411,43 @@ export class WalletProvider {
 
 
   decrypt(common: any, current: any, account: any = '', algo: any = '', network: any = '') {
-    const acct = current;
-    const net = NetworkType.TEST_NET;
-    const alg = 2;
-    const walletAccount = {
-      encrypted: current.encryptedPrivateKey.encryptedKey,
-      iv: current.encryptedPrivateKey.iv
-    }
-    console.log('common', common)
-    console.log('walletAccount', walletAccount)
-    console.log('alg', alg)
-    // Try to generate or decrypt key
-    if (!Crypto.passwordToPrivateKey(common, walletAccount, alg)) {
-      // console.log('passwordToPrivatekeyy ')
-      setTimeout(() => {
-        console.log('Error Invalid password')
-        // this.sharedService.showError('Error', '¡Invalid password!');
-      }, 500);
-      return false;
-    }
-    if (common.isHW) {
-      return true;
-    }
-    // console.log('pase common.common ', common.privateKey)
-    // console.log('pase common.net ', net)
-    // console.log('pase common.acct.address ', acct.address.address)
-    if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address.address)) {
-      setTimeout(() => {
-        console.log('Error Invalid password')
-        // this.sharedService.showError('Error', '¡Invalid password!');
-      }, 500);
-      return false;
-    }
-    // console.log('!this.isPrivateKeyValid......')
-    //Get public account from private key
-    this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
-    // console.log('this.publicAccount ', this.publicAccount )
-    return true;
+    // const acct = current;
+    // const net = NetworkType.TEST_NET;
+    // const alg = 2;
+    // const walletAccount = {
+    //   encrypted: current.encryptedPrivateKey.encryptedKey,
+    //   iv: current.encryptedPrivateKey.iv
+    // }
+    // console.log('common', common)
+    // console.log('walletAccount', walletAccount)
+    // console.log('alg', alg)
+    // // Try to generate or decrypt key
+    // if (!Crypto.passwordToPrivateKey(common, walletAccount, alg)) {
+    //   // console.log('passwordToPrivatekeyy ')
+    //   setTimeout(() => {
+    //     console.log('Error Invalid password')
+    //     // this.sharedService.showError('Error', '¡Invalid password!');
+    //   }, 500);
+    //   return false;
+    // }
+    // if (common.isHW) {
+    //   return true;
+    // }
+    // // console.log('pase common.common ', common.privateKey)
+    // // console.log('pase common.net ', net)
+    // // console.log('pase common.acct.address ', acct.address.address)
+    // if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address.address)) {
+    //   setTimeout(() => {
+    //     console.log('Error Invalid password')
+    //     // this.sharedService.showError('Error', '¡Invalid password!');
+    //   }, 500);
+    //   return false;
+    // }
+    // // console.log('!this.isPrivateKeyValid......')
+    // //Get public account from private key
+    // this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
+    // // console.log('this.publicAccount ', this.publicAccount )
+    // return true;
   }
 
   
@@ -480,7 +480,7 @@ export class WalletProvider {
       [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount))), NetworkCurrencyMosaic.createRelative(10)], PlainMessage.create(message), network
     );
     const account = Account.createFromPrivateKey(common.privateKey, network);
-    const signedTransaction = account.sign(transferTransaction,  this.generationHash)
+    const signedTransaction = account.sign(transferTransaction, this.generationHash)
 
     return {
       signedTransaction: signedTransaction,

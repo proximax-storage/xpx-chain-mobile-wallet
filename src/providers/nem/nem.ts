@@ -1,8 +1,6 @@
-import { Injectable, OnInit } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AppConfig } from '../../app/app.config';
-import { crypto } from 'js-xpx-chain-library';
 import * as js_joda_1 from 'js-joda';
 
 import {
@@ -13,25 +11,23 @@ import {
   SimpleWallet,
   Address,
   AccountInfoWithMetaData,
-  AssetDefinition,
   AccountOwnedAssetService,
   AssetHttp,
   AssetTransferable,
   ServerConfig,
-  PublicAccount,
   PlainMessage,
   Account,
   TransferTransaction,
   TimeWindow,
   TransactionHttp,
-  NemAnnounceResult,
   AssetId,
   QRWalletText,
-  QRService
+  QRService,
 } from "nem-library";
 
 
 import { Observable } from "rxjs";
+import { Crypto } from "tsjs-xpx-chain-sdk";
 
 @Injectable()
 export class NemProvider{
@@ -107,7 +103,7 @@ export class NemProvider{
       encrypted: encryptedKey,
       iv: iv,
     };
-    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    Crypto.passwordToPrivateKey(common, wallet, 'pass:bip32');
     // console.log('wallet common', common)
     return common.privateKey;
   }
@@ -117,13 +113,13 @@ export class NemProvider{
   }
 
   async createTransaction(message: string, assetId: AssetId, quantity: number) {
-    const resultAssets = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
+    const assetTransferable = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
     // console.log('\n\n\n\nValue resultAssets:\n', resultAssets, '\n\n\n\nEnd value\n\n');
     return TransferTransaction.createWithAssets(
       // TimeWindow.createWithDeadline(),
       this.createWithDeadline(),
       new Address(AppConfig.swap.burnAccountAddress),
-      [resultAssets],
+      [assetTransferable],
       PlainMessage.create(message)
     );
   }

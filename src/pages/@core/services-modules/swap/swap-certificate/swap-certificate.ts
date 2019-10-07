@@ -37,15 +37,7 @@ export class SwapCertificatePage {
     public viewCtrl: ViewController,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-    private alertCtrl: AlertController,
-    private screenshot: Screenshot,
-    private photoLibrary: PhotoLibrary,
-    private base64ToGallery: Base64ToGallery,
-    private file:File,
-    private platform: Platform,
-    private diagnostic: Diagnostic,
-    private transfer: FileTransfer
-    ) {
+  ) {
 
     const params = this.navParams.data;
     console.log("TCL: SwapCertificatePage -> this.navParams.data", JSON.stringify(this.navParams.data, null, 4))
@@ -76,76 +68,6 @@ export class SwapCertificatePage {
     });
   }
 
-  save() {
-    this.screenshot.save('jpg', 80, `${this.address}.jpg`).then(base64Data=> {
-    console.log("TCL: SwapCertificatePage -> save -> base64Data filepath", base64Data.filepath)
-      // console.log("Screenshot saved.", JSON.stringify(base64Data,null, 3));
-      // this.downloadImage('MyScreenshot', 'jpeg', base64Data.URI);
-    }, ()=> {
-      console.log("There's an error saving the screenshot.");
-    });
-    // this.screenshot.URI(80).then(base64Data=> {
-    //   console.log('Image Uri ', JSON.stringify(base64Data,null, 3));
-
-      // this.photoLibrary.saveImage(base64Data.URI, 'Screenshots').then(res=>{
-      //   console.log(JSON.stringify(res, null, 4));
-      // });
-
-      // this.base64ToGallery.base64ToGallery(base64Data.URI, { prefix: '_img', mediaScanner:true }).then(
-      //   res => console.log('Saved image to gallery ', JSON.stringify(res,null, 3)),
-      //   err => console.log('Error saving image to gallery ', err)
-      // );
-
-      // remove photo Library
-      // remove base64
-      
-      // this.downloadImage('MyScreenshot', 'jpeg', base64Data.URI);
-
-    // })
-  }
-
-  downloadImage(fileName, ext, base64) {
-    
-    let storageDirectory: string = "";
-    //Select Storage Location
-    if (this.platform.is('ios')) {
-        storageDirectory = this.file.documentsDirectory + 'ProximaX/';
-    }
-    else if (this.platform.is('android')) {
-        storageDirectory = this.file.externalDataDirectory + 'ProximaX/';
-    }
-    else {
-        return false;
-    }
-    //Request Access
-    if (this.platform.is("android")) {
-        this.diagnostic.requestRuntimePermission('READ_EXTERNAL_STORAGE').then(() => {
-            console.log("Success");
-        })
-    }
-    //Download Image
-    var uri = encodeURI(base64);
-    const file = `${fileName}.${ext}`;
-    var fileURL = storageDirectory + "Image.jpg".replace(/ /g, '%20');
-    const fileTransfer: FileTransferObject = this.transfer.create();
-    fileTransfer.download(uri, fileURL).then((success) => {
-        console.log("TCL: downloadImage -> success", success)
-        // base64 = 'data:' + "image/jpeg" + ';base64,' + base64;
-        const alertSuccess = this.alertCtrl.create({
-            title: `Download Succeeded!`,
-            subTitle: `Image was successfully downloaded`,
-            buttons: ['Ok']
-        });
-        alertSuccess.present();
-    }, error => {
-        const alertFailure = this.alertCtrl.create({
-            title: `Download Failed!`,
-            subTitle: `Image was not successfully downloaded. Error code: ${error.code}`,
-            buttons: ['Ok']
-        });
-        alertFailure.present();
-    })
-  }
 
   dismiss() {
     this.viewCtrl.dismiss();

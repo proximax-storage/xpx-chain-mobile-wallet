@@ -31,13 +31,14 @@ export class WalletInfoPage {
   publicAccount: any;
   transferTransaction: TransferTransaction;
   hash: any;
-  walletC: any;
+  catapultWallet: any;
   message: PlainMessage;
   selectedMosaic: AssetTransferable;
   credentials: { password: string; privateKey: string };
+  privateKey: string;
   total: number;
   address: Address;
-  wallet: any;
+  nemWallet: any;
   recipient = AppConfig.swap.burnAccountAddress
   optionsXPX = {
     prefix: '',
@@ -86,9 +87,10 @@ export class WalletInfoPage {
     let loader = this.loadingCtrl.create(options);
     loader.present();
 
-    this.wallet = this.navParams.data.data.wallet;
-    this.walletC = this.navParams.data.data.walletC;
-    this.address = new Address(this.wallet.address.value);
+    this.nemWallet = this.navParams.data.data.nemWallet;
+    this.catapultWallet = this.navParams.data.data.catapultWallet;
+    this.privateKey = this.navParams.data.data.privateKey;
+    this.address = new Address(this.nemWallet.address.value);
 
     // 0. initialize form
     this.init();
@@ -164,13 +166,21 @@ export class WalletInfoPage {
     } else {
 
       if (this._allowedToSendTx()) {
-        this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.credentials.privateKey, AppConfig.sirius.networkType)
+
+        console.log("TCL: onSubmit -> this.credentials.privateKey", this.credentials.privateKey)
+        // return;
+        
+        this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.privateKey, AppConfig.sirius.networkType)
         console.log('this.publicAccount publicKey', this.publicAccount.publicKey)
-        const account = this.nemProvider.createAccountPrivateKey(this.credentials.privateKey);
+        
+        const account = this.nemProvider.createAccountPrivateKey(this.privateKey);
         console.log('this.account', account)
+        
         const transaction = await this.nemProvider.createTransaction(this.publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
         this.transferTransaction = transaction;
+
         console.log('this.account', this.transferTransaction)
+        
         this.nemProvider.anounceTransaction(transaction, account)
           .then(resp => {
             this.hash = resp.transactionHash;
@@ -260,12 +270,6 @@ export class WalletInfoPage {
   private _allowedToSendTx() {
     if (this.credentials.password) {
       try {
-        const password = new Password(this.credentials.password)
-        this.credentials.privateKey = this.nemProvider.decryptPrivateKey(
-          password,
-          this.walletC.encryptedPrivateKey.encryptedKey,
-          this.walletC.encryptedPrivateKey.iv
-        );
         return true;
       } catch (err) {
         return false;
@@ -284,7 +288,7 @@ export class WalletInfoPage {
     //     direction: 'backward'
     //   }
     // );
-    this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.walletC.address);
+    this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.catapultWallet.address);
   }
 
   showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction, address: Address) {
@@ -305,7 +309,9 @@ export class WalletInfoPage {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
-    modal.present();
+    modal.present().then(_=>{
+      this.dismiss();
+    })
   }
 
   showErrorMessage(error) {
@@ -360,7 +366,7 @@ export class WalletInfoPage {
 
   checkAllowedInput(e) {this.message
     const AMOUNT = this.form.get('amount').value;
-    console.log("LOG: SendPage -> checkAllowedInput -> AMOUNT", AMOUNT);
+    console.log("LOG: WalletInfoPage -> checkAllowedInput -> AMOUNT", AMOUNT);
 
     // Prevent "+" and "-"
     if (e.key === "-" || e.key === "+" || e.charCode === 43 || e.charCode === 45 || e.keyCode === 189 || e.keyCode === 187 || e.key === "Unindentified" || e.keyCode === 229) {
@@ -391,7 +397,7 @@ export class WalletInfoPage {
         e.preventDefault();
         --this.periodCount;
       }
-      console.log("LOG: SendPage -> checkAllowedInput -> this.periodCount", this.periodCount);
+      console.log("LOG: WalletInfoPage -> checkAllowedInput -> this.periodCount", this.periodCount);
     }
   }
 

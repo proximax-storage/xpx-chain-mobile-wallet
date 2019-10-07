@@ -17,7 +17,7 @@ export class LocalStorageProvider {
    * @param value
    * @returns {any}
    */
-  public setItem<T>(key:string, value:T):Observable<T>{
+  public setItem<T>(key:string, value:T):Observable<any>{
     return from(localforage.setItem(key, value))
   }
 
@@ -26,7 +26,7 @@ export class LocalStorageProvider {
    * @param key
    * @returns {any}
    */
-  public getItem<T>(key:string):Observable<T>{
+  public getItem<T>(key:string):Observable<any>{
     return from(localforage.getItem(key))
   }
 
@@ -35,7 +35,7 @@ export class LocalStorageProvider {
    * @param key
    * @returns {any}
    */
-  public removeItem(key:string):Observable<void>{
+  public removeItem(key:string):Observable<any>{
     return from(localforage.removeItem(key))
   }
 }
