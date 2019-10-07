@@ -8,7 +8,7 @@ export const AppConfig = {
       httpNodeUrl: "https://bctestnet1.brimstone.xpxsirius.io",
       wsNodeUrl: "ws://bctestnet1.brimstone.xpxsirius.io:3000",
       networkType: NetworkType.TEST_NET,
-      networkGenerationHash: '3D9507C8038633C0EB2658704A5E7BC983E4327A99AC14D032D67F5AACBCCF6A'
+      networkGenerationHash: '56D112C98F7A7E34D1AEDC4BD01BC06CA2276DD546A93E36690B785E82439CA9'
     },
     swap:{
       burnAccountAddress: 'TBF4LAZUEJMBIOC6J24D6ZGGXE5W775TX555CTTN'
