@@ -194,7 +194,7 @@ export class ImportWalletPage {
               this.walletProvider
                 .storeWalletNis1(catapultWallet, nemWallet, this.walletColor)
                 .then(_ => {
-                this.showWalletInfoPage(nemWallet, catapultWallet);
+                this.showWalletInfoPage(nemWallet, catapultWallet, form.privateKey);
                 });
             } else {
   
@@ -203,21 +203,19 @@ export class ImportWalletPage {
         });
         }
       });
-
-
-      
-
     }
     catch (error) {
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
     }
   }
 
-  showWalletInfoPage(wallet: SimpleWallet, walletC: any) {
+  showWalletInfoPage(nemWallet: SimpleWallet, catapultWallet: any, privateKey:string) {
+    console.log("TCL: ImportWalletPage -> showWalletInfoPage -> nemWallet", nemWallet)
     const page = "WalletInfoPage"
     this.showModal(page, {
-      wallet: wallet,
-      walletC: walletC
+      nemWallet: nemWallet,
+      catapultWallet: catapultWallet,
+      privateKey: privateKey
     });
   }
 

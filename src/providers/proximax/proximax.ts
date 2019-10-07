@@ -150,8 +150,10 @@ export class ProximaxProvider {
     return Address.createFromRawAddress(address);
   }
 
-  getPublicAccountFromPrivateKey(privateKey: string, net: NetworkType): PublicAccount {
-    return Account.createFromPrivateKey(privateKey, net).publicAccount;
+  getPublicAccountFromPrivateKey(privateKey: string, networkType: NetworkType): PublicAccount {
+  console.log("TCL: ProximaxProvider -> privateKey", privateKey, networkType)
+    
+    return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
 
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {

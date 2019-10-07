@@ -113,13 +113,13 @@ export class NemProvider{
   }
 
   async createTransaction(message: string, assetId: AssetId, quantity: number) {
-    const resultAssets = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
+    const assetTransferable = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
     // console.log('\n\n\n\nValue resultAssets:\n', resultAssets, '\n\n\n\nEnd value\n\n');
     return TransferTransaction.createWithAssets(
       // TimeWindow.createWithDeadline(),
       this.createWithDeadline(),
       new Address(AppConfig.swap.burnAccountAddress),
-      [resultAssets],
+      [assetTransferable],
       PlainMessage.create(message)
     );
   }
