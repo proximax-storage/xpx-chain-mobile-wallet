@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo, NamespaceId } from "tsjs-xpx-chain-sdk";
+import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo, NamespaceId, Address, MosaicAmountView } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../coingecko/coingecko";
 import { Observable, from, forkJoin } from "rxjs";
 import { DefaultMosaic } from "../../models/default-mosaic";
@@ -31,6 +31,10 @@ export class MosaicsProvider {
     this.defaultMosaics = this.getDefaultMosaics();
   }
 
+  mosaicsAmountViewFromAddress(address: Address) : Observable<MosaicAmountView[]> {
+    return this.proximaxProvider.mosaicsAmountViewFromAddress(address);
+  }
+
   getDefaultMosaics(): Array<DefaultMosaic> {
     const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: "13bfc518e40549d7", amount: 0, divisibility:0 });
     // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
@@ -54,8 +58,35 @@ export class MosaicsProvider {
     });
   }
 
+  getMosaicMetaData(mosaicAmountView:MosaicAmountView){
+    const _mosaicAmountView = new DefaultMosaic({
+      namespaceId: '', // namespaceId
+      mosaicId: '', // mosaicId
+      hex: mosaicAmountView.fullName(), // mosaic hex id
+      amount: mosaicAmountView.relativeAmount(),
+      divisibility: mosaicAmountView.mosaicInfo.divisibility,
+    });
+
+    let mergeMosaics = this.getDefaultMosaics().filter(m => m.hex === _mosaicAmountView.hex);
+    mergeMosaics = mergeMosaics.map(mosaic=>{
+      return {
+        namespaceId: mosaic.namespaceId, // namespaceId
+        mosaicId: mosaic.mosaicId, // mosaicId
+        hex: mosaic.hex, // mosaic hex id
+        amount: _mosaicAmountView.amount,
+        divisibility: _mosaicAmountView.divisibility,
+      }
+    })
+    console.log("TCL: getMosaicMetaData -> mergeMosaics", mergeMosaics)
+    return mergeMosaics;
+  }
+
+  /**
+   * @deprecated
+   * @param ownedMosaics 
+   */
   public getMosaicInfo(ownedMosaics: Mosaic[]): Observable<Array<DefaultMosaic>> {
-  console.log('LOG: MosaicsProvider -> mergeMosaics -> ownedMosaics', ownedMosaics);    
+  console.log('LOG: MosaicsProvider -> mergeMosaics -> ownedMosaics', JSON.stringify(ownedMosaics,null, 3));    
 
 
     return new Observable(observer => {
@@ -112,6 +143,7 @@ export class MosaicsProvider {
                 toArray()
               )
                 .subscribe(mosaicsInfo=> {
+                  console.log("TCL: mosaicsInfo", JSON.stringify(mosaicsInfo,null,3));
                   const mergedMosaics = this.filterUniqueMosaic(mosaicsInfo.concat(this.getDefaultMosaics()));
                   observer.next(mergedMosaics);
               })

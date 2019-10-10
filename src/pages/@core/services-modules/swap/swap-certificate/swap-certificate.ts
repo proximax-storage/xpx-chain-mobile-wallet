@@ -71,6 +71,12 @@ export class SwapCertificatePage {
 
   dismiss() {
     this.viewCtrl.dismiss();
+    this.navCtrl.setRoot(
+      'TabsPage',
+      {
+        animate: true
+      }
+    );
   }
 
 }
