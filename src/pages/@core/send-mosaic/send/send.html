@@ -64,17 +64,17 @@
 
       <!-- Mosaic -->
       <!-- (click)="selectMosaic()" -->
-      <ion-card no-margin-bottom *ngIf="mosaics" (click)="selectMosaic()">
+      <ion-card no-margin-bottom *ngIf="selectedMosaic" (click)="selectMosaic()">
         <ion-item mosaic>
           <ion-avatar item-start>
-            <img [src]="utils.getLogo(mosaics)">
+            <img [src]="utils.getLogo(selectedMosaic)">
           </ion-avatar>
-          <h2 text-uppercase ion-text color="dark" >{{ mosaics.mosaicId }}</h2>
-          <p text-uppercase ion-text color="dark">{{ mosaics.namespaceId }}</p>
+          <h2 text-uppercase ion-text color="dark" >{{ selectedMosaic?.mosaicId }}</h2>
+          <p text-uppercase ion-text color="dark">{{ selectedMosaic?.namespaceId }}</p>
 
           <section item-right>
             <!-- <h2 ion-text color="dark">{{ mosaics?.amount | number:'1.2' }}</h2> -->
-            <h2 ion-text color="dark">{{  mosaics?.amount }}</h2>
+            <h2 ion-text color="dark">{{  selectedMosaic?.amount }}</h2>
             <p text-right text-left ion-text color="dark">
               <small>
                 {{  selectedCoin?.market_data.current_price.usd * mosaics?.amount | currency: 'USD': 'symbol': '1.2-6' }}
@@ -84,7 +84,7 @@
         </ion-item>
       </ion-card>
       
-      <ion-card no-margin-bottom fake-card *ngIf="!mosaics">
+      <ion-card no-margin-bottom fake-card *ngIf="!selectedMosaic">
         <ion-item text-center>
           <ion-spinner name="dots"></ion-spinner>
         </ion-item>
