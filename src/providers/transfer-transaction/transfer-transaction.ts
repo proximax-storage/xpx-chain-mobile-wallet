@@ -1,3 +1,4 @@
+import { HelperProvider } from './../helper/helper';
 import { WalletProvider } from './../wallet/wallet';
 import { AppConfig } from './../../app/app.config';
 import { Injectable } from '@angular/core';
@@ -16,12 +17,18 @@ import { ConfirmedTransactionListener } from 'nem-library';
 */
 @Injectable()
 export class TransferTransactionProvider {
+  getFee() : number {
+    const tx = this.build();
+    console.log("TCL: TransferTransactionProvider -> getFee -> tx", tx);
+    return this.helper.getRelativeAmount(tx.maxFee.compact());
+  }
   httpNodeUrl: any;
 
   constructor(
     private walletProvider: WalletProvider,
     private authProvider: AuthProvider,
     private storage: Storage,
+    private helper: HelperProvider
     ){
 
       this.storage.get("node").then( nodeStorage=>{
