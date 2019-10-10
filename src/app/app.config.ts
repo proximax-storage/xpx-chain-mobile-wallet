@@ -10,6 +10,7 @@ export const AppConfig = {
       networkType: NetworkType.TEST_NET,
       networkGenerationHash: '56D112C98F7A7E34D1AEDC4BD01BC06CA2276DD546A93E36690B785E82439CA9'
     },
+    xpxHexId: '13bfc518e40549d7',
     swap:{
       burnAccountAddress: 'TBF4LAZUEJMBIOC6J24D6ZGGXE5W775TX555CTTN'
     }

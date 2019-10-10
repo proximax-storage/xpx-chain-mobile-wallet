@@ -1,10 +1,12 @@
+import { AppConfig } from './../../app/app.config';
 import { Injectable } from '@angular/core';
 import { ModalController, Platform, ViewController, NavController, App, Events } from 'ionic-angular';
-import { App as AppConfig } from './../app/app';
+import { App as AppProvider } from './../app/app';
 import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../toast/toast';
+import { DefaultMosaic } from '../../models/default-mosaic';
 
 /*
   Generated class for the UtilitiesProvider provider.
@@ -14,7 +16,7 @@ import { ToastProvider } from '../toast/toast';
 */
 @Injectable()
 export class UtilitiesProvider {
-  AppConfig = AppConfig;
+  AppProvider = AppProvider;
 
   constructor(
     private app: App,
@@ -93,29 +95,29 @@ export class UtilitiesProvider {
    * Get the logo of the mosaics
    * @param mosaic The mosaic object for querying the logo
    */
-  getLogo(mosaic: any) {
+  getLogo(mosaic: DefaultMosaic) {
     if (
-      mosaic.namespaceId === 'prx' &&
-      mosaic.mosaicId === 'xpx' || mosaic.mosaicId ===  '3c0f3de5298ced2d'
+      mosaic.namespaceId.toLowerCase() === 'prx' &&
+      mosaic.mosaicId.toLowerCase() === 'xpx' || mosaic.hex.toLowerCase() ===  AppConfig.xpxHexId
     ) {
-      return AppConfig.LOGO.XPX;
+      return AppProvider.LOGO.XPX;
     } else if (
-      mosaic.namespaceId === 'pundix' &&
-      mosaic.mosaicId === 'npxs' || mosaic.mosaicId === '1e29b3356f3e24e5'
+      mosaic.namespaceId.toLowerCase() === 'pundix' &&
+      mosaic.mosaicId.toLowerCase() === 'npxs' || mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
     ) {
-      return AppConfig.LOGO.NPXS;
+      return AppProvider.LOGO.NPXS;
     } else if (
-      mosaic.namespaceId === 'sportsfix' &&
-      mosaic.mosaicId === 'sft' || mosaic.mosaicId === '33b0efbf4a600cc9'
+      mosaic.namespaceId.toLowerCase() === 'sportsfix' &&
+      mosaic.mosaicId.toLowerCase() === 'sft' || mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
     ) {
-      return AppConfig.LOGO.SFT;
+      return AppProvider.LOGO.SFT;
     } else if (
-      mosaic.namespaceId === 'xarcade' &&
-      mosaic.mosaicId === 'xar' || mosaic.mosaicId === '59096674da68a7e5'
+      mosaic.namespaceId.toLowerCase() === 'xarcade' &&
+      mosaic.mosaicId.toLowerCase() === 'xar' || mosaic.hex.toLowerCase() === '59096674da68a7e5'
     ) {
-      return AppConfig.LOGO.XAR;
+      return AppProvider.LOGO.XAR;
     } else {
-      return AppConfig.LOGO.DEFAULT;
+      return AppProvider.LOGO.DEFAULT;
     }
   }
 
@@ -125,24 +127,24 @@ export class UtilitiesProvider {
    */
   getFlag(lang) {
     if (lang.value == "cn") {
-      return AppConfig.FLAGS.CN;
+      return AppProvider.FLAGS.CN;
     } else if (lang.value == "en") {
-      return AppConfig.FLAGS.EN;
+      return AppProvider.FLAGS.EN;
     }  else if (lang.value == "es") {
-      return AppConfig.FLAGS.ES;
+      return AppProvider.FLAGS.ES;
     } else if (lang.value == "fr") {
-      return AppConfig.FLAGS.FR;
+      return AppProvider.FLAGS.FR;
     } else if (lang.value == "jp") {
-      return AppConfig.FLAGS.JP;
+      return AppProvider.FLAGS.JP;
     } else if (lang.value == "kr") {
-      return AppConfig.FLAGS.KR;
+      return AppProvider.FLAGS.KR;
     }
      else if (lang.value == "nl") {
-      return AppConfig.FLAGS.NL;
+      return AppProvider.FLAGS.NL;
     } else if (lang.value == "ru") {
-      return AppConfig.FLAGS.RU;
+      return AppProvider.FLAGS.RU;
     } else if (lang.value == "vt") {
-      return AppConfig.FLAGS.VT;
+      return AppProvider.FLAGS.VT;
     } 
   }
 
