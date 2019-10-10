@@ -1,4 +1,6 @@
 {
+    "APP.MESSAGE.SUCCESS.TITLE": "成功！",
+    "APP.MESSAGE.SUCCESS.SUBTITLE": "トランザクションは現在処理中です。",
     "APP.ERROR":"何か問題がありました。もう一度やり直してください",
     "APP.INVALID.USERNAME_OR_PASSWORD": "入力されたユーザー名またはパスワードは正しくありません",
     "APP.BUTTON.TRY_AGAIN": "再試行する",

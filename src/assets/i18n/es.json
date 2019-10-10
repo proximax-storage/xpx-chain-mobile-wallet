@@ -1,4 +1,6 @@
 {
+    "APP.MESSAGE.SUCCESS.TITLE": "¡Éxito!",
+    "APP.MESSAGE.SUCCESS.SUBTITLE": "Su transacción ahora está siendo procesada.",
     "APP.ERROR":"Algo salió mal. Inténtalo de nuevo",
     "APP.INVALID.USERNAME_OR_PASSWORD": "El nombre de usuario o la contraseña son incorrectos.",
     "APP.BUTTON.TRY_AGAIN": "Inténtalo de nuevo",

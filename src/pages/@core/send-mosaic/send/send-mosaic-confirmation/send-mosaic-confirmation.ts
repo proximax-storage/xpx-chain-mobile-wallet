@@ -1,6 +1,6 @@
 import { MosaicModel } from './../../../../../providers/transfer-transaction/mosaic.model';
 
-import { Component } from '@angular/core';
+import { Component, trigger, transition, style, group, animate } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
@@ -28,7 +28,45 @@ import { TransferTransactionProvider } from '../../../../../providers/transfer-t
 @IonicPage()
 @Component({
   selector: 'page-send-mosaic-confirmation',
-  templateUrl: 'send-mosaic-confirmation.html'
+  templateUrl: 'send-mosaic-confirmation.html',
+  animations: [
+
+    trigger('container', [
+      transition(':enter', [
+          style({opacity: '0'}),
+          group([
+            animate('500ms ease-out', style({opacity: '1'})),
+          ])
+          
+      ]),
+      transition(':leave', [
+          group([
+            animate('500ms ease-out', style({opacity: '0'})),
+          ])
+      ])
+    ]),
+
+    trigger('badge', [
+        transition(':enter', [
+            style({transform: 'translateY(400%)'}),
+            animate('500ms ease-out', style({transform: 'translateY(0)'}))
+        ]),
+        transition(':leave', [
+            animate('500ms ease-in', style({transform: 'translateY(400%)'}))   
+        ])
+    ]),
+
+    trigger('message', [
+      transition(':enter', [
+          style({opacity: '0'}),
+          animate('500ms 1000ms ease-out', style({opacity: '1'}))
+      ]),
+      transition(':leave', [
+          animate('500ms ease-in', style({opacity: '0'}))   
+      ])
+    ])
+
+  ]
 })
 export class SendMosaicConfirmationPage {
   generationHash: any;
@@ -41,6 +79,8 @@ export class SendMosaicConfirmationPage {
   data: any;
 
   fee: number = 0;
+
+  displaySuccessMessage: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -170,23 +210,34 @@ export class SendMosaicConfirmationPage {
               
   }
   showSuccessMessage() {
-    this.haptic.notification({ type: 'success' });
-    this.alertProvider.showMessage(
-      `You sent ${
-      this.data.amount
-      } ${this.data.mosaic.mosaicId.toUpperCase()} to ${
-      this.data.recipientName || this.data.recipientAddress
-      }`
-    );
-    this.utils.setTabIndex(2);
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {},
-      {
-        animate: true,
-        direction: 'backward'
-      }
-    );
+
+    this.displaySuccessMessage = true;
+
+    setTimeout(() => {
+      this.displaySuccessMessage = false;
+
+      this.haptic.notification({ type: 'success' });
+      // this.alertProvider.showMessage(
+      //   `You sent ${
+      //   this.data.amount
+      //   } ${this.data.mosaic.mosaicId.toUpperCase()} to ${
+      //   this.data.recipientName || this.data.recipientAddress
+      //   }`
+      // );
+      this.utils.setTabIndex(2);
+      this.navCtrl.setRoot(
+        'TabsPage',
+        {},
+        {
+          animate: true,
+          direction: 'backward'
+        }
+      );
+
+    }, 3000);
+
+
+    
   }
 
   /**

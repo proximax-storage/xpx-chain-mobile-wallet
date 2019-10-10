@@ -1,4 +1,6 @@
 {
+    "APP.MESSAGE.SUCCESS.TITLE": "成功",
+    "APP.MESSAGE.SUCCESS.SUBTITLE": "您的交易现在正在处理中。",
     "APP.ERROR": "有些不对劲。请再试一次",
     "APP.INVALID.USERNAME_OR_PASSWORD": "您输入的用户名或密码不正确。",
     "APP.BUTTON.TRY_AGAIN": "再试一次",

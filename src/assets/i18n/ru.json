@@ -1,4 +1,6 @@
 {
+    "APP.MESSAGE.SUCCESS.TITLE": "Успех!",
+    "APP.MESSAGE.SUCCESS.SUBTITLE": "Ваша транзакция сейчас обрабатывается.",
     "APP.ERROR":"Что-то пошло не так. Пожалуйста, попробуйте еще раз",
     "APP.INVALID.USERNAME_OR_PASSWORD": "Неверное имя пользователя или пароль.",
     "APP.BUTTON.TRY_AGAIN": "Попробуйте снова",

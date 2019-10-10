@@ -119,4 +119,17 @@
       <ion-col col-12></ion-col>
     </ion-row>
   </ion-grid>
+
+
+  <div padding *ngIf="displaySuccessMessage" class="achievement-container">
+    <div class="medal">
+        <img class="image"  src="assets/imgs/success.svg" />
+    </div>
+    <div padding class="message">
+      <h5 text-center>{{"APP.MESSAGE.SUCCESS.TITLE" | translate}}</h5>
+      <p text-center>{{"APP.MESSAGE.SUCCESS.SUBTITLE" | translate}}</p>
+    </div>
+</div>
+
+
 </ion-content>
