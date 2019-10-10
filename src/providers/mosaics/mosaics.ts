@@ -95,7 +95,7 @@ export class MosaicsProvider {
         return _mosaicAmountView;
       } else {
         _mosaicAmountView.namespaceId = XPX[0].namespaceId; // namespaceId
-        _mosaicAmountView.mosaicId =  XPX[0].namespaceId; // mosaicId
+        _mosaicAmountView.mosaicId =  XPX[0].mosaicId; // mosaicId
         _mosaicAmountView.hex = XPX[0].hex; // mosaic hex id
         _mosaicAmountView.amount = _mosaicAmountView.amount;
         _mosaicAmountView.divisibility = _mosaicAmountView.divisibility;

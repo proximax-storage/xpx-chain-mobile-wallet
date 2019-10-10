@@ -1,28 +1,36 @@
-import { GetBalanceProvider } from './../../../../providers/get-balance/get-balance';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController, Platform } from 'ionic-angular';
+import { GetBalanceProvider } from "./../../../../providers/get-balance/get-balance";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Component } from "@angular/core";
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ViewController,
+  ModalController,
+  Platform
+} from "ionic-angular";
 import {
   SimpleWallet,
   Password,
   Account,
   AccountInfo
-} from 'tsjs-xpx-chain-sdk';
+} from "tsjs-xpx-chain-sdk";
 
-import { App } from '../../../../providers/app/app';
-import { NemProvider } from './../../../../providers/nem/nem';
-import { WalletProvider } from './../../../../providers/wallet/wallet';
-import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { AlertProvider } from '../../../../providers/alert/alert';
+import { App } from "../../../../providers/app/app";
+import { NemProvider } from "./../../../../providers/nem/nem";
+import { WalletProvider } from "./../../../../providers/wallet/wallet";
+import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
+import { AlertProvider } from "../../../../providers/alert/alert";
 
-import { CoingeckoProvider } from '../../../../providers/coingecko/coingecko';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Storage } from '@ionic/storage';
-import { Observable } from 'rxjs';
-import { AuthProvider } from '../../../../providers/auth/auth';
-import { MosaicsProvider } from '../../../../providers/mosaics/mosaics';
-import { ProximaxProvider } from '../../../../providers/proximax/proximax';
-import { TranslateService } from '@ngx-translate/core';
+import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
+import { BarcodeScanner } from "@ionic-native/barcode-scanner";
+import { Storage } from "@ionic/storage";
+import { Observable } from "rxjs";
+import { AuthProvider } from "../../../../providers/auth/auth";
+import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
+import { ProximaxProvider } from "../../../../providers/proximax/proximax";
+import { TranslateService } from "@ngx-translate/core";
+import { DefaultMosaic } from "../../../../models/default-mosaic";
 
 /**
  * Generated class for the SendPage page.
@@ -33,33 +41,31 @@ import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
-  selector: 'page-send',
-  templateUrl: 'send.html'
+  selector: "page-send",
+  templateUrl: "send.html"
 })
 export class SendPage {
-
   wallet: string;
   msgErrorBalance: any;
   msgErrorUnsupported: any;
-  mosaicWallet: any[];
-  mosaics: any = [];
+  mosaics: DefaultMosaic[] = [];
   App = App;
   addressSourceType: { from: string; to: string };
   currentWallet: SimpleWallet;
-  selectedMosaic: any;
+  selectedMosaic: DefaultMosaic;
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
   amount: number;
-  mosaicSelectedName: string;
+  selectedMosaicName: string;
   amountPlaceholder: string = "0";
   periodCount = 0;
   decimalCount: number = 0;
   optionsXPX = {
-    prefix: '',
-    thousands: ',',
-    decimal: '.',
-    precision: '6'
+    prefix: "",
+    thousands: ",",
+    decimal: ".",
+    precision: "6"
   };
 
   constructor(
@@ -80,14 +86,14 @@ export class SendPage {
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider,
-    private translateService: TranslateService,
+    private translateService: TranslateService
   ) {
-    this.mosaicSelectedName = this.navParams.get('mosaicSelectedName');
+    this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
 
-    console.log('this.mosaicSelectedName', this.mosaicSelectedName)
+    console.log("this.mosaicSelectedName", this.selectedMosaicName);
     // If no mosaic selected, fallback to xpx
-    if (!this.mosaicSelectedName) {
-      this.mosaicSelectedName = 'xpx';
+    if (!this.selectedMosaicName) {
+      this.selectedMosaicName = "xpx";
     }
 
     this.init();
@@ -97,66 +103,55 @@ export class SendPage {
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
     this.walletProvider.getSelectedWallet().then(currentWallet => {
-      console.log('currentWallet ', currentWallet)
-      
+      console.log("currentWallet ", currentWallet);
+
       if (!currentWallet) {
         this.navCtrl.setRoot(
-          'TabsPage',
+          "TabsPage",
           {},
           {
             animate: true,
-            direction: 'backward'
+            direction: "backward"
           }
         );
       } else {
-        if (this.selectedMosaic) {
-          this.selectedMosaic;
-          this.form.get('amount').setValue(null);
-        } else {
-          // this.mosaics = [{
-          //   mosaicId: "xpx", 
-          //   namespaceId: "prx", 
-          //   hex: "3c0f3de5298ced2d", 
-          //   amount: "0.000000"
-          // }]
-          // console.log('por defecto', this.mosaics)
-          this.currentWallet = currentWallet;
-          this.getAccount(this.currentWallet).subscribe(account => {
-            this.wallet = account.address.plain()
-            this.getAccountInfo(account).subscribe(async accountInfo => {
-              this.mosaicWallet = accountInfo.mosaics
-              this.selectedMosaic = accountInfo.mosaics
-              await this.mosaicsProvider.getOwnedMosaic( this.selectedMosaic ).then(result => {
-                result.forEach(mosaics => {
-                    if (mosaics.mosaicId === 'xpx') {
-                      this.mosaics = mosaics
-                      this.selectedMosaic = mosaics
-                    }
-    
-                    let mosaic = this.mosaics.mosaicId;
-                    let coinId: string;
-    
-                    if (mosaic === 'xpx') {
-                      coinId = 'proximax';
-                    } else if (mosaic === 'npxs') {
-                      coinId = 'pundi-x';
-                    }
-                    // Get coin price
-                    if (coinId) {
-                      this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
-                        this.selectedCoin = coin;
-                      });
-                    }
-                  })
-              })
+        this.currentWallet = currentWallet;
+
+        this.getAccount(this.currentWallet).subscribe(account => {
+          this.wallet = account.address.plain();
+
+          this.mosaicsProvider
+            .getMosaics(account.address)
+            .subscribe(mosaics => {
+              this.mosaics = mosaics;
+
+              mosaics.forEach(_mosaic => {
+                if (_mosaic.mosaicId === this.selectedMosaicName) {
+                  this.selectedMosaic = _mosaic;
+                }
+
+                let mosaicId = _mosaic.mosaicId;
+                let coinId: string;
+
+                if (mosaicId === "xpx") {
+                  coinId = "proximax";
+                } else if (mosaicId === "npxs") {
+                  coinId = "pundi-x";
+                }
+
+                // Get coin price
+                // Check if  null
+                if (coinId) {
+                  this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
+                    this.selectedCoin = coin;
+                  });
+                }
+              });
             });
-          });
-        }
+        });
         // Set sender address to currenWallet.address
-        this.form.get('senderName').setValue(this.currentWallet.name);
-        this.form
-          .get('senderAddress')
-          .setValue(this.currentWallet.address);
+        this.form.get("senderName").setValue(this.currentWallet.name);
+        this.form.get("senderAddress").setValue(this.currentWallet.address);
       }
     });
   }
@@ -173,55 +168,60 @@ export class SendPage {
   private getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
-      this.authProvider
-        .getPassword()
-        .then(password => {
-          // Get user's passwordmosaics
-          const myPassword = new Password(password);
+      this.authProvider.getPassword().then(password => {
+        // Get user's passwordmosaics
+        const myPassword = new Password(password);
 
-          // Convert current wallet to SimpleWallet
-          const myWallet = this.walletProvider.convertToSimpleWallet(wallet)
+        // Convert current wallet to SimpleWallet
+        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
 
-          // Unlock wallet to get an account using user's password 
-          const account = myWallet.open(myPassword);
+        // Unlock wallet to get an account using user's password
+        const account = myWallet.open(myPassword);
 
-          observer.next(account);
-        });
+        observer.next(account);
+      });
     });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SendPage');
-    this.storage.set('isQrActive', true);
+    console.log("ionViewDidLoad SendPage");
+    this.storage.set("isQrActive", true);
   }
 
   ionViewDidLeave() {
-    this.storage.set('isQrActive', false);
+    this.storage.set("isQrActive", false);
   }
 
   init() {
     // Initialize form
     this.form = this.formBuilder.group({
-      senderName: '',
-      senderAddress: [''],
-      recipientName: '',
-      recipientAddress: ['', [Validators.required, Validators.minLength(40), Validators.maxLength(46)]],
+      senderName: "",
+      senderAddress: [""],
+      recipientName: "",
+      recipientAddress: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(40),
+          Validators.maxLength(46)
+        ]
+      ],
       isMosaicTransfer: [false, Validators.required],
-      message: [''],
-      amount: ['', Validators.required],
-      fee: ['']
+      message: [""],
+      amount: ["", Validators.required],
+      fee: [""]
     });
 
     // Initialize source type of NEM address in from and to
     this.addressSourceType = {
-      from: 'contact',
-      to: 'contact'
+      from: "contact",
+      to: "contact"
     };
 
     // Defaults to manual contact input
-    this.addressSourceType.to = 'manual';
-    if (this.addressSourceType.to === 'manual') {
-      this.form.get('recipientAddress').setValue('');
+    this.addressSourceType.to = "manual";
+    if (this.addressSourceType.to === "manual") {
+      this.form.get("recipientAddress").setValue("");
     }
 
     this.fee = 0;
@@ -230,76 +230,88 @@ export class SendPage {
 
   subscribeValue() {
     // Account recipient
-    this.form.get('recipientAddress').valueChanges.subscribe(
-      value => {
-        console.log('value', value)
-        const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
+    this.form.get("recipientAddress").valueChanges.subscribe(value => {
+      console.log("value", value);
+      const accountRecipient =
+        value !== undefined && value !== null && value !== ""
+          ? value.split("-").join("")
+          : "";
 
-        if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40 ) {
-          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
-            // this.blockSendButton = true;
-            this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
-          } else {
-            // this.blockSendButton = false;
-            this.msgErrorUnsupported = '';
-          }
-        } else {
+      if (
+        accountRecipient !== null &&
+        accountRecipient !== undefined &&
+        accountRecipient.length === 40
+      ) {
+        if (
+          !this.proximaxProvider.verifyNetworkAddressEqualsNetwork(
+            this.walletProvider.selectedWallet.address.plain(),
+            accountRecipient
+          )
+        ) {
           // this.blockSendButton = true;
-          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID");
-        }
-      }
-    );
-
-    this.form.get('amount').valueChanges.subscribe(
-      value => {
-        console.log('value', String(value))
-        console.log('value', typeof(this.mosaics.amount))
-        if (value > this.mosaics.amount) {
-          this.msgErrorBalance = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
+          this.msgErrorUnsupported = this.translateService.instant(
+            "WALLETS.SEND.ADDRESS.UNSOPPORTED"
+          );
         } else {
-          this.msgErrorBalance = '';
+          // this.blockSendButton = false;
+          this.msgErrorUnsupported = "";
         }
+      } else {
+        // this.blockSendButton = true;
+        this.msgErrorUnsupported = this.translateService.instant(
+          "WALLETS.SEND.ADDRESS.INVALID"
+        );
       }
-    );
+    });
+
+    this.form.get("amount").valueChanges.subscribe(value => {
+      if (value > this.selectedMosaic.amount) {
+        this.msgErrorBalance = this.translateService.instant(
+          "WALLETS.SEND.ERROR.BALANCE"
+        );
+      } else {
+        this.msgErrorBalance = "";
+      }
+    });
   }
 
   onChangeFrom(val) {
-    if (val === 'manual') {
-      this.form.get('senderName').setValue(null);
-      this.form.get('senderAddress').setValue(null);
+    if (val === "manual") {
+      this.form.get("senderName").setValue(null);
+      this.form.get("senderAddress").setValue(null);
     } else {
-      this.form.get('senderName').setValue('Current wallet');
+      this.form.get("senderName").setValue("Current wallet");
       this.form
-        .get('senderAddress')
+        .get("senderAddress")
         .setValue(this.currentWallet.address.plain());
     }
   }
 
   onChangeTo(val) {
-    if (val === 'manual') {
-      this.form.get('recipientName').setValue(null);
-      this.form.get('recipientAddress').setValue(null);
+    if (val === "manual") {
+      this.form.get("recipientName").setValue(null);
+      this.form.get("recipientAddress").setValue(null);
     }
-    if (val === 'qrcode') {
+    if (val === "qrcode") {
       this.scan();
     }
   }
 
   selectMosaic() {
     this.utils
-      .showInsetModal('SendMosaicSelectPage', {
-        selectedMosaic: this.mosaicWallet,
+      .showInsetModal("SendMosaicSelectPage", {
+        selectedMosaic: this.selectMosaic,
         walletAddress: this.currentWallet.address.plain()
       })
       .subscribe(data => {
         if (data) {
           this.optionsXPX = {
-            prefix: '',
-            thousands: ',',
-            decimal: '.',
+            prefix: "",
+            thousands: ",",
+            decimal: ".",
             precision: data.disivitity
           };
-          console.log('mosaics retornado', data)
+          console.log("mosaics retornado", data);
           this.selectedMosaic = data;
           this.mosaics = data;
         }
@@ -308,11 +320,11 @@ export class SendPage {
 
   selectContact(title) {
     this.utils
-      .showInsetModal('SendContactSelectPage', { title: title })
+      .showInsetModal("SendContactSelectPage", { title: title })
       .subscribe(data => {
         if (data != undefined || data != null) {
-          this.form.get('recipientName').setValue(data.name);
-          this.form.get('recipientAddress').setValue(data.address);
+          this.form.get("recipientName").setValue(data.name);
+          this.form.get("recipientAddress").setValue(data.address);
         }
       });
   }
@@ -321,13 +333,13 @@ export class SendPage {
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
   onSubmit() {
-    if (!this.form.get('amount').value) this.form.get('amount').setValue(0);
+    if (!this.form.get("amount").value) this.form.get("amount").setValue(0);
     if (
-      !this.form.get('senderAddress').value ||
-      !this.form.get('recipientAddress').value
+      !this.form.get("senderAddress").value ||
+      !this.form.get("recipientAddress").value
     ) {
-      if (this.addressSourceType.to === 'contact') {
-        this.alertProvider.showMessage('Please select a recipient first.');
+      if (this.addressSourceType.to === "contact") {
+        this.alertProvider.showMessage("Please select a recipient first.");
       } else {
         this.alertProvider.showMessage(
           "Please enter the recipient's address first."
@@ -337,43 +349,38 @@ export class SendPage {
     }
 
     try {
-      let recipient = (
-        this.form
-          .get('recipientAddress')
-          .value.toUpperCase()
-          .replace('-', '')
-      );
+      let recipient = this.form
+        .get("recipientAddress")
+        .value.toUpperCase()
+        .replace("-", "");
+      let message = this.form.get("message").value;
+      const prueba = this.selectedCoin.market_data.current_price.usd;
+      console.log("por este multiploca", prueba);
+      let total =
+        this.selectedCoin.market_data.current_price.usd *
+        Number(this.form.get("amount").value);
 
-      // Check the validity of an address
-      // if (this.proximaxProvider.isValidAddress(recipient)) {
-      //   console.log('-------------' )
-      //   this.alertProvider.showMessage(
-      //     this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
-      //   );
-      // } else {
-        // Compute total
-        let message = this.form.get('message').value;
-        const prueba = this.selectedCoin.market_data.current_price.usd;
-        console.log('por este multiploca', prueba)
-        let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get('amount').value);
-
-        // Show confirm transaction
-        let page = "SendMosaicConfirmationPage";
-        const modal = this.modalCtrl.create(page, {
+      // Show confirm transaction
+      let page = "SendMosaicConfirmationPage";
+      const modal = this.modalCtrl.create(
+        page,
+        {
           ...this.form.value,
           mosaic: this.selectedMosaic,
           currentWallet: this.currentWallet,
-          transactionType: 'normal',
+          transactionType: "normal",
           total: total,
           message: message
-        }, {
-            enableBackdropDismiss: false,
-            showBackdrop: true
-          });
-        modal.present();
+        },
+        {
+          enableBackdropDismiss: false,
+          showBackdrop: true
+        }
+      );
+      modal.present();
       // }
     } catch (err) {
-      console.log('puto')
+      console.log("puto");
       this.alertProvider.showMessage(
         this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
       );
@@ -386,21 +393,28 @@ export class SendPage {
 
   scan() {
     this.storage.set("isQrActive", true);
-    this.barcodeScanner.scan().then(barcodeData => {
-      console.log('Barcode data', JSON.stringify(barcodeData, null, 4));
-      barcodeData.format = "QR_CODE";
-      // let payload = JSON.parse(barcodeData.text);
-      // this.form.patchValue({ recipientName: payload.data.name })
-      this.form.patchValue({ recipientAddress: barcodeData.text })
-      // this.storage.set('isModalShown', false);
-    }).catch(err => {
-      console.log('Error', err);
-      if (err.toString().indexOf(this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")) >= 0) {
-        let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2")
-        this.alertProvider.showMessage(message);
-        // this.storage.set('isModalShown', false);
-      }
-    });
+    this.barcodeScanner
+      .scan()
+      .then(barcodeData => {
+        console.log("Barcode data", JSON.stringify(barcodeData, null, 4));
+        barcodeData.format = "QR_CODE";
+        this.form.patchValue({ recipientAddress: barcodeData.text });
+      })
+      .catch(err => {
+        console.log("Error", err);
+        if (
+          err
+            .toString()
+            .indexOf(
+              this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")
+            ) >= 0
+        ) {
+          let message = this.translateService.instant(
+            "WALLETS.SEND.ERROR.CAMERA2"
+          );
+          this.alertProvider.showMessage(message);
+        }
+      });
   }
 
   clearPlaceholder() {
@@ -414,16 +428,25 @@ export class SendPage {
   }
 
   checkAllowedInput(e) {
-    const AMOUNT = this.form.get('amount').value;
+    const AMOUNT = this.form.get("amount").value;
     console.log("LOG: SendPage -> checkAllowedInput -> AMOUNT", AMOUNT);
 
     // Prevent "+" and "-"
-    if (e.key === "-" || e.key === "+" || e.charCode === 43 || e.charCode === 45 || e.keyCode === 189 || e.keyCode === 187 || e.key === "Unindentified" || e.keyCode === 229) {
+    if (
+      e.key === "-" ||
+      e.key === "+" ||
+      e.charCode === 43 ||
+      e.charCode === 45 ||
+      e.keyCode === 189 ||
+      e.keyCode === 187 ||
+      e.key === "Unindentified" ||
+      e.keyCode === 229
+    ) {
       e.preventDefault();
       if (AMOUNT == null) {
-        this.form.get('amount').setValue("")
-        this.form.get('amount').reset();
-        this.periodCount = 0
+        this.form.get("amount").setValue("");
+        this.form.get("amount").reset();
+        this.periodCount = 0;
       }
     }
 
@@ -435,8 +458,13 @@ export class SendPage {
       e.preventDefault();
     }
 
-    if ((e.charCode >= 48 && e.charCode <= 57) || (e.key == "." || e.charCode == 46 || e.keyCode == 8 || e.key == "Backspace")) {
-
+    if (
+      (e.charCode >= 48 && e.charCode <= 57) ||
+      (e.key == "." ||
+        e.charCode == 46 ||
+        e.keyCode == 8 ||
+        e.key == "Backspace")
+    ) {
       // Check for "." or char code "46"
       if (e.key == "." || e.charCode == 46) {
         ++this.periodCount;
@@ -446,7 +474,10 @@ export class SendPage {
         e.preventDefault();
         --this.periodCount;
       }
-      console.log("LOG: SendPage -> checkAllowedInput -> this.periodCount", this.periodCount);
+      console.log(
+        "LOG: SendPage -> checkAllowedInput -> this.periodCount",
+        this.periodCount
+      );
     }
   }
 }
