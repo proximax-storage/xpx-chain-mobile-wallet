@@ -110,7 +110,7 @@
     "rxjs-compat": "^6.5.3",
     "short-num": "0.2.0",
     "sw-toolbox": "3.6.0",
-    "tsjs-xpx-chain-sdk": "^0.6.0",
+    "tsjs-xpx-chain-sdk": "^0.6.1",
     "uniqid": "5.0.3",
     "zone.js": "0.8.26"
   },

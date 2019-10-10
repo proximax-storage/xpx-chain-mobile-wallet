@@ -145,6 +145,9 @@ export class ProximaxProvider {
     // return null;
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
   }
+  mosaicsAmountViewFromAddress(address: Address) : Observable<MosaicAmountView[]> {
+    return this.mosaicService.mosaicsAmountViewFromAddress(address);
+  }
 
   createFromRawAddress(address: string): Address {
     return Address.createFromRawAddress(address);

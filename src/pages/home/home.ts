@@ -15,6 +15,7 @@ import { TransactionsProvider } from '../../providers/transactions/transactions'
 import { Observable, from } from 'rxjs';
 import { animate, style, transition, trigger } from "@angular/animations";
 import { DefaultMosaic } from '../../models/default-mosaic';
+import { mergeMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'page-home',
@@ -151,37 +152,35 @@ export class HomePage {
             this.selectedAccount = account;
 
             try {
-              this.walletProvider.getAccountInfo(account).subscribe(accountInfo => {
-                console.log("5. LOG: HomePage -> ionViewWillEnter -> accountInfo", accountInfo);
 
-                // Owned mosaics
-                const ownedMosaics = accountInfo.mosaics
-                console.log('Owned mosaics', ownedMosaics)
 
-                // Merge owned mosaics & default mosaics
-                const myMergedMosaics = from(this.mosaicsProvider.getMosaicInfo(ownedMosaics));
+              this.mosaicsProvider.mosaicsAmountViewFromAddress(account.address)
+              .pipe(
+                mergeMap((_) => _),
+              )
+              .toPromise()
+              .then(mosaicAmountView=>{
+                console.log("5. LOG: HomePage -> ionViewWillEnter -> mosaicAmountView", mosaicAmountView);
+                console.log('You have', mosaicAmountView.relativeAmount(), mosaicAmountView.fullName(), mosaicAmountView.mosaicInfo.mosaicId);
+               
+                const _myMergedMosaics = this.mosaicsProvider.getMosaicMetaData(mosaicAmountView);
+                console.log("TCL: HomePage -> init -> merged", _myMergedMosaics)
 
-                myMergedMosaics.subscribe(_myMergedMosaics => {
-                  console.log('6. LOG: HomePage -> init -> _myMergedMosaics');
-                  this.mosaics = _myMergedMosaics;
+                console.log('6. LOG: HomePage -> init -> _myMergedMosaics');
+                this.mosaics = _myMergedMosaics;
 
-                  // Compute wallet balance in USD
-                  console.log("7. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
-                  this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
-                    this.totalWalletBalance = total as number;
-                    console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
-                    // loader.dismiss();
-                  });
+                // Compute wallet balance in USD
+                console.log("7. LOG: HomePage -> computeTotalBalance -> mosaics", _myMergedMosaics)
+                this.mosaicsProvider.computeTotalBalance(_myMergedMosaics).then(total => {
+                  this.totalWalletBalance = total as number;
+                  console.log("SIRIUS CHAIN WALLET: HomePage -> init -> total", total)
+                  // loader.dismiss();
+                });
 
-                  // Show Transactions
-                  console.log("8. LOG: HomePage -> getTransactions -> selectedWallet", this.selectedWallet);
-                  this.getTransactions(account);
-                  this.getTransactionsUnconfirmed(account);
-                  // this.hideLoaders();
-                })
-              }, err => {
-                // this.hideLoaders();
-                this.showEmptyMessage();
+                // Show Transactions
+                console.log("8. LOG: HomePage -> getTransactions -> selectedWallet", this.selectedWallet);
+                this.getTransactions(account);
+                this.getTransactionsUnconfirmed(account);
               })
             } catch (error) {
               // this.hideLoaders();
