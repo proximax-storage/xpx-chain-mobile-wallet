@@ -73,11 +73,11 @@
           <p text-uppercase ion-text color="dark">{{ selectedMosaic?.namespaceId }}</p>
 
           <section item-right>
-            <!-- <h2 ion-text color="dark">{{ mosaics?.amount | number:'1.2' }}</h2> -->
+            <!-- <h2 ion-text color="dark">{{ selectedMosaic?.amount | number:'1.2' }}</h2> -->
             <h2 ion-text color="dark">{{  selectedMosaic?.amount }}</h2>
             <p text-right text-left ion-text color="dark">
               <small>
-                {{  selectedCoin?.market_data.current_price.usd * mosaics?.amount | currency: 'USD': 'symbol': '1.2-6' }}
+                {{  selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount | currency: 'USD': 'symbol': '1.2-6' }}
               </small>
             </p>
           </section>

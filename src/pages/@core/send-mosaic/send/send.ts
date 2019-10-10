@@ -1,3 +1,4 @@
+import { AppConfig } from './../../../../app/app.config';
 import { GetBalanceProvider } from "./../../../../providers/get-balance/get-balance";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Component } from "@angular/core";
@@ -52,7 +53,7 @@ export class SendPage {
   App = App;
   addressSourceType: { from: string; to: string };
   currentWallet: SimpleWallet;
-  selectedMosaic: DefaultMosaic;
+  selectedMosaic: DefaultMosaic = new DefaultMosaic({namespaceId: 'prx', mosaicId:'xpx', hex:AppConfig.xpxHexId, amount:0, divisibility:0})
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
