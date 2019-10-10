@@ -170,16 +170,20 @@ export class WalletInfoPage {
         console.log("TCL: onSubmit -> this.credentials.privateKey", this.credentials.privateKey)
         // return;
         
-        this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.privateKey, AppConfig.sirius.networkType)
-        console.log('this.publicAccount publicKey', this.publicAccount.publicKey)
+        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.privateKey, AppConfig.sirius.networkType)
+        console.log('this.publicAccount publicKey', publicAccount.publicKey)
         
         const account = this.nemProvider.createAccountPrivateKey(this.privateKey);
         console.log('this.account', account)
         
-        const transaction = await this.nemProvider.createTransaction(this.publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
+        const transaction = await this.nemProvider.createTransaction(publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
         this.transferTransaction = transaction;
 
-        console.log('this.account', this.transferTransaction)
+
+
+        console.log('this.transferTransaction', this.transferTransaction)
+
+        return;
         
         this.nemProvider.anounceTransaction(transaction, account)
           .then(resp => {

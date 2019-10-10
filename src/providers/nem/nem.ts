@@ -33,6 +33,7 @@ import { Crypto } from "tsjs-xpx-chain-sdk";
 export class NemProvider{
   js_joda_1 = require("js-joda");
   transactionHttp: TransactionHttp;
+  
   wallets: SimpleWallet[];
   accountHttp: AccountHttp;
   assetHttp: AssetHttp;
