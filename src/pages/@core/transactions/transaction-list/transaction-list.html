@@ -83,40 +83,15 @@
   </ion-list>
   <!-- ./Transactions -->
 
-  <!-- Infinite scroll -->
-  <!-- <ion-infinite-scroll *ngIf="!showEmptyMessage"  (ionInfinite)="doInfinite($event)" threshold="100px">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more transactions...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll> -->
-  <!-- ./Infinite scroll -->
-
   <ion-grid padding empty *ngIf="showEmptyMessage" reduce-margin-top>
     <ion-row padding>
       
       <ion-col>
           <br><br>
         <img quarter-width [src]="App.STICKERS.SORRY">
-        <!-- 
-            <h4 ion-text color="darkgreen" text-wrap>
-              No transactions yet
-            </h4> -->
-
         <h6 ion-text color="grey" text-wrap>
           <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
         </h6>
-
-        <!-- <p text-wrap>
-              Start by sending mosaics to your new wallet
-            </p> -->
-
-        <!-- 
-            <h6 ion-text color="darkgreen" text-wrap>
-              Start by sending mosaics to your new wallet
-            </h6> -->
-        <!--     
-            <button gradient-button color-5 color="dark" (click)="showReceiveModal()">
-              Topup now
-            </button> -->
       </ion-col>
     </ion-row>
   </ion-grid>

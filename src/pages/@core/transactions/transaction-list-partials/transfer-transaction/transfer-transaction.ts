@@ -38,18 +38,14 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    const TX = this.tx;
-    // console.log('tx', TX)
-    // const MOSAICS = [...this.mosaics]
-    // const arr= this.tx.mosaics.map(x => x.id);
-    // this.array.push(new MosaicId([arr[0].id.lower, arr[0].id.higher]))       
+    const _tx = this.tx;
     this.MOSAIC_INFO = this.mosaics.find(mosaic => {
-      return mosaic.hex == TX.mosaics[0].id.id.toHex()
+      return mosaic.hex == _tx.mosaics[0].id.id.toHex()
     });
 
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     console.log('this.LOGO', this.LOGO)
     this.STATUS = this.status;
-    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(TX.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
+    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(_tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
   }
 }
