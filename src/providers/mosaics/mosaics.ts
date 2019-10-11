@@ -70,8 +70,16 @@ export class MosaicsProvider {
       scan((acc, v) => acc.concat(v), []),
       last()
     )
-    .subscribe(mosaicAmountViewArray =>{     
-      observer.next(this.getMosaicMetaData(mosaicAmountViewArray));
+    .subscribe(async mosaicAmountViewArray =>{     
+
+      // Filter out expired mosaics (5760)
+      const activeMosaics = await mosaicAmountViewArray.filter((_:MosaicAmountView)=> _.mosaicInfo.duration.compact() != 5760 && _.mosaicInfo.duration.compact() != 11520)
+
+      activeMosaics.forEach((_:MosaicAmountView)=>{
+        console.log("TCL: MosaicsProvider -> _.mosaicInfo.duration.compact();", _.mosaicInfo.mosaicId.toHex(),_.mosaicInfo.duration.compact(), _.mosaicInfo );
+      })
+
+      observer.next(this.getMosaicMetaData(activeMosaics));
     })
   })
   }
@@ -108,15 +116,6 @@ export class MosaicsProvider {
 
     console.log("TCL: MosaicsProvider -> getMosaicMetaData -> _mosaicAmountViewArray", _mosaicAmountViewArray)
     return _mosaicAmountViewArray;
-
-    // this.filterUniqueMosaic(_mosaicAmountViewArray);
-
-    // })
-    // console.log("TCL: getMosaicMetaData -> _mosaicAmountViewArray", JSON.stringify(_mosaicAmountViewArray, null, 3));
-    
-
-    
-    
   }
 
   /**
@@ -312,7 +311,10 @@ export class MosaicsProvider {
     }
   }
 
-  // TODO: Refactor
+  /**
+   * @deprecated
+   * @param mosacis 
+   */
    async getOwnedMosaic(mosacis) {
     this.mosaics = [];
     const mosaicsIds = mosacis.map(data => data.id);
@@ -336,7 +338,12 @@ export class MosaicsProvider {
 
 
 
-  // TODO: Remove
+  /**
+   * @deprecated
+   * @param mosacis 
+   * @param mosaicsInfo 
+   * @param mosaicsIds 
+   */
   async continue(mosacis, mosaicsInfo, mosaicsIds){
     // console.log('--------------------------info', mosaicsInfo)
     this.mosacisAnt = mosacis
@@ -380,6 +387,10 @@ export class MosaicsProvider {
     return this.mosaics;
   }
 
+  /**
+   * @deprecated
+   * @param mosaicsId 
+   */
   async searchInfoMosaics(mosaicsId: MosaicId[]): Promise<MosaicsStorage[]> {
     try {
       let findMosaicsByNamespace: (MosaicId | NamespaceId)[] = [];

@@ -128,9 +128,12 @@ export class TransferTransactionProvider {
       setTimeout(async () => {
         try {
           const status = await transactionHttp.getTransactionStatus(txn.hash).toPromise();
-          console.log('TCL: SimpleTransfer -> status, ' + status);
+          console.log('TCL: SimpleTransfer -> status, ' + JSON.stringify(status, null, 3));
           if (status.group === 'confirmed') {
+            // TODO: notification
             resolve(true);
+          } else if(status.group === 'unconfirmed') {
+            // TODO: notification
           } else {
             this.checkTransaction(txn);
           }

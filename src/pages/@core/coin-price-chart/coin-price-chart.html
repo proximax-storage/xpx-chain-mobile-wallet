@@ -95,12 +95,6 @@
     </ion-list>
     <!-- ./Transactions -->
 
-    <!-- Infinite scroll -->
-    <!-- <ion-infinite-scroll (ionInfinite)="doInfinite()">
-      <ion-infinite-scroll-content loadingSpinner="dots" loadingText="Loading more transactions">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll> -->
-    <!-- ./Infinite scroll -->
 
     <ion-grid padding empty *ngIf="showEmptyMessage" reduce-margin-top>
       <ion-row padding>
@@ -260,27 +254,6 @@
       </ion-card>
 
     </ion-list>
-  </div>
-  <div *ngIf="showEmptyMosaic">
-    <ion-grid padding empty>
-      <ion-row>
-        <ion-col>
-          <p>
-          </p>
-        </ion-col>
-      </ion-row>
-      <br>
-      <ion-row>
-        <ion-col>
-          <img quarter-width [src]="App.STICKERS.SORRY">
-
-          <h6 ion-text color="grey" text-wrap>
-            <strong>{{"APP.EMPTY.MOSAICS.INFO" | translate}}</strong>
-          </h6>
-
-        </ion-col>
-      </ion-row>
-    </ion-grid>
   </div>
 
   <!-- Info -->
