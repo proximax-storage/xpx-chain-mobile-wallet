@@ -20,8 +20,8 @@
       *ngFor="let mosaic of mosaics" (click)="onSelect(mosaic);onSubmit()">
       <ion-item>
         <img logo-medium item-left [src]="utils.getLogo(mosaic)">
-        <h2 text-uppercase ion-text color="dark">{{ mosaic.mosaicId }}</h2>
-        <p text-uppercase ion-text color="dark">{{ mosaic.namespaceId }}</p>
+        <h2 text-uppercase ion-text color="dark">{{ mosaic.mosaicId || ''}}</h2>
+        <p text-uppercase ion-text color="dark">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</p>
 
         <section item-right>
           <!-- <h2 ion-text color="dark">{{ mosaic.amount | number:'1.2' }}</h2> -->

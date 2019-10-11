@@ -40,8 +40,8 @@
               <ion-avatar item-start>
                 <img [src]="utils.getLogo(data.mosaic)">
               </ion-avatar>
-              <h2 text-uppercase ion-text color="dark">{{ data.mosaic.mosaicId }}</h2>
-              <p text-uppercase ion-text color="dark">{{ data.mosaic.namespaceId }}</p>
+              <h2 text-uppercase ion-text color="dark">{{ data.mosaic.mosaicId || '' }}</h2>
+              <p text-uppercase ion-text color="dark">{{  data.mosaic.namespaceId || data.mosaic.hex.toLocaleUpperCase()}}</p>
 
               <section item-right>
                 <h2 ion-text color="dark">{{ data.amount | number: '1.6-6'  }}</h2>

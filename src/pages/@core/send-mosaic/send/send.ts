@@ -128,7 +128,7 @@ export class SendPage {
 
               mosaics.forEach(_mosaic => {
                 if (_mosaic.mosaicId === this.selectedMosaicName) {
-                  this.selectedMosaic = _mosaic;
+                  this.selectedMosaic = this.selectedMosaic.divisibility===0? _mosaic : this.selectedMosaic ;
                 }
 
                 let mosaicId = _mosaic.mosaicId;
@@ -157,14 +157,6 @@ export class SendPage {
     });
   }
 
-  private getAccountInfo(account: Account): Observable<AccountInfo> {
-    return new Observable(observer => {
-      const accountInfo = this.walletProvider.getAccountInfo(account);
-      accountInfo.subscribe(accountInfo => {
-        observer.next(accountInfo);
-      });
-    });
-  }
 
   private getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
@@ -305,16 +297,16 @@ export class SendPage {
         walletAddress: this.currentWallet.address.plain()
       })
       .subscribe(data => {
+      console.log("TCL: SendPage -> selectMosaic -> data", data)
         if (data) {
           this.optionsXPX = {
             prefix: "",
             thousands: ",",
             decimal: ".",
-            precision: data.disivitity
+            precision: data.divisibility
           };
-          console.log("mosaics retornado", data);
           this.selectedMosaic = data;
-          this.mosaics = data;
+          // this.mosaics = data;
         }
       });
   }
