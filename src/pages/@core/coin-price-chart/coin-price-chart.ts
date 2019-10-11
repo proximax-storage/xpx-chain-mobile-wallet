@@ -15,7 +15,7 @@ import {
   Transaction,
   TransactionType,
   MultisigAccountInfo,
-  MosaicId,
+  TransferTransaction,
 } from 'tsjs-xpx-chain-sdk';
 
 import { GetMarketPricePipe } from '../../../pipes/get-market-price/get-market-price';
@@ -27,7 +27,6 @@ import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { DefaultMosaic } from '../../../models/default-mosaic';
 import { ProximaxProvider } from '../../../providers/proximax/proximax';
-import { MosaicsProvider } from '../../../providers/mosaics/mosaics';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -59,7 +58,7 @@ export class CoinPriceChartPage {
 
   selectedAccount: any;
   fakeList: Array<any>;
-  confirmedTransactions: any[]=[];
+  confirmedTransactions: TransferTransaction[]=[];
   showEmptyMessage: boolean;
   isLoading: boolean;
 
@@ -100,7 +99,6 @@ export class CoinPriceChartPage {
     private haptic: HapticProvider,
     private browserTab: BrowserTab,
     private safariViewController: SafariViewController,
-    private mosaicsProvider: MosaicsProvider,
   ) { 
     this.selectedSegment = 'transactions';
     this.durations = [
@@ -114,8 +112,8 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
+    console.log("TCL: CoinPriceChartPage -> payload", payload)
 
-    console.log('**************', payload)
     this.mosaicHex = payload.mosaicHex;
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
@@ -126,20 +124,14 @@ export class CoinPriceChartPage {
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;
 
-    console.log('acount ****', this.account )
-
-    this.confirmed.forEach(confirmed => {
-      let mosaics = confirmed.mosaics;
-      mosaics.forEach(async mosac => {
-         const array = [(new MosaicId([mosac['id'].id.lower, mosac['id'].id.higher]))]
-         await this.mosaicsProvider.searchInfoMosaics(array).then( valor => { 
-          if(mosac.id.toHex() === this.mosaicHex || valor[0].mosaicNames.names[0].namespaceId.toHex() == mosac.id.id.toHex()){
-            this.confirmedTransactions.push(confirmed);
-            this.showEmptyMessage = false;
+    this.confirmed.forEach((confirmed:TransferTransaction) => {
+      confirmed.mosaics.forEach(async _mosaic => {
+        if(_mosaic.id.toHex().toLowerCase() == this.mosaicHex){
+          this.confirmedTransactions.push(confirmed);
+          this.showEmptyMessage = false;
         }
-         });
       });
-    });
+    });    
     
     if(this.confirmedTransactions.length < 1){
       this.showEmptyMessage = true;

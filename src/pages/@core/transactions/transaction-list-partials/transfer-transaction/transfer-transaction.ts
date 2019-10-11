@@ -7,6 +7,7 @@ import { TransferTransaction } from '../../../../../models/transfer-transaction'
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 import { MosaicId } from 'tsjs-xpx-chain-sdk';
+import { AppConfig } from '../../../../../app/app.config';
 
 @Component({
   selector: 'transfer-transaction',
@@ -15,23 +16,21 @@ import { MosaicId } from 'tsjs-xpx-chain-sdk';
 export class TransferTransactionComponent {
   hiden: boolean;
   @Input() tx: TransferTransaction; // Type conversion for better code completion
-  @Input() mosaics: any[] = [] ;
+  @Input() mosaics: DefaultMosaic[] = [] ;
   @Input() owner: string;
   @Input() status: string;
   
   App = App;
   LOGO: string = App.LOGO.DEFAULT;
   AMOUNT: number = 0;
-  MOSAIC_INFO: DefaultMosaic = null;
+  MOSAIC_INFO: DefaultMosaic = new DefaultMosaic({namespaceId: 'prx', mosaicId:'xpx', hex:AppConfig.xpxHexId, amount:0, divisibility:0});
   STATUS:string = '';
   array: any[]=[];
 
   constructor(
     private mosaicsProvider: MosaicsProvider,
     private utils: UtilitiesProvider
-    ){
-
-      
+    ){      
   }
 
   ngOnInit() {
@@ -39,21 +38,14 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    const TX = this.tx;
-    // console.log('tx', TX)
-    const MOSAICS = [...this.mosaics]
-    const arr= this.tx.mosaics.map(x => x.id);
-    this.array.push(new MosaicId([arr[0].id.lower, arr[0].id.higher])) 
-    await this.mosaicsProvider.searchInfoMosaics(this.array).then( valor => {
-      
-    this.MOSAIC_INFO = MOSAICS.find(m => {
-      return m.hex == TX.mosaics[0].id.id.toHex() || valor[0].mosaicNames.names[0].namespaceId.toHex() == TX.mosaics[0].id.id.toHex();
+    const _tx = this.tx;
+    this.MOSAIC_INFO = this.mosaics.find(mosaic => {
+      return mosaic.hex == _tx.mosaics[0].id.id.toHex()
     });
 
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     console.log('this.LOGO', this.LOGO)
     this.STATUS = this.status;
-    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(TX.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
-    })
+    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(_tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
   }
 }

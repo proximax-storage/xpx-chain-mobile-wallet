@@ -87,14 +87,6 @@ export class TransactionListPage {
 
   }
 
-  getAccountInfo() {
-
-  }
-
-  ionViewWillEnter() {
-
-  }
-
   ionViewDidLoad() {
     console.log("ionViewDidLoad TransactionListPage");
     
