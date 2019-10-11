@@ -1,4 +1,6 @@
 {
+    "APP.MESSAGE.SUCCESS.TITLE": "Succes!",
+    "APP.MESSAGE.SUCCESS.SUBTITLE": "Uw transactie wordt nu verwerkt.",
     "APP.ERROR":"Er is iets fout gegaan. Probeer het opnieuw",
     "APP.INVALID.USERNAME_OR_PASSWORD": "Uw gebruikersnaam of wachtwoord is onjuist.",
     "APP.BUTTON.TRY_AGAIN": "Probeer het opnieuw",

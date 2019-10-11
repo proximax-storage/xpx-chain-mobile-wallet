@@ -1,6 +1,6 @@
 import { MosaicModel } from './../../../../../providers/transfer-transaction/mosaic.model';
 
-import { Component } from '@angular/core';
+import { Component, trigger, transition, style, group, animate } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
@@ -8,7 +8,6 @@ import { SimpleWallet, Password, NetworkType} from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
-// import { NemProvider } from '../../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../../providers/auth/auth';
@@ -29,7 +28,45 @@ import { TransferTransactionProvider } from '../../../../../providers/transfer-t
 @IonicPage()
 @Component({
   selector: 'page-send-mosaic-confirmation',
-  templateUrl: 'send-mosaic-confirmation.html'
+  templateUrl: 'send-mosaic-confirmation.html',
+  animations: [
+
+    trigger('container', [
+      transition(':enter', [
+          style({opacity: '0'}),
+          group([
+            animate('500ms ease-out', style({opacity: '1'})),
+          ])
+          
+      ]),
+      transition(':leave', [
+          group([
+            animate('500ms ease-out', style({opacity: '0'})),
+          ])
+      ])
+    ]),
+
+    trigger('badge', [
+        transition(':enter', [
+            style({transform: 'translateY(400%)'}),
+            animate('500ms ease-out', style({transform: 'translateY(0)'}))
+        ]),
+        transition(':leave', [
+            animate('500ms ease-in', style({transform: 'translateY(400%)'}))   
+        ])
+    ]),
+
+    trigger('message', [
+      transition(':enter', [
+          style({opacity: '0'}),
+          animate('500ms 1000ms ease-out', style({opacity: '1'}))
+      ]),
+      transition(':leave', [
+          animate('500ms ease-in', style({opacity: '0'}))   
+      ])
+    ])
+
+  ]
 })
 export class SendMosaicConfirmationPage {
   generationHash: any;
@@ -40,6 +77,10 @@ export class SendMosaicConfirmationPage {
   credentials: { password: string; privateKey: string };
 
   data: any;
+
+  fee: number = 0;
+
+  displaySuccessMessage: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -57,7 +98,6 @@ export class SendMosaicConfirmationPage {
   ) {
     this.init();
     this.generationHash = this.walletProvider.generationHash
-    console.log('-------------------------', this.generationHash)
   }
 
   ionViewWillEnter() {
@@ -74,10 +114,8 @@ export class SendMosaicConfirmationPage {
     // Get NavParams data
     console.log('navParams', this.navParams.data);
     this.data = this.navParams.data;
+    console.log("TCL: SendMosaicConfirmationPage -> init -> this.data", this.data)
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
-
-    console.log('***********************', this.data)
-
 
     // Initialize private data
     this.authProvider.getPassword().then(password => {
@@ -86,6 +124,22 @@ export class SendMosaicConfirmationPage {
         privateKey: ''
       };
     })
+
+    // Prepare transfer Transaction
+    this.prepareTransaction();
+  }
+  prepareTransaction() {
+    
+    const mosaicModel = new MosaicModel();
+    mosaicModel.hexId = this.data.mosaic.hex;
+    mosaicModel.amount = this.data.amount;
+
+    //1. Build a transfer transaction
+    this.transferTransaction.setRecipient(this.data.recipientAddress);
+    this.transferTransaction.setMosaics([mosaicModel]);
+    this.transferTransaction.setMessage(this.data.message);
+    this.fee = this.transferTransaction.getFee();
+    console.log("TCL: SendMosaicConfirmationPage -> onSubmit -> fee", this.fee)
   }
 
   goBack() {
@@ -104,22 +158,7 @@ export class SendMosaicConfirmationPage {
     } else if (this.data.transactionType = 'normal'){
       console.log("Normal transfer");
       if (this._allowedToSendTx()) {
-
-        // const acountRecipient = this.data.recipientAddress;
-        // const amount = this.proximaxProvider.getAbsoluteAmount(this.data.amount);
-        // const message = this.data.message;
-        // const password =  this.credentials.password
-        // const mosaic = this.data.mosaic.hex;
-        // const common = { password: password };
-
-        const mosaicModel = new MosaicModel();
-        mosaicModel.hexId = this.data.mosaic.hex;
-        mosaicModel.amount = this.data.amount;
-
-        //1. Build a transfer transaction
-        this.transferTransaction.setRecipient(this.data.recipientAddress);
-        this.transferTransaction.setMosaics([mosaicModel]);
-        this.transferTransaction.setMessage(this.data.message);
+        
         this.transferTransaction.send().subscribe(response => {
           this.showSuccessMessage();
         }, (err) => {
@@ -127,34 +166,6 @@ export class SendMosaicConfirmationPage {
         }, () => {
           console.log('Done transfer transaction.');
         });
-      
-
-        // if (this.walletProvider.decrypt(common, this.data.currentWallet)) {
-
-        //   const transferTransction = this.walletProvider.buildToSendTransfer(
-        //     common,
-        //     acountRecipient,
-        //     message,
-        //     amount,
-        //     NetworkType.TEST_NET,
-        //     mosaic
-        //   );
-
-        //   transferTransction.transactionHttp
-        //     .announce(transferTransction.signedTransaction)
-        //     .subscribe(
-        //       value => {
-        //         console.log('value ', value)
-        //         navigator.vibrate(500)
-        // console.log('.---------- navigator.vibrate(500)----------------------',  navigator.vibrate(500))
-        //         this.showSuccessMessage()
-        //       },
-        //       async error => {
-        //         console.log('error ', error)
-        //         this.showErrorMessage(error)
-        //       }
-        //     );
-        // }
       } else {
         this.showGenericError();
       }
@@ -191,9 +202,6 @@ export class SendMosaicConfirmationPage {
         'Transaction is not allowed for multisignature enabled wallets.'
       );
     } else {
-      // this.alertProvider.showMessage(
-      //   'An error occured. Please try again.'
-      // );
       this.alertProvider.showMessage(
         error
       );
@@ -202,23 +210,34 @@ export class SendMosaicConfirmationPage {
               
   }
   showSuccessMessage() {
-    this.haptic.notification({ type: 'success' });
-    this.alertProvider.showMessage(
-      `You sent ${
-      this.data.amount
-      } ${this.data.mosaic.mosaicId.toUpperCase()} to ${
-      this.data.recipientName || this.data.recipientAddress
-      }`
-    );
-    this.utils.setTabIndex(2);
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {},
-      {
-        animate: true,
-        direction: 'backward'
-      }
-    );
+
+    this.displaySuccessMessage = true;
+
+    setTimeout(() => {
+      this.displaySuccessMessage = false;
+
+      this.haptic.notification({ type: 'success' });
+      // this.alertProvider.showMessage(
+      //   `You sent ${
+      //   this.data.amount
+      //   } ${this.data.mosaic.mosaicId.toUpperCase()} to ${
+      //   this.data.recipientName || this.data.recipientAddress
+      //   }`
+      // );
+      this.utils.setTabIndex(2);
+      this.navCtrl.setRoot(
+        'TabsPage',
+        {},
+        {
+          animate: true,
+          direction: 'backward'
+        }
+      );
+
+    }, 3000);
+
+
+    
   }
 
   /**

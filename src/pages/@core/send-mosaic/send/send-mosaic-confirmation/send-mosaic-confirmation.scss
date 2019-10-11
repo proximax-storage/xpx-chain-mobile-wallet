@@ -1,3 +1,40 @@
 page-send-mosaic-confirmation {
 
+    .achievement-container {
+        z-index: 100;
+        width: 100%;
+        height: 100%;
+        background-color: #fff !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    h5 {
+        color: #000;
+        font-weight: normal;
+        font-size: 2em;
+    }
+
+    p {
+        margin-left: 1em;
+        margin-right: 1em;
+
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+
+    .image {
+        max-height: 50%;
+        max-width: 90%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+      }
+
 }

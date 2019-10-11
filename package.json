@@ -14,7 +14,7 @@
     "build:mainnet": "node build.mainnet.js && ionic cordova build android"
   },
   "dependencies": {
-    "@angular/animations": "5.2.10",
+    "@angular/animations": "^5.2.10",
     "@angular/cli": "7.3.8",
     "@angular/common": "5.2.10",
     "@angular/compiler": "5.2.10",
