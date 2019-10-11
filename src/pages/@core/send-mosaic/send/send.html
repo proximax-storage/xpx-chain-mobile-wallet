@@ -69,15 +69,15 @@
           <ion-avatar item-start>
             <img [src]="utils.getLogo(selectedMosaic)">
           </ion-avatar>
-          <h2 text-uppercase ion-text color="dark" >{{ selectedMosaic?.mosaicId }}</h2>
-          <p text-uppercase ion-text color="dark">{{ selectedMosaic?.namespaceId }}</p>
+          <h2 text-uppercase ion-text color="dark" >{{ selectedMosaic?.mosaicId || '' }}</h2>
+          <p text-uppercase ion-text color="dark">{{ selectedMosaic?.namespaceId || selectedMosaic.hex.toLocaleUpperCase() }}</p>
 
           <section item-right>
             <!-- <h2 ion-text color="dark">{{ selectedMosaic?.amount | number:'1.2' }}</h2> -->
             <h2 ion-text color="dark">{{  selectedMosaic?.amount }}</h2>
             <p text-right text-left ion-text color="dark">
               <small>
-                {{  selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount | currency: 'USD': 'symbol': '1.2-6' }}
+                {{  ((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | currency: 'USD': 'symbol': '1.2-6'  }}
               </small>
             </p>
           </section>
