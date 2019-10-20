@@ -144,7 +144,7 @@ export class WalletListPage {
 
     alert.addInput({
       type: 'radio',
-      label: 'Import wallet',
+      label: 'Import account',
       value: WalletCreationType.IMPORT.toString(),
       checked: false
     });

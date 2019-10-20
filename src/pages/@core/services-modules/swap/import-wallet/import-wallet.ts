@@ -105,7 +105,7 @@ export class ImportWalletPage {
 
 
       let alertCtrl = this.alertCtrl.create();
-      alertCtrl.setTitle('Import wallet');
+      alertCtrl.setTitle('Import account');
       alertCtrl.setSubTitle('');
   
       alertCtrl.addInput({

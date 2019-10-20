@@ -171,7 +171,7 @@
     "SERVICES.SWAP_PROCESS.LIST.SUBTITLE": "Import NIS1 Wallet",
     "SERVICES.SWAP_PROCESS.STEP1.TITLE": "Step 1: Import NIS1 Wallet",
     "SERVICES.SWAP_PROCESS.STEP2.TITLE": "Step 2: Enter XPX amount",
-    "SERVICES.SWAP_PROCESS.STEP2.SUBTITLE": "Your NIS1 XPX will be converted to ProximaX Sirius XPX.  Your new XPX will be sent to an auto generated in your Sirius wallet. This process may take several hours to complete.",
+    "SERVICES.SWAP_PROCESS.STEP2.SUBTITLE": "Your NIS1 XPX will be converted to ProximaX Sirius XPX.  Your new XPX will be sent to an auto generated account in your Sirius wallet. This process may take several hours to complete.",
     "SERVICES.SWAP_PROCESS.STEP2.BALANCE": "Current balance (NIS1):",
     "SERVICES.SWAP_PROCESS.STEP2.RECIPIENT": "Recipient:",
     "SERVICES.SWAP_PROCESS.STEP2.ACCOUNT_PROXIMAX": "ProximaX Burn Account",

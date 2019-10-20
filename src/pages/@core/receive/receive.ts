@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, Platform } from 'ionic-angular';
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
@@ -18,6 +18,7 @@ import { HapticProvider } from '../../../providers/haptic/haptic';
 })
 export class ReceivePage {
   address:string;
+  smallScreen: boolean = false;
   constructor(
     public viewCtrl: ViewController,
     public navCtrl: NavController,
@@ -25,12 +26,23 @@ export class ReceivePage {
     private clipboard: Clipboard,
     private socialSharing: SocialSharing,
     private toastProvider: ToastProvider,
-    private haptic: HapticProvider
+    private haptic: HapticProvider,
+    private platform: Platform
   ) {
     const account = this.navParams.data;
     this.address = (account as Account).address.plain()
+
+    this.platform.ready().then((readySource) => {
+      if (this.platform.width() <= 330) {
+        // 330px portrait
+        this.smallScreen = true;
+      } else {
+        this.smallScreen = false;
+      }
+    });
   }
   ionViewWillEnter() {
+
   }
 
 
