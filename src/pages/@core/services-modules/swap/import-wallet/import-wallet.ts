@@ -100,60 +100,12 @@ export class ImportWalletPage {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
       console.info('Barcode data', barcodeData);
-      let password: string;
-      let payload = JSON.parse(barcodeData.text);
+      let privKey = JSON.parse(barcodeData.text);
 
-
-      let alertCtrl = this.alertCtrl.create();
-      alertCtrl.setTitle('Import account');
-      alertCtrl.setSubTitle('');
-  
-      alertCtrl.addInput({
-        type: 'password',
-        label: 'Password',
-        min:'6',
-        placeholder: 'Enter your password'
-      });
-
-      alertCtrl.addButton('Cancel');
-  
-      alertCtrl.addButton({
-        text: 'Verify',
-        handler: data => {
-          if(data) {
-            console.log(data);
-            password = data[0];
-            try {
-              try {
-                let privKey = this.nem.decryptPrivateKeyViaQrCode(password, payload);
-                this.formGroup.patchValue({ name: payload.data.name })
-                this.formGroup.patchValue({ privateKey: privKey })
-              } catch (error) {
-                console.log('Error', error);
-                
-                if (error.toString().indexOf('Password must be at least 6 characters') >= 0) {
-                  this.alertProvider.showMessage("Password must be at least 6 characters");
-                } else {
-                  this.alertProvider.showMessage("Invalid password. Please try again.");
-                }
-              }
-              
-            } catch (error) {
-              console.log(error);
-              this.alertProvider.showMessage("Invalid private key. Please try again.");
-            }
-          }
-        }
-      });
-  
-      alertCtrl.present();
-     }).catch(err => {
-          console.log('Error', err);
-          if (err.toString().indexOf('Access to the camera has been prohibited; please enable it in the Settings app to continue.') >= 0) {
-            let message = "Camera access is disabled. Please enable it in the Settings app."
-            this.alertProvider.showMessage(message);
-          }
-     });
+      if(privKey) {
+        this.formGroup.patchValue({ privateKey: privKey })
+      }
+    });
   }
 
   gotoBackup(wallet) {
