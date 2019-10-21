@@ -41,7 +41,7 @@ export class NemProvider{
 
   constructor(private storage: Storage) {
     let serverConfig: ServerConfig[];
-    serverConfig = [{protocol: "http", domain: "18.231.166.212", port: 7890} as ServerConfig]
+    serverConfig = [{protocol: "https", domain: "bctestnetswap.xpxsirius.io", port: 7890} as ServerConfig]
 
     NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
     this.accountHttp = new AccountHttp(serverConfig);

@@ -35,81 +35,14 @@ export class WalletBackupQrcodePage {
     private haptic: HapticProvider,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-    private alertCtrl: AlertController,
-    private alertProvider: AlertProvider,
-    private authProvider: AuthProvider
     ) {
       console.log("SIRIUS CHAIN WALLET: WalletBackupQrcodePage -> this.navParams.data", this.navParams.data)
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WalletBackupQrcodePage');
-    let options:AlertOptions = {
-      enableBackdropDismiss: false
-    }
-    let alertCtrl = this.alertCtrl.create(options);
-      alertCtrl.setTitle('Backup your account');
-      alertCtrl.setSubTitle('');
-      alertCtrl.addInput({
-        type: 'password',
-        label: 'Password',
-        min: '6',
-        placeholder: 'Enter your wallet\'s password'
-      });
-
-      alertCtrl.addButton({
-        text: 'Cancel',
-        role: 'cancel',
-        handler: () => {
-          this.dismiss();
-          this.dismiss();
-        }
-      });
-
-      alertCtrl.addButton({
-        text: 'OK',
-        handler: data => {
-          if (data) {
-            const enteredPassword = data[0];
-            
-            this.authProvider.getPassword().then(password => {
-              // compare password
-              if(password == enteredPassword) {
-                this.privateKey = this.navParams.get("privateKey");
-                this.walletName = this.navParams.get("walletName");
-                this.QRData = JSON.stringify({walletName: this.walletName, password: password, privateKey: this.privateKey}); 
-              } else {
-                this.alertProvider.showMessage("Invalid password. Please try again.");
-                this.dismiss();
-              }
-            });
-            
-      
-            try {
-              try {
-              } catch (error) {
-                console.log('Error', error);
-
-                if (error.toString().indexOf('Password must be at least 6 characters') >= 0) {
-                  this.alertProvider.showMessage("Password must be at least 6 characters");
-                } else {
-                  this.alertProvider.showMessage("Invalid password. Please try again.");
-                }
-                this.dismiss();
-              }
-
-            } catch (error) {
-              console.log(error);
-              this.alertProvider.showMessage("Invalid private key. Please try again.");
-              this.dismiss();
-            }
-          } 
-        }
-      });
-
-      alertCtrl.present();
+    this.QRData =this.privateKey; 
   }
-
   dismiss() {
      this.viewCtrl.dismiss(); 
   }

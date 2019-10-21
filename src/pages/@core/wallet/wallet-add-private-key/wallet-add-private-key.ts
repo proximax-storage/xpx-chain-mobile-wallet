@@ -209,7 +209,7 @@ export class WalletAddPrivateKeyPage {
 
 
       let alertCtrl = this.alertCtrl.create();
-      alertCtrl.setTitle('Import wallet');
+      alertCtrl.setTitle('Import account');
       alertCtrl.setSubTitle('');
 
       alertCtrl.addInput({

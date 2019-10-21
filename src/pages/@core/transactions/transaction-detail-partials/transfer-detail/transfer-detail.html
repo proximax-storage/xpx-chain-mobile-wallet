@@ -56,7 +56,7 @@
 <!-- ./Date -->
 
 <!-- Sender -->
-<ion-card no-margin-bottom (click)="utils.copy(tx?.signer.address, 'sender')">
+<ion-card no-margin-bottom (click)="utils.copy(tx?.signer.address.plain(), 'sender')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">
@@ -71,7 +71,7 @@
 <!-- ./Sender -->
 
 <!-- Receiver -->
-<ion-card no-margin-bottom (click)="utils.copy(tx?.recipient, 'receiver')">
+<ion-card no-margin-bottom (click)="utils.copy(tx?.recipient?.address, 'receiver')">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">

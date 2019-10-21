@@ -20,8 +20,15 @@
 <ion-content background>
   <ion-grid>
     <ion-row>
-      <ion-col col-12>
-        <ngx-kjua text-center *ngIf="address" fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="350"
+      <ion-col col-12 *ngIf="!smallScreen">
+        <ngx-kjua text-center *ngIf="address" fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="300"
+          [mPosX]="50" [mPosY]="50" [mSize]="10" [fontcolor]="'#005E62'" [mode]="'label'" [render]="'label'"
+          [label]="'ProximaX'" [back]="'#fff'" [text]="address">
+        </ngx-kjua>
+      </ion-col>
+
+      <ion-col col-12 *ngIf="smallScreen">
+        <ngx-kjua text-center *ngIf="address" fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="200"
           [mPosX]="50" [mPosY]="50" [mSize]="10" [fontcolor]="'#005E62'" [mode]="'label'" [render]="'label'"
           [label]="'ProximaX'" [back]="'#fff'" [text]="address">
         </ngx-kjua>
