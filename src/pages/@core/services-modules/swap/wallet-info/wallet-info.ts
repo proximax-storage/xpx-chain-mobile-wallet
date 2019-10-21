@@ -179,11 +179,7 @@ export class WalletInfoPage {
         const transaction = await this.nemProvider.createTransaction(publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
         this.transferTransaction = transaction;
 
-
-
         console.log('this.transferTransaction', this.transferTransaction)
-
-        return;
         
         this.nemProvider.anounceTransaction(transaction, account)
           .then(resp => {
