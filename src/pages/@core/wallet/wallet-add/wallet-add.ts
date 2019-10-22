@@ -95,7 +95,8 @@ export class WalletAddPage {
   onSubmit(form) {
     this.walletProvider.checkIfWalletNameExists(form.name, '').then(value => {
       if (value) {
-        this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
+        const title = `<${this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS")}>`
+        this.alertProvider.showMessage(title);
       } else {
         
         
