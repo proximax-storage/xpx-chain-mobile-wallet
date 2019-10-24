@@ -1,6 +1,10 @@
 ion-slides {
   height: auto;
-  padding: 16px;
+      /* padding: 16px; */
+      padding-left: 0px;
+      padding-right: 0px;
+      padding-top: 16px;
+      padding-bottom: 16px;
 }
 ion-slides[onboarding] {
   height: 100%;
