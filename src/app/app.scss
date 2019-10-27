@@ -81,11 +81,3 @@ body{
   font-family: "Open Sans" !important;
   }
 
-  body.keyboard-is-open {
-    div.tabbar.show-tabbar {
-        display: none;
-    }
-    scroll-content {
-        margin-bottom: 0 !important;
-    }
-}

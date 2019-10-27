@@ -67,7 +67,30 @@ export class WalletAddPrivateKeyPage {
   }
 
   ionViewWillEnter() {
-    this.utils.setHardwareBack();
+    this.utils.setHardwareBack(this.navCtrl);
+
+    // Hide Tabs
+    let tabs = document.querySelectorAll('.tabbar');
+    if ( tabs !== null ) {
+      Object.keys(tabs).map((key) => {
+        // tabs[key].style.transform = 'translateY(56px)';
+        tabs[key].style.display = 'none';
+      });
+    } // end if
+  }
+
+
+  ionViewDidLeave() {
+    this.storage.set('isQrActive', false);
+
+    // show tabs when page is dismissed
+    let tabs = document.querySelectorAll('.tabbar');
+    if ( tabs !== null ) {
+      Object.keys(tabs).map((key) => {
+        // tabs[ key ].style.transform = 'translateY(0)';
+        tabs[key].style.display = 'flex';
+      });
+    } // end if
   }
 
   ionViewDidLoad() {
@@ -75,9 +98,6 @@ export class WalletAddPrivateKeyPage {
     this.storage.set('isQrActive', true);
   }
 
-  ionViewDidLeave() {
-    this.storage.set('isQrActive', false);
-  }
 
   init() {
     if (window.screen.width >= 768) { // 768px portrait

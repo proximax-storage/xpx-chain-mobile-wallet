@@ -32,15 +32,6 @@ export class MyApp {
 
       this.initTranslate();
       
-      // Add class when keyboard is on
-      this.keyboard.onKeyboardShow().subscribe(() => {
-        document.body.classList.add('keyboard-is-open');
-      });
-  
-      this.keyboard.onKeyboardHide().subscribe(() => {
-        document.body.classList.remove('keyboard-is-open');
-      });
-
       this.getNode();
 
       this.initGetRoot().then(rootPage => {

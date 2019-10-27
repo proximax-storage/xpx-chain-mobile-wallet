@@ -58,6 +58,24 @@ export class WalletAddPage {
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
+
+    // Hide Tabs
+    let tabs = document.querySelectorAll('.tabbar');
+    if ( tabs !== null ) {
+      Object.keys(tabs).map((key) => {
+        // tabs[ key ].style.transform = 'translateY(56px)';
+        tabs[key].style.display = 'none';
+      });
+    } // end if
+  }
+
+  ionViewDidLeave() {
+    let tabs = document.querySelectorAll('.tabbar');
+    if ( tabs !== null ) {
+      Object.keys(tabs).map((key) => {
+        tabs[key].style.display = 'flex';
+      });
+    } // end if
   }
 
   ionViewDidLoad() {
