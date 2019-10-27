@@ -1,3 +1,13 @@
+.ios,
+.md {
+  .tabbar {
+    display: none;
+  }
+  
+  .scroll-content {
+    margin-bottom: 0 !important;
+  }
+}
 page-wallet-add {
     
     .wallet {
@@ -143,6 +153,9 @@ page-wallet-add {
         transition: background 0s;
       }
     }
+
+
+
 
 
 }
