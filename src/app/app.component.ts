@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { Platform } from "ionic-angular";
+import { Component, ViewChild } from "@angular/core";
+import { Platform, Nav } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Storage } from "@ionic/storage";
@@ -8,12 +8,18 @@ import { OneSignal } from "@ionic-native/onesignal";
 import { Keyboard } from "@ionic-native/keyboard";
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../app/app.config';
+import { Deeplinks, DeeplinkMatch } from "@ionic-native/deeplinks";
+import { TabsPage } from '../pages/tabs/tabs';
 
 @Component({
   templateUrl: "app.html"
 })
 export class MyApp {
   rootPage: string;
+
+  @ViewChild(Nav) navChild:Nav;
+
+  match : DeeplinkMatch;
 
   constructor(
     statusBar: StatusBar,
@@ -23,27 +29,57 @@ export class MyApp {
     private utils: UtilitiesProvider,
     private oneSignal: OneSignal,
     private keyboard: Keyboard,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private deeplinks: Deeplinks
   ) {
-    platform.ready().then(() => {
+    platform.ready().then(async () => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
+
+      // Handle Deeplinks
 
       this.initTranslate();
       
       this.getNode();
 
+      // let isDeepLink: boolean = false;
+      // let redirectLink:string= "TabsPage";
+      // let params:any ={};
+
+      await this.deeplinks.routeWithNavController(this.navChild, {
+        '/send': "SendPage",
+      }).subscribe((match) => {
+        console.log('Successfully routed', JSON.stringify(match));
+        // isDeepLink = true;
+        // redirectLink = match.$route;
+        // params = match.$args
+
+        this.match = match;
+      }, (nomatch) => {
+        // isDeepLink = false;
+        console.log('Unmatched Route', nomatch);        
+    });
+
+    // if(isDeepLink) {
+    //   this.navChild.push(redirectLink, params)
+    //   this.initOnPauseResume();
+    //   this.showPin(redirectLink);
+      
+    // } else {
       this.initGetRoot().then(rootPage => {
         this.rootPage = rootPage;
-
+  
         setTimeout(() => {
           this.splashScreen.hide();
         }, 1000);
       });
+  
+     
       this.initOnPauseResume();
       this.showPin();
-    });
+    // }
+  });
   }
 
   /**
@@ -112,7 +148,7 @@ export class MyApp {
     });
   }
 
-  private showPin() {
+  private  showPin() {
     Promise.all([
       this.storage.get("pin"),
       this.storage.get("isLoggedIn"),
@@ -126,8 +162,8 @@ export class MyApp {
       const isModalShown = results[3];
       const isQrActive = !!results[4];
       console.log(
-        "rootPage:", this.rootPage ,
-        this.rootPage !== "OnboardingPage" && this.rootPage !== "WelcomePage"
+        // "rootPage:", this.rootPage ,
+        // // this.rootPage !== "OnboardingPage" && this.rootPage !== "WelcomePage"
       );
       console.log("isModalShown:", !isModalShown);
       console.log("isAppPaused:", !isAppPaused);
@@ -136,8 +172,8 @@ export class MyApp {
 
       console.log(
         "showModal:",
-        this.rootPage !== "OnboardingPage" &&
-          this.rootPage !== "WelcomePage" &&
+        // this.rootPage !== "OnboardingPage" &&
+          // this.rootPage !== "WelcomePage" &&
           !isModalShown &&
           !isAppPaused &&
           !!pin &&
@@ -145,14 +181,14 @@ export class MyApp {
       );
 
       // alert(
-      //     "OnboardingPage:" + this.rootPage + 
+          // "OnboardingPage:" + this.rootPage + 
       //     ",isModalShown:" + !isModalShown +
       //     ",isAppPaused:" + isAppPaused +
       //     ",pin:" + !!pin +
       //     ",isLoggedIn:" + isLoggedIn);++
 
       // alert(
-      //   "1OnboardingPage:" + this.rootPage + 
+        // "1OnboardingPage:" + this.rootPage + 
       //   ",isModalShown:" + !isModalShown +
       //   ",isAppPaused:" + isAppPaused +
       //   ",pin:" + !!pin +
@@ -161,11 +197,15 @@ export class MyApp {
 
       if (!pin && isLoggedIn) {
         // alert("showModal: VerificationCodePage");
-        return this.utils.showModal("VerificationCodePage", {
+        this.utils.showModal("VerificationCodePage", {
           status: "setup",
           destination: "TabsPage"
         });
       }
+
+      // if(this.match) {
+      //   this.utils.showModal(this.match.$route, { mosaicSelectedName: 'xpx', payload: this.match.$args })
+      // }
 
           // if (isAppPaused) {
       //   return this.storage.set("isAppPaused", false);
@@ -175,8 +215,8 @@ export class MyApp {
          return this.storage.set('isQrActive', false);
 
       } else if (
-        this.rootPage !== "OnboardingPage" &&
-        this.rootPage !== "WelcomePage" &&
+        // this.rootPage !== "OnboardingPage" &&
+        // this.rootPage !== "WelcomePage" &&
         !isModalShown &&
         isAppPaused &&
         !!pin &&
@@ -184,7 +224,7 @@ export class MyApp {
         !isQrActive
       ) {
         // alert(
-        //   "2OnboardingPage:" + this.rootPage + 
+          "2OnboardingPage:" + this.rootPage + 
         //   ",isModalShown:" + !isModalShown +
         //   ",isAppPaused:" + isAppPaused +
         //   ",pin:" + !!pin +

@@ -45,7 +45,7 @@ export class VerificationCodePage {
 
   ionViewWillEnter() {
     console.log(
-      "VerificationCodePage :: ionViewWillEnter",
+      "VerificationCodePage : ionViewWillEnter",
       !this.navParams.data.destination &&
       this.navParams.data.status === "verify"
     );
@@ -130,6 +130,7 @@ export class VerificationCodePage {
       console.log("status === 'verify'");
 
       this.haptic.notification({ type: 'success' });
+      this.navCtrl.getActive()
       let page = "TabsPage";
       this.isVerify = true;
       this.previousPin = pin;
@@ -143,6 +144,7 @@ export class VerificationCodePage {
               animate: true,
               direction: "forward"
             });
+            // return this.viewCtrl.dismiss();
           } else {
             this.viewCtrl.dismiss();
           }
@@ -167,10 +169,11 @@ export class VerificationCodePage {
             })
             .then(_ => {
               if (page) {
-                return this.navCtrl.setRoot(page, {}, {
-                  animate: true,
-                  direction: "forward"
-                });
+                // return this.navCtrl.setRoot(page, {}, {
+                //   animate: true,
+                //   direction: "forward"
+                // });
+                return this.viewCtrl.dismiss();
               } else {
                 this.viewCtrl.dismiss();
               }
