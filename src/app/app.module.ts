@@ -68,8 +68,7 @@ import { FileTransfer } from '@ionic-native/file-transfer';
 import { Screenshot } from '@ionic-native/screenshot';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
-import { Diagnostic } from '@ionic-native/diagnostic';
-
+import { Deeplinks } from '@ionic-native/deeplinks';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -159,7 +158,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     Screenshot,
     PhotoLibrary,
     Base64ToGallery,
-    Diagnostic,
+    Deeplinks
   ]
 })
 export class AppModule {}

@@ -1,3 +1,4 @@
+import { Deeplinks } from '@ionic-native/deeplinks';
 import { Component, ViewChild } from "@angular/core";
 import {
   App,
@@ -9,7 +10,8 @@ import {
   ModalController,
   Slides,
   LoadingController,
-  LoadingOptions
+  LoadingOptions,
+  Nav
 } from "ionic-angular";
 
 import { App as AppConfig } from "../../providers/app/app";
@@ -83,6 +85,8 @@ export class HomePage {
   selectedAccount: Account;
   accountInfo: AccountInfo;
 
+  @ViewChild(Nav) navChild:Nav;
+
   constructor(
     public app: App,
     public navCtrl: NavController,
@@ -100,8 +104,34 @@ export class HomePage {
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
-    public loadingCtrl: LoadingController
-  ) {}
+    public loadingCtrl: LoadingController,
+    private deeplinks: Deeplinks 
+  ) {
+  //   this.platform.ready().then(()=> {
+
+  //     this.deeplinks.routeWithNavController(this.navChild, {
+  //      '/send': "SendPage",
+  //    }).subscribe((match) => {
+  //      console.log('Successfully routed', JSON.stringify(match));
+
+  //      let page = "SendPage";
+  //      this.showModal(page, { mosaicSelectedName: 'xpx', payload: match.$args })
+
+  //      // isDeepLink = true;
+  //      // redirectLink = match.$route;
+  //      // params = match.$args
+
+  //      // return;
+  //    }, (nomatch) => {
+  //      console.log('Unmatched Route', nomatch);        
+  //  });
+  //  })
+
+  }
+
+  ionViewDidEnter(){
+    
+  }
 
   ionViewWillEnter() {
     console.log("1 ionViewWillEnter");

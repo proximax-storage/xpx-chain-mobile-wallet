@@ -32,6 +32,7 @@ import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
+import { DeeplinkMatch } from '@ionic-native/deeplinks';
 
 /**
  * Generated class for the SendPage page.
@@ -69,6 +70,8 @@ export class SendPage {
     precision: "6"
   };
 
+  payload:any = {};
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -89,13 +92,15 @@ export class SendPage {
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService
   ) {
+    // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
-
     console.log("this.mosaicSelectedName", this.selectedMosaicName);
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
     }
+
+    
 
     this.init();
     this.subscribeValue();
@@ -155,6 +160,17 @@ export class SendPage {
         this.form.get("senderAddress").setValue(this.currentWallet.address);
       }
     });
+
+    // if deeplink
+    this.payload = this.navParams.data;
+    if(this.payload.amount) {
+      console.log("TCL: SendPage -> this.payload", this.payload)
+
+      this.form.patchValue({ amount: this.payload.amount });
+      this.form.patchValue({ recipientAddress: this.payload.address });
+      this.form.patchValue({ message: this.payload.message });
+    }
+
   }
 
 
