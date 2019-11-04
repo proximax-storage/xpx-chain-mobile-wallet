@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Transaction, PublicAccount } from 'tsjs-xpx-chain-sdk';
+import { Transaction, PublicAccount, AggregateTransaction } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 
 /*
@@ -26,6 +26,12 @@ export class TransactionsProvider {
   getAllTransactionsUnconfirmed(publicAccount: PublicAccount): Observable<Transaction[]> {
     const pageSize = 10;
     const transaction = this.proximaxProvider.getAllTransactionsUnconfirmed(publicAccount, pageSize)
+    return transaction;
+  }
+
+  getAllTransactionsAggregate(publicAccount: PublicAccount): Observable<AggregateTransaction[]> {
+    const pageSize = 10;
+    const transaction = this.proximaxProvider.getAllTransactionsAggregate(publicAccount, pageSize)
     return transaction;
   }
 

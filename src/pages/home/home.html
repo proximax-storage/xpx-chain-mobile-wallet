@@ -114,6 +114,17 @@
 
 
   <div *ngIf="menu=='transactions'">
+    <!-- Aggregate Transactions -->
+    <div *ngIf="aggregateTransactions?.length>0">
+      <ion-list transparent-items *ngIf="!isLoading">
+        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy"
+          (click)="gotoTransactionDetail(transaction)">
+          <!-- if transfer  -->
+          <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Partial'"></transfer-transaction>
+        </ion-card>
+      </ion-list>
+    </div>
+
     <!-- Unconfirmed Transactions -->
     <div *ngIf="unconfirmedTransactions?.length>0">
       <ion-list transparent-items *ngIf="!isLoading">

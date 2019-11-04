@@ -69,6 +69,18 @@
   <ion-list transparent-items *ngIf="!isLoading">
     <h2 padding *ngIf="!showEmptyMessage">{{"WALLETS.TRANSACTIONS" | translate}}</h2>
 
+    <!-- Partial Transactions -->
+    <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy: trackByHash"
+      (click)="gotoTransactionDetail(transaction)">        
+
+      <!-- if transfer  -->
+      <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
+        [mosaics]="mosaics" 
+        [owner]="selectedAccount.address.plain()" [status]="'Partial'">
+      </transfer-transaction>
+    </ion-card>
+
+    <!-- Confirmed Transactions -->
     <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
         (click)="gotoTransactionDetail(transaction)">        
 

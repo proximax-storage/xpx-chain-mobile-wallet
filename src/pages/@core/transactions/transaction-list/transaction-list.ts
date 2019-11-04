@@ -10,7 +10,7 @@ import { Clipboard } from "@ionic-native/clipboard";
 import { GetMarketPricePipe } from "../../../../pipes/get-market-price/get-market-price";
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
-import { TransactionType } from "tsjs-xpx-chain-sdk";
+import { TransactionType, AggregateTransaction } from "tsjs-xpx-chain-sdk";
 
 /**
  * Generated class for the TransactionListPage page.
@@ -34,6 +34,7 @@ export class TransactionListPage {
   fakeList: Array<any>;
 
   unconfirmedTransactions: Array<any>;
+  aggregateTransactions: Array<AggregateTransaction> = [];
   confirmedTransactions: Array<any>;
   showEmptyMessage: boolean;
   isLoading: boolean;
@@ -78,6 +79,7 @@ export class TransactionListPage {
 
     this.totalBalance = payload.total;
     this.confirmedTransactions = payload.transactions;
+    this.aggregateTransactions = payload.aggregateTransactions;
     this.selectedAccount = payload.selectedAccount;
     this.mosaics = payload.mosaics;
 

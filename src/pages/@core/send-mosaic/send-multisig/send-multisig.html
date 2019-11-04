@@ -110,17 +110,13 @@
       <!-- Recipient -->
 
       <ion-item select-contact no-lines>
-          <ion-label ion-text color="dark"></ion-label>
-          <ion-select [selectOptions]="{
-    title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate,
-    subTitle: ''        
-  }" [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}" (ionChange)="onChangeTo($event)">
+        <ion-label ion-text color="dark"></ion-label>
+        <ion-select [selectOptions]="{ title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate, subTitle: '' }" [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}" (ionChange)="onChangeTo($event)">
             <ion-option value="manual">{{"WALLETS.SEND.ADDRESS.OPTION1" | translate}}</ion-option>
             <!-- <ion-option value="qrcode">Scan QR code</ion-option> -->
             <ion-option value="contact">{{"WALLETS.SEND.ADDRESS.OPTION2" | translate}}</ion-option>
           </ion-select>
         </ion-item>
-
 
         <ion-card *ngIf="addressSourceType.to === 'contact'" (click)="selectContact('to')">
           <ion-item>
@@ -148,7 +144,6 @@
             placeholder="{{'WALLETS.SEND.NOTES' | translate}}"></ion-textarea>
         </ion-item>
       </ion-card>
-
     </form>
 
   </ion-list>

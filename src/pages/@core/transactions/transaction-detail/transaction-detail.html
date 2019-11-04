@@ -22,9 +22,10 @@
 <ion-content background>
   <ion-list transparent-items *ngIf="tx">
 
-       <!-- if transfer  -->
-       <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER" [tx]="tx" [mosaics]="mosaics"></transfer-detail>
-       
+    <!-- if transfer  -->
+    <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER" [tx]="tx" [mosaics]="mosaics" [owner]="selectedAccount?.address?.plain()"></transfer-detail>
+    <transfer-detail *ngIf="tx?.type === TransactionType.AGGREGATE_BONDED" [tx]="tx" [mosaics]="mosaics" [owner]="selectedAccount?.address?.plain()"></transfer-detail>
+
     <!-- if importance transfer -->
     <!-- <importance-transfer-detail *ngIf="tx.type == TransactionTypes.IMPORTANCE_TRANSFER" [tx]="tx"></importance-transfer-detail> -->
 
@@ -47,3 +48,9 @@
   </ion-list>
 
 </ion-content>
+
+<ion-footer no-border *ngIf="tx.type === TransactionType.AGGREGATE_BONDED" [hidden]="!this.isSelectedAccountMultisig && (!!this.selectedAccount && toShowCosign(tx))">
+  <button gradient-button quarter-width color-5 medium (click)="cosign(tx)">
+      {{"TRANSACTION_DETAIL.COSIGN" | translate}}
+  </button>
+</ion-footer>
