@@ -28,6 +28,7 @@ import {
   AccountInfo,
   TransactionType,
   Transaction,
+  AggregateTransaction,
 } from "tsjs-xpx-chain-sdk";
 import { AuthProvider } from "../../providers/auth/auth";
 import { MosaicsProvider } from "../../providers/mosaics/mosaics";
@@ -74,6 +75,7 @@ export class HomePage {
   TransactionType = TransactionType;
 
   unconfirmedTransactions: Array<Transaction> = [];
+  aggregateTransactions: Array<AggregateTransaction> = [];
   confirmedTransactions: Array<any> = [];
   showEmptyTransaction: boolean = false;
   showEmptyMosaic: boolean = false;
@@ -245,6 +247,7 @@ export class HomePage {
                   );
                   this.getTransactions(account);
                   this.getTransactionsUnconfirmed(account);
+                  this.getTransactionsAggregate(account);
                 });
             } catch (error) {
               // this.hideLoaders();
@@ -280,6 +283,7 @@ export class HomePage {
     this.showEmptyTransaction = true;
     this.showEmptyMosaic = true;
     this.unconfirmedTransactions = null;
+    this.aggregateTransactions = null;
     this.confirmedTransactions = null;
   }
 
@@ -345,6 +349,24 @@ export class HomePage {
     this.isLoading = false;
   }
 
+  getTransactionsAggregate(account: Account) {
+    this.isLoading = true;
+    this.transactionsProvider
+      .getAllTransactionsAggregate(account.publicAccount)
+      .subscribe(transactions => {
+        console.log('TCL: HomePage -> getTransactionsAggregate -> aggregateTransactions', transactions);
+        if (transactions) {
+          const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
+          this.aggregateTransactions = transferTransactionsAggregate;
+          console.log("this.aggregateTransactions ", this.aggregateTransactions);
+          this.showEmptyTransaction = false;
+        } else {
+          this.showEmptyTransaction = true;
+        }
+      });
+    this.isLoading = false;
+  }
+
   async onWalletSelect(wallet) {
     console.log("LOG: HomePage -> onWalletSelect -> wallet", wallet);
     if (this.selectedWallet === wallet) {
@@ -361,10 +383,11 @@ export class HomePage {
 
     let selectedAccount = this.selectedWallet;
     let transactions = this.confirmedTransactions;
+    let aggregateTransactions = this.aggregateTransactions;
     let total = this.totalWalletBalance;
     let mosaics = this.mosaics;
 
-    let payload = { selectedAccount, transactions, total, mosaics };
+    let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
 
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,

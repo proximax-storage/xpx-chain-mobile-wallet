@@ -6,7 +6,7 @@ import { App } from '../../../../../providers/app/app';
 import { TransferTransaction } from '../../../../../models/transfer-transaction';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
-import { MosaicId } from 'tsjs-xpx-chain-sdk';
+import { MosaicId, TransactionType } from 'tsjs-xpx-chain-sdk';
 import { AppConfig } from '../../../../../app/app.config';
 
 @Component({
@@ -19,6 +19,8 @@ export class TransferTransactionComponent {
   @Input() mosaics: DefaultMosaic[] = [] ;
   @Input() owner: string;
   @Input() status: string;
+
+  transactionDetails: TransferTransaction;
   
   App = App;
   LOGO: string = App.LOGO.DEFAULT;
@@ -38,13 +40,14 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    const _tx = this.tx;
+    const _tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];    
+    this.tx = _tx;
+
     this.MOSAIC_INFO = this.mosaics.find(mosaic => {
-      return mosaic.hex == _tx.mosaics[0].id.id.toHex()
+      return mosaic.hex == _tx.mosaics[0].id.toHex()
     });
 
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
-    console.log('this.LOGO', this.LOGO)
     this.STATUS = this.status;
     this.AMOUNT = this.mosaicsProvider.getRelativeAmount(_tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
   }

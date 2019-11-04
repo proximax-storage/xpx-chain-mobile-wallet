@@ -227,5 +227,9 @@
     "SETTINGS.LANGUAGE.DUTCH": "Dutch",
     "SETTINGS.LANGUAGE.RUSSIAN": "Russian",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamese",
-    "SETTINGS.LOGOUT": "Logout"
+    "SETTINGS.LOGOUT": "Logout",
+
+    "TRANSACTION_DETAIL.COSIGN": "Cosign",
+    "TRANSACTION_DETAIL.COSIGN_DONE": "Cosigned",
+    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "This multisig tranfer transaction has been successfuly cosigned"
 }

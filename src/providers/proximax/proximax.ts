@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import {
   Account,
@@ -26,12 +26,16 @@ import {
   NetworkHttp,
   MultisigAccountInfo,
   Crypto,
+  TransactionType,
+  AggregateTransaction,
+  CosignatureTransaction,
 } from 'tsjs-xpx-chain-sdk';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
 import { AppConfig } from '../../app/app.config';
 import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
 import { Storage } from '@ionic/storage';
+import { flatMap, filter, map, toArray, catchError } from 'rxjs/operators';
 
 /*
   Generated class for the ProximaxProvider provider.
@@ -54,7 +58,10 @@ export class ProximaxProvider {
   transactionHttp: TransactionHttp;
 
 
-  constructor(public http: HttpClient, private storage: Storage,) {
+  constructor(
+    public http: HttpClient,
+    private storage: Storage,
+  ) {
   
     this.networkType = AppConfig.sirius.networkType;
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
@@ -141,6 +148,18 @@ export class ProximaxProvider {
     // return null;
     return this.accountHttp.unconfirmedTransactions(publicAccount, new QueryParams(queryParams));
   }
+
+  getAllTransactionsAggregate(publicAccount: PublicAccount, queryParams?): Observable<AggregateTransaction[]> {
+    // return null;
+    return this.accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(queryParams))
+      .pipe(
+        flatMap(txn => txn),
+        filter((txn: Transaction) => txn.type === TransactionType.AGGREGATE_BONDED),
+        map(txn => <AggregateTransaction>txn),
+        toArray()
+      );
+  }
+
   getBalance(address: Address): Observable<MosaicAmountView[]> {
     // return null;
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
@@ -316,5 +335,18 @@ export class ProximaxProvider {
   public formatLevy(mosaic: any): Promise<any> {
     return new Promise((resolve, reject) => {
     })
+  }
+
+  cosignAggregateBondedTransaction(transaction: AggregateTransaction, account: Account) {
+    const cosignatureTransaction = CosignatureTransaction.create(transaction);
+    const cosignedTransaction = account.signCosignatureTransaction(cosignatureTransaction);
+    return this.transactionHttp.announceAggregateBondedCosignature(cosignedTransaction);
+  };
+
+  isMultisigAccount(address: Address): Observable<boolean> {
+    return this.accountHttp.getMultisigAccountInfo(address).pipe(
+      map(multisigInfo => multisigInfo.cosignatories.length > 0),
+      catchError(() => of(false))
+    );
   }
 }

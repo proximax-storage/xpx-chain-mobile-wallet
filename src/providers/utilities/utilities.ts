@@ -96,7 +96,9 @@ export class UtilitiesProvider {
    * @param mosaic The mosaic object for querying the logo
    */
   getLogo(mosaic: DefaultMosaic) {
-    if (
+    if(!mosaic) {
+      return AppProvider.LOGO.DEFAULT;
+    } else if (
       mosaic.namespaceId.toLowerCase() === 'prx' &&
       mosaic.mosaicId.toLowerCase() === 'xpx' || mosaic.hex.toLowerCase() ===  AppConfig.xpxHexId
     ) {

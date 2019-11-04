@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Deadline, Address, TransferTransaction } from 'tsjs-xpx-chain-sdk';
+import { Deadline, Address, TransferTransaction, TransactionType } from 'tsjs-xpx-chain-sdk';
 
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
@@ -21,6 +21,7 @@ import { DefaultMosaic } from '../../../../../models/default-mosaic';
 export class TransferDetailComponent {
   @Input() tx: any;
   @Input() mosaics: DefaultMosaic[] = [];
+  @Input() owner: string;
   public App = App;
   public ownerAddress: any;
   public message: any;
@@ -32,8 +33,9 @@ export class TransferDetailComponent {
     public mosaicsProvider: MosaicsProvider,
   ) {
   }
-
+  
   ngOnInit() {
+    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];    
     this._setOwner();
     this._getMosaicInfo();
   }

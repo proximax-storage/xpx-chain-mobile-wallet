@@ -39,7 +39,7 @@
 
       <p text-right  ion-text color="dark">
           <small>
-            {{ tx.deadline.value.minusHours(2).toString() | timeago }}
+            {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
           </small>
         </p>
     </section>
@@ -60,6 +60,12 @@
 
     <section item-right *ngIf="STATUS=='Unconfirmed'">
       <p float-right ion-text color="danger">
+        <small>{{STATUS}}</small>
+      </p>
+    </section>
+
+    <section item-right *ngIf="STATUS=='Partial'">
+      <p float-right ion-text color="grey">
         <small>{{STATUS}}</small>
       </p>
     </section>

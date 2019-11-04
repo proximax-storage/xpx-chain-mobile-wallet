@@ -11,11 +11,11 @@
     </p>
 
     <section item-right>
-      <h2 text-right ion-text color="success" [hidden]="mosaics" *ngIf="ownerAddress?.ADDRESS == tx?.recipient?.address">
+      <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient?.address">
         + {{ mosaic.amount?.toString() }}
       </h2>
 
-      <h2 text-right ion-text color="danger" [hidden]="!mosaics" *ngIf="ownerAddress?.ADDRESS  != tx?.recipient?.address">
+      <h2 text-right ion-text color="danger" *ngIf="owner  != tx?.recipient?.address">
         - {{ mosaic.amount?.toString()  }}
       </h2>
 
@@ -44,11 +44,11 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
 
       <p text-wrap ion-text color="dark">
-        {{ tx?.deadline.value.minusHours(2).toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
+        {{ tx?.deadline.value.minusMinutes(1439).toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
       </p>
 
       <p item-right>
-        {{ tx?.deadline.value.minusHours(2).toString() | timeago  }}
+        {{ tx?.deadline.value.minusMinutes(1439).toString() | timeago  }}
       </p>
     </ion-item>
   </ion-card-content>
@@ -120,7 +120,7 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</h2>
 
       <p text-wrap>
-        {{ tx?.transactionInfo?.hash }}
+        {{ tx?.transactionInfo?.aggregateHash ? tx?.transactionInfo?.aggregateHash : tx?.transactionInfo?.hash }}
       </p>
     </ion-item>
   </ion-card-content>
