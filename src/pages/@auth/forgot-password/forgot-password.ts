@@ -31,7 +31,7 @@ export class ForgotPasswordPage {
 
   init() {
     this.formGroup = this.formBuilder.group({
-      email: ['', [Validators.email, Validators.required]]
+      user: ['', [ Validators.required]]
     });
   }
 

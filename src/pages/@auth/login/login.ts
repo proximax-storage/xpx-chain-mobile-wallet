@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
 
   init() {
     this.formGroup = this.formBuilder.group({
-      email: ['', Validators.required],
+      user: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -85,12 +85,12 @@ export class LoginPage implements OnInit {
     if(this.formGroup.status == "VALID") {
 
       this.authProvider
-      .login(form.email, form.password)
+      .login(form.user, form.password)
       .then(res => {
         if (res.status === 'success') {
           this.haptic.notification({ type: 'success' });
           this.authProvider
-            .setSelectedAccount(form.email, form.password)
+            .setSelectedAccount(form.user, form.password)
             .then(_ => {
               setTimeout(() => {
                 this.gotoHome();
