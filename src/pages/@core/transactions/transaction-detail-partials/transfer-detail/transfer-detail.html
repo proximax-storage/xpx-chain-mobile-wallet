@@ -12,11 +12,11 @@
 
     <section item-right>
       <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient?.address">
-        + {{ mosaic.amount?.toString() }}
+        + {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
       </h2>
 
       <h2 text-right ion-text color="danger" *ngIf="owner  != tx?.recipient?.address">
-        - {{ mosaic.amount?.toString()  }}
+        - {{ getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility) }}
       </h2>
 
       <p text-right text-left ion-text color="dark">
@@ -92,7 +92,7 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
 
       <p text-wrap ion-text color="dark">
-        {{ getRelativeAmount(tx?.maxFee.compact()) }} XPX
+        {{ getAbsoluteAmount(tx?.maxFee.compact(), 6) }} XPX
       </p>
     </ion-item>
   </ion-card-content>

@@ -29,14 +29,14 @@ export class MosaicsProvider {
 
 
   constructor(private coingeckoProvider: CoingeckoProvider, private proximaxProvider: ProximaxProvider, ) {
-    console.log("Hello MosaicsProvider Provider");
+    // console.log("Hello MosaicsProvider Provider");
     this.defaultMosaics = this.getDefaultMosaics();
   }
 
   
 
   getDefaultMosaics(): Array<DefaultMosaic> {
-    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: AppConfig.xpxHexId, amount: 0, divisibility:0 });
+    const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: AppConfig.xpxHexId, amount: 0, amountCompact: 0, divisibility:0 });
     // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
     // const SFT = new DefaultMosaic({ namespaceId: "sportsfix", mosaicId: "sft", hex: "33b0efbf4a600cc9", amount: 0, divisibility:0 });
     // const XAR = new DefaultMosaic({ namespaceId: "xarcade", mosaicId: "xar", hex: "59096674da68a7e5", amount: 0, divisibility:0 });
@@ -75,7 +75,7 @@ export class MosaicsProvider {
       const activeMosaics = await mosaicAmountViewArray.filter((_:MosaicAmountView)=> _.mosaicInfo.duration.compact() != 5760 && _.mosaicInfo.duration.compact() != 11520)
 
       activeMosaics.forEach((_:MosaicAmountView)=>{
-        console.log("TCL: MosaicsProvider -> _.mosaicInfo.duration.compact();", _.mosaicInfo.mosaicId.toHex(),_.mosaicInfo.duration.compact(), _.mosaicInfo );
+        // console.log("TCL: MosaicsProvider -> _.mosaicInfo.duration.compact();", _.mosaicInfo.mosaicId.toHex(),_.mosaicInfo.duration.compact(), _.mosaicInfo );
       })
 
       observer.next(this.getMosaicMetaData(activeMosaics));
@@ -91,6 +91,7 @@ export class MosaicsProvider {
         mosaicId: '', // mosaicId
         hex: mosaicAmountView.fullName(), // mosaic hex id
         amount: mosaicAmountView.relativeAmount(),
+        amountCompact: mosaicAmountView.amount.compact(),
         divisibility: mosaicAmountView.mosaicInfo.divisibility,
       });
       let XPX = this.getDefaultMosaics().filter(m => m.hex === _mosaicAmountView.hex);
@@ -109,7 +110,7 @@ export class MosaicsProvider {
       
     })
 
-    console.log("TCL: MosaicsProvider -> getMosaicMetaData -> _mosaicAmountViewArray", _mosaicAmountViewArray)
+    // console.log("TCL: MosaicsProvider -> getMosaicMetaData -> _mosaicAmountViewArray", _mosaicAmountViewArray)
     return _mosaicAmountViewArray;
   }
 
@@ -118,7 +119,7 @@ export class MosaicsProvider {
    * @param ownedMosaics 
    */
   public getMosaicInfo(ownedMosaics: Mosaic[]): Observable<Array<DefaultMosaic>> {
-  console.log('LOG: MosaicsProvider -> mergeMosaics -> ownedMosaics', JSON.stringify(ownedMosaics,null, 3));    
+  // console.log('LOG: MosaicsProvider -> mergeMosaics -> ownedMosaics', JSON.stringify(ownedMosaics,null, 3));    
 
 
     return new Observable(observer => {
@@ -166,7 +167,8 @@ export class MosaicsProvider {
                       namespaceId: mName.name.toString().split('.')[0], // namespaceId
                       mosaicId: mName.name.toString().split('.')[1], // mosaicId
                       hex: mName.id.toHex(), // mosaic hex id
-                      amount: this.getRelativeAmount(mosaic.amount.compact(), mInfo.divisibility),
+                      amount: mosaic.amount.compact(),
+                      amountCompact: this.getRelativeAmount(mosaic.amount.compact(), mInfo.divisibility),
                       divisibility: mInfo.divisibility,
                       // 'duration': mInfo.duration
                     });
@@ -175,7 +177,7 @@ export class MosaicsProvider {
                 toArray()
               )
                 .subscribe(mosaicsInfo=> {
-                  console.log("TCL: mosaicsInfo", JSON.stringify(mosaicsInfo,null,3));
+                  // console.log("TCL: mosaicsInfo", JSON.stringify(mosaicsInfo,null,3));
                   const mergedMosaics = this.filterUniqueMosaic(mosaicsInfo.concat(this.getDefaultMosaics()));
                   observer.next(mergedMosaics);
               })
@@ -188,7 +190,7 @@ export class MosaicsProvider {
   
   
       mosaicList$.subscribe(mosaicList=>{
-      console.log('LOG: MosaicsProvider -> mergeMosaics -> mosaicList', mosaicList);
+      // console.log('LOG: MosaicsProvider -> mergeMosaics -> mosaicList', mosaicList);
       })
     })
 
@@ -239,9 +241,9 @@ export class MosaicsProvider {
       })
 
       Promise.all(mosaicsAmountInUSD).then(function (pricesArray) {
-        console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
+        // console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> results", pricesArray)
         const sum = pricesArray.reduce(getSum);
-        console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> sum", sum)
+        // console.log("SIRIUS CHAIN WALLET: HomePage -> getWalletBalanceInUSD -> sum", sum)
         resolve(sum);
       })
     })
@@ -266,7 +268,7 @@ export class MosaicsProvider {
           return details.market_data.current_price.usd;
         })
         .catch((err) => {
-          console.log("LOG: MosaicsProvider -> getCoinPrice -> err", err);
+          // console.log("LOG: MosaicsProvider -> getCoinPrice -> err", err);
           return returnZero();
         });
     } else {

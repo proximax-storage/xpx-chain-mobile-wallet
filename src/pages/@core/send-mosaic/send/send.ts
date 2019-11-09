@@ -14,7 +14,6 @@ import {
   SimpleWallet,
   Password,
   Account,
-  AccountInfo
 } from "tsjs-xpx-chain-sdk";
 
 import { App } from "../../../../providers/app/app";
@@ -32,7 +31,7 @@ import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
-import { DeeplinkMatch } from '@ionic-native/deeplinks';
+import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 
 /**
  * Generated class for the SendPage page.
@@ -71,6 +70,7 @@ export class SendPage {
   };
 
   payload:any = {};
+  configurationForm: ConfigurationForm = {};
 
   constructor(
     public navCtrl: NavController,
@@ -90,11 +90,12 @@ export class SendPage {
     private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sharedService: SharedService
   ) {
     // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
-    console.log("this.mosaicSelectedName", this.selectedMosaicName);
+    this.configurationForm = this.sharedService.configurationForm;
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
@@ -211,14 +212,27 @@ export class SendPage {
         "",
         [
           Validators.required,
-          Validators.minLength(40),
-          Validators.maxLength(46)
+          Validators.minLength(this.configurationForm.address.minLength),
+          Validators.maxLength(this.configurationForm.address.maxLength)
         ]
       ],
       isMosaicTransfer: [false, Validators.required],
       message: [""],
-      amount: ["", Validators.required],
-      fee: [""]
+      amount: [
+        "", 
+        [
+          Validators.required,
+        ]
+      ],
+      fee: [""],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.configurationForm.passwordWallet.minLength),
+          Validators.minLength(this.configurationForm.passwordWallet.minLength)
+        ]
+      ]
     });
 
     // Initialize source type of NEM address in from and to

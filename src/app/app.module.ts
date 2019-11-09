@@ -69,6 +69,7 @@ import { Screenshot } from '@ionic-native/screenshot';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks';
+import { SharedService } from '../providers/shared-service/shared-service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -119,6 +120,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DecimalPipe,
     App,
     AuthProvider,
+    SharedService,
     NemProvider,
     WalletProvider,
     AlertProvider,

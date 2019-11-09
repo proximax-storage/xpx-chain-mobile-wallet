@@ -112,6 +112,12 @@
               placeholder="{{'WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER' | translate}}"></ion-textarea>
           </ion-item>
 
+          <ion-item transparent padding>
+            <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+            <ion-input formControlName="password" type="password" autocapitalize="none" placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}">
+            </ion-input>
+          </ion-item>
+
           <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
             {{"WALLETS.CREATE.IMPORT" | translate}}
           </button>

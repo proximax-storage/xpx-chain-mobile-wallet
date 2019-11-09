@@ -132,7 +132,8 @@ export class WalletImportOptionPage {
     if (this.selectedOption.value === WalletImportOption.PRIVATE_KEY) {
       this.navCtrl.push("WalletAddPrivateKeyPage", {
         name: "",
-        privateKey: ""
+        privateKey: "",
+        password: ""
       });
     } else if (this.selectedOption.value === WalletImportOption.WALLET_FILE) {
       this.storage.set("isAppPaused", true).then(_ => {

@@ -130,7 +130,7 @@ export class ProximaxProvider {
     const _password = new Password(password);
     const wallet = SimpleWallet.createFromPrivateKey(walletName, _password, privateKey, NetworkType.MIJIN_TEST);
     const account = wallet.open(_password);
-    console.log('Your account address is:', account.address.pretty(), 'and its private key', account.privateKey);
+    // console.log('Your account address is:', account.address.pretty(), 'and its private key', account.privateKey);
     return account;
   }
 
@@ -173,7 +173,7 @@ export class ProximaxProvider {
   }
 
   getPublicAccountFromPrivateKey(privateKey: string, networkType: NetworkType): PublicAccount {
-  console.log("TCL: ProximaxProvider -> privateKey", privateKey, networkType)
+  // console.log("TCL: ProximaxProvider -> privateKey", privateKey, networkType)
     
     return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
@@ -251,8 +251,20 @@ export class ProximaxProvider {
     return success;
   }
 
-  public getAbsoluteAmount(amount: number): number {
-    return amount * Math.pow(10, 6);
+  // public getAbsoluteAmount(amount: number): number {
+  //   return amount * Math.pow(10, 6);
+  // }
+
+  amountFormatter(amount: Number, divisibility: any) {
+    const amountDivisibility = Number(amount) / Math.pow(10, divisibility);
+    return amountDivisibility.toLocaleString("en-us", {
+      minimumFractionDigits: divisibility
+    });
+  }
+  public getAbsoluteAmount(amount, divisibility) {
+    const amountDivisibility = amount * Math.pow(10, divisibility);
+
+    return amountDivisibility;
   }
 
 

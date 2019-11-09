@@ -8,6 +8,7 @@ import { UtilitiesProvider } from '../../../../../providers/utilities/utilities'
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 import { MosaicId, TransactionType } from 'tsjs-xpx-chain-sdk';
 import { AppConfig } from '../../../../../app/app.config';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 @Component({
   selector: 'transfer-transaction',
@@ -24,14 +25,14 @@ export class TransferTransactionComponent {
   
   App = App;
   LOGO: string = App.LOGO.DEFAULT;
-  AMOUNT: number = 0;
-  MOSAIC_INFO: DefaultMosaic = new DefaultMosaic({namespaceId: 'prx', mosaicId:'xpx', hex:AppConfig.xpxHexId, amount:0, divisibility:0});
+  AMOUNT: any = 0;
+  MOSAIC_INFO: DefaultMosaic = new DefaultMosaic({namespaceId: 'prx', mosaicId:'xpx', hex:AppConfig.xpxHexId, amount:0, amountCompact:0, divisibility:0});
   STATUS:string = '';
   array: any[]=[];
 
   constructor(
-    private mosaicsProvider: MosaicsProvider,
-    private utils: UtilitiesProvider
+    private utils: UtilitiesProvider,
+    private proximaxProvider: ProximaxProvider
     ){      
   }
 
@@ -49,6 +50,6 @@ export class TransferTransactionComponent {
 
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
-    this.AMOUNT = this.mosaicsProvider.getRelativeAmount(_tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
+    this.AMOUNT = this.proximaxProvider.amountFormatter(_tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
   }
 }

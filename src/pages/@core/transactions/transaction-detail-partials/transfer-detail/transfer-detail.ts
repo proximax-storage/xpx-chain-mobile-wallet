@@ -31,6 +31,7 @@ export class TransferDetailComponent {
     private wallet: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
+    private proximaxProvider: ProximaxProvider
   ) {
   }
   
@@ -46,6 +47,10 @@ export class TransferDetailComponent {
     });
   }
 
+  getAbsoluteAmount(amount, divisibility){
+    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  }
+
   private async _getMosaicInfo() {
     // Get mosaic details
     this.mosaics = this.mosaics.filter(m1 => {
@@ -59,7 +64,8 @@ export class TransferDetailComponent {
             namespaceId: m1.namespaceId,
             hex: m1.hex,
             mosaicId: m1.mosaicId,
-            amount: m2.amount.compact() / Math.pow(10, m1.divisibility),
+            amount: m2.amount.compact(),
+            amountCompact: m2.amount.compact(),
             divisibility: m1.divisibility
           }
           )
@@ -78,10 +84,6 @@ export class TransferDetailComponent {
       this.messageShow = false
      }
   }
-
-  getRelativeAmount(amount) {
-    return amount / Math.pow(10, 6);
-  }
-
+  
   IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; } 
 }

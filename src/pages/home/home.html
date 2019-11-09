@@ -75,7 +75,8 @@
             <h2 ion-text color="dark">{{ mosaic.mosaicId | uppercase}}</h2>
             <p ion-text color="dark">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</p>
             <section text-right item-right>
-              <h2 ion-text color="dark">{{ mosaic.amount | number : '1.6-6'}}</h2>
+              
+              <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
             </section>
           </ion-item>
         </ion-card-header>

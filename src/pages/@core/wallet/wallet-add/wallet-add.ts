@@ -11,6 +11,7 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 
 /**
  * Generated class for the WalletAddPage page.
@@ -27,13 +28,13 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 export class WalletAddPage {
   App = App;
   formGroup: FormGroup;
-
   PASSWORD: string;
 
-  walletColor:string = "wallet-4";
+  walletColor: string = "wallet-4";
   walletName: string = "Primary";
 
   tablet: boolean = false;
+  configurationForm: ConfigurationForm = {};
 
   constructor(
     public navCtrl: NavController,
@@ -45,14 +46,17 @@ export class WalletAddPage {
     private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
     private haptic: HapticProvider,
-    private translateService : TranslateService,
+    private translateService: TranslateService,
+    private sharedService: SharedService
   ) {
-    this.init();
+
+    this.configurationForm = this.sharedService.configurationForm;
     this.walletColor = "wallet-1";
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
+    this.init();
   }
 
-  changeWalletColor(color){
+  changeWalletColor(color) {
     this.walletColor = color;
   }
 
@@ -61,7 +65,7 @@ export class WalletAddPage {
 
     // Hide Tabs
     let tabs = document.querySelectorAll('.tabbar');
-    if ( tabs !== null ) {
+    if (tabs !== null) {
       Object.keys(tabs).map((key) => {
         // tabs[ key ].style.transform = 'translateY(56px)';
         tabs[key].style.display = 'none';
@@ -71,7 +75,7 @@ export class WalletAddPage {
 
   ionViewDidLeave() {
     let tabs = document.querySelectorAll('.tabbar');
-    if ( tabs !== null ) {
+    if (tabs !== null) {
       Object.keys(tabs).map((key) => {
         tabs[key].style.display = 'flex';
       });
@@ -79,7 +83,7 @@ export class WalletAddPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletAddPage');
+    // console.log('ionViewDidLoad WalletAddPage');
   }
 
   init() {
@@ -89,12 +93,27 @@ export class WalletAddPage {
     }
 
     this.formGroup = this.formBuilder.group({
-      name: ['', [Validators.minLength(3), Validators.required]]
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.configurationForm.nameWallet.minLength),
+          Validators.maxLength(this.configurationForm.nameWallet.maxLength)
+        ]
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.configurationForm.passwordWallet.minLength),
+          Validators.minLength(this.configurationForm.passwordWallet.minLength)
+        ]
+      ]
     });
 
-    this.authProvider.getPassword().then(password => {
-      this.PASSWORD = password;
-    });
+    // this.authProvider.getPassword().then(password => {
+    //   this.PASSWORD = password;
+    // });
   }
 
   gotoBackup(wallet) {
@@ -116,16 +135,16 @@ export class WalletAddPage {
         const title = `<${this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS")}>`
         this.alertProvider.showMessage(title);
       } else {
-        
-        
-        const newWallet = this.walletProvider.createSimpleWallet({ walletName: form.name, password: this.PASSWORD });
 
-        console.log("LOG: WalletAddPage -> onSubmit -> newWallet", newWallet);
-        
+
+        const newWallet = this.walletProvider.createSimpleWallet({ walletName: form.name, password: form.password });
+
+        // console.log("LOG: WalletAddPage -> onSubmit -> newWallet", newWallet);
+
         this.walletProvider.storeWallet(newWallet, this.walletColor).then(value => {
 
           newWallet.walletColor = this.walletColor;
-          console.log("New wallet:",newWallet);
+          // console.log("New wallet:", newWallet);
           return this.walletProvider.setSelectedWallet(newWallet);
         }).then(() => {
           this.haptic.notification({ type: 'success' });
@@ -138,9 +157,9 @@ export class WalletAddPage {
   }
 
   updateName() {
-		let name = this.formGroup.value.name
-		console.log("LOG: WalletAddPage -> updateName -> name", name);
-    if(name) {
+    let name = this.formGroup.value.name
+    // console.log("LOG: WalletAddPage -> updateName -> name", name);
+    if (name) {
       this.walletName = name;
     } else {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;

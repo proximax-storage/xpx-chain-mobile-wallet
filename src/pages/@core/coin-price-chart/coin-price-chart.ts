@@ -82,6 +82,7 @@ export class CoinPriceChartPage {
   public mosaics: DefaultMosaic[] = [];
   array: any[]=[];
   account: any;
+  divisibility: any;
 
 
   constructor(
@@ -136,8 +137,12 @@ export class CoinPriceChartPage {
     if(this.confirmedTransactions.length < 1){
       this.showEmptyMessage = true;
     }
-    
-    this.mosaicAmount = this.navParams.data['mosaicAmount']; 
+    this.navParams.data.mosaics.forEach(element => {
+      if(element.hex === this.navParams.data.mosaicHex){
+        this.mosaicAmount = element.amountCompact; 
+        this.divisibility = element.divisibility; 
+      }
+    });
     this.totalBalance = this.navParams.data['totalBalance'];
     
     if (this.mosaicId == 'xar') {
@@ -193,6 +198,10 @@ export class CoinPriceChartPage {
   ionViewWillEnter() {
   }
 
+  getAbsoluteAmount(amount, divisibility){
+    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  }
+  
   getAccountInfo() {
     // console.info("Getting account information.", this.selectedAccount.address)
     try {

@@ -36,6 +36,7 @@ import { TransactionsProvider } from "../../providers/transactions/transactions"
 import { Observable } from "rxjs";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { DefaultMosaic } from "../../models/default-mosaic";
+import { ProximaxProvider } from '../../providers/proximax/proximax';
 
 @Component({
   selector: "page-home",
@@ -107,7 +108,7 @@ export class HomePage {
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
-    private deeplinks: Deeplinks 
+    private proximaxProvider: ProximaxProvider
   ) {
   //   this.platform.ready().then(()=> {
 
@@ -233,6 +234,9 @@ export class HomePage {
                     .computeTotalBalance(mosaics)
                     .then(total => {
                       this.totalWalletBalance = total as number;
+
+                      console.log(this.totalWalletBalance);
+                      
                       console.log(
                         "SIRIUS CHAIN WALLET: HomePage -> init -> total",
                         total
@@ -398,6 +402,10 @@ export class HomePage {
     });
   }
 
+  getAbsoluteAmount(amount, divisibility){
+    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  }
+
   onWalletPress(wallet) {
     this.haptic.impact({ style: "heavy" });
 
@@ -447,7 +455,8 @@ export class HomePage {
       } else {
         this.navCtrl.push("WalletAddPrivateKeyPage", {
           name: "",
-          privateKey: ""
+          privateKey: "",
+          password: ""
         });
       }
     });
