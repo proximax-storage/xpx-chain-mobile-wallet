@@ -155,7 +155,7 @@ export class UtilitiesProvider {
    * @param page { Component || string } The page to set as modal.
    * @param data { Object } Any data to pass when modal is shown
    */
-  showModal(page, data = {}): Observable<any> {
+  showModal(page: any, data: Object = {}): Observable<any> {
     const modal = this.modalCtrl.create(page, data, {
       enableBackdropDismiss: false,
       showBackdrop: true

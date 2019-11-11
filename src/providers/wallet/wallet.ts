@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
 import { AuthProvider } from '../auth/auth';
-import { SimpleWallet, Password, Address, EncryptedPrivateKey, 
+import {
+  SimpleWallet, Password, Address, EncryptedPrivateKey,
   AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
-  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, NetworkCurrencyMosaic} from 'tsjs-xpx-chain-sdk';
+  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, NetworkCurrencyMosaic
+} from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
@@ -27,56 +29,73 @@ export class WalletProvider {
   selectedWallet: any;
 
   constructor(
-    private storage: Storage, 
-    private authProvider: AuthProvider, 
+    private storage: Storage,
+    private authProvider: AuthProvider,
     private proximaxProvider: ProximaxProvider,
-    private http: HttpClient,) {
-      this.httpUrl = AppConfig.sirius.httpNodeUrl;
+    private http: HttpClient, ) {
+    this.httpUrl = AppConfig.sirius.httpNodeUrl;
   }
 
-    /**
-   * Create Simple Wallet
-   * @param walletName wallet idenitifier for app
-   * @param password wallet's password
-   * @param selected network
-   * @return Promise with wallet created
+
+  /**
+   *
+   *
+   * @param {string} walletName
+   * @param {string} password
+   * @param {string} privateKey
+   * @returns {SimpleWallet}
+   * @memberof WalletProvider
    */
-  public createSimpleWallet(
-  { walletName, password }: 
-  { walletName: string; password: string; }): 
-  SimpleWallet {
-    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
-  }
-
-  public createAccountFromPrivateKey(
-    { walletName, password, privateKey }: 
-    { walletName: string; password: string; privateKey: string; }): 
-    SimpleWallet {
+  createAccountFromPrivateKey(walletName: string, password: string, privateKey: string): SimpleWallet {
     return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
   }
 
-  public getAccount(wallet: SimpleWallet) : Observable<Account> {
+
+
+
+
+
+
+  // -----------------------------------------------------------------------
+
+  /**
+ * Create Simple Wallet
+ * @param walletName wallet idenitifier for app
+ * @param password wallet's password
+ * @param selected network
+ * @return Promise with wallet created
+ */
+  public createSimpleWallet(
+    { walletName, password }:
+      { walletName: string; password: string; }):
+    SimpleWallet {
+    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  }
+
+
+
+  public getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
-     this.authProvider
-     .getPassword()
-     .then(password => {
-       // Get user's password
-       const myPassword = new Password(password);
+      this.authProvider
+        .getPassword()
+        .then(password => {
+          // Get user's password
+          const myPassword = new Password(password);
 
-       // Convert current wallet to SimpleWallet
-       const myWallet = this.convertToSimpleWallet(wallet)
+          // Convert current wallet to SimpleWallet
+          const myWallet = this.convertToSimpleWallet(wallet)
 
-       // Unlock wallet to get an account using user's password 
-       const account = myWallet.open(myPassword);
+          // Unlock wallet to get an account using user's password 
+          const account = myWallet.open(myPassword);
 
-       observer.next(account);
-     
-      });
+          observer.next(account);
+
+        });
     });
   }
 
-  public getAccountInfo(account: Account) : Observable<AccountInfo> {
+  public getAccountInfo(account: Account): Observable<AccountInfo> {
     return this.proximaxProvider.getAccountInfo(Address.createFromRawAddress(account.address.plain()));
   }
 
@@ -113,7 +132,7 @@ export class WalletProvider {
         let wallets = value;
         result = wallets[username];
 
-        result.push({wallet: wallet, walletColor: walletColor});
+        result.push({ wallet: wallet, walletColor: walletColor });
 
         wallets[username] = result;
         this.storage.set('wallets', wallets);
@@ -122,12 +141,12 @@ export class WalletProvider {
     });
   }
 
-     /**
-   * Store wallet
-   * @param walletC
-   * @param walletN
-   * @return Promise with stored wallet
-   */
+  /**
+* Store wallet
+* @param walletC
+* @param walletN
+* @return Promise with stored wallet
+*/
 
   public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
     let result = [];
@@ -136,7 +155,7 @@ export class WalletProvider {
         let wallets = value;
         result = wallets[username];
 
-        result.push({wallet: walletC, walletNis1: walletN,  walletColor: walletColor});
+        result.push({ wallet: walletC, walletNis1: walletN, walletColor: walletColor });
 
         wallets[username] = result;
 
@@ -150,22 +169,22 @@ export class WalletProvider {
    * @param wallet The wallet to change the name.
    * @param newWalletName The new name for the wallet.
    */
-  public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor:string) {
+  public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
     // return;
     return this.authProvider.getUsername().then(username => {
       return this.getLocalWallets().then(wallets => {
         let _wallets: any = wallets[username];
-        let updateWallet :any;
-        for(let i=0; i<_wallets.length; i++) {
-          if(_wallets[i].wallet.name == wallet.name) {
+        let updateWallet: any;
+        for (let i = 0; i < _wallets.length; i++) {
+          if (_wallets[i].wallet.name == wallet.name) {
             _wallets[i].wallet.name = newWalletName;
             _wallets[i].walletColor = walletColor;
-            updateWallet= _wallets[i];
+            updateWallet = _wallets[i];
           };
 
         }
 
-        
+
 
         _wallets = _wallets.map(_ => {
           return {
@@ -185,13 +204,13 @@ export class WalletProvider {
   }
 
   deleteWallet(wallet: SimpleWallet) {
-    
+
     return this.authProvider.getUsername().then(username => {
       return this.getLocalWallets().then(wallets => {
         let _wallets: Array<any> = wallets[username];
 
         console.log(_wallets, wallet);
-        _wallets.map((res,index)=> {
+        _wallets.map((res, index) => {
           if (res.wallet.name == wallet.name) {
             console.log("Deleting your wallet: ", wallet.name)
             _wallets.splice(index, 1);
@@ -212,9 +231,9 @@ export class WalletProvider {
         _wallets
         return;
 
-        
 
-        
+
+
       });
     });
   }
@@ -270,16 +289,16 @@ export class WalletProvider {
     return this.authProvider.getUsername().then(username => {
       return this.storage.get('wallets').then(wallets => {
         let _wallets = wallets ? wallets : {};
-				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
+        console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
         const WALLETS = _wallets[username] ? _wallets[username] : [];
 
         if (wallets) {
           const walletsMap = WALLETS.map(walletFile => {
             if (walletFile.name) {
-              return 
+              return
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
-              return { wallet:<SimpleWallet>(walletFile.wallet), walletColor: walletFile.walletColor};
+              return { wallet: <SimpleWallet>(walletFile.wallet), walletColor: walletFile.walletColor };
             }
           });
 
@@ -293,23 +312,23 @@ export class WalletProvider {
     });
   }
 
-    /**
-   * Get loaded wallets from localStorage
-   */
+  /**
+ * Get loaded wallets from localStorage
+ */
   public getLocalWalletsNis(): Promise<any> {
     return this.authProvider.getUsername().then(username => {
       return this.storage.get('walletsNis1').then(wallets => {
         let _wallets = wallets ? wallets : {};
-				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
+        console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
         const WALLETS = _wallets[username] ? _wallets[username] : [];
 
         if (wallets) {
           const walletsMap = WALLETS.map(walletFile => {
             if (walletFile.name) {
-              return 
+              return
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
-              return { wallet:<SimpleWallet>(walletFile.wallet), walletNis1:<SimpleWallet>(walletFile.walletNis1), walletColor: walletFile.walletColor};
+              return { wallet: <SimpleWallet>(walletFile.wallet), walletNis1: <SimpleWallet>(walletFile.walletNis1), walletColor: walletFile.walletColor };
             }
           });
 
@@ -322,13 +341,13 @@ export class WalletProvider {
       });
     });
   }
-  
+
   /**
    * Get loaded wallets from localStorage
    */
   public getWallets(): Promise<any> {
     return this.authProvider.getUsername().then(username => {
-    console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", username)
+      console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", username)
       return this.storage.get('wallets').then(wallets => {
         console.log("LOG: WalletProvider -> constructor -> data", wallets)
         let _wallets = wallets || {};
@@ -337,15 +356,15 @@ export class WalletProvider {
 
         if (WALLETS) {
           const walletsMap = WALLETS.map(walletFile => {
-          console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
-            
+            console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
+
             if (walletFile.name) {
-              return 
+              return
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
             } else {
               let wallet = walletFile.wallet as SimpleWallet;
               wallet.walletColor = walletFile['walletColor'];
-              return wallet ;
+              return wallet;
             }
           });
 
@@ -450,7 +469,7 @@ export class WalletProvider {
     // return true;
   }
 
-  
+
   isPrivateKeyValid(privateKey: any) {
     if (privateKey.length !== 64 && privateKey.length !== 66) {
       console.error('Private key length must be 64 or 66 characters !');

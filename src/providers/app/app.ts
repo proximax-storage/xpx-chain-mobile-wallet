@@ -46,6 +46,5 @@ export class App {
   };
 
   constructor(public http: HttpClient) {
-    console.log("Hello AppProvider Provider");
   }
 }
