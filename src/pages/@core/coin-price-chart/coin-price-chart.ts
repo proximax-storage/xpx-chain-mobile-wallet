@@ -192,7 +192,10 @@ export class CoinPriceChartPage {
           }
           this.showEmptyMosaic = false;
         });
+      } else {
+        this.showEmptyMosaic = true;
       }
+
     }
   }
   ionViewWillEnter() {
