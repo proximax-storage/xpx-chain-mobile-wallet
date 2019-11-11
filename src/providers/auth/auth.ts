@@ -24,6 +24,13 @@ export class AuthProvider {
   ) { }
 
 
+  async auth(password: string, nameAccount?: string) {
+    const decrypted = await this.decryptAccountUser(password, nameAccount);
+    if (decrypted) {
+      
+    }
+  }
+
   /**
    * RJ
    *
@@ -61,16 +68,26 @@ export class AuthProvider {
    * @param {string} password
    * @memberof AuthProvider
    */
-  async decryptAccountUser(password: string) {
-    const accountSelected = await this.storage.get('selectedAccount');
-    console.log(accountSelected);
-    if (accountSelected && accountSelected.encrypted) {
-      const decryptBytes = CryptoJS.TripleDES.decrypt(accountSelected.encrypted, password);
-      const decrypted = decryptBytes.toString(CryptoJS.enc.Utf8);
-      return (decrypted !== '' && decrypted.length === 64) ? true : false;
-    }
+  async decryptAccountUser(password: string, nameAccount?: string) {
+    try {
+      let account = null;
+      if (nameAccount) {
+        const accounts = await this.storage.get('accounts');
+        account = accounts.find((x: any) => x.user === nameAccount);
+      } else {
+        account = await this.storage.get('selectedAccount');
+      }
 
-    return false;
+      if (account && account.encrypted) {
+        const decryptBytes = CryptoJS.TripleDES.decrypt(account.encrypted, password);
+        const decrypted = decryptBytes.toString(CryptoJS.enc.Utf8);
+        return (decrypted !== '' && decrypted.length === 64) ? true : false;
+      }
+
+      return false;
+    } catch (error) {
+      return false;
+    }
   }
 
 

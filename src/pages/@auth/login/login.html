@@ -19,7 +19,7 @@
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
-        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+        <form [formGroup]="formGroup" (ngSubmit)="auth(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.COMMON.USERNAME" | translate}}</ion-label>
             <ion-input autocapitalize="none" type="text" formControlName="user"

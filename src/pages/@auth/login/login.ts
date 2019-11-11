@@ -42,18 +42,52 @@ export class LoginPage implements OnInit {
     private keyboard: Keyboard,
     private translateService: TranslateService
   ) {
-    this.init();
+    this.createForm();
     this.passwordType = "password";
     this.passwordIcon = "ios-eye-outline";
 
   }
 
-  init() {
+  async auth(form: { user: string; password: string; }) {
+    if (this.formGroup.valid) {
+      const decrypted = await this.authProvider.decryptAccountUser(form.password, form.user);
+      if (decrypted) {
+        this.haptic.notification({ type: 'success' });
+        this.authProvider.setSelectedAccount(form.user, form.password);
+        this.gotoHome();
+      } else {
+        this.utils.showInsetModal('TryAgainPage', {}, 'small');
+        this.haptic.notification({ type: 'error' });
+      }
+    }
+  }
+
+  createForm() {
     this.formGroup = this.formBuilder.group({
       user: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
+
+
+  gotoHome() {
+    const confirmPinTitle = this.translateService.instant("APP.PIN.CONFIRM.TITLE");
+    const confirmPinSubtitle = this.translateService.instant("APP.PIN.CONFIRM")
+    this.storage.get('currentPin').then(pin => {
+      this.utils.showModal('VerificationCodePage', {
+        status: 'confirm',
+        title: confirmPinTitle,
+        subtitle: confirmPinSubtitle,
+        invalidPinMessage: 'Incorrect pin. Please try again',
+        pin: pin,
+        destination: 'TabsPage'
+      });
+    });
+  }
+
+  // --------------------------------------------------------------------------
+
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
@@ -63,53 +97,9 @@ export class LoginPage implements OnInit {
     this.navCtrl.push('ForgotPasswordPage');
   }
 
-  gotoHome() {
 
-    const confirmPinTitle = this.translateService.instant("APP.PIN.CONFIRM.TITLE");
-    const confirmPinSubtitle = this.translateService.instant("APP.PIN.CONFIRM")
 
-    this.storage.get('currentPin').then(pin => {
-      this.utils.showModal('VerificationCodePage', {
-        status: 'confirm',
-        title: confirmPinTitle,
-        subtitle:
-        confirmPinSubtitle,
-        invalidPinMessage: 'Incorrect pin. Please try again',
-        pin: pin,
-        destination: 'TabsPage'
-      });
-    });
-  }
 
-  onSubmit(form) {
-    if(this.formGroup.status == "VALID") {
-
-      this.authProvider
-      .login(form.user, form.password)
-      .then(res => {
-        if (res.status === 'success') {
-          this.haptic.notification({ type: 'success' });
-          this.authProvider
-            .setSelectedAccount(form.user, form.password)
-            .then(_ => {
-              setTimeout(() => {
-                this.gotoHome();
-              }, 1000);
-            });
-        } else {
-          this.utils.showInsetModal('TryAgainPage', {}, 'small');
-          this.haptic.notification({ type: 'error' });
-        }
-      })
-      .catch(err => {
-        console.log("LOG: LoginPage -> onSubmit -> err", err);
-        this.utils.showInsetModal('TryAgainPage', {}, 'small');
-        this.haptic.notification({ type: 'error' });
-      });
-
-    }
-    
-  }
 
   showHidePassword(e: Event) {
     e.preventDefault();

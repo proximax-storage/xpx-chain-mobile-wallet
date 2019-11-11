@@ -245,7 +245,6 @@ export class WalletProvider {
    */
   public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
-
     return this.authProvider.getUsername().then(username => {
       return this.getLocalWallets().then(wallets => {
         const _wallets = wallets[username];

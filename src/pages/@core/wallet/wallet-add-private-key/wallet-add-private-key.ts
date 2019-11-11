@@ -80,13 +80,12 @@ export class WalletAddPrivateKeyPage {
       if (decrypted) {
         this.catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
         console.log('\n\ncatapultWallet\n', this.catapultWallet);
-        
+        console.log('\n\nform.password\n', form.password);
         this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
         this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
           if (value) {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
-
             this.walletProvider.storeWallet(this.catapultWallet, this.walletColor).then(_ => {
               return this.walletProvider.setSelectedWallet(this.catapultWallet);
             }).then(_ => {

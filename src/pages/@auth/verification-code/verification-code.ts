@@ -43,24 +43,24 @@ export class VerificationCodePage {
     private translateService: TranslateService
   ) { }
 
+  /**
+   *
+   *
+   * @memberof VerificationCodePage
+   */
   ionViewWillEnter() {
-    console.log(
-      "VerificationCodePage : ionViewWillEnter",
-      !this.navParams.data.destination &&
-      this.navParams.data.status === "verify"
-    );
-
-    if (
-      !this.navParams.data.destination &&
-      this.navParams.data.status === "verify"
-    ) {
+    if (!this.navParams.data.destination && this.navParams.data.status === "verify") {
       this.utils.disableHardwareBack();
     } else {
       this.utils.disableHardwareBack();
-      // this.utils.setHardwareBackModal(this.viewCtrl);
     }
   }
 
+  /**
+   *
+   *
+   * @memberof VerificationCodePage
+   */
   ionViewDidLoad() {
     console.log("ionViewDidLoad VerificationCodePage");
     console.log(
@@ -73,21 +73,11 @@ export class VerificationCodePage {
     const setupPinTitle = this.translateService.instant("APP.PIN.SETUP.TITLE");
     const setupPinSubTitle = this.translateService.instant("APP.PIN.SETUP.DESC");
 
-    this.pinTitle = this.navParams.data.title
-      ? this.navParams.data.title
-      : setupPinTitle;
-
-    this.pinSubtitle = this.navParams.data.subtitle
-      ? this.navParams.data.subtitle
-      : setupPinSubTitle;
-
-    this.invalidPinMessage = this.navParams.data.invalidPinMessage
-      ? this.navParams.data.invalidPinMessage
-      : "Your pin is not equal to previous one. Please try again.";
-
+    this.pinTitle = this.navParams.data.title ? this.navParams.data.title : setupPinTitle;
+    this.pinSubtitle = this.navParams.data.subtitle ? this.navParams.data.subtitle : setupPinSubTitle;
+    this.invalidPinMessage = this.navParams.data.invalidPinMessage ? this.navParams.data.invalidPinMessage : "Your pin is not equal to previous one. Please try again.";
 
     // Used in pin component to compare previous and current pin
-
     if (this.navParams.data.status === "verify") {
       this.isVerify = true;
       this.previousPin = this.navParams.data.pin;
@@ -103,10 +93,15 @@ export class VerificationCodePage {
     }
   }
 
-  onSubmit(pin) {
-
+  /**
+   *
+   *
+   * @param {string} pin
+   * @returns
+   * @memberof VerificationCodePage
+   */
+  onSubmit(pin: string) {
     const verifyPinTitle = this.translateService.instant("APP.PIN.VERIFY.TITLE");
-
     let status: string = this.navParams.data.status;
     let destination = this.navParams.data.destination;
     console.log(destination)
@@ -163,17 +158,16 @@ export class VerificationCodePage {
           this.isVerify = true;
           this.previousPin = pin;
 
-          return this.pin.set(pin)
-            .then(_ => {
-              return this.storage.set("isModalShown", false);
-            })
-            .then(_ => {
+          return this.pin.set(pin).then(_ => {
+            return this.storage.set("isModalShown", false);
+          }).then(_ => {
               if (page) {
-                // return this.navCtrl.setRoot(page, {}, {
-                //   animate: true,
-                //   direction: "forward"
-                // });
-                return this.viewCtrl.dismiss();
+                this.viewCtrl.dismiss();
+                return this.navCtrl.setRoot(page, {}, {
+                  animate: true,
+                  direction: "forward"
+                });
+                // return this.viewCtrl.dismiss();
               } else {
                 this.viewCtrl.dismiss();
               }
