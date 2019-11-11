@@ -64,7 +64,7 @@ export class AccountDetailsPage {
       })
 
       .then(_ => {
-        this.authProvider.setSelectedAccount(form.email, form.password);
+        this.authProvider.setSelectedAccount(form.user, form.password);
       });
   }
 
