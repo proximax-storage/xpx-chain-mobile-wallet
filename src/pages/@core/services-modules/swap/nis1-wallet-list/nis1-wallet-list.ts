@@ -43,7 +43,6 @@ export class Nis1WalletListPage {
     this.walletProvider.getLocalWalletsNis().then(wallets => {
       this.authProvider.getUsername().then(username => {
         this.wallets = wallets[username];
-        console.log("getLocalWalletsNis", this.wallets);
       });
     });
   }

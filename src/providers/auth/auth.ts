@@ -5,6 +5,9 @@ import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import * as BcryptJS from "bcryptjs";
 import { ForgeProvider } from '../forge/forge';
+import crypto from 'crypto';
+import { Convert } from 'tsjs-xpx-chain-sdk';
+import CryptoJS from 'crypto-js';
 
 
 /*
@@ -15,11 +18,96 @@ import { ForgeProvider } from '../forge/forge';
 */
 @Injectable()
 export class AuthProvider {
-  constructor(private storage: Storage, private forge: ForgeProvider) {
-    console.log('Hello AuthProvider Provider');
+  constructor(
+    private storage: Storage,
+    private forge: ForgeProvider
+  ) { }
+
+
+  /**
+   * RJ
+   *
+   * @param {string} user
+   * @param {string} password
+   * @returns
+   * @memberof AuthProvider
+   */
+  async createUser(user: string, password: string) {
+    const data = await this.storage.get('accounts');
+    const accounts = data ? data : [];
+    let foundAccount = accounts.filter((account: any) => {
+      return account.user.includes(user);
+    });
+
+    if (foundAccount.length > 0) {
+      return "duplicate";
+    } else {
+
+      var encrypted = this.encryptAccount(password);
+      const accountFromInput = {
+        user: user.toLowerCase(),
+        encrypted: encrypted.toString()
+      };
+
+      accounts.push(accountFromInput);
+      this.setSelectedAccount(user, encrypted.toString());
+      return this.storage.set('accounts', accounts);
+    }
+  }
+
+  /**
+   * RJ
+   *
+   * @param {string} password
+   * @memberof AuthProvider
+   */
+  async decryptAccountUser(password: string) {
+    const accountSelected = await this.storage.get('selectedAccount');
+    console.log(accountSelected);
+    if (accountSelected && accountSelected.encrypted) {
+      const decryptBytes = CryptoJS.TripleDES.decrypt(accountSelected.encrypted, password);
+      const decrypted = decryptBytes.toString(CryptoJS.enc.Utf8);
+      return (decrypted !== '' && decrypted.length === 64) ? true : false;
+    }
+
+    return false;
   }
 
 
+  /**
+  * RJ
+  *
+  * @returns
+  * @memberof AuthProvider
+  */
+  encryptAccount(password: string) {
+    const randomBytesArray = crypto.randomBytes(32);
+    const hashKey = Convert.uint8ToHex(randomBytesArray);
+    return CryptoJS.TripleDES.encrypt(hashKey, password);
+  }
+
+  /**
+   * RJ
+   *
+   * @param {string} user
+   * @param {string} password
+   * @returns {Promise<any>}
+   * @memberof AuthProvider
+   */
+  setSelectedAccount(user: string, encrypted: string): Promise<any> {
+    const account = {
+      user: user,
+      encrypted: encrypted
+    };
+
+    this.storage.set('isAccountCreated', true);
+    this.storage.set('isLoggedIn', true);
+    this.storage.set('selectedAccount', account);
+    return;
+  }
+
+
+  // ------------------------------------------------------------------------------
 
   getUsername() {
     return this.storage.get('selectedAccount').then(data => {
@@ -37,31 +125,7 @@ export class AuthProvider {
   }
 
 
-  setSelectedAccount(email: string, password: string): Promise<any> {
 
-      // TODO : Encrypt password
-    const ACCOUNT = {
-      email: email,
-      password: BcryptJS.hashSync(password, 8)
-    };
-
-    return this.storage.set('isAccountCreated', true)
-      .then(_ => {
-      return this.storage.set('isLoggedIn', true)
-      })
-      .then(_ => {
-        return this.storage.get('selectedAccount');
-      })
-      .then(_ => {
-        return ACCOUNT;
-      })
-      .then(_ => {
-        return this.storage.set('selectedAccount', ACCOUNT); // Ecnrypted password
-      })
-      .then(_ => {
-        return this.storage.set('plainPassword', password); // Plain password
-      });
-  }
 
   /**
    * Login the user.
@@ -73,7 +137,7 @@ export class AuthProvider {
     password: string
   ): Promise<{ status: string; message: string }> {
     return this.storage.get('accounts').then(data => {
-      
+
       // TODO : Encrypt password
       const ACCOUNT = {
         email: email.toLowerCase(),
@@ -87,8 +151,8 @@ export class AuthProvider {
       };
 
       let existingAccount = find(ACCOUNTS, (accounts) => { return accounts.email == ACCOUNT.email; });
-      
-      if(BcryptJS.compareSync(ACCOUNT.password, existingAccount.password)) {
+
+      if (BcryptJS.compareSync(ACCOUNT.password, existingAccount.password)) {
         console.log("Accounts", ACCOUNTS);
         console.log("accountExists", existingAccount);
         response = {
@@ -139,48 +203,48 @@ export class AuthProvider {
       })
       .then((accounts: any[]) => {
         console.log("LOG: register -> accounts", accounts);
-        
-        let foundAccount = accounts.filter( account => {
-					console.log("LOG: register -> foundAccount", foundAccount);
+
+        let foundAccount = accounts.filter(account => {
+          console.log("LOG: register -> foundAccount", foundAccount);
           return account.email.includes(email)
-       });
+        });
 
-       if(foundAccount.length > 0) {
-         // duplicate account
-        //  alert("Duplicate account");
+        if (foundAccount.length > 0) {
+          // duplicate account
+          //  alert("Duplicate account");
 
-         return "duplicate"
+          return "duplicate"
 
-       } else {
-        // TODO: Encrypt password
-        const accountFromInput = {
-          email: email.toLowerCase(),
-          password: BcryptJS.hashSync(password, 8)
-        };
-        accounts.push(accountFromInput);
-        return this.storage.set('accounts', accounts);
-       }
-        
+        } else {
+          // TODO: Encrypt password
+          const accountFromInput = {
+            email: email.toLowerCase(),
+            password: BcryptJS.hashSync(password, 8)
+          };
+          accounts.push(accountFromInput);
+          return this.storage.set('accounts', accounts);
+        }
+
       });
   }
 
-  edit(oldUsername:string, newUsername:string, newPassword:string) {
-      return this.storage.get('accounts').then(data => {
-        const ACCOUNTS = data ? data : [];
+  edit(oldUsername: string, newUsername: string, newPassword: string) {
+    return this.storage.get('accounts').then(data => {
+      const ACCOUNTS = data ? data : [];
 
-        console.log(ACCOUNTS);
-  
-        if (findIndex(ACCOUNTS, oldUsername) === -1) {
-          let _newAccounts = ACCOUNTS.filter(res=>{
-            return res.email != oldUsername;
-          })
-          console.log(_newAccounts);
-          _newAccounts.push({email: newUsername, password: newPassword});
-          console.log(_newAccounts);
-          return _newAccounts;
-        }
-  
-      });
+      console.log(ACCOUNTS);
+
+      if (findIndex(ACCOUNTS, oldUsername) === -1) {
+        let _newAccounts = ACCOUNTS.filter(res => {
+          return res.email != oldUsername;
+        })
+        console.log(_newAccounts);
+        _newAccounts.push({ email: newUsername, password: newPassword });
+        console.log(_newAccounts);
+        return _newAccounts;
+      }
+
+    });
   }
 
   /**
@@ -210,10 +274,10 @@ export class AuthProvider {
     return this.storage.set('isLoggedIn', false).then(_ => {
       this.storage.set('selectedAccount', {})
     })
-    .then(_=> {
+      .then(_ => {
 
-      return this.encryptPasswordUsingCurrentPin();
-    });
+        return this.encryptPasswordUsingCurrentPin();
+      });
   }
 
   private encryptPasswordUsingCurrentPin() {
@@ -230,8 +294,8 @@ export class AuthProvider {
       Promise.all([
         this.storage.set("currentPin", null),
         this.storage.set("plainPassword", null),
-        this.storage.set("encryptedPassword", {password: ENCRYPTED_PASSWORD, salt: SALT, iv: IV }),
-      ]).then(res=> {
+        this.storage.set("encryptedPassword", { password: ENCRYPTED_PASSWORD, salt: SALT, iv: IV }),
+      ]).then(res => {
         return res;
       })
     });

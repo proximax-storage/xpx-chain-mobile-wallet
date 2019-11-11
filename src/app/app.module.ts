@@ -92,7 +92,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       tabsHideOnSubPages: true
     }),
     IonicStorageModule.forRoot({
-      name: '__nem_wallet',
+      name: 'proximax-sirius-wallet',
       driverOrder: ['indexeddb', 'sqlite', 'websql']
     }),
     ComponentsModule,

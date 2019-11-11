@@ -19,10 +19,10 @@
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
-        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" (keyup.enter)="onSubmit(formGroup.value)">
+        <form [formGroup]="formRegisterUser" (ngSubmit)="createUser()" (keyup.enter)="createUser()">
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.COMMON.USERNAME" | translate}}</ion-label>
-            <ion-input autocapitalize="none"  formControlName="email" type="text"
+            <ion-input autocapitalize="none" formControlName="user" type="text"
               placeholder="{{'APP.COMMON.USERNAME.PLACEHOLDER' | translate}}"></ion-input>
           </ion-item>
 
@@ -31,31 +31,26 @@
             <ion-input formControlName="password" [type]="passwordType" (ionChange)="minPasswords()"
               placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
-            <button type="button" (click)="showHidePassword($event)"  clear item-right ion-button icon-only>
+            <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
               <ion-icon item-right color="dark" [name]="passwordIcon">
               </ion-icon>
             </button>
           </ion-item>
-          <div *ngIf="formGroup.invalid" color="danger">
-              <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors">
-                <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
-              </p>
-            </div>
+          <div *ngIf="formRegisterUser.invalid" color="danger">
+            <p error padding-left text-left color="danger" *ngFor="let error of formRegisterUser.errors">
+              <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
+            </p>
+          </div>
 
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.SIGNUP.CONFIRM_PASSWORD" | translate}}</ion-label>
-            <ion-input (ionChange)="validate()" [disabled]="passDisabled" formControlName="confirmPassword" [type]="confirmPasswordType" placeholder="{{'APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER'| translate}}">
+            <ion-input (ionChange)="validate()" [disabled]="passDisabled" formControlName="confirmPassword"
+              [type]="confirmPasswordType" placeholder="{{'APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER'| translate}}">
             </ion-input>
-
-            <!-- <button (click)="showHideConfirmPassword($event)" clear item-right ion-button icon-only>
-              <ion-icon item-right color="dark" [name]="confirmPasswordIcon">
-              </ion-icon>
-            </button> -->
-
           </ion-item>
 
-          <div *ngIf="formGroup.invalid" color="danger">
-            <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors">
+          <div *ngIf="formRegisterUser.invalid" color="danger">
+            <p error padding-left text-left color="danger" *ngFor="let error of formRegisterUser.errors">
               <strong>{{ (error.passwordMismatch ? ('APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE' | translate) :'') }}</strong>
             </p>
           </div>
@@ -63,10 +58,10 @@
 
           <br>&nbsp;<br>
 
-          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formGroup.invalid"
-            type="submit" color="dark">
+          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formRegisterUser.invalid" type="submit"
+            color="dark">
             {{"APP.SIGNUP" | translate}}
-            </button>
+          </button>
         </form>
       </ion-col>
 

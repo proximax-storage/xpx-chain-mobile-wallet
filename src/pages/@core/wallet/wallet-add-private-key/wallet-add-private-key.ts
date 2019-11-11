@@ -64,8 +64,58 @@ export class WalletAddPrivateKeyPage {
     this.configurationForm = this.sharedService.configurationForm;
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.init();
-    
+
   }
+
+
+  /**
+   *
+   *
+   * @param {{ name: any; password: any; privateKey: any; }} form
+   * @memberof WalletAddPrivateKeyPage
+   */
+  async createAccount(form: { name: any; password: any; privateKey: any; }) {
+    try {
+      const decrypted = await this.authProvider.decryptAccountUser(form.password);
+      if (decrypted) {
+        this.catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
+        console.log('\n\ncatapultWallet\n', this.catapultWallet);
+        
+        this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
+        this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
+          if (value) {
+            this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
+          } else {
+
+            this.walletProvider.storeWallet(this.catapultWallet, this.walletColor).then(_ => {
+              return this.walletProvider.setSelectedWallet(this.catapultWallet);
+            }).then(_ => {
+              // this.goHome();
+              this.gotoBackup(this.catapultWallet);
+            });
+
+            this.nem.getOwnedMosaics(this.nemWallet.address).subscribe(mosacis => {
+              for (let index = 0; index < mosacis.length; index++) {
+                const element = mosacis[index];
+                if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
+                  this.walletProvider.storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor).then(_ => {
+                    this.showSwap();
+                  });
+                }
+              }
+            });
+          }
+        });
+      } else {
+        this.alertProvider.showMessage('Invalid password');
+      }
+    }
+    catch (error) {
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------------------------
 
   changeWalletColor(color) {
     this.walletColor = color;
@@ -159,53 +209,7 @@ export class WalletAddPrivateKeyPage {
     );
   }
 
-  onSubmit(form) {
-    try {
-      this.catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: form.password, privateKey: form.privateKey });
 
-      this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
-
-      this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
-        if (value) {
-          this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
-        } else {
-
-          this.walletProvider
-            .storeWallet(this.catapultWallet, this.walletColor)
-            .then(_ => {
-              return this.walletProvider.setSelectedWallet(this.catapultWallet);
-            }).then(_ => {
-              // this.goHome();
-              this.gotoBackup(this.catapultWallet);
-            });
-
-          this.nem.getOwnedMosaics(this.nemWallet.address)
-            .subscribe(mosacis => {
-              // console.log('mosacis', mosacis)
-              for (let index = 0; index < mosacis.length; index++) {
-                const element = mosacis[index];
-
-                if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
-                  // console.log('elemento de mosaico', element)
-                  // console.log('wallet nis1 ', this.nemWallet)
-                  this.walletProvider
-                    .storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor)
-                    .then(_ => {
-                      this.showSwap();
-                      // console.log('ALERT PARA EL SWAP NIS 1');
-                    });
-                } else {
-
-                }
-              }
-            });
-        }
-      });
-    }
-    catch (error) {
-      this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
-    }
-  }
 
 
   showSwap() {

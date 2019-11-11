@@ -99,7 +99,7 @@
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
-        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+        <form [formGroup]="formGroup" (ngSubmit)="createAccount(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
             <ion-input formControlName="name" type="text" autocapitalize="none" placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()">
