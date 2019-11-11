@@ -8,9 +8,13 @@
 
   <ion-navbar transparent no-border-bottom>
     <ion-title *ngIf="selectedCoin">
-      <span text-uppercase ion-text color="dark">
+      {{selectedCoin.length}}
+      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.name != '' && selectedCoin.symbol != ''">
         {{ selectedCoin.name }} ({{ selectedCoin.symbol }})
       </span>
+      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.name === '' && selectedCoin.symbol === ''">
+          {{ mosaicHex }}
+        </span>
     </ion-title>
 
     <ion-buttons end>
