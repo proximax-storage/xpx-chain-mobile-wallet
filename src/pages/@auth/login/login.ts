@@ -48,12 +48,27 @@ export class LoginPage implements OnInit {
 
   }
 
+  ngOnInit() {
+    this.platform.ready().then(() => {
+      // Okay, so the platform is ready and our plugins are available.
+      // Here you can do any higher level native things you might need.
+      this.statusBar.styleDefault();
+      this.keyboard.hideFormAccessoryBar(false);
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {{ user: string; password: string; }} form
+   * @memberof LoginPage
+   */
   async auth(form: { user: string; password: string; }) {
     if (this.formGroup.valid) {
       const decrypted = await this.authProvider.decryptAccountUser(form.password, form.user);
       if (decrypted) {
         this.haptic.notification({ type: 'success' });
-        this.authProvider.setSelectedAccount(form.user, form.password);
+        this.authProvider.setSelectedAccount(decrypted);
         this.gotoHome();
       } else {
         this.utils.showInsetModal('TryAgainPage', {}, 'small');
@@ -62,6 +77,12 @@ export class LoginPage implements OnInit {
     }
   }
 
+
+  /**
+   *
+   *
+   * @memberof LoginPage
+   */
   createForm() {
     this.formGroup = this.formBuilder.group({
       user: ['', Validators.required],
@@ -70,6 +91,11 @@ export class LoginPage implements OnInit {
   }
 
 
+  /**
+   *
+   *
+   * @memberof LoginPage
+   */
   gotoHome() {
     const confirmPinTitle = this.translateService.instant("APP.PIN.CONFIRM.TITLE");
     const confirmPinSubtitle = this.translateService.instant("APP.PIN.CONFIRM")
@@ -85,34 +111,33 @@ export class LoginPage implements OnInit {
     });
   }
 
-  // --------------------------------------------------------------------------
-
-
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-  }
-
+  /**
+   *
+   *
+   * @memberof LoginPage
+   */
   gotoForgotPassword() {
     this.navCtrl.push('ForgotPasswordPage');
   }
 
+  /**
+   *
+   *
+   * @memberof LoginPage
+   */
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad LoginPage');
+  }
 
-
-
-
+  /**
+   *
+   *
+   * @param {Event} e
+   * @memberof LoginPage
+   */
   showHidePassword(e: Event) {
     e.preventDefault();
     this.passwordType = this.passwordType === "password" ? "text" : "password";
     this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
-  }
-
-  ngOnInit() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
-      this.keyboard.hideFormAccessoryBar(false);
-    });
   }
 }

@@ -24,13 +24,6 @@ export class AuthProvider {
   ) { }
 
 
-  async auth(password: string, nameAccount?: string) {
-    const decrypted = await this.decryptAccountUser(password, nameAccount);
-    if (decrypted) {
-      
-    }
-  }
-
   /**
    * RJ
    *
@@ -81,12 +74,12 @@ export class AuthProvider {
       if (account && account.encrypted) {
         const decryptBytes = CryptoJS.TripleDES.decrypt(account.encrypted, password);
         const decrypted = decryptBytes.toString(CryptoJS.enc.Utf8);
-        return (decrypted !== '' && decrypted.length === 64) ? true : false;
+        return (decrypted !== '' && decrypted.length === 64) ? account : null;
       }
 
-      return false;
+      return null;
     } catch (error) {
-      return false;
+      return null;
     }
   }
 
@@ -111,12 +104,7 @@ export class AuthProvider {
    * @returns {Promise<any>}
    * @memberof AuthProvider
    */
-  setSelectedAccount(user: string, encrypted: string): Promise<any> {
-    const account = {
-      user: user,
-      encrypted: encrypted
-    };
-
+  setSelectedAccount(account: any): Promise<any> {
     this.storage.set('isAccountCreated', true);
     this.storage.set('isLoggedIn', true);
     this.storage.set('selectedAccount', account);
@@ -141,52 +129,6 @@ export class AuthProvider {
     });
   }
 
-
-
-
-  /**
-   * Login the user.
-   * @param email { string } The email of the user
-   * @param password { string } The password of the user
-   */
-  login(
-    email: string,
-    password: string
-  ): Promise<{ status: string; message: string }> {
-    return this.storage.get('accounts').then(data => {
-
-      // TODO : Encrypt password
-      const ACCOUNT = {
-        email: email.toLowerCase(),
-        password: password
-      };
-      const ACCOUNTS = data ? data : [];
-
-      let response: { status: string; message: string } = {
-        status: '',
-        message: ''
-      };
-
-      let existingAccount = find(ACCOUNTS, (accounts) => { return accounts.email == ACCOUNT.email; });
-
-      if (BcryptJS.compareSync(ACCOUNT.password, existingAccount.password)) {
-        console.log("Accounts", ACCOUNTS);
-        console.log("accountExists", existingAccount);
-        response = {
-          status: 'success',
-          message: "You've successfully logged in."
-        };
-      }
-      else {
-        response = {
-          status: 'failed',
-          message:
-            "Invalid username or password. Please try again."
-        };
-      }
-      return response;
-    });
-  }
 
   /**
    * Check email if it is registered already.
@@ -285,36 +227,12 @@ export class AuthProvider {
   }
 
   /**
-   * Log out account delete any related data to it.
+   *
+   *
+   * @memberof AuthProvider
    */
-  logout(): Promise<any> {
-    return this.storage.set('isLoggedIn', false).then(_ => {
-      this.storage.set('selectedAccount', {})
-    })
-      .then(_ => {
-
-        return this.encryptPasswordUsingCurrentPin();
-      });
-  }
-
-  private encryptPasswordUsingCurrentPin() {
-    Promise.all([
-      this.storage.get("currentPin"),
-      this.storage.get("plainPassword"),
-    ]).then(results => {
-      const CURRENT_PIN = results[0];
-      const PLAIN_PASSWORD = results[1];
-      const SALT = this.forge.generateSalt();
-      const IV = this.forge.generateIv();
-      const ENCRYPTED_PASSWORD = this.forge.encrypt(PLAIN_PASSWORD, CURRENT_PIN, SALT, IV);
-
-      Promise.all([
-        this.storage.set("currentPin", null),
-        this.storage.set("plainPassword", null),
-        this.storage.set("encryptedPassword", { password: ENCRYPTED_PASSWORD, salt: SALT, iv: IV }),
-      ]).then(res => {
-        return res;
-      })
-    });
+  logout(){
+    this.storage.set('isLoggedIn', false);
+    this.storage.set('selectedAccount', null);
   }
 }
