@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-
-import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import * as BcryptJS from "bcryptjs";
-import { ForgeProvider } from '../forge/forge';
 import crypto from 'crypto';
-import { Convert } from 'tsjs-xpx-chain-sdk';
+import { Convert, SimpleWallet, PublicAccount } from 'tsjs-xpx-chain-sdk';
+import * as Utilities from 'tsjs-xpx-chain-sdk/dist/src/core/crypto/Utilities';
 import CryptoJS from 'crypto-js';
 
 
@@ -33,7 +31,7 @@ export class AuthProvider {
    */
   async createUser(user: string, password: string) {
     const data = await this.storage.get('accounts');
-    const accounts = data ? data : [];
+    const accounts: AccountInterface[] = data ? data : [];
     let foundAccount = accounts.filter((account: any) => {
       return account.user.includes(user);
     });
@@ -41,22 +39,31 @@ export class AuthProvider {
     if (foundAccount.length > 0) {
       return "duplicate";
     } else {
-
       var encrypted = this.encryptAccount(password);
-      const accountFromInput = {
+      const account = {
         user: user.toLowerCase(),
-        encrypted: encrypted.toString()
+        encrypted: encrypted.toString(),
+        catapultAccounts: null
       };
 
-      accounts.push(accountFromInput);
-      const account = {
-        user: user,
-        encrypted: encrypted.toString()
-      }
       this.setSelectedAccount(account);
+      accounts.push(account);
       return this.storage.set('accounts', accounts);
     }
   }
+
+  /**
+   *
+   *
+   * @returns
+   * @memberof AuthProvider
+   */
+  async getDataAccountSelected() {
+    const data = await this.storage.get('selectedAccount');
+    const result = data ? data : null;
+    return result;
+  }
+
 
   /**
    * RJ
@@ -96,7 +103,31 @@ export class AuthProvider {
   encryptAccount(password: string) {
     const randomBytesArray = crypto.randomBytes(32);
     const hashKey = Convert.uint8ToHex(randomBytesArray);
-    return CryptoJS.TripleDES.encrypt(hashKey, password);
+    const iv = crypto.randomBytes(16);
+    const encKey = Utilities.ua2words(hashKey, 32);
+    let data: any = password;
+    for (let i = 0; i < 20; ++i) {
+      data = CryptoJS.SHA3(data, {
+        outputLength: 256,
+      });
+    }
+
+    const encIv = {
+      iv: Utilities.ua2words(iv, 16),
+    };
+
+    return CryptoJS.AES.encrypt(CryptoJS.enc.Hex.parse(data), encKey, encIv);
+    // return CryptoJS.TripleDES.encrypt(hashKey, password);
+  }
+
+  /**
+  *
+  *
+  * @memberof AuthProvider
+  */
+  logout() {
+    this.storage.set('isLoggedIn', false);
+    this.storage.set('selectedAccount', null);
   }
 
   /**
@@ -115,14 +146,9 @@ export class AuthProvider {
   }
 
 
-  // ------------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------------------------------------------------------
 
-  getUsername() {
-    return this.storage.get('selectedAccount').then(data => {
-      const result = data ? data : { user: '' };
-      return result.user;
-    });
-  }
+
 
 
   getPassword() {
@@ -228,14 +254,15 @@ export class AuthProvider {
         }
       });
   }
+}
 
-  /**
-   *
-   *
-   * @memberof AuthProvider
-   */
-  logout(){
-    this.storage.set('isLoggedIn', false);
-    this.storage.set('selectedAccount', null);
-  }
+
+export interface AccountInterface {
+  user: string;
+  encrypted: string;
+  catapultAccounts: {
+    account: SimpleWallet,
+    publicAccount: PublicAccount,
+    walletColor: string
+  }[]
 }

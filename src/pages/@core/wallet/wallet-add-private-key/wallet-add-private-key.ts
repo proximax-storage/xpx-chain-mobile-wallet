@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { SimpleWallet } from 'nem-library';
+import { SimpleWallet, Password } from 'nem-library';
 import { TranslateService } from '@ngx-translate/core';
 
 import { App } from '../../../../providers/app/app';
@@ -80,7 +80,7 @@ export class WalletAddPrivateKeyPage {
           if (value) {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
-            this.walletProvider.storeWallet(this.catapultWallet, this.walletColor).then(_ => {
+            this.walletProvider.storeWallet(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
               return this.walletProvider.setSelectedWallet(this.catapultWallet);
             }).then(_ => {
               this.gotoBackup(this.catapultWallet);

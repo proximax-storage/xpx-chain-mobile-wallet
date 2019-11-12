@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
-import { AuthProvider } from '../auth/auth';
+import { AuthProvider, AccountInterface } from '../auth/auth';
 import {
   SimpleWallet, Password, Address, EncryptedPrivateKey,
   AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
@@ -51,7 +51,36 @@ export class WalletProvider {
   }
 
 
+  /**
+   *
+   *
+   * @param {SimpleWallet} wallet
+   * @param {string} walletColor
+   * @returns {Promise<SimpleWallet>}
+   * @memberof WalletProvider
+   */
+  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
+    let result = [];
+    const dataAccount = await this.authProvider.getDataAccountSelected();
+    const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
+    const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
+      this.proximaxProvider.decryptPrivateKey(
+        password,
+        wallet.encryptedPrivateKey.encryptedKey,
+        wallet.encryptedPrivateKey.iv
+      ).toUpperCase(), wallet.network
+    );
 
+    catapultAccounts.push({ account: wallet, walletColor: walletColor, publicAccount: publicAccount });
+    dataAccount['catapultAccounts'] = catapultAccounts;
+    console.log('\n\n TO SAVE --------->', dataAccount, '\n\n');
+    /*result = wallets[username];
+    result.push({ wallet: wallet, walletColor: walletColor });
+    wallets[username] = result;
+    this.storage.set('wallets', wallets);*/
+    // return wallet;
+    return null;
+  }
 
 
 
@@ -120,26 +149,7 @@ export class WalletProvider {
     });
   };
 
-  /**
-   * Store wallet
-   * @param wallet
-   * @return Promise with stored wallet
-   */
-  public storeWallet(wallet: SimpleWallet, walletColor): Promise<SimpleWallet> {
-    let result = [];
-    return this.authProvider.getUsername().then(username => {
-      return this.getLocalWallets().then(value => {
-        let wallets = value;
-        result = wallets[username];
 
-        result.push({ wallet: wallet, walletColor: walletColor });
-
-        wallets[username] = result;
-        this.storage.set('wallets', wallets);
-        return wallet;
-      });
-    });
-  }
 
   /**
 * Store wallet
@@ -150,14 +160,14 @@ export class WalletProvider {
 
   public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
     let result = [];
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.getLocalWalletsNis().then(value => {
         let wallets = value;
-        result = wallets[username];
+        result = wallets[dataAccountSelected.user];
 
         result.push({ wallet: walletC, walletNis1: walletN, walletColor: walletColor });
 
-        wallets[username] = result;
+        wallets[dataAccountSelected.user] = result;
 
         this.storage.set('walletsNis1', wallets);
         return walletN;
@@ -171,9 +181,9 @@ export class WalletProvider {
    */
   public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
     // return;
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
-        let _wallets: any = wallets[username];
+        let _wallets: any = wallets[dataAccountSelected.user];
         let updateWallet: any;
         for (let i = 0; i < _wallets.length; i++) {
           if (_wallets[i].wallet.name == wallet.name) {
@@ -194,7 +204,7 @@ export class WalletProvider {
         });
 
         const WALLET = {};
-        WALLET[username] = _wallets;
+        WALLET[dataAccountSelected.user] = _wallets;
 
         return this.storage.set('wallets', WALLET).then(_ => {
           return updateWallet;
@@ -205,9 +215,9 @@ export class WalletProvider {
 
   deleteWallet(wallet: SimpleWallet) {
 
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
-        let _wallets: Array<any> = wallets[username];
+        let _wallets: Array<any> = wallets[dataAccountSelected.user];
 
         console.log(_wallets, wallet);
         _wallets.map((res, index) => {
@@ -223,7 +233,7 @@ export class WalletProvider {
             });
 
             const WALLET = {};
-            WALLET[username] = _wallets;
+            WALLET[dataAccountSelected.user] = _wallets;
 
             return this.storage.set('wallets', WALLET);
           }
@@ -245,9 +255,9 @@ export class WalletProvider {
    */
   public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
-        const _wallets = wallets[username];
+        const _wallets = wallets[dataAccountSelected.user];
         for (var i = 0; i < _wallets.length; i++) {
           console.log('wallet storage', _wallets[i])
           if (_wallets[i].wallet.name === walletName || _wallets[i].wallet.address.address === walletAddress) {
@@ -265,11 +275,11 @@ export class WalletProvider {
    * @return promise with selected wallet
    */
   public getSelectedWallet(): Promise<SimpleWallet> {
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.storage.get('selectedWallet').then(wallets => {
         let _wallet = null;
         if (wallets) {
-          const selectedWallet = wallets[username];
+          const selectedWallet = wallets[dataAccountSelected.user];
           this.selectedWallet = selectedWallet
           _wallet = <SimpleWallet>(selectedWallet);
         } else {
@@ -285,11 +295,11 @@ export class WalletProvider {
    * Get loaded wallets from localStorage
    */
   public getLocalWallets(): Promise<any> {
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.storage.get('wallets').then(wallets => {
         let _wallets = wallets ? wallets : {};
         console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
-        const WALLETS = _wallets[username] ? _wallets[username] : [];
+        const WALLETS = _wallets[dataAccountSelected.user] ? _wallets[dataAccountSelected.user] : [];
 
         if (wallets) {
           const walletsMap = WALLETS.map(walletFile => {
@@ -301,9 +311,9 @@ export class WalletProvider {
             }
           });
 
-          _wallets[username] = walletsMap;
+          _wallets[dataAccountSelected.user] = walletsMap;
         } else {
-          _wallets[username] = [];
+          _wallets[dataAccountSelected.user] = [];
         }
 
         return _wallets;
@@ -315,11 +325,11 @@ export class WalletProvider {
  * Get loaded wallets from localStorage
  */
   public getLocalWalletsNis(): Promise<any> {
-    return this.authProvider.getUsername().then(username => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.storage.get('walletsNis1').then(wallets => {
         let _wallets = wallets ? wallets : {};
         console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
-        const WALLETS = _wallets[username] ? _wallets[username] : [];
+        const WALLETS = _wallets[dataAccountSelected.user] ? _wallets[dataAccountSelected.user] : [];
 
         if (wallets) {
           const walletsMap = WALLETS.map(walletFile => {
@@ -331,9 +341,9 @@ export class WalletProvider {
             }
           });
 
-          _wallets[username] = walletsMap;
+          _wallets[dataAccountSelected.user] = walletsMap;
         } else {
-          _wallets[username] = [];
+          _wallets[dataAccountSelected.user] = [];
         }
 
         return _wallets;
@@ -345,12 +355,12 @@ export class WalletProvider {
    * Get loaded wallets from localStorage
    */
   public getWallets(): Promise<any> {
-    return this.authProvider.getUsername().then(username => {
-      console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", username)
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+      console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", dataAccountSelected.user)
       return this.storage.get('wallets').then(wallets => {
         console.log("LOG: WalletProvider -> constructor -> data", wallets)
         let _wallets = wallets || {};
-        const WALLETS = _wallets[username] || [];
+        const WALLETS = _wallets[dataAccountSelected.user] || [];
         console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
 
         if (WALLETS) {
@@ -367,12 +377,12 @@ export class WalletProvider {
             }
           });
 
-          _wallets[username] = walletsMap;
+          _wallets[dataAccountSelected.user] = walletsMap;
         } else {
-          _wallets[username] = [];
+          _wallets[dataAccountSelected.user] = [];
         }
 
-        return _wallets[username];
+        return _wallets[dataAccountSelected.user];
       });
     });
   }
@@ -403,12 +413,12 @@ export class WalletProvider {
    */
   public setSelectedWallet(wallet: SimpleWallet) {
     return Promise.all([
-      this.authProvider.getUsername(),
+      this.authProvider.getDataAccountSelected(),
       this.storage.get('selectedWallet')
     ]).then(results => {
-      const EMAIL = results[0];
+      const user = results[0].user;
       const SELECTED_WALLET = results[1] ? results[1] : {};
-      SELECTED_WALLET[EMAIL] = wallet;
+      SELECTED_WALLET[user] = wallet;
 
       return this.storage.set('selectedWallet', SELECTED_WALLET);
     });
@@ -418,9 +428,9 @@ export class WalletProvider {
    * Remove selected Wallet
    */
   public unsetSelectedWallet() {
-    return this.authProvider.getUsername().then(email => {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       this.storage.get('selectedWallet').then(selectedWallet => {
-        delete selectedWallet[email];
+        delete selectedWallet[dataAccountSelected.user];
 
         this.storage.set('selectedWallet', null);
       });
