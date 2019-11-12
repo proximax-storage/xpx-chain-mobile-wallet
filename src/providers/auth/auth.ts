@@ -19,8 +19,7 @@ import CryptoJS from 'crypto-js';
 @Injectable()
 export class AuthProvider {
   constructor(
-    private storage: Storage,
-    private forge: ForgeProvider
+    private storage: Storage
   ) { }
 
 
@@ -50,7 +49,11 @@ export class AuthProvider {
       };
 
       accounts.push(accountFromInput);
-      this.setSelectedAccount(user, encrypted.toString());
+      const account = {
+        user: user,
+        encrypted: encrypted.toString()
+      }
+      this.setSelectedAccount(account);
       return this.storage.set('accounts', accounts);
     }
   }
