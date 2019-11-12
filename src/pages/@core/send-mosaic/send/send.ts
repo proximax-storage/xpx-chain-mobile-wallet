@@ -52,8 +52,8 @@ export class SendPage {
   mosaics: DefaultMosaic[] = [];
   App = App;
   addressSourceType: { from: string; to: string };
-  currentWallet: SimpleWallet;
-  selectedMosaic: DefaultMosaic = new DefaultMosaic({namespaceId: 'prx', mosaicId:'xpx', hex:AppConfig.xpxHexId, amount:0, amountCompact:0, divisibility:0});
+  currentWallet: any;
+  selectedMosaic: DefaultMosaic = new DefaultMosaic({ namespaceId: 'prx', mosaicId: 'xpx', hex: AppConfig.xpxHexId, amount: 0, amountCompact: 0, divisibility: 0 });
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
@@ -69,8 +69,9 @@ export class SendPage {
     precision: "6"
   };
 
-  payload:any = {};
+  payload: any = {};
   configurationForm: ConfigurationForm = {};
+  address: any;
 
   constructor(
     public navCtrl: NavController,
@@ -101,16 +102,15 @@ export class SendPage {
       this.selectedMosaicName = "xpx";
     }
 
-    
 
-    this.init();
+
+    this.createForm();
     this.subscribeValue();
   }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
     this.walletProvider.getSelectedWallet().then(currentWallet => {
-      console.log("currentWallet ", currentWallet);
 
       if (!currentWallet) {
         this.navCtrl.setRoot(
@@ -123,39 +123,36 @@ export class SendPage {
         );
       } else {
         this.currentWallet = currentWallet;
+        this.address = this.proximaxProvider.createFromRawAddress(this.currentWallet.address.address)
+        this.wallet = this.address.plain();
+        this.mosaicsProvider
+          .getMosaics(this.address)
+          .subscribe(mosaics => {
+            this.mosaics = mosaics;
 
-        this.getAccount(this.currentWallet).subscribe(account => {
-          this.wallet = account.address.plain();
+            mosaics.forEach(_mosaic => {
+              if (_mosaic.mosaicId === this.selectedMosaicName) {
+                this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
+              }
 
-          this.mosaicsProvider
-            .getMosaics(account.address)
-            .subscribe(mosaics => {
-              this.mosaics = mosaics;
+              let mosaicId = _mosaic.mosaicId;
+              let coinId: string;
 
-              mosaics.forEach(_mosaic => {
-                if (_mosaic.mosaicId === this.selectedMosaicName) {
-                  this.selectedMosaic = this.selectedMosaic.divisibility===0? _mosaic : this.selectedMosaic ;
-                }
+              if (mosaicId === "xpx") {
+                coinId = "proximax";
+              } else if (mosaicId === "npxs") {
+                coinId = "pundi-x";
+              }
 
-                let mosaicId = _mosaic.mosaicId;
-                let coinId: string;
-
-                if (mosaicId === "xpx") {
-                  coinId = "proximax";
-                } else if (mosaicId === "npxs") {
-                  coinId = "pundi-x";
-                }
-
-                // Get coin price
-                // Check if  null
-                if (coinId) {
-                  this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
-                    this.selectedCoin = coin;
-                  });
-                }
-              });
+              // Get coin price
+              // Check if  null
+              if (coinId) {
+                this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
+                  this.selectedCoin = coin;
+                });
+              }
             });
-        });
+          });
         // Set sender address to currenWallet.address
         this.form.get("senderName").setValue(this.currentWallet.name);
         this.form.get("senderAddress").setValue(this.currentWallet.address);
@@ -164,7 +161,7 @@ export class SendPage {
 
     // if deeplink
     this.payload = this.navParams.data;
-    if(this.payload.amount) {
+    if (this.payload.amount) {
       console.log("TCL: SendPage -> this.payload", this.payload)
 
       this.form.patchValue({ amount: this.payload.amount });
@@ -172,25 +169,6 @@ export class SendPage {
       this.form.patchValue({ message: this.payload.message });
     }
 
-  }
-
-
-  private getAccount(wallet: SimpleWallet): Observable<Account> {
-    return new Observable(observer => {
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider.getPassword().then(password => {
-        // Get user's passwordmosaics
-        const myPassword = new Password(password);
-
-        // Convert current wallet to SimpleWallet
-        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
-
-        // Unlock wallet to get an account using user's password
-        const account = myWallet.open(myPassword);
-
-        observer.next(account);
-      });
-    });
   }
 
   ionViewDidLoad() {
@@ -202,7 +180,7 @@ export class SendPage {
     this.storage.set("isQrActive", false);
   }
 
-  init() {
+  createForm() {
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: "",
@@ -219,7 +197,7 @@ export class SendPage {
       isMosaicTransfer: [false, Validators.required],
       message: [""],
       amount: [
-        "", 
+        "",
         [
           Validators.required,
         ]
@@ -306,7 +284,7 @@ export class SendPage {
       this.form.get("senderName").setValue("Current wallet");
       this.form
         .get("senderAddress")
-        .setValue(this.currentWallet.address.plain());
+        .setValue(this.address.plain());
     }
   }
 
@@ -324,10 +302,10 @@ export class SendPage {
     this.utils
       .showInsetModal("SendMosaicSelectPage", {
         selectedMosaic: this.selectMosaic,
-        walletAddress: this.currentWallet.address.plain()
+        walletAddress: this.address.plain()
       })
       .subscribe(data => {
-      console.log("TCL: SendPage -> selectMosaic -> data", data)
+        console.log("TCL: SendPage -> selectMosaic -> data", data)
         if (data) {
           this.optionsXPX = {
             prefix: "",
@@ -355,18 +333,13 @@ export class SendPage {
   /**
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
-  onSubmit() {
+  send() {
     if (!this.form.get("amount").value) this.form.get("amount").setValue(0);
-    if (
-      !this.form.get("senderAddress").value ||
-      !this.form.get("recipientAddress").value
-    ) {
+    if (!this.form.get("senderAddress").value || !this.form.get("recipientAddress").value) {
       if (this.addressSourceType.to === "contact") {
         this.alertProvider.showMessage("Please select a recipient first.");
       } else {
-        this.alertProvider.showMessage(
-          "Please enter the recipient's address first."
-        );
+        this.alertProvider.showMessage("Please enter the recipient's address first.");
       }
       return;
     }
@@ -403,7 +376,6 @@ export class SendPage {
       modal.present();
       // }
     } catch (err) {
-      console.log("puto");
       this.alertProvider.showMessage(
         this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
       );

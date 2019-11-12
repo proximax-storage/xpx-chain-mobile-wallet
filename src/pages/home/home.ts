@@ -84,11 +84,12 @@ export class HomePage {
 
   tablet: boolean;
 
-  selectedWallet: SimpleWallet;
+  selectedWallet: any;
   selectedAccount: Account;
   accountInfo: AccountInfo;
 
   @ViewChild(Nav) navChild:Nav;
+  address: any;
 
   constructor(
     public app: App,
@@ -209,16 +210,16 @@ export class HomePage {
             }
           });
 
-          this.getAccount(this.selectedWallet).subscribe(account => {
+          this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.address.address)
             console.log(
               "4. LOG: HomePage -> ionViewWillEnter -> account",
-              account
+              this.address
             );
-            this.selectedAccount = account;
+            // this.selectedAccount = account;
 
             try {
               this.mosaicsProvider
-                .getMosaics(account.address)
+                .getMosaics(this.address)
                 .subscribe(mosaics => {
                   console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
 
@@ -249,15 +250,14 @@ export class HomePage {
                     "8. LOG: HomePage -> getTransactions -> selectedWallet",
                     this.selectedWallet
                   );
-                  this.getTransactions(account);
-                  this.getTransactionsUnconfirmed(account);
-                  this.getTransactionsAggregate(account);
+                  // this.getTransactions(this.address);
+                  // this.getTransactionsUnconfirmed(this.address);
+                  // this.getTransactionsAggregate(this.address);
                 });
             } catch (error) {
               // this.hideLoaders();
               this.showEmptyMessage();
             }
-          });
         });
         this.hideEmptyMessage();
       } else {
@@ -289,24 +289,6 @@ export class HomePage {
     this.unconfirmedTransactions = null;
     this.aggregateTransactions = null;
     this.confirmedTransactions = null;
-  }
-
-  private getAccount(wallet: SimpleWallet): Observable<Account> {
-    return new Observable(observer => {
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider.getPassword().then(password => {
-        // Get user's password
-        const myPassword = new Password(password);
-
-        // Convert current wallet to SimpleWallet
-        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
-
-        // Unlock wallet to get an account using user's password
-        const account = myWallet.open(myPassword);
-
-        observer.next(account);
-      });
-    });
   }
 
   getTransactions(account: Account) {

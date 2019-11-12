@@ -20,6 +20,7 @@ import {
 import { MosaicsProvider } from "../../../../../providers/mosaics/mosaics";
 import { Observable } from "rxjs";
 import { AuthProvider } from "../../../../../providers/auth/auth";
+import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
 
 /**
  * Generated class for the SendMosaicSelectPage page.
@@ -40,9 +41,10 @@ export class SendMosaicSelectPage {
   App = App;
   selectedMosaic: any;
   mosaics: any[] = [];
-  selectedWallet: SimpleWallet;
+  selectedWallet: any;
   fakeList: Array<any>;
   walletAddress: Address;
+  address: Address;
 
   constructor(
     public navCtrl: NavController,
@@ -52,45 +54,20 @@ export class SendMosaicSelectPage {
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
-    private authProvider: AuthProvider
+    private authProvider: AuthProvider,
+    private proximaxProvider: ProximaxProvider,
   ) {
     this.fakeList = [{}, {}];
     this.selectedMosaicc = this.navParams.data.selectedMosaic;
   }
 
   async ionViewWillEnter() {
-    // let filter = this.selectedMosaicc.filter(mosaics => mosaics)
-    //   await this.mosaicsProvider.getOwnedMosaic( filter ).then(result => {
-    //   filter.forEach(mosaicsI => {
-    //       let filter2 = result.filter(mosaics =>mosaics.hex === mosaicsI.id.toHex())
-    //       this.mosaics.push( filter2[0])
-    //   })
-    // })
-
     this.walletProvider.getSelectedWallet().then(selectedWallet => {
-      this.getAccount(selectedWallet).subscribe(account => {
-        console.log("4. LOG: HomePage -> ionViewWillEnter -> account", account);
-        this.mosaicsProvider.getMosaics(account.address).subscribe(mosaics=>{
+      this.selectedWallet = selectedWallet
+        this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.address.address)
+        this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics=>{
           this.mosaics = mosaics;
         })
-      });
-    });
-  }
-
-  private getAccount(wallet: SimpleWallet): Observable<Account> {
-    return new Observable(observer => {
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider.getPassword().then(password => {
-        // Get user's password
-        const myPassword = new Password(password);
-
-        // Convert current wallet to SimpleWallet
-        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
-
-        // Unlock wallet to get an account using user's password
-        const _account = myWallet.open(myPassword);
-        observer.next(_account);
-      });
     });
   }
 

@@ -130,7 +130,7 @@ export class ImportWalletPage {
     loader.present();
     
     try {
-      const catapultWallet = this.walletProvider.createAccountFromPrivateKey({ walletName: form.name, password: this.PASSWORD, privateKey: form.privateKey });
+      const catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, this.PASSWORD, form.privateKey );
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
       
       this.walletProvider.checkIfWalletNameExists(catapultWallet.name, catapultWallet.address.plain()).then(value => {
