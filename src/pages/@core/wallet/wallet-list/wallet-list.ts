@@ -15,10 +15,8 @@ import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from './../../../../providers/wallet/wallet';
 
-import sortBy from 'lodash/sortBy';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the WalletListPage page.

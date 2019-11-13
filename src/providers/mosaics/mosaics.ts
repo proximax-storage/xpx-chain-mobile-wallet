@@ -1,6 +1,6 @@
 import { AppConfig } from './../../app/app.config';
 import { Injectable } from "@angular/core";
-import { Mosaic, SimpleWallet, MosaicId, UInt64, MosaicInfo, NamespaceId, Address, MosaicAmountView } from "tsjs-xpx-chain-sdk";
+import { Mosaic, MosaicId, UInt64, MosaicInfo, Address, MosaicAmountView } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../coingecko/coingecko";
 import { Observable, from, forkJoin } from "rxjs";
 import { DefaultMosaic } from "../../models/default-mosaic";

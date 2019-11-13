@@ -1,12 +1,8 @@
-import { WalletProvider } from './../../../../providers/wallet/wallet';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Haptic, AlertController, AlertOptions } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../../../../providers/toast/toast';
-import { AlertProvider } from '../../../../providers/alert/alert';
-import { AuthProvider } from '../../../../providers/auth/auth';
-import { e } from '@angular/core/src/render3';
 
 
 /**

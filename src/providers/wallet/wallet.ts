@@ -5,7 +5,7 @@ import { AuthProvider, AccountInterface } from '../auth/auth';
 import {
   SimpleWallet, Password, Address, EncryptedPrivateKey,
   AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
-  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, NetworkCurrencyMosaic
+  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, NetworkCurrencyMosaic
 } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
