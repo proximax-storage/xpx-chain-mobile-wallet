@@ -4,7 +4,7 @@ import { Component, trigger, transition, style, group, animate } from '@angular/
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet, Password, NetworkType} from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Password} from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
@@ -13,8 +13,6 @@ import { AlertProvider } from '../../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../../providers/auth/auth';
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
-import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
-import * as BcryptJS from "bcryptjs";
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { TransferTransactionProvider } from '../../../../../providers/transfer-transaction/transfer-transaction';
 
@@ -92,7 +90,6 @@ export class SendMosaicConfirmationPage {
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
     private translateService: TranslateService,
-    private proximaxProvider: ProximaxProvider,
     private walletProvider: WalletProvider,
     private transferTransaction: TransferTransactionProvider
   ) {

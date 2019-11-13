@@ -93,7 +93,7 @@ export class VerificationCodePage {
   onSubmit(pin: string) {
     const verifyPinTitle = this.translateService.instant("APP.PIN.VERIFY.TITLE");
     let status: string = this.navParams.data.status;
-    let destination = this.navParams.data.destination;
+    // let destination = this.navParams.data.destination;
     let pinParams = this.navParams.data.pin;
     if (status === 'setup') {
       let page = "VerificationCodePage";

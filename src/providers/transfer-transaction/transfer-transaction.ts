@@ -2,7 +2,7 @@ import { HelperProvider } from './../helper/helper';
 import { WalletProvider } from './../wallet/wallet';
 import { AppConfig } from './../../app/app.config';
 import { Injectable } from '@angular/core';
-import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, Password, Account, SignedTransaction, TransactionHttp, Message, EmptyMessage, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
+import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, Password, Account, SignedTransaction, TransactionHttp, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
 import { MosaicModel } from './mosaic.model';
 import { Observable } from 'rxjs';
 import { AuthProvider } from '../auth/auth';

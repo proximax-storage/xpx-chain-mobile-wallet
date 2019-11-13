@@ -1,8 +1,6 @@
 
 import { Component, Input } from '@angular/core';
 import { Transaction } from 'tsjs-xpx-chain-sdk';
-import { NemProvider } from '../../../../../providers/nem/nem';
-import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 /**

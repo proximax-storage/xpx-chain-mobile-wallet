@@ -1,6 +1,4 @@
-import { NemProvider } from './../nem/nem';
 import { Injectable } from '@angular/core';
-import { CoingeckoProvider } from '../coingecko/coingecko';
 
 /*
   Generated class for the GetBalanceProvider provider.
