@@ -2,7 +2,7 @@ import { ViewController } from 'ionic-angular';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IonicPage, NavController, NavParams, Haptic } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';

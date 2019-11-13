@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Haptic, AlertController, AlertOptions } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../../../../providers/toast/toast';
-
 /**
  * Generated class for the WalletBackupQrcodePage page.
  *

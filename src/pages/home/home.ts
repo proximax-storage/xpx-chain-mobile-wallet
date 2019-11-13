@@ -28,7 +28,6 @@ import {
   Transaction,
   AggregateTransaction,
 } from "tsjs-xpx-chain-sdk";
-import { AuthProvider } from "../../providers/auth/auth";
 import { MosaicsProvider } from "../../providers/mosaics/mosaics";
 import { TransactionsProvider } from "../../providers/transactions/transactions";
 import { animate, style, transition, trigger } from "@angular/animations";

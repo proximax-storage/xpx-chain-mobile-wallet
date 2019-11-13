@@ -5,11 +5,9 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { Storage } from "@ionic/storage";
 import { UtilitiesProvider } from "../providers/utilities/utilities";
 import { OneSignal } from "@ionic-native/onesignal";
-import { Keyboard } from "@ionic-native/keyboard";
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../app/app.config';
 import { Deeplinks, DeeplinkMatch } from "@ionic-native/deeplinks";
-import { TabsPage } from '../pages/tabs/tabs';
 
 @Component({
   templateUrl: "app.html"
@@ -28,7 +26,6 @@ export class MyApp {
     private storage: Storage,
     private utils: UtilitiesProvider,
     private oneSignal: OneSignal,
-    private keyboard: Keyboard,
     private translateService: TranslateService,
     private deeplinks: Deeplinks
   ) {
