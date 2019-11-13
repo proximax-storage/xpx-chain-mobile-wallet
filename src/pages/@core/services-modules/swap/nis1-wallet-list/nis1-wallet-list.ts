@@ -41,8 +41,8 @@ export class Nis1WalletListPage {
 
   getWallet() {
     this.walletProvider.getLocalWalletsNis().then(wallets => {
-      this.authProvider.getUsername().then(username => {
-        this.wallets = wallets[username];
+      this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+        this.wallets = wallets[dataAccountSelected.user];
       });
     });
   }

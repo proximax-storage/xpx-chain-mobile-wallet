@@ -18,9 +18,9 @@ import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 })
 export class AccountDetailsPage {
   formGroup: FormGroup;
-  editMode:boolean=false;
-  oldUsername:string = "jonpecson";
-  oldPassword:string = "password";
+  editMode: boolean = false;
+  oldUsername: string = "jonpecson";
+  oldPassword: string = "password";
 
   constructor(
     public navCtrl: NavController,
@@ -50,22 +50,14 @@ export class AccountDetailsPage {
 
 
   onSubmit(form) {
-    // this.authProvider
-    //   .register(form.email, form.password)
-    //   .then(_ => {
-    //     // this.utils.showModal('VerificationCodePage', { status: 'confirm', destination: 'TabsPage' });
-    //   })
-    //   .then(_ => {
-    //     this.authProvider.setSelectedAccount(form.email, form.password);
-    //   });
-
-      this.authProvider.edit(this.oldUsername, form.newUsername, form.newPassword).then(_=>{
-        this.dismiss()
-      })
-
-      .then(_ => {
-        this.authProvider.setSelectedAccount(form.user, form.password);
+    this.authProvider.edit(this.oldUsername, form.newUsername, form.newPassword).then(_ => {
+      this.dismiss()
+    }).then(_ => {
+      this.authProvider.setSelectedAccount({
+        user: form.user,
+        encrypted: form.password
       });
+    });
   }
 
   dismiss() {
