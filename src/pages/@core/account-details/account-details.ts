@@ -50,14 +50,15 @@ export class AccountDetailsPage {
 
 
   onSubmit(form) {
-    this.authProvider.edit(this.oldUsername, form.newUsername, form.newPassword).then(_ => {
+    // Rj
+    /*this.authProvider.edit(this.oldUsername, form.newUsername, form.newPassword).then(_ => {
       this.dismiss()
     }).then(_ => {
       this.authProvider.setSelectedAccount({
         user: form.user,
         encrypted: form.password
       });
-    });
+    });*/
   }
 
   dismiss() {

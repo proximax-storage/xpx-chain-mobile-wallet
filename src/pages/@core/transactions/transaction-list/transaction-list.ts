@@ -43,9 +43,6 @@ export class TransactionListPage {
 
   pageable: Pageable<Transaction[]>;
 
-  @ViewChild(InfiniteScroll)
-  private infiniteScroll: InfiniteScroll;
-
   coindId: string;
   mosaicId: string;
   walletName: string;

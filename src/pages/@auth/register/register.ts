@@ -47,6 +47,13 @@ export class RegisterPage implements OnInit {
 
   }
 
+  ngOnInit() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.keyboard.hideFormAccessoryBar(false);
+    });
+  }
+
   /**
    *
    *
@@ -82,7 +89,6 @@ export class RegisterPage implements OnInit {
       const user = this.formRegisterUser.get("user").value;
       const password = this.formRegisterUser.get("password").value;
       this.authProvider.createUser(user, password).then(status => {
-        console.log("LOG -->", status);
         if (status === "duplicate") {
           this.alertProvider.showMessage("Account already exist.");
           this.haptic.notification({ type: 'error' });
@@ -99,58 +105,70 @@ export class RegisterPage implements OnInit {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} value
+   * @returns
+   * @memberof RegisterPage
+   */
+  checkPasswords(value: any) {
+    let pass = this.formRegisterUser.controls.password.value;
+    let confirmPass = value;
+    return pass === confirmPass ? null : this.formRegisterUser.setErrors([{ passwordMismatch: true }]);
+  }
 
 
-
-
+  /**
+   *
+   *
+   * @memberof RegisterPage
+   */
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RegisterPage');
     this.passDisabled = true;
   }
 
-
-
-  validate() {
-    this.checkPasswords(this.formRegisterUser.controls.confirmPassword.value);
-  }
-
-  checkPasswords(value) {
-    let pass = this.formRegisterUser.controls.password.value;
-    let confirmPass = value;
-
-    return pass === confirmPass
-      ? null
-      : this.formRegisterUser.setErrors([{ passwordMismatch: true }]);
-  }
-
+  /**
+   *
+   *
+   * @returns
+   * @memberof RegisterPage
+   */
   minPasswords() {
     let pass = this.formRegisterUser.controls.password.value;
-    return pass.length < this.passwordMin
-      ? this.formRegisterUser.setErrors([{ passwordMin: true }])
-      : null;
+    return pass.length < this.passwordMin ? this.formRegisterUser.setErrors([{ passwordMin: true }]) : null;
   }
-  
 
+  /**
+   *
+   *
+   * @param {Event} e
+   * @memberof RegisterPage
+   */
   showHidePassword(e: Event) {
     e.preventDefault();
     this.passwordType = this.passwordType === "password" ? "text" : "password";
     this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
   }
 
+  /**
+   *
+   *
+   * @param {Event} e
+   * @memberof RegisterPage
+   */
   showHideConfirmPassword(e: Event) {
     e.preventDefault();
     this.confirmPasswordType = this.confirmPasswordType === "password" ? "text" : "password";
     this.confirmPasswordIcon = this.confirmPasswordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
   }
 
-  ngOnInit() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
-      this.keyboard.hideFormAccessoryBar(false);
-    });
+  /**
+   *
+   *
+   * @memberof RegisterPage
+   */
+  validatePassword() {
+    this.checkPasswords(this.formRegisterUser.controls.confirmPassword.value);
   }
-
-
 }

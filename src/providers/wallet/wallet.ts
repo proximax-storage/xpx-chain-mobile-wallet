@@ -10,7 +10,6 @@ import {
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
-import { HttpClient } from '@angular/common/http';
 
 /*
  Generated class for the NemProvider provider.
@@ -31,8 +30,8 @@ export class WalletProvider {
   constructor(
     private storage: Storage,
     private authProvider: AuthProvider,
-    private proximaxProvider: ProximaxProvider,
-    private http: HttpClient, ) {
+    private proximaxProvider: ProximaxProvider
+  ) {
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
   }
 
@@ -59,7 +58,7 @@ export class WalletProvider {
    * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<dataAccount> {
+  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
     const dataAccount = await this.authProvider.getDataAccountSelected();
     const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
     const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(

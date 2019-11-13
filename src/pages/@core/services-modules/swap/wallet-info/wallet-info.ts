@@ -1,5 +1,5 @@
 import { CoingeckoProvider } from './../../../../../providers/coingecko/coingecko';
-import { SimpleWallet, AssetDefinition, XEM, AssetTransferable, Address, TransferTransaction, PublicAccount, PlainMessage } from 'nem-library';
+import { AssetTransferable, Address, TransferTransaction, PublicAccount, PlainMessage } from 'nem-library';
 import { NemProvider } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthProvider } from '../../../../../providers/auth/auth';
 import { AppConfig } from '../../../../../app/app.config'
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
-import { Password } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 /**

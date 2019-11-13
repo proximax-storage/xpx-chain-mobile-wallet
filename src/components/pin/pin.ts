@@ -46,30 +46,11 @@ export class PinComponent implements OnChanges {
     }
   }
 
-  emitEvent() {
-    this.submit.emit(this.inputPin);
-  }
-
-  handleInput(pin: string) {
-    this.styleClasses.miss = false;
-    this.activePin += "1";
-    if (this.inputPin.length !== this.maxLength) {
-      this.inputPin += pin;
-      if (this.inputPin.length === this.maxLength) {
-        console.log("PinComponent : Pin length===", this.inputPin.length);
-
-        if (this.isVerify && !BcryptJS.compareSync(this.inputPin, this.previousPin)) {
-          console.log("TCL: PinComponent -> handleInput -> BcryptJS.compareSync(this.inputPin, this.previousPin)", BcryptJS.compareSync(this.inputPin, this.previousPin))
-          this.styleClasses.miss = true;
-          this.activePin = "";
-          this.haptic.notification({ type: 'error' });
-        }
-        this.emitEvent();
-        this.inputPin = "";
-      }
-    }
-  }
-
+  /**
+   *
+   *
+   * @memberof PinComponent
+   */
   backspace() {
     if (this.inputPin.length) {
       this.inputPin = this.inputPin.slice(0, -1);
@@ -77,16 +58,59 @@ export class PinComponent implements OnChanges {
     }
   }
 
+  /**
+   *
+   *
+   * @memberof PinComponent
+   */
+  emitEvent() {
+    this.submit.emit(this.inputPin);
+  }
+  /**
+   *
+   *
+   * @param {string} pin
+   * @memberof PinComponent
+   */
+  handleInput(pin: string) {
+    this.styleClasses.miss = false;
+    this.activePin += "1";
+    if (this.inputPin.length !== this.maxLength) {
+      this.inputPin += pin;
+      if (this.inputPin.length === this.maxLength) {
+        if (this.isVerify && !BcryptJS.compareSync(this.inputPin, this.previousPin)) {
+          this.styleClasses.miss = true;
+          this.activePin = "";
+          this.haptic.notification({ type: 'error' });
+        }
+        
+        this.emitEvent();
+        this.inputPin = "";
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @returns
+   * @memberof PinComponent
+   */
   random9DigitNumberNotStartingWithZero() {
-    // I did not include the zero, for the first digit
-    var digits = "123456789".split(""),
-      first = this.shuffle(digits).pop();
-    // Add "0" to the array
+    var digits = "123456789".split(""), first = this.shuffle(digits).pop();
     digits.push("0");
     return parseInt(first + this.shuffle(digits).join("").substring(0, 9), 10).toString().split("");
   }
 
-  shuffle(o) {
+
+  /**
+   *
+   *
+   * @param {*} o
+   * @returns
+   * @memberof PinComponent
+   */
+  shuffle(o: any) {
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
   }

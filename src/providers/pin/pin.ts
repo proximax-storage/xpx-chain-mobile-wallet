@@ -13,57 +13,50 @@ import { ForgeProvider } from '../forge/forge';
 @Injectable()
 export class PinProvider {
 
-  constructor(public http: HttpClient, private storage: Storage, private forge: ForgeProvider) {
+  constructor(http: HttpClient, private storage: Storage, private forge: ForgeProvider) {
     console.log('Hello PinProvider Provider');
   }
 
-  public get() {
+  get() {
     return new Promise((resolve, reject) => {
       this.storage.get("pin").then(pin => {
         resolve(pin);
       }).catch(error => {
-      console.log("LOG: PinProvider -> get -> error", error);
+        console.log("LOG: PinProvider -> get -> error", error);
         // reject(error);
       })
     });
   }
 
-  public set(pin) {
-    this.saveCurrentPin(pin);
+  set(pin) {
     const hashedPin = BcryptJS.hashSync(pin, 8)
     return new Promise((resolve, reject) => {
       this.storage.set("pin", hashedPin).then(pin => {
         resolve(pin);
       }).catch(error => {
-      console.log("LOG: PinProvider -> set -> error", error);
+        console.log("LOG: PinProvider -> set -> error", error);
         // reject(error);
       })
     });
   }
 
-  public hash(pin) {
+  hash(pin) {
     return BcryptJS.hashSync(pin, 8);
   }
 
-  public compare(currentPin) {
+  compare(currentPin) {
     return new Promise((resolve, reject) => {
       this.storage.get("pin").then(previousPin => {
         if (BcryptJS.compareSync(currentPin, previousPin)) {
-          this.saveCurrentPin(currentPin).then(_=> {
-            // this.decryptPasswordUsingCurrentPin();
-          })
           resolve(true);
         } else {
           resolve(false);
         }
-      }).catch(error => {
-      console.log("LOG: PinProvider -> compare -> error", error);
-        // reject(error);
-      })
+      }).catch(error => { });
     });
   }
 
-  public encryptPasswordUsingCurrentPin() {
+  encryptPasswordUsingCurrentPin() {
     Promise.all([
       this.storage.get("currentPin"),
       this.storage.get("plainPassword"),
@@ -77,82 +70,71 @@ export class PinProvider {
       Promise.all([
         this.storage.set("currentPin", null),
         this.storage.set("plainPassword", null),
-        this.storage.set("encryptedPassword", {password: ENCRYPTED_PASSWORD, salt: SALT, iv: IV }),
-      ]).then(res=> {
+        this.storage.set("encryptedPassword", { password: ENCRYPTED_PASSWORD, salt: SALT, iv: IV }),
+      ]).then(res => {
         return res;
       })
     });
   }
 
-  public decryptPasswordUsingCurrentPin() {
+  decryptPasswordUsingCurrentPin() {
     Promise.all([
       this.storage.get("currentPin"),
       this.storage.get("encryptedPassword"),
     ]).then(results => {
       const CURRENT_PIN = results[0];
       const ENCRYPTED_PASSWORD = results[1];
-			console.log("LOG: PinProvider -> publicdecryptPasswordUsingCurrentPin -> ENCRYPTED_PASSWORD", ENCRYPTED_PASSWORD);
+      console.log("LOG: PinProvider -> ecryptPasswordUsingCurrentPin -> ENCRYPTED_PASSWORD", ENCRYPTED_PASSWORD);
 
       const SALT = ENCRYPTED_PASSWORD.salt;
       const IV = ENCRYPTED_PASSWORD.iv;
       const PLAIN_PASSWORD = this.forge.decrypt(ENCRYPTED_PASSWORD.password, CURRENT_PIN, SALT, IV);
-      
+
       Promise.all([
         this.storage.set("plainPassword", PLAIN_PASSWORD),
         this.storage.set("encryptedPassword", null),
-      ]).then(res=> {
+      ]).then(res => {
         return res;
       })
     });
   }
 
-  private saveCurrentPin(currentPin) {
-    return new Promise((resolve, reject) => {
-      this.storage.set("currentPin", currentPin).then(pin => {
-        resolve(pin);
-      }).catch(error => {
-      console.log("LOG: PinProvider -> saveCurrentPin -> error", error);
-        // reject(error);
-      })
-    })  
-    
-  }
 
-  public getCurrentPin() {
+  getCurrentPin() {
     return new Promise((resolve, reject) => {
       this.storage.get("currentPin").then(currentPin => {
-        if(currentPin) {
+        if (currentPin) {
           resolve(currentPin);
         } else {
           resolve(false);
         }
-        
+
       }).catch(error => {
-      console.log("LOG: PinProvider -> getCurrentPin -> error", error);
+        console.log("LOG: PinProvider -> getCurrentPin -> error", error);
         // reject(error);
       })
     });
 
   }
 
-  public removeCurrentPin() {
+  removeCurrentPin() {
     this.storage.set("currentPin", false).then(pin => {
       console.log(pin);
     }).catch(error => {
-    console.log("LOG: PinProvider -> removeCurrentPin -> error", error);
+      console.log("LOG: PinProvider -> removeCurrentPin -> error", error);
       console.log(error);
     })
   }
 
 
 
-  public reset() {
+  reset() {
     return new Promise((resolve, reject) => {
       this.storage.set("pin", false).then(pin => {
         this.removeCurrentPin();
         resolve(pin);
       }).catch(error => {
-      console.log("LOG: PinProvider -> reset -> error", error);
+        console.log("LOG: PinProvider -> reset -> error", error);
         // reject(error);
       })
     });

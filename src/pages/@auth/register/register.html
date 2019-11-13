@@ -44,7 +44,7 @@
 
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.SIGNUP.CONFIRM_PASSWORD" | translate}}</ion-label>
-            <ion-input (ionChange)="validate()" [disabled]="passDisabled" formControlName="confirmPassword"
+            <ion-input (ionChange)="validatePassword()" [disabled]="passDisabled" formControlName="confirmPassword"
               [type]="confirmPasswordType" placeholder="{{'APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER'| translate}}">
             </ion-input>
           </ion-item>
@@ -58,8 +58,8 @@
 
           <br>&nbsp;<br>
 
-          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formRegisterUser.invalid" type="submit"
-            color="dark">
+          <button gradient-button color-5 ion-button icon-end no-margin [disabled]="formRegisterUser.invalid"
+            type="submit" color="dark">
             {{"APP.SIGNUP" | translate}}
           </button>
         </form>
