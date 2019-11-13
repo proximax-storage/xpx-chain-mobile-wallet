@@ -59,7 +59,7 @@ export class WalletProvider {
    * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<dataAccount> {
+  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
     const dataAccount = await this.authProvider.getDataAccountSelected();
     const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
     const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
