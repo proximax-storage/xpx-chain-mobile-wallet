@@ -1,6 +1,6 @@
 import { AuthProvider } from './../../../../providers/auth/auth';
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, App, ModalController, AlertController, Platform } from "ionic-angular";
+import { IonicPage, NavController, NavParams, ModalController, AlertController, Platform } from "ionic-angular";
 import { SimpleWallet, AccountInfoWithMetaData } from "nem-library";
 import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
 import { AppVersion } from '@ionic-native/app-version';

@@ -1,13 +1,8 @@
-import { WalletProvider } from './../../../../providers/wallet/wallet';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Haptic, AlertController, AlertOptions } from 'ionic-angular';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../../../../providers/toast/toast';
-import { AlertProvider } from '../../../../providers/alert/alert';
-import { AuthProvider } from '../../../../providers/auth/auth';
-import { e } from '@angular/core/src/render3';
-
 
 /**
  * Generated class for the WalletBackupQrcodePage page.
@@ -26,25 +21,25 @@ export class WalletBackupQrcodePage {
   privateKey: string;
   QRData: string;
   walletName: string;
-  
+
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-    ) {
-      console.log("SIRIUS CHAIN WALLET: WalletBackupQrcodePage -> this.navParams.data", this.navParams.data)
+  ) {
+    console.log("SIRIUS CHAIN WALLET: WalletBackupQrcodePage -> this.navParams.data", this.navParams.data)
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WalletBackupQrcodePage');
-    this.QRData =this.privateKey; 
+    this.QRData = this.privateKey;
   }
   dismiss() {
-     this.viewCtrl.dismiss(); 
+    this.viewCtrl.dismiss();
   }
 
   copy() {

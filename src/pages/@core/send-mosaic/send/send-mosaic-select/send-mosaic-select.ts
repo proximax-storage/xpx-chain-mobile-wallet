@@ -11,15 +11,10 @@ import { App } from "../../../../../providers/app/app";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 import {
-  SimpleWallet,
   Address,
   MosaicInfo,
-  Password,
-  Account
 } from "tsjs-xpx-chain-sdk";
 import { MosaicsProvider } from "../../../../../providers/mosaics/mosaics";
-import { Observable } from "rxjs";
-import { AuthProvider } from "../../../../../providers/auth/auth";
 import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
 
 /**
@@ -54,7 +49,6 @@ export class SendMosaicSelectPage {
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
-    private authProvider: AuthProvider,
     private proximaxProvider: ProximaxProvider,
   ) {
     this.fakeList = [{}, {}];

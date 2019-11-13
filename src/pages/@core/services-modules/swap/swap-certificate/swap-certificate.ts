@@ -1,16 +1,9 @@
-import { File } from '@ionic-native/file';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Platform, AlertController } from 'ionic-angular';
 import { ToastProvider } from '../../../../../providers/toast/toast';
 import { Clipboard } from '@ionic-native/clipboard';
-import { Screenshot } from '@ionic-native/screenshot';
 import { Address } from 'tsjs-xpx-chain-sdk';
-import { PhotoLibrary } from '@ionic-native/photo-library';
-import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
-import { Diagnostic } from '@ionic-native/diagnostic';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
-// import * as qrcode from 'qrcode-generator';
-// import { Address } from 'tsjs-xpx-chain-sdk';
+
 
 /**
  * Generated class for the SwapCertificatePage page.
@@ -32,7 +25,7 @@ export class SwapCertificatePage {
   screenshotDone: boolean = false;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
     private clipboard: Clipboard,

@@ -1,18 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
-import { SimpleWallet, Password, Account } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
-import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 
-// import { NemProvider } from './../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { ToastProvider } from '../../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { App } from '../../../../providers/app/app';
-import { TranslateService } from '@ngx-translate/core';
-import CryptoJS from 'crypto-js';
 import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet-backup';
 
 /**
@@ -38,10 +33,7 @@ export class PrivateKeyPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public walletProvider: WalletProvider,
-    // private nemProvider: NemProvider,
-    private clipboard: Clipboard,
     private socialSharing: SocialSharing,
-    private toastProvider: ToastProvider,
     private utils: UtilitiesProvider,
     private viewController: ViewController,
     private haptic: HapticProvider,

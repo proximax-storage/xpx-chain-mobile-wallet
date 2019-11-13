@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams, ModalController, InfiniteScroll, ViewController, ActionSheetController } from "ionic-angular";
 import { SimpleWallet, Transaction, Pageable, AccountInfoWithMetaData } from "nem-library";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";

@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, App, AlertController, ModalController, LoadingOptions, LoadingController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertProvider } from '../../../../../providers/alert/alert';
-import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import { NemProvider } from '../../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../../providers/auth/auth';
@@ -49,7 +48,6 @@ export class ImportWalletPage {
     private translateService: TranslateService,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,
-    private alertCtrl: AlertController,
     private barcodeScanner: BarcodeScanner,
     private loadingCtrl: LoadingController
   ) {
