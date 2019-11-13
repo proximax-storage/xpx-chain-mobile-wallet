@@ -1,5 +1,3 @@
-import { UInt64 } from "tsjs-xpx-chain-sdk";
-
 export class DefaultMosaic {
     public namespaceId: string;
     public mosaicId: string;

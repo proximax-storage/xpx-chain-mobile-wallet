@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Storage } from "@ionic/storage";
 import { AppConfig } from '../../app/app.config';
 import * as js_joda_1 from 'js-joda';
 
@@ -39,7 +38,7 @@ export class NemProvider {
   assetHttp: AssetHttp;
   qrService: QRService;
 
-  constructor(private storage: Storage) {
+  constructor() {
     let serverConfig: ServerConfig[];
     serverConfig = [{ protocol: "https", domain: "bctestnetswap.xpxsirius.io", port: 7890 } as ServerConfig]
     NEMLibrary.bootstrap(NetworkTypes.TEST_NET);

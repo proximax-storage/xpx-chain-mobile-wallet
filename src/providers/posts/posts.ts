@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LocalCacheProvider } from '../local-cache/local-cache';
 import { Storage } from '@ionic/storage';
 
 
@@ -17,7 +16,10 @@ export class PostsProvider {
   seenPosts: Array<any> = [];
 
 
-  constructor(public http: HttpClient, private cache: LocalCacheProvider, private storage: Storage) {
+  constructor(
+    public http: HttpClient, 
+    private storage: Storage
+  ) {
     console.log('Hello PostsProvider Provider');
     this.seenPosts
 
