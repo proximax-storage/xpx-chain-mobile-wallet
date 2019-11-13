@@ -62,18 +62,18 @@ export class ProximaxProvider {
     public http: HttpClient,
     private storage: Storage,
   ) {
-  
+
     this.networkType = AppConfig.sirius.networkType;
     this.wsNodeUrl = AppConfig.sirius.wsNodeUrl;
 
-    this.storage.get("node").then( nodeStorage=>{
-      if(nodeStorage === null || nodeStorage=== undefined){
+    this.storage.get("node").then(nodeStorage => {
+      if (nodeStorage === null || nodeStorage === undefined) {
         this.httpUrl = AppConfig.sirius.httpNodeUrl;
       } else {
-        this.httpUrl = nodeStorage ;
+        this.httpUrl = nodeStorage;
       }
 
-      this.httpUrl = this.httpUrl 
+      this.httpUrl = this.httpUrl
       this.networkHttp = new NetworkHttp(this.httpUrl);
       this.accountHttp = new AccountHttp(this.httpUrl, this.networkHttp);
       this.mosaicHttp = new MosaicHttp(this.httpUrl, this.networkHttp);
@@ -81,22 +81,57 @@ export class ProximaxProvider {
       this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
       this.namespaceService = new NamespaceService(this.namespaceHttp);
       this.transactionHttp = new TransactionHttp(this.httpUrl);
-    
+
     })
   }
+
+  /**
+   * 
+   * @param nameWallet 
+   * @param password 
+   * @param privateKey 
+   */
+
+  createAccountFromPrivateKey(nameWallet: string, password: Password, privateKey: string): SimpleWallet {
+    return SimpleWallet.createFromPrivateKey(nameWallet, password, privateKey, this.networkType);
+  }
+
+  /**
+   * 
+   * @param value 
+   */
 
   createPassword(value) {
     const password = new Password(value)
     return password;
   }
 
+  /**
+* createPublicAccount
+* @param publicKey
+* @param network
+* @returns {PublicAccount}
+*/
+  createPublicAccount(publicKey: string, network: NetworkType): PublicAccount {
+    return PublicAccount.createFromPublicKey(publicKey, network);
+  }
+
+  /**
+   * 
+   * @param name 
+   * @param password 
+   */
+
   createSimpleWallet(name: string, password: Password) {
     return SimpleWallet.create(name, password, this.networkType);
   }
 
-  createAccountFromPrivateKey(nameWallet: string, password: Password, privateKey: string): SimpleWallet {
-    return SimpleWallet.createFromPrivateKey(nameWallet, password, privateKey, this.networkType);
-  }
+/**
+ * 
+ * @param password 
+ * @param encryptedKey 
+ * @param iv 
+ */
 
   decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
     const common: commonInterface = {
@@ -104,7 +139,7 @@ export class ProximaxProvider {
       privateKey: ''
     };
 
-    
+
     const wallet: walletInterface = {
       encrypted: encryptedKey,
       iv: iv,
@@ -114,13 +149,13 @@ export class ProximaxProvider {
     return common.privateKey;
   }
 
-  
-    /**
-   * Decrypt private key
-   * @param password password
-   * @param encriptedData Object containing private_key encrypted and salt
-   * @return Decrypted private key
-   */
+
+  /**
+ * Decrypt private key
+ * @param password password
+ * @param encriptedData Object containing private_key encrypted and salt
+ * @return Decrypted private key
+ */
 
   public createFromPrivateKey(
     walletName: string,
@@ -134,20 +169,43 @@ export class ProximaxProvider {
     return account;
   }
 
+  /**
+   * 
+   * @param address 
+   */
+
   getAccountInfo(address: Address): Observable<AccountInfo> {
     // return null;
     return this.accountHttp.getAccountInfo(address);
   }
+
+  /**
+   * 
+   * @param publicAccount 
+   * @param queryParams 
+   */
 
   getAllTransactionsFromAccount(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
     // return null;
     return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));
   }
 
+  /**
+   * 
+   * @param publicAccount 
+   * @param queryParams 
+   */
+
   getAllTransactionsUnconfirmed(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
     // return null;
     return this.accountHttp.unconfirmedTransactions(publicAccount, new QueryParams(queryParams));
   }
+
+  /**
+   * 
+   * @param publicAccount 
+   * @param queryParams 
+   */
 
   getAllTransactionsAggregate(publicAccount: PublicAccount, queryParams?): Observable<AggregateTransaction[]> {
     // return null;
@@ -160,50 +218,100 @@ export class ProximaxProvider {
       );
   }
 
+  /**
+   * 
+   * @param address 
+   */
+
   getBalance(address: Address): Observable<MosaicAmountView[]> {
     // return null;
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
   }
-  mosaicsAmountViewFromAddress(address: Address) : Observable<MosaicAmountView[]> {
+  /**
+   * 
+   * @param address 
+   */
+
+  mosaicsAmountViewFromAddress(address: Address): Observable<MosaicAmountView[]> {
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
   }
+
+  /**
+   * 
+   * @param address 
+   */
 
   createFromRawAddress(address: string): Address {
     return Address.createFromRawAddress(address);
   }
 
+  /**
+   * 
+   * @param privateKey 
+   * @param networkType 
+   */
+
   getPublicAccountFromPrivateKey(privateKey: string, networkType: NetworkType): PublicAccount {
-  // console.log("TCL: ProximaxProvider -> privateKey", privateKey, networkType)
-    
+    // console.log("TCL: ProximaxProvider -> privateKey", privateKey, networkType)
+
     return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
 
+  /**
+   * 
+   * @param mosaicIsd 
+   */
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
 
+  /**
+   * 
+   * @param NamespaceId 
+   */
   getNamespace(NamespaceId: NamespaceId[]): Observable<NamespaceName[]> {
     return this.namespaceHttp.getNamespacesName(NamespaceId)
-    // return this.mosaicHttp.getMosaics(mosaicIsd);
   }
-  
+
+  /**
+   * 
+   * @param NamespaceId 
+   */
   getLinkedMosaicId(NamespaceId: NamespaceId): Observable<MosaicId> {
     return this.namespaceHttp.getLinkedMosaicId(NamespaceId)
   }
 
-    public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
+  /**
+   * 
+   * @param address 
+   */
+  getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
     return this.accountHttp.getMultisigAccountInfo(address);
   }
 
-  getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>{
-    // return from([]);
+  /**
+   * 
+   * @param mosaicIds 
+   */
+  getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]> {
     return this.mosaicHttp.getMosaicsNames(mosaicIds);
   }
 
+  /**
+   * 
+   * @param privateKey 
+   * @param net 
+   * @param address 
+   */
   checkAddress(privateKey: string, net: NetworkType, address: string): boolean {
     return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
   }
 
+  /**
+   * 
+   * @param val 
+   * @param val2 
+   */
   verifyNetworkAddressEqualsNetwork(val: string, val2: string) {
     let value = val.toUpperCase()
     let value2 = val2.toUpperCase()
@@ -251,22 +359,28 @@ export class ProximaxProvider {
     return success;
   }
 
-  // public getAbsoluteAmount(amount: number): number {
-  //   return amount * Math.pow(10, 6);
-  // }
-
+  /**
+   * 
+   * @param amount 
+   * @param divisibility 
+   */
   amountFormatter(amount: Number, divisibility: any) {
     const amountDivisibility = Number(amount) / Math.pow(10, divisibility);
     return amountDivisibility.toLocaleString("en-us", {
       minimumFractionDigits: divisibility
     });
   }
-  public getAbsoluteAmount(amount, divisibility) {
+  
+  /**
+   * 
+   * @param amount 
+   * @param divisibility 
+   */
+  getAbsoluteAmount(amount, divisibility) {
     const amountDivisibility = amount * Math.pow(10, divisibility);
 
     return amountDivisibility;
   }
-
 
   /**
    * Generate Address QR Text
@@ -278,18 +392,16 @@ export class ProximaxProvider {
     amount: number,
     message: string
   ): string {
-
-   
     return;
   }
 
-    /**
-   * Prepares provision namespace transaction
-   * @param recipientAddress recipientAddress
-   * @param mosaicsTransferable mosaicsTransferable
-   * @param message message
-   * @return Promise containing prepared transaction
-   */
+  /**
+ * Prepares provision namespace transaction
+ * @param recipientAddress recipientAddress
+ * @param mosaicsTransferable mosaicsTransferable
+ * @param message message
+ * @return Promise containing prepared transaction
+ */
   public prepareSubNamespaceTransaction(
     subNamespace: string,
     parentNamespace: string
@@ -302,13 +414,13 @@ export class ProximaxProvider {
     // );
   }
 
-    /**
-   * Prepares provision namespace transaction
-   * @param recipientAddress recipientAddress
-   * @param mosaicsTransferable mosaicsTransferable
-   * @param message message
-   * @return Promise containing prepared transaction
-   */
+  /**
+ * Prepares provision namespace transaction
+ * @param recipientAddress recipientAddress
+ * @param mosaicsTransferable mosaicsTransferable
+ * @param message message
+ * @return Promise containing prepared transaction
+ */
   public prepareNamespaceTransaction(
     namespace: string
   ): any {
@@ -319,42 +431,51 @@ export class ProximaxProvider {
     // );
   }
 
-    /**
-   * Get the namespaces owned by the NEM address
-   * @param address The NEM address
-   * @return {Namespace[]}
-   */
+  /**
+ * Get the namespaces owned by the NEM address
+ * @param address The NEM address
+ * @return {Namespace[]}
+ */
   public getNamespacesOwned(address: Address): Observable<any[]> {
     return;
   }
 
-    /**
-   * Get namespace id
-   *
-   * @param {any} id
-   * @returns
-   * @memberof ProximaxProvider
-   */
+  /**
+ * Get namespace id
+ *
+ * @param {any} id
+ * @returns
+ * @memberof ProximaxProvider
+ */
   getNamespaceId(id: string | number[]): NamespaceId {
     return new NamespaceId(id);
   }
 
-    /**
-   * Formats levy given mosaic object
-   * @param mosaic mosaic object
-   * @return Promise with levy fee formated
-   */
+  /**
+ * Formats levy given mosaic object
+ * @param mosaic mosaic object
+ * @return Promise with levy fee formated
+ */
   public formatLevy(mosaic: any): Promise<any> {
     return new Promise((resolve, reject) => {
     })
   }
 
+  /**
+   * 
+   * @param transaction 
+   * @param account 
+   */
   cosignAggregateBondedTransaction(transaction: AggregateTransaction, account: Account) {
     const cosignatureTransaction = CosignatureTransaction.create(transaction);
     const cosignedTransaction = account.signCosignatureTransaction(cosignatureTransaction);
     return this.transactionHttp.announceAggregateBondedCosignature(cosignedTransaction);
   };
 
+  /**
+   * 
+   * @param address 
+   */
   isMultisigAccount(address: Address): Observable<boolean> {
     return this.accountHttp.getMultisigAccountInfo(address).pipe(
       map(multisigInfo => multisigInfo.cosignatories.length > 0),

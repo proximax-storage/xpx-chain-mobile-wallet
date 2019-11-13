@@ -32,6 +32,7 @@ import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { l } from '@angular/core/src/render3';
 
 /**
  * Generated class for the SendPage page.
@@ -343,43 +344,55 @@ export class SendPage {
       }
       return;
     }
+    const password = new Password(this.form.get("password").value);
+    const iv = this.currentWallet.encryptedPrivateKey.iv;
+    const encryptedKey = this.currentWallet.encryptedPrivateKey.encryptedKey;
 
-    try {
-      let recipient = this.form
-        .get("recipientAddress")
-        .value.toUpperCase()
-        .replace("-", "");
-      let message = this.form.get("message").value;
-      const prueba = this.selectedCoin.market_data.current_price.usd;
-      console.log("por este multiploca", prueba);
-      let total =
-        this.selectedCoin.market_data.current_price.usd *
-        Number(this.form.get("amount").value);
-
-      // Show confirm transaction
-      let page = "SendMosaicConfirmationPage";
-      const modal = this.modalCtrl.create(
-        page,
-        {
-          ...this.form.value,
-          mosaic: this.selectedMosaic,
-          currentWallet: this.currentWallet,
-          transactionType: "normal",
-          total: total,
-          message: message
-        },
-        {
-          enableBackdropDismiss: false,
-          showBackdrop: true
+      const privateKey = this.proximaxProvider.decryptPrivateKey(password, iv,encryptedKey);
+      console.log('privateKeyprivateKey', privateKey);
+      
+      if(privateKey != ''){
+        try {
+          let recipient = this.form
+            .get("recipientAddress")
+            .value.toUpperCase()
+            .replace("-", "");
+          let message = this.form.get("message").value;
+          const prueba = this.selectedCoin.market_data.current_price.usd;
+          console.log("por este multiploca", prueba);
+          let total =
+            this.selectedCoin.market_data.current_price.usd *
+            Number(this.form.get("amount").value);
+    
+          // Show confirm transaction
+          let page = "SendMosaicConfirmationPage";
+          const modal = this.modalCtrl.create(
+            page,
+            {
+              ...this.form.value,
+              mosaic: this.selectedMosaic,
+              currentWallet: this.currentWallet,
+              transactionType: "normal",
+              total: total,
+              message: message
+            },
+            {
+              enableBackdropDismiss: false,
+              showBackdrop: true
+            }
+          );
+          modal.present();
+          // }
+        } catch (err) {
+          this.alertProvider.showMessage(
+            this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
+          );
         }
-      );
-      modal.present();
-      // }
-    } catch (err) {
-      this.alertProvider.showMessage(
-        this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
-      );
-    }
+      } else {
+        console.log('error mwnor ');
+        
+      }
+
   }
 
   dismiss() {
