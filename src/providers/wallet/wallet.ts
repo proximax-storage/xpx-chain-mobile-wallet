@@ -56,11 +56,10 @@ export class WalletProvider {
    *
    * @param {SimpleWallet} wallet
    * @param {string} walletColor
-   * @returns {Promise<SimpleWallet>}
+   * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
-    let result = [];
+  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<dataAccount> {
     const dataAccount = await this.authProvider.getDataAccountSelected();
     const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
     const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
@@ -73,13 +72,12 @@ export class WalletProvider {
 
     catapultAccounts.push({ account: wallet, walletColor: walletColor, publicAccount: publicAccount });
     dataAccount['catapultAccounts'] = catapultAccounts;
-    console.log('\n\n TO SAVE --------->', dataAccount, '\n\n');
-    /*result = wallets[username];
-    result.push({ wallet: wallet, walletColor: walletColor });
-    wallets[username] = result;
-    this.storage.set('wallets', wallets);*/
-    // return wallet;
-    return null;
+    const data: AccountInterface[] = await this.storage.get('accounts');
+    const otherAccounts: AccountInterface[] = data.filter(x => x.user !== dataAccount.user);
+    otherAccounts.push(dataAccount);
+    this.authProvider.setSelectedAccount(dataAccount);
+    this.storage.set('accounts', otherAccounts);
+    return dataAccount;
   }
 
 

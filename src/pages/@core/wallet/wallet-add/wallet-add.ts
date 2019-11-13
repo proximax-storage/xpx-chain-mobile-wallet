@@ -130,7 +130,8 @@ export class WalletAddPage {
   }
 
   onSubmit(form) {
-    this.walletProvider.checkIfWalletNameExists(form.name, '').then(value => {
+    //RJ
+    /*this.walletProvider.checkIfWalletNameExists(form.name, '').then(value => {
       if (value) {
         const title = `<${this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS")}>`
         this.alertProvider.showMessage(title);
@@ -140,8 +141,8 @@ export class WalletAddPage {
         const newWallet = this.walletProvider.createSimpleWallet({ walletName: form.name, password: form.password });
 
         // console.log("LOG: WalletAddPage -> onSubmit -> newWallet", newWallet);
-
-        this.walletProvider.storeWallet(newWallet, this.walletColor).then(value => {
+this.walletProvider.storeWallet(newWallet, this.walletColor, );
+        this.walletProvider.storeWallet({ wallet: newWallet, walletColor: this.walletColor }).then(value => {
 
           newWallet.walletColor = this.walletColor;
           // console.log("New wallet:", newWallet);
@@ -153,7 +154,7 @@ export class WalletAddPage {
           this.gotoBackup(newWallet);
         });
       }
-    });
+    });*/
   }
 
   updateName() {

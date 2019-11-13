@@ -50,7 +50,7 @@ export class ImportWalletPage {
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private barcodeScanner:BarcodeScanner,
+    private barcodeScanner: BarcodeScanner,
     private loadingCtrl: LoadingController
   ) {
     console.log('LOG: ImportWalletPage -> init -> this.navParams.data', this.navParams.data.data);
@@ -81,7 +81,7 @@ export class ImportWalletPage {
     if (window.screen.width >= 768) { // 768px portrait
       this.tablet = true;
     }
-    
+
     this.formGroup = this.formBuilder.group({
       name: ['', [Validators.minLength(3), Validators.required]],
       privateKey: ['', [Validators.minLength(3), Validators.required]]
@@ -102,7 +102,7 @@ export class ImportWalletPage {
       console.info('Barcode data', barcodeData);
       let privKey = JSON.parse(barcodeData.text);
 
-      if(privKey) {
+      if (privKey) {
         this.formGroup.patchValue({ privateKey: privKey })
       }
     });
@@ -122,47 +122,36 @@ export class ImportWalletPage {
   }
 
   onSubmit(form) {
-    let options:LoadingOptions = {
+    let options: LoadingOptions = {
       content: ''
     };
     let loader = this.loadingCtrl.create(options);
 
     loader.present();
-    
+
     try {
-      const catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, this.PASSWORD, form.privateKey );
+      const catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, this.PASSWORD, form.privateKey);
       const nemWallet = this.nem.createPrivateKeyWallet(form.name, this.PASSWORD, form.privateKey);
-      
       this.walletProvider.checkIfWalletNameExists(catapultWallet.name, catapultWallet.address.plain()).then(value => {
         if (value) {
           this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           loader.dismiss();
-        } else {        
-          this.nem.getOwnedMosaics(nemWallet.address)
-          .subscribe(mosacis => {
+        } else {
+          this.nem.getOwnedMosaics(nemWallet.address).subscribe(mosacis => {
             for (let index = 0; index < mosacis.length; index++) {
               const element = mosacis[index];
               if (element.assetId.name === 'xpx') {
-                this.walletProvider
-                  .storeWalletNis1(catapultWallet, nemWallet, this.walletColor)
-                  .then(_ => {
-                    this.walletProvider
-                    .storeWallet(catapultWallet, this.walletColor)
-                    .then(_ => {
-                      this.walletProvider.setSelectedWallet(catapultWallet);
-                      loader.dismiss();
-                      this.showWalletInfoPage(nemWallet, catapultWallet, form.privateKey);
-                    });
-                  });
-              } else {
-                // NIS1 account has no XPX
+                this.walletProvider.storeWalletNis1(catapultWallet, nemWallet, this.walletColor).then(_ => {
+                  // RJ
+                  /*this.walletProvider.storeWallet({ wallet: catapultWallet, walletColor: this.walletColor }).then(_ => {
+                    this.walletProvider.setSelectedWallet(catapultWallet);
+                    loader.dismiss();
+                    this.showWalletInfoPage(nemWallet, catapultWallet, form.privateKey);
+                  });*/
+                });
               }
             }
           });
-
-        
-
-
         }
       });
     }
@@ -171,7 +160,7 @@ export class ImportWalletPage {
     }
   }
 
-  showWalletInfoPage(nemWallet: SimpleWallet, catapultWallet: any, privateKey:string) {
+  showWalletInfoPage(nemWallet: SimpleWallet, catapultWallet: any, privateKey: string) {
     console.log("TCL: ImportWalletPage -> showWalletInfoPage -> nemWallet", nemWallet)
     const page = "WalletInfoPage"
     this.showModal(page, {
