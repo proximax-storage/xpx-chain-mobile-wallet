@@ -20,13 +20,11 @@ import { AlertProvider } from "../../../../providers/alert/alert";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 import { Storage } from "@ionic/storage";
-import { AuthProvider } from "../../../../providers/auth/auth";
 import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
-import { l } from '@angular/core/src/render3';
 import { Password } from 'tsjs-xpx-chain-sdk';
 
 /**
@@ -347,10 +345,6 @@ export class SendPage {
       
       if(privateKey != ''){
         try {
-          let recipient = this.form
-            .get("recipientAddress")
-            .value.toUpperCase()
-            .replace("-", "");
           let message = this.form.get("message").value;
           const prueba = this.selectedCoin.market_data.current_price.usd;
           console.log("por este multiploca", prueba);

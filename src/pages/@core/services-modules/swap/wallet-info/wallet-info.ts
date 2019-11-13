@@ -1,5 +1,5 @@
 import { CoingeckoProvider } from './../../../../../providers/coingecko/coingecko';
-import { AssetTransferable, Address, TransferTransaction, PublicAccount, PlainMessage } from 'nem-library';
+import { AssetTransferable, Address, TransferTransaction, PlainMessage } from 'nem-library';
 import { NemProvider } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
@@ -125,7 +125,6 @@ export class WalletInfoPage {
   confirmSwap() {
     
 
-    let total = this.coinGecko.market_data.current_price.usd * Number(this.form.get('amount').value);
     let alert = this.alertCtrl.create({
       title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
       message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
@@ -157,7 +156,6 @@ export class WalletInfoPage {
 
     loader.present();
     let quantity = this.form.get('amount').value;
-    const recipient = new Address(this.recipient)
 
     if (this.multisig) {
       // console.log('es multifirma', transferTransaction);

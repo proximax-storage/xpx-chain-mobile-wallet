@@ -1,4 +1,3 @@
-import { Deeplinks } from '@ionic-native/deeplinks';
 import { Component, ViewChild } from "@angular/core";
 import {
   App,
@@ -23,7 +22,6 @@ import { GetMarketPricePipe } from "../../pipes/get-market-price/get-market-pric
 import { TranslateService } from "@ngx-translate/core";
 import {
   SimpleWallet,
-  Password,
   Account,
   AccountInfo,
   TransactionType,
@@ -33,7 +31,6 @@ import {
 import { AuthProvider } from "../../providers/auth/auth";
 import { MosaicsProvider } from "../../providers/mosaics/mosaics";
 import { TransactionsProvider } from "../../providers/transactions/transactions";
-import { Observable } from "rxjs";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { DefaultMosaic } from "../../models/default-mosaic";
 import { ProximaxProvider } from '../../providers/proximax/proximax';
@@ -105,7 +102,6 @@ export class HomePage {
     private haptic: HapticProvider,
     private marketPrice: GetMarketPricePipe,
     private translateService: TranslateService,
-    private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
