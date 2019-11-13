@@ -71,7 +71,7 @@ export class AuthProvider {
    * @param {string} password
    * @memberof AuthProvider
    */
-  async decryptAccountUser(password: string, nameAccount?: string) {
+  async decryptAccountUser(p: string, nameAccount?: string) {
     try {
       let account = null;
       if (nameAccount) {
@@ -82,8 +82,10 @@ export class AuthProvider {
       }
 
       if (account && account.encrypted) {
-        const decryptBytes = CryptoJS.TripleDES.decrypt(account.encrypted, password);
+        console.log(CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
+        const decryptBytes = CryptoJS.AES.decrypt(account.encrypted, CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
         const decrypted = decryptBytes.toString(CryptoJS.enc.Utf8);
+        console.log('\n\n\ndecrypted --->', decrypted, '\n\n\n');
         return (decrypted !== '' && decrypted.length === 64) ? account : null;
       }
 
@@ -100,24 +102,23 @@ export class AuthProvider {
   * @returns
   * @memberof AuthProvider
   */
-  encryptAccount(password: string) {
+  encryptAccount(p: string) {
     const randomBytesArray = crypto.randomBytes(32);
     const hashKey = Convert.uint8ToHex(randomBytesArray);
-    const iv = crypto.randomBytes(16);
-    const encKey = Utilities.ua2words(hashKey, 32);
-    let data: any = password;
-    for (let i = 0; i < 20; ++i) {
-      data = CryptoJS.SHA3(data, {
-        outputLength: 256,
-      });
-    }
+    console.log(CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
+    return CryptoJS.AES.encrypt(hashKey, CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
+  }
 
-    const encIv = {
-      iv: Utilities.ua2words(iv, 16),
-    };
-
-    return CryptoJS.AES.encrypt(CryptoJS.enc.Hex.parse(data), encKey, encIv);
-    // return CryptoJS.TripleDES.encrypt(hashKey, password);
+  /**
+   *
+   *
+   * @param {*} a
+   * @memberof AuthProvider
+   */
+  ec(a: any, i: number) {
+    for (let d = 0; d < i; ++d)
+      a = CryptoJS.SHA3(a, { outputLength: 256 });
+    return a
   }
 
   /**
