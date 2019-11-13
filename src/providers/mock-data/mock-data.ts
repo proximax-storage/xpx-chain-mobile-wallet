@@ -20,39 +20,7 @@ export class MockDataProvider {
     console.log('Hello MockDataProvider Provider');
   }
 
-  private initData() {
-    this.pin = '1111';
-
-    this.accounts = [
-      {
-        email: 'apps@proximax.io',
-        password: '123qweasd'
-      }
-    ];
-
-    this.wallets = {
-      'apps@proximax.io': [
-        {
-          "wallet": "eyJuYW1lIjoiVGVzdFdhbGxldCIsIm5ldHdvcmsiOiIxNTIiLCJhZGRyZXNzIjoiVERLWjQzQkdJQTdPN05MUERKNFk0QkU0VDNKRjNUSUhVTEw2WjNBMiIsImNyZWF0aW9uRGF0ZSI6IjIwMTktMDQtMjVUMDE6MjA6MjMuMTQxIiwic2NoZW1hIjoxLCJ0eXBlIjoic2ltcGxlIiwiZW5jcnlwdGVkUHJpdmF0ZUtleSI6Ijc0MjQ2ZDg1NzkyMWY2NDgyNTJhNWMzYWU4MzU1MDRlYzcwY2FlN2NhMDg5MzgwNmNkYTZjNWQ3MmMwNmU2ZGMyZmQ4M2RhNmM1YmUxODIwNTFiM2U0YjE0MmI4Yzk5MCIsIml2IjoiOGY3NDcxMDFlYTY4NzVjZTcyNGI5NGQ2OTEyYWYwZDYifQ==",
-          "walletColor": "wallet-1"
-        }
-      ]
-    };
-
-    this.selectedAccount = {
-      email: 'apps@proximax.io',
-      password: '123qweasd'
-    };
-
-    this.selectedWallet = {
-      "wallet": "eyJuYW1lIjoiVGVzdFdhbGxldCIsIm5ldHdvcmsiOiIxNTIiLCJhZGRyZXNzIjoiVERLWjQzQkdJQTdPN05MUERKNFk0QkU0VDNKRjNUSUhVTEw2WjNBMiIsImNyZWF0aW9uRGF0ZSI6IjIwMTktMDQtMjVUMDE6MjA6MjMuMTQxIiwic2NoZW1hIjoxLCJ0eXBlIjoic2ltcGxlIiwiZW5jcnlwdGVkUHJpdmF0ZUtleSI6Ijc0MjQ2ZDg1NzkyMWY2NDgyNTJhNWMzYWU4MzU1MDRlYzcwY2FlN2NhMDg5MzgwNmNkYTZjNWQ3MmMwNmU2ZGMyZmQ4M2RhNmM1YmUxODIwNTFiM2U0YjE0MmI4Yzk5MCIsIml2IjoiOGY3NDcxMDFlYTY4NzVjZTcyNGI5NGQ2OTEyYWYwZDYifQ==",
-      "walletColor": "wallet-1"
-    };
-  }
-
   init() {
-    // this.initData();
-
     Promise.all([
       this.storage.get('pin'),
       this.storage.get('wallets'),
