@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, ModalController, InfiniteScroll, ViewController, ActionSheetController } from "ionic-angular";
+import { IonicPage, NavController, NavParams, ModalController, ViewController, ActionSheetController } from "ionic-angular";
 import { SimpleWallet, Transaction, Pageable, AccountInfoWithMetaData } from "nem-library";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { CoinPriceChartProvider } from "../../../../providers/coin-price-chart/coin-price-chart";
