@@ -1,12 +1,9 @@
 import { DefaultMosaic } from './../../../../../models/default-mosaic';
-//"type": 257
-
 import { Component, Input } from '@angular/core';
 import { App } from '../../../../../providers/app/app';
 import { TransferTransaction } from '../../../../../models/transfer-transaction';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
-import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
-import { MosaicId, TransactionType } from 'tsjs-xpx-chain-sdk';
+import { TransactionType } from 'tsjs-xpx-chain-sdk';
 import { AppConfig } from '../../../../../app/app.config';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 

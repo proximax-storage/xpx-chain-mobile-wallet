@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import findIndex from 'lodash/findIndex';
-import * as BcryptJS from "bcryptjs";
 import crypto from 'crypto';
 import { Convert, SimpleWallet, PublicAccount } from 'tsjs-xpx-chain-sdk';
-import * as Utilities from 'tsjs-xpx-chain-sdk/dist/src/core/crypto/Utilities';
 import CryptoJS from 'crypto-js';
 
 

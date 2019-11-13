@@ -1,13 +1,10 @@
 
 import { Component, Input } from '@angular/core';
-
-import { Address, MosaicId, Transaction } from 'tsjs-xpx-chain-sdk';
-
+import { Transaction } from 'tsjs-xpx-chain-sdk';
 import { NemProvider } from '../../../../../providers/nem/nem';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
-import { text } from '@angular/core/src/render3/instructions';
 /**
  * Generated class for the TransferTransactionFilterComponent component.
  *
@@ -40,41 +37,7 @@ export class TransferTransactionFilterComponent {
     }
   }
 
-  private _getMosaics() {
-    // console.log("LOG: TransferTransactionFilterComponent -> private_getMosaics -> _getMosaics", this.mosaicId);
-    // console.log("LOG: TransferTransactionFilterComponent -> private_getMosaics -> this.tx", this.tx);
-    // try {
-      // this.nemProvider.getMosaicsDefinition(this.tx.mosaics()).subscribe(mosaics => {
-      //   this.mosaics = mosaics;
-      //   console.log(mosaics);
-      //   this.hasLevy = this.mosaics.filter(mosaic => mosaic.levy).length
-      //     ? true
-      //     : false;
-      // });
-
-      // this.mosaics = this.tx.filter(tx=> tx._mosaics[0].mosaicId.name == this.mosaicId);
-
-      // tx.mosaics()
-      // console.log("LOG: TransferTransactionFilterComponent -> private_getMosaics -> tx.mosaics()", this.tx.mosaics());
-      
-      // this.mosaics = this.tx.mosaics().filter(mosaic=> mosaic.mosaicId == this.mosaicId);
-			// console.log("LOG: TransferTransactionFilterComponent -> private_getMosaics -> this.mosaics", this.mosaics);
-
-
-    // } catch (e) {
-    //   this.mosaics = [];
-    // }
-  }
-
-  private _setOwner() {
-    // this.wallet.getSelectedWallet().then(wallet => {
-    //   this.owner = wallet.address;
-    // });
-  }
-
   constructor(
-    private nemProvider: NemProvider,
-    private wallet: WalletProvider,
     public utils: UtilitiesProvider
   ) {
     this.hasLevy = false;

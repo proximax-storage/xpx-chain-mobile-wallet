@@ -1,10 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, Events, Tabs, ModalController } from 'ionic-angular';
+import { IonicPage, Events, Tabs, ModalController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
 import { UtilitiesProvider } from '../../providers/utilities/utilities';
 import { PostsProvider } from '../../providers/posts/posts';
-import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -23,18 +22,16 @@ export class TabsPage {
   @ViewChild(Tabs) public tabs: Tabs;
 
   constructor(
-    private navCtrl: NavController, 
-    public events: Events, 
-    private utils: UtilitiesProvider, 
-    private modalCtrl: ModalController, 
-    private articles: PostsProvider,
-    private translateService: TranslateService
-    ) {
+    public events: Events,
+    private utils: UtilitiesProvider,
+    private modalCtrl: ModalController,
+    private articles: PostsProvider
+  ) {
     this.articles.getUnreadCount().then(count => {
       // console.log("Unread count", count);
       this.notificationCount = count;
     })
-   }
+  }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack();

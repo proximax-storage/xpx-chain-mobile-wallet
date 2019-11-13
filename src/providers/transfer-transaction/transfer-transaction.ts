@@ -2,12 +2,11 @@ import { HelperProvider } from './../helper/helper';
 import { WalletProvider } from './../wallet/wallet';
 import { AppConfig } from './../../app/app.config';
 import { Injectable } from '@angular/core';
-import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, SimpleWallet, Password, Account, SignedTransaction, TransactionHttp, Message, EmptyMessage, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
+import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, Password, Account, SignedTransaction, TransactionHttp, Message, EmptyMessage, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
 import { MosaicModel } from './mosaic.model';
 import { Observable } from 'rxjs';
 import { AuthProvider } from '../auth/auth';
 import { Storage } from '@ionic/storage';
-import { ConfirmedTransactionListener } from 'nem-library';
 
 /*
   Generated class for the TransferTransactionProvider provider.
@@ -17,7 +16,7 @@ import { ConfirmedTransactionListener } from 'nem-library';
 */
 @Injectable()
 export class TransferTransactionProvider {
-  getFee() : number {
+  getFee(): number {
     const tx = this.build();
     console.log("TCL: TransferTransactionProvider -> getFee -> tx", tx);
     return this.helper.getRelativeAmount(tx.maxFee.compact());
@@ -29,13 +28,10 @@ export class TransferTransactionProvider {
     private authProvider: AuthProvider,
     private storage: Storage,
     private helper: HelperProvider
-    ){
-
-      this.storage.get("node").then( nodeStorage=>{
-        
-          this.httpNodeUrl = nodeStorage ;
-        });
-
+  ) {
+    this.storage.get("node").then(nodeStorage => {
+      this.httpNodeUrl = nodeStorage;
+    });
   }
 
   private _address: Address;
@@ -87,38 +83,38 @@ export class TransferTransactionProvider {
   send(): Observable<TransactionAnnounceResponse> {
 
     return new Observable(observer => {
-      
-    // 1. Get account
-    this.getAccount().subscribe(account => {
-      const _account = account;
-      console.log('LOG: TransferTransactionProvider -> send -> _account', _account);
 
-      // 2. Get transfer transaction
-      const transferTransaction = this.build();
+      // 1. Get account
+      this.getAccount().subscribe(account => {
+        const _account = account;
+        console.log('LOG: TransferTransactionProvider -> send -> _account', _account);
 
-      // 3. Sign and announce a transaction
-      const signedTxn = account.sign(transferTransaction, AppConfig.sirius.networkGenerationHash);
-      console.log('LOG: TransferTransactionProvider -> send -> signedTxn', signedTxn);
+        // 2. Get transfer transaction
+        const transferTransaction = this.build();
 
-      // 4. Monitor transaction status
-      this.checkTransaction(signedTxn);
+        // 3. Sign and announce a transaction
+        const signedTxn = account.sign(transferTransaction, AppConfig.sirius.networkGenerationHash);
+        console.log('LOG: TransferTransactionProvider -> send -> signedTxn', signedTxn);
 
-      // 5. Announce transaction
-      const transactionHttp = new TransactionHttp(this.httpNodeUrl);
-      transactionHttp.announce(signedTxn).subscribe(response => {
-        observer.next(response);
-      }, (err) => {
-        observer.error(err);
-      }, () => {
-        observer.complete();
-      });
-      
-    })
+        // 4. Monitor transaction status
+        this.checkTransaction(signedTxn);
+
+        // 5. Announce transaction
+        const transactionHttp = new TransactionHttp(this.httpNodeUrl);
+        transactionHttp.announce(signedTxn).subscribe(response => {
+          observer.next(response);
+        }, (err) => {
+          observer.error(err);
+        }, () => {
+          observer.complete();
+        });
+
+      })
 
 
     });
 
-    
+
   }
 
   private checkTransaction(txn: SignedTransaction): Promise<boolean> {
@@ -132,7 +128,7 @@ export class TransferTransactionProvider {
           if (status.group === 'confirmed') {
             // TODO: notification
             resolve(true);
-          } else if(status.group === 'unconfirmed') {
+          } else if (status.group === 'unconfirmed') {
             // TODO: notification
           } else {
             this.checkTransaction(txn);
@@ -150,27 +146,27 @@ export class TransferTransactionProvider {
 
       // Get selected Wallet
       this.walletProvider.getSelectedWallet().then(selectedWallet => {
-      console.log('LOG: TransferTransactionProvider -> selectedWallet', selectedWallet);
+        console.log('LOG: TransferTransactionProvider -> selectedWallet', selectedWallet);
 
         const _selectedWallet = selectedWallet;
-      
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider
-        .getPassword()
-        .then(password => {
-        console.log('LOG: TransferTransactionProvider -> password', password);
-          // Get user's password
-          const myPassword = new Password(password);
 
-          // Convert current wallet to SimpleWallet
-          const myWallet = this.walletProvider.convertToSimpleWallet(_selectedWallet);
+        // Get user's password and unlock the wallet to get the account
+        this.authProvider
+          .getPassword()
+          .then(password => {
+            console.log('LOG: TransferTransactionProvider -> password', password);
+            // Get user's password
+            const myPassword = new Password(password);
 
-          // Unlock wallet to get an account using user's password 
-          const account = myWallet.open(myPassword);
+            // Convert current wallet to SimpleWallet
+            const myWallet = this.walletProvider.convertToSimpleWallet(_selectedWallet);
 
-          observer.next(account);
+            // Unlock wallet to get an account using user's password 
+            const account = myWallet.open(myPassword);
 
-        });
+            observer.next(account);
+
+          });
 
       })
     });
