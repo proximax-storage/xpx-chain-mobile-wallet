@@ -58,7 +58,7 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  async getDataAccountSelected() {
+  async getDataAccountSelected(): Promise<AccountInterface> {
     const data = await this.storage.get('selectedAccount');
     const result = data ? data : null;
     return result;
@@ -82,11 +82,9 @@ export class AuthProvider {
       }
 
       if (account && account.encrypted) {
-        console.log(CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
-        const decryptBytes = CryptoJS.AES.decrypt(account.encrypted, CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
-        const decrypted = decryptBytes.toString(CryptoJS.enc.Utf8);
-        console.log('\n\n\ndecrypted --->', decrypted, '\n\n\n');
-        return (decrypted !== '' && decrypted.length === 64) ? account : null;
+        const db = CryptoJS.AES.decrypt(account.encrypted, CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
+        const d = db.toString(CryptoJS.enc.Utf8);
+        return (d !== '' && d.length === 64 && Convert.isHexString(d)) ? account : null;
       }
 
       return null;
@@ -139,7 +137,7 @@ export class AuthProvider {
    * @returns {Promise<any>}
    * @memberof AuthProvider
    */
-  setSelectedAccount(account: any): Promise<any> {
+  setSelectedAccount(account: AccountInterface): Promise<any> {
     this.storage.set('isAccountCreated', true);
     this.storage.set('isLoggedIn', true);
     this.storage.set('selectedAccount', account);
@@ -177,52 +175,11 @@ export class AuthProvider {
     });
   }
 
-  /**
-   * Register new user.
-   * @param email { string } The email of the user
-   * @param password { string } The password of the user
-   */
-  register(email: string, password: string) {
-    return this.storage
-      .get('accounts')
-      .then(data => {
-        const ACCOUNTS = data ? data : [];
-
-        return ACCOUNTS;
-      })
-      .then((accounts: any[]) => {
-        console.log("LOG: register -> accounts", accounts);
-
-        let foundAccount = accounts.filter(account => {
-          console.log("LOG: register -> foundAccount", foundAccount);
-          return account.email.includes(email)
-        });
-
-        if (foundAccount.length > 0) {
-          // duplicate account
-          //  alert("Duplicate account");
-
-          return "duplicate"
-
-        } else {
-          // TODO: Encrypt password
-          const accountFromInput = {
-            email: email.toLowerCase(),
-            password: BcryptJS.hashSync(password, 8)
-          };
-          accounts.push(accountFromInput);
-          return this.storage.set('accounts', accounts);
-        }
-
-      });
-  }
 
   edit(oldUsername: string, newUsername: string, newPassword: string) {
     return this.storage.get('accounts').then(data => {
       const ACCOUNTS = data ? data : [];
-
       console.log(ACCOUNTS);
-
       if (findIndex(ACCOUNTS, oldUsername) === -1) {
         let _newAccounts = ACCOUNTS.filter(res => {
           return res.email != oldUsername;
