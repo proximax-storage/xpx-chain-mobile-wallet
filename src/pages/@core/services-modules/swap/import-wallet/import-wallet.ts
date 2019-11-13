@@ -1,6 +1,6 @@
 import { SimpleWallet } from 'nem-library';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, App, AlertController, ModalController, LoadingOptions, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, App, ModalController, LoadingOptions, LoadingController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { NemProvider } from '../../../../../providers/nem/nem';
