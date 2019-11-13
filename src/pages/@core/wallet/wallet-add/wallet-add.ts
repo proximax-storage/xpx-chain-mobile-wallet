@@ -1,16 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { App } from '../../../../providers/app/app';
-import { NemProvider } from '../../../../providers/nem/nem';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { AuthProvider } from '../../../../providers/auth/auth';
-import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { HapticProvider } from '../../../../providers/haptic/haptic';
-import { TranslateService } from '@ngx-translate/core';
-import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 
 /**
@@ -40,12 +34,7 @@ export class WalletAddPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    private nemProvider: NemProvider,
-    private walletProvider: WalletProvider,
-    private authProvider: AuthProvider,
-    private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
-    private haptic: HapticProvider,
     private translateService: TranslateService,
     private sharedService: SharedService
   ) {

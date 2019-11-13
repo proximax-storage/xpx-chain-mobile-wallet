@@ -1,13 +1,8 @@
-import { AuthProvider } from './../../../../providers/auth/auth';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import {
-  SimpleWallet,
-  // QRWalletText
-} from 'tsjs-xpx-chain-sdk';
-
+import { AuthProvider } from './../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { NemProvider } from './../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';

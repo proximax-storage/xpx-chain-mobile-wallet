@@ -10,7 +10,6 @@ import {
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
-import { HttpClient } from '@angular/common/http';
 
 /*
  Generated class for the NemProvider provider.
@@ -31,8 +30,8 @@ export class WalletProvider {
   constructor(
     private storage: Storage,
     private authProvider: AuthProvider,
-    private proximaxProvider: ProximaxProvider,
-    private http: HttpClient, ) {
+    private proximaxProvider: ProximaxProvider
+  ) {
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
   }
 

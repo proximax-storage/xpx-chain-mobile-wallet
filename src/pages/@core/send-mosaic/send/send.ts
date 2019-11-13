@@ -10,11 +10,6 @@ import {
   ModalController,
   Platform
 } from "ionic-angular";
-import {
-  SimpleWallet,
-  Password,
-  Account,
-} from "tsjs-xpx-chain-sdk";
 
 import { App } from "../../../../providers/app/app";
 import { NemProvider } from "./../../../../providers/nem/nem";
@@ -25,7 +20,6 @@ import { AlertProvider } from "../../../../providers/alert/alert";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 import { Storage } from "@ionic/storage";
-import { Observable } from "rxjs";
 import { AuthProvider } from "../../../../providers/auth/auth";
 import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../providers/proximax/proximax";
@@ -88,7 +82,6 @@ export class SendPage {
     private barcodeScanner: BarcodeScanner,
     private storage: Storage,
     public platform: Platform,
-    private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService,

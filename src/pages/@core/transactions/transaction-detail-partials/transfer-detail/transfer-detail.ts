@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Deadline, Address, TransferTransaction, TransactionType } from 'tsjs-xpx-chain-sdk';
+import { TransactionType } from 'tsjs-xpx-chain-sdk';
 
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
