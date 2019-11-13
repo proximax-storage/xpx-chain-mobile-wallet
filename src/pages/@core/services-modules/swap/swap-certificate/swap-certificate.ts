@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Platform, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ToastProvider } from '../../../../../providers/toast/toast';
 import { Clipboard } from '@ionic-native/clipboard';
 import { Address } from 'tsjs-xpx-chain-sdk';
