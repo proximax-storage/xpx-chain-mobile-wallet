@@ -53,9 +53,11 @@ export class WalletBackupPage {
     console.log("SIRIUS CHAIN WALLET: PrivateKeyPage -> ionViewWillEnter -> currentWallet", currentWallet)
       if (currentWallet) {
       this.currentWallet = currentWallet;
-      this.walletProvider.getAccount(currentWallet).subscribe(account=> {
-        this.privateKey = account.privateKey;
-      })
+
+      //LI
+      // this.walletProvider.getAccount(currentWallet).subscribe(account=> {
+      //   this.privateKey = account.privateKey;
+      // })
       }
     });
   }
