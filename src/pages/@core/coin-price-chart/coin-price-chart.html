@@ -50,9 +50,9 @@
           <h2 color="dark" text-center>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
 
             <ion-list transparent-items>
-                <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
+                <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
                     <ion-icon name='custom-copy' item-end></ion-icon>
-                    <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
+                    <p text-justify  *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
                 </ion-item>
               </ion-list>
         </ion-card-content>
@@ -92,7 +92,7 @@
 
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-          [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Confirmed'">
+          [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
         </transfer-transaction>
       </ion-card>
 
