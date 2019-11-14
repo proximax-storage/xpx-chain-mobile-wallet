@@ -26,10 +26,107 @@ export class UtilitiesProvider {
     private events: Events,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-  ) {
-    console.log('Hello UtilitiesProvider Provider');
+  ) {}
+
+
+  /**
+   *
+   *
+   * @param {*} cant
+   * @param {number} [amount=0]
+   * @returns
+   * @memberof UtilitiesProvider
+   */
+  addZeros(cant: any, amount: number = 0) {
+    let decimal: any;
+    let realAmount: any;
+    if (amount === 0) {
+      decimal = this.addDecimals(cant);
+      realAmount = `0${decimal}`;
+    } else {
+      const arrAmount = amount.toString().replace(/,/g, "").split(".");
+      if (arrAmount.length < 2) {
+        decimal = this.addDecimals(cant);
+      } else {
+        const arrDecimals = arrAmount[1].split("");
+        decimal = this.addDecimals(cant - arrDecimals.length, arrAmount[1]);
+      }
+      realAmount = `${arrAmount[0]}${decimal}`;
+    }
+    return realAmount;
   }
 
+  /**
+   *
+   *
+   * @param {*} cant
+   * @param {string} [amount="0"]
+   * @returns
+   * @memberof UtilitiesProvider
+   */
+  addDecimals(cant: any, amount: string = "0") {
+    const x = "0";
+    if (amount === "0") {
+      for (let index = 0; index < cant - 1; index++) {
+        amount += x;
+      }
+    } else {
+      for (let index = 0; index < cant; index++) {
+        amount += x;
+      }
+    }
+    return amount;
+  }
+
+
+  /**
+   *
+   *
+   * @param {number} quantityOne
+   * @param {number} quantityTwo
+   * @param {number} [limitDecimal=6]
+   * @returns {string}
+   * @memberof UtilitiesProvider
+   */
+  subtractAmount(quantityOne: number, quantityTwo: number, limitDecimal: number = 6): string {
+    let residue: string[] = (quantityOne - quantityTwo).toString().replace(/,/g, "").split(".");
+    let missing = (residue.length > 1) ? limitDecimal - residue[1].length : 6;
+    residue[1] = (residue.length > 1) ? residue[1].slice(0, 6) : '';
+    for (let index = 0; index < missing; index++) {
+      residue[1] += 0;
+    }
+
+    return residue.join().replace(/,/g, ".");
+  }
+
+
+  /**
+   *
+   *
+   * @param {string} str1
+   * @returns
+   * @memberof UtilitiesProvider
+   */
+  hexToAscii(str1: string) {
+    var hex = str1.toString();
+    var str = '';
+    for (var n = 0; n < hex.length; n += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+  }
+
+
+  // ----------------------------------------------------------------------------
+
+
+  /**
+   *
+   *
+   * @param {*} index
+   * @returns
+   * @memberof UtilitiesProvider
+   */
   setTabIndex(index) {
     return this.platform.registerBackButtonAction(() => {
       this.events.publish('tab:back', index);

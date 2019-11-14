@@ -58,7 +58,7 @@ export class WalletProvider {
    * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWallet(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
+  async storeWalletCatapult(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
     const dataAccount = await this.authProvider.getDataAccountSelected();
     const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
     const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
@@ -77,6 +77,33 @@ export class WalletProvider {
     this.authProvider.setSelectedAccount(dataAccount);
     this.storage.set('accounts', otherAccounts);
     return dataAccount;
+  }
+
+
+  /**
+   *
+   *
+   * @param {*} walletC
+   * @param {*} walletN
+   * @param {*} walletColor
+   * @returns {Promise<SimpleWallet>}
+   * @memberof WalletProvider
+   */
+  storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
+    let result = [];
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+      return this.getLocalWalletsNis().then(value => {
+        let wallets = value;
+        result = wallets[dataAccountSelected.user];
+
+        result.push({ wallet: walletC, walletNis1: walletN, walletColor: walletColor });
+
+        wallets[dataAccountSelected.user] = result;
+
+        this.storage.set('walletsNis1', wallets);
+        return walletN;
+      });
+    });
   }
 
 
@@ -148,29 +175,7 @@ export class WalletProvider {
 
 
 
-  /**
-* Store wallet
-* @param walletC
-* @param walletN
-* @return Promise with stored wallet
-*/
 
-  public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
-    let result = [];
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      return this.getLocalWalletsNis().then(value => {
-        let wallets = value;
-        result = wallets[dataAccountSelected.user];
-
-        result.push({ wallet: walletC, walletNis1: walletN, walletColor: walletColor });
-
-        wallets[dataAccountSelected.user] = result;
-
-        this.storage.set('walletsNis1', wallets);
-        return walletN;
-      });
-    });
-  }
   /**
    * Update the wallet name of the given wallet.
    * @param wallet The wallet to change the name.

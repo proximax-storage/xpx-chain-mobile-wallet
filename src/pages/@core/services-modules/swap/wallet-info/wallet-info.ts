@@ -1,6 +1,6 @@
 import { CoingeckoProvider } from './../../../../../providers/coingecko/coingecko';
 import { AssetTransferable, Address, TransferTransaction, PlainMessage } from 'nem-library';
-import { NemProvider } from './../../../../../providers/nem/nem';
+import { NemProvider, AccountsInfoNis1Interface } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -59,6 +59,7 @@ export class WalletInfoPage {
   };
   App = App;
   decimalCount: number;
+  accountInfoNis1: AccountsInfoNis1Interface;
 
   constructor(
     public navCtrl: NavController,
@@ -69,12 +70,10 @@ export class WalletInfoPage {
     private loadingCtrl: LoadingController,
     private formBuilder: FormBuilder,
     public platform: Platform,
-    private coingeckoProvider: CoingeckoProvider,
     public utils: UtilitiesProvider,
     public alertProvider: AlertProvider,
     public translateService: TranslateService,
     private alertCtrl: AlertController,
-    private authProvider: AuthProvider,
     private haptic: HapticProvider,
     private modalCtrl: ModalController,
   ) {
@@ -83,16 +82,22 @@ export class WalletInfoPage {
     let options: LoadingOptions = {
       content: 'Getting account information...'
     };
+
+
     let loader = this.loadingCtrl.create(options);
     loader.present();
-
+    console.log('\n\n ESTOS SON LOS PARAMETROS --> ', this.navParams.data.data, '\n\n');
     this.nemWallet = this.navParams.data.data.nemWallet;
     this.catapultWallet = this.navParams.data.data.catapultWallet;
     this.privateKey = this.navParams.data.data.privateKey;
-    this.address = new Address(this.nemWallet.address.value);
-
+    this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
     // 0. initialize form
-    this.init();
+    this.createForm();
+    loader.dismiss();
+    this.address = new Address(this.nemWallet.address.value);
+    /*this.address = new Address(this.nemWallet.address.value);
+
+    
 
     // 1. Get wallet info
     this.getAccountInfo(this.address);
@@ -119,12 +124,18 @@ export class WalletInfoPage {
       };
     })
 
-    loader.dismiss();
+    loader.dismiss(); */
+  }
+
+
+  createForm() {
+    // Initialize form
+    this.form = this.formBuilder.group({
+      amount: ['', Validators.required],
+    });
   }
 
   confirmSwap() {
-    
-
     let alert = this.alertCtrl.create({
       title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
       message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
@@ -205,16 +216,10 @@ export class WalletInfoPage {
         this.alertProvider.showMessage(message);
         this.amount = 0;
       }
-    }
-    );
-  }
-
-  init() {
-    // Initialize form
-    this.form = this.formBuilder.group({
-      amount: ['', Validators.required],
     });
   }
+
+  
 
   ownedMosaics(address: Address) {
     console.log()
@@ -236,30 +241,7 @@ export class WalletInfoPage {
     })
   }
 
-  getAccountInfo(address: Address) {
-    // console.log("This is a multisig account", address)
-    try {
-      this.nemProvider
-        .getAccountInfo(address)
-        .subscribe(accountInfo => {
-          if (accountInfo) {
-            console.log("This is a multisig account", accountInfo);
-            this.message = PlainMessage.create(accountInfo.publicAccount.publicKey);
-            // // Check if account is a cosignatory of multisig account(s)
-            console.log("This is a multisig account", accountInfo.cosignatoryOf);
-            if (accountInfo.cosignatoryOf.length > 0) {
-              console.log("This is a multisig account");
-              // this.isMultisig = true;
-            }
-          }
-        }, (err: any) => {
-          console.log(err)
-          // this.isMultisig = false;
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
 
   /**
  * User checking if it can do the send transaction.
@@ -398,8 +380,6 @@ export class WalletInfoPage {
     }
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletInfoPage');
-  }
+ 
 
 }

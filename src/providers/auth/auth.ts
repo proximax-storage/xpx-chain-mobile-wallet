@@ -114,7 +114,7 @@ export class AuthProvider {
   ec(a: any, i: number) {
     for (let d = 0; d < i; ++d)
       a = CryptoJS.SHA3(a, { outputLength: 256 });
-    return a
+    return a;
   }
 
   /**

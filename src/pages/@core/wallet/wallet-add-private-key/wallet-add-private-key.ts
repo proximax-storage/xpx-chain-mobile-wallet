@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { SimpleWallet, Password } from 'nem-library';
+import { SimpleWallet as SimpleWalletNEM, Password } from 'nem-library';
 import { TranslateService } from '@ngx-translate/core';
 
 import { App } from '../../../../providers/app/app';
@@ -10,8 +10,9 @@ import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { NemProvider } from '../../../../providers/nem/nem';
+import { NemProvider, AccountsInfoNis1Interface } from '../../../../providers/nem/nem';
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -26,8 +27,8 @@ import { SharedService, ConfigurationForm } from '../../../../providers/shared-s
 })
 export class WalletAddPrivateKeyPage {
 
-  catapultWallet: any;
-  nemWallet: SimpleWallet;
+  catapultWallet: SimpleWallet;
+  nemWallet: SimpleWalletNEM;
   App = App;
   formGroup: FormGroup;
 
@@ -74,16 +75,24 @@ export class WalletAddPrivateKeyPage {
       if (decrypted) {
         this.catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
         this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
-        this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(value => {
+        this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
           if (value) {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
-            this.walletProvider.storeWallet(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
+            this.walletProvider.storeWalletCatapult(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
               // return this.walletProvider.setSelectedWallet(this.catapultWallet);
               this.goToBackup(this.catapultWallet);
             });
 
-            this.nem.getOwnedMosaics(this.nemWallet.address).subscribe(mosacis => {
+            console.log('this.nemWallet', this.nemWallet);
+            const nis1Wallet = this.nem.createAccountPrivateKey(form.privateKey);
+            const publicAccount = this.nem.createPublicAccount(nis1Wallet.publicKey);
+            this.nem.getAccountInfoNis1(publicAccount, form.name).then((data: AccountsInfoNis1Interface) => {
+              if (data) {
+                this.showSwap(data);
+              }
+            });
+            /*this.nem.getOwnedMosaics(this.nemWallet.address).subscribe(mosacis => {
               for (let index = 0; index < mosacis.length; index++) {
                 const element = mosacis[index];
                 if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
@@ -92,7 +101,7 @@ export class WalletAddPrivateKeyPage {
                   });
                 }
               }
-            });
+            });*/
           }
         });
       } else {
@@ -209,6 +218,49 @@ export class WalletAddPrivateKeyPage {
     this.storage.set('isQrActive', true);
   }
 
+  /**
+   *
+   *
+   * @param {AccountsInfoNis1Interface} data
+   * @memberof WalletAddPrivateKeyPage
+   */
+  showSwap(data: AccountsInfoNis1Interface) {
+    let alert = this.alertCtrl.create({
+      title: this.translateService.instant("WALLETS.IMPORT.SWAP_TITLE"),
+      message: this.translateService.instant("WALLETS.IMPORT.SWAP_MESSAGE"),
+      buttons: [
+        {
+          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
+          handler: () => this.showWalletInfoPage(this.nemWallet, this.catapultWallet, data)
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /**
+   *
+   *
+   * @param {SimpleWalletNEM} nemWallet
+   * @param {SimpleWallet} catapultWallet
+   * @param {AccountsInfoNis1Interface} data
+   * @memberof WalletAddPrivateKeyPage
+   */
+  showWalletInfoPage(nemWallet: SimpleWalletNEM, catapultWallet: SimpleWallet, data: AccountsInfoNis1Interface) {
+    const page = "WalletInfoPage"
+    this.showModal(page, {
+      nemWallet: nemWallet,
+      catapultWallet: catapultWallet,
+      accountInfoNis1: data
+    });
+  }
   // ------------------------------------------------------------------------------------------------------------
 
 
@@ -228,36 +280,9 @@ export class WalletAddPrivateKeyPage {
 
 
 
-  showSwap() {
-    let alert = this.alertCtrl.create({
-      title: this.translateService.instant("WALLETS.IMPORT.SWAP_TITLE"),
-      message: this.translateService.instant("WALLETS.IMPORT.SWAP_MESSAGE"),
-      buttons: [
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
-          handler: () => {
-            this.showWalletInfoPage(this.nemWallet, this.catapultWallet)
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
 
-  showWalletInfoPage(wallet: SimpleWallet, walletC) {
-    const page = "WalletInfoPage"
-    this.showModal(page, {
-      wallet: wallet,
-      walletC: walletC
-    });
-  }
+
+
 
   showModal(page, params) {
     const modal = this.modalCtrl.create(page, { data: params }, {

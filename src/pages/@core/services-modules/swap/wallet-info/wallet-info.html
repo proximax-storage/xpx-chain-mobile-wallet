@@ -21,8 +21,7 @@
 </ion-header>
 
 
-<ion-content fullscreen background padding >
-
+<ion-content fullscreen background padding>
   <div text-center>
     <h3 ion-text color="dark">{{ "SERVICES.SWAP_PROCESS.STEP2.TITLE" | translate}}</h3>
     <p ion-text color="dark">
@@ -30,94 +29,78 @@
     </p>
   </div>
 
-    <ion-list transparent-items>
-      <form [formGroup]="form">
+  <ion-list transparent-items>
+    <form [formGroup]="form">
 
-        <!-- Price -->
-        <section title text-center>
-          <h2 price ion-text color="dark" *ngIf="coinGecko">
-            {{'WALLETS.SEND.AMOUNT' | translate}}</h2>
-        </section>
-
-
-        <!-- Amount -->
-        <ion-card amount *ngIf="platform.is('ios')">
-          <ion-item>
-            <ion-label>
-              <input pattern="^[+]?([0-9]*[.])?[0-9]+$" [placeholder]="amountPlaceholder" formControlName="amount"
-                [(ngModel)]="amount" currencyMask [options]="optionsXPX" (click)="clearPlaceholder()"
-                (keypress)="checkAllowedInput($event)" />
-            </ion-label>
-          </ion-item>
-        </ion-card>
-
-        <ion-card amount *ngIf="platform.is('android')">
-          <ion-item>
-            <ion-label>
-              <input pattern="^[+]?([0-9]*[.])?[0-9]+$" [placeholder]="amountPlaceholder" formControlName="amount"
-                [(ngModel)]="amount" currencyMask [options]="optionsXPX" (click)="clearPlaceholder()"
-                (keypress)="checkAllowedInput($event)" />
-            </ion-label>
-          </ion-item>
-        </ion-card>
-
-        <section total text-center>
-          <h2 price ion-text color="dark" *ngIf="coinGecko">
-            ≈ {{ coinGecko?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }}</h2>
-          <div *ngIf="msgErrorBalance !== ''">
-            <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
-          </div>
-        </section>
+      <!-- Price -->
+      <section title text-center>
+        <h2 price ion-text color="dark" *ngIf="coinGecko">
+          {{'WALLETS.SEND.AMOUNT' | translate}}</h2>
+      </section>
 
 
-        <!-- Mosaic -->
-        <!-- (click)="selectMosaic()" -->
-        <ion-card no-margin-bottom>
-          <ion-label padding-left> {{ "SERVICES.SWAP_PROCESS.STEP2.BALANCE" | translate}}
-</ion-label>
-          <ion-item mosaic>
-            <ion-avatar item-start>
-              <img [src]="utils.getLogo(mosaic)">
-            </ion-avatar>
-            <h2 text-uppercase ion-text color="dark">{{ mosaic.mosaicId }}</h2>
-            <p text-uppercase ion-text color="dark">{{ mosaic.namespaceId }}</p>
-
-            <section item-right>
-              <!-- <h2 ion-text color="dark">{{ mosaics?.amount | number:'1.2' }}</h2> -->
-              <h2 ion-text color="dark">{{  mosaic?.balance }}</h2>
-              <p text-right text-left ion-text color="dark">
-                <small>
-                  {{  coinGecko?.market_data.current_price.usd * mosaic?.balance | currency: 'USD': 'symbol': '1.2-6' }}
-                </small>
-              </p>
-            </section>
-          </ion-item>
-        </ion-card>
-
-        <br>
-
-        <!-- Recipient -->
-        <ion-card>
-          <ion-label padding-left> {{ "SERVICES.SWAP_PROCESS.STEP2.RECIPIENT" | translate}}
+      <!-- Amount ios -->
+      <ion-card amount *ngIf="platform.is('ios')">
+        <ion-item>
+          <ion-label>
+            <input pattern="^[+]?([0-9]*[.])?[0-9]+$" [placeholder]="amountPlaceholder" formControlName="amount"
+              [(ngModel)]="amount" currencyMask [options]="optionsXPX" (click)="clearPlaceholder()"
+              (keypress)="checkAllowedInput($event)" />
           </ion-label>
-          <ion-item>
-            <img item-left logo-small [src]="App.USER">
-            <h2 ion-text color="dark">{{ "SERVICES.SWAP_PROCESS.STEP2.ACCOUNT_PROXIMAX" | translate}}</h2>
-            <p small ion-text color="dark">{{ recipient }}</p>
-          </ion-item>
-        </ion-card>
+        </ion-item>
+      </ion-card>
 
-      </form>
+      <!-- Amount android -->
+      <ion-card amount *ngIf="platform.is('android')">
+        <ion-item>
+          <ion-label>
+            <input pattern="^[+]?([0-9]*[.])?[0-9]+$" [placeholder]="amountPlaceholder" formControlName="amount"
+              [(ngModel)]="amount" currencyMask [options]="optionsXPX" (click)="clearPlaceholder()"
+              (keypress)="checkAllowedInput($event)" />
+          </ion-label>
+        </ion-item>
+      </ion-card>
 
-    </ion-list>
+      <!-- COINGECKO -->
+      <section total text-center>
+        <h2 price ion-text color="dark" *ngIf="coinGecko">
+          ≈ {{ coinGecko?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }}</h2>
+        <div *ngIf="msgErrorBalance !== ''">
+          <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
+        </div>
+      </section>
 
-    <section text-center>
-      <button gradient-button half color-6 ion-button icon-end no-margin
-        [disabled]="msgErrorBalance" (click)="confirmSwap()">
-        {{"WALLETS.BUTTON.CONFIRM" | translate}}
-        <ion-icon name="arrow-round-up"></ion-icon>
-      </button>
-    </section>
-  <!-- </ion-grid> -->
 
+      <!-- Mosaic -->
+      <ion-card no-margin-bottom>
+        <ion-label padding-left> {{ "SERVICES.SWAP_PROCESS.STEP2.BALANCE" | translate}}
+        </ion-label>
+        <ion-item mosaic>
+          <ion-avatar item-start>
+            <img [src]="utils.getLogo(mosaic)">
+          </ion-avatar>
+          <h2 text-uppercase ion-text color="dark">PRX.XPX</h2>
+          <!-- <p text-uppercase ion-text color="dark">{{ mosaic.namespaceId }}</p> -->
+
+          <section item-right>
+            <!-- <h2 ion-text color="dark">{{ mosaics?.amount | number:'1.2' }}</h2> -->
+            <h2 ion-text color="dark">{{  accountInfoNis1?.balance }}</h2>
+            <!-- <p text-right text-left ion-text color="dark">
+              <small>
+                {{  coinGecko?.market_data.current_price.usd * mosaic?.balance | currency: 'USD': 'symbol': '1.2-6' }}
+              </small>
+            </p> -->
+          </section>
+        </ion-item>
+      </ion-card>
+    </form>
+  </ion-list>
+
+  <section text-center style="margin-top: 4rem">
+    <button gradient-button half color-6 ion-button icon-end no-margin [disabled]="msgErrorBalance"
+      (click)="confirmSwap()">
+      {{"WALLETS.BUTTON.CONFIRM" | translate}}
+      <ion-icon name="arrow-round-up"></ion-icon>
+    </button>
+  </section>
 </ion-content>
