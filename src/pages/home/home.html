@@ -19,21 +19,21 @@
 
   <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
     <ion-slide *ngFor="let wallet of wallets"
-      [attr.selected]="selectedWallet?.name === wallet?.name ? true : null"
+      [attr.selected]="selectedWallet?.name === wallet.account?.name ? true : null"
        (press)="showWalletList()">
       <div class="wallet" >
         <div class="wallet-content" [ngClass]="wallet.walletColor" (click)="showWalletDetails(wallet)">
           <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
 
           <div *ngIf="!tablet">
-            <p class="wallet-number">{{ wallet?.address.plain() | ngXtruncate: 22 : '...' }}</p>
+            <p class="wallet-number">{{ wallet.account?.address.address | ngXtruncate: 22 : '...' }}</p>
           </div>
           <div *ngIf="tablet">
-            <p class="wallet-number">{{ wallet?.address.plain() }}</p>
+            <p class="wallet-number">{{ wallet.account?.address.address }}</p>
           </div>
           <div class="wallet-space-75">
             <span class="wallet-label">{{"WALLETS.WALLET_NAME" | translate}}</span>
-            <p class="wallet-info">{{ wallet?.name }}</p>
+            <p class="wallet-info">{{ wallet.account?.name }}</p>
           </div>
           <div class="wallet-space-25">
             <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
@@ -133,7 +133,7 @@
           (click)="gotoTransactionDetail(transaction)">
           <!-- if transfer  -->
           <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-            [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Unconfirmed'">
+            [mosaics]="mosaics" [owner]="address.plain()" [status]="'Unconfirmed'">
           </transfer-transaction>
         </ion-card>
       </ion-list>
@@ -147,7 +147,7 @@
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
           [mosaics]="mosaics" 
-          [owner]="selectedAccount.address.plain()" [status]="'Confirmed'">
+          [owner]="address.plain()" [status]="'Confirmed'">
         </transfer-transaction>
       </ion-card>
     </ion-list>

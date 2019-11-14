@@ -43,29 +43,29 @@ export class TransactionDetailPage {
     this.mosaics = payload.mosaics;
     
     this.walletProvider.getSelectedWallet().then(selectedWallet => {
-      this.getAccount(selectedWallet).subscribe((selectedAccount: Account) => {
-        this.selectedAccount = selectedAccount;
-      });
+      // this.getAccount(selectedWallet).subscribe((selectedAccount: Account) => {
+      //   this.selectedAccount = selectedAccount;
+      // });
     });
   }
 
-  private getAccount(wallet: SimpleWallet): Observable<Account> {
-    return new Observable(observer => {
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider.getPassword().then(password => {
-        // Get user's password
-        const myPassword = new Password(password);
+  // private getAccount(wallet: SimpleWallet): Observable<Account> {
+  //   return new Observable(observer => {
+  //     // Get user's password and unlock the wallet to get the account
+  //     this.authProvider.getPassword().then(password => {
+  //       // Get user's password
+  //       const myPassword = new Password(password);
 
-        // Convert current wallet to SimpleWallet
-        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
+  //       // Convert current wallet to SimpleWallet
+  //       const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
 
-        // Unlock wallet to get an account using user's password
-        const account = myWallet.open(myPassword);
+  //       // Unlock wallet to get an account using user's password
+  //       const account = myWallet.open(myPassword);
 
-        observer.next(account);
-      });
-    });
-  }
+  //       observer.next(account);
+  //     });
+  //   });
+  // }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);

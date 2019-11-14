@@ -1,6 +1,6 @@
 <!-- Mosaic/s -->
 <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
-  <ion-item>
+  <ion-item *ngIf="show">
     <img logo-small item-left [src]="utils.getLogo(mosaic)">
     <h2 ion-text text-uppercase color="dark">{{ mosaic.mosaicId }}</h2>
     <p text-uppercase ion-text color="dark">
@@ -18,20 +18,6 @@
       <h2 text-right ion-text color="danger" *ngIf="owner  != tx?.recipient?.address">
         - {{ getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility) }}
       </h2>
-
-      <p text-right text-left ion-text color="dark">
-        <!-- <small *ngIf="mosaic.mosaicId === 'xpx';">
-          {{ mosaic.amount * 0.00837014 | currency }}
-        </small> -->
-
-        <!-- <small *ngIf="mosaic.mosaicId === 'lyl';">
-          {{ mosaic.amount * 0.00436937 | currency }}
-        </small> -->
-
-        <!-- <small *ngIf="mosaic.mosaicId !== 'lyl' || mosaic.mosaicId === 'xpx'">
-          {{ mosaic.amount * 0.00436937 | currency }}
-        </small> -->
-      </p>
     </section>
   </ion-item>
 </ion-card>

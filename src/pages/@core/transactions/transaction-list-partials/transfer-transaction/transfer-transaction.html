@@ -16,13 +16,22 @@
 <ion-card-header reduce-transfer-tx-header>
   <ion-item>
     <img logo-small item-left [src]="LOGO" alt="logo">
-    <h2 ion-text color="dark">{{ MOSAIC_INFO?.mosaicId.toLocaleUpperCase() || MOSAIC_INFO?.hex.toLocaleUpperCase()}}</h2>
-    <p ion-text color="dark">
+    <h2 ion-text color="dark" *ngIf="MOSAIC_INFO.mosaicId !=='' ||MOSAIC_INFO.hex !=='' " >{{ MOSAIC_INFO?.mosaicId.toLocaleUpperCase() || MOSAIC_INFO?.hex.toLocaleUpperCase()}}</h2>
+    <p ion-text color="dark" *ngIf="MOSAIC_INFO.mosaicId !=='' ||MOSAIC_INFO.hex !=='' ">
         <small>
           {{MOSAIC_INFO?.namespaceId.toLocaleUpperCase() || ''}}
         </small>
       </p>
 
+      <h2 ion-text color="dark" *ngIf="MOSAIC_INFO.mosaicId ==='' ||MOSAIC_INFO.hex ==='' " >Mensaje</h2>
+      <p ion-text color="dark" *ngIf="MOSAIC_INFO.mosaicId ==='' ||MOSAIC_INFO.hex ==='' ">
+          <small *ngIf="owner == tx?.recipient.plain()">
+            Recibido
+          </small>
+          <small *ngIf="owner != tx?.recipient.plain()">
+              Enviado
+            </small>
+        </p>
     <section item-right>
 
       <!-- <h2 text-right ion-text color="dark" *ngIf="!hiden">
@@ -36,6 +45,10 @@
       <h2 text-right ion-text color="danger" *ngIf="owner != tx?.recipient.plain()  && AMOUNT !== 0">
          -{{ AMOUNT  }}
       </h2>
+
+      <h2 text-right ion-text color="dark" *ngIf="AMOUNT === 0">
+        {{ AMOUNT  }}
+     </h2>
 
       <p text-right  ion-text color="dark">
           <small>

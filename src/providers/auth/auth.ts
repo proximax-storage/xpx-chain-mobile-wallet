@@ -141,6 +141,11 @@ export class AuthProvider {
     this.storage.set('selectedAccount', account);
     return;
   }
+  setSelectedWallet(wallet): Promise<any> {
+    this.storage.set('selectedWallet', wallet);
+    return;
+  }
+
 
 
   // -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -211,7 +216,6 @@ export class AuthProvider {
       });
   }
 }
-
 
 export interface AccountInterface {
   user: string;
