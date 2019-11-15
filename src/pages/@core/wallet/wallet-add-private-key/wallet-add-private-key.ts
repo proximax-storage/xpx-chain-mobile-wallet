@@ -80,7 +80,6 @@ export class WalletAddPrivateKeyPage {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
             this.walletProvider.storeWalletCatapult(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
-              // return this.walletProvider.setSelectedWallet(this.catapultWallet);
               this.goToBackup(this.catapultWallet);
             });
 

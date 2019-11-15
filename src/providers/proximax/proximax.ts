@@ -30,12 +30,14 @@ import {
   AggregateTransaction,
   CosignatureTransaction,
 } from 'tsjs-xpx-chain-sdk';
+import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
 import { AppConfig } from '../../app/app.config';
 import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
 import { Storage } from '@ionic/storage';
 import { flatMap, filter, map, toArray, catchError } from 'rxjs/operators';
+import { AlertProvider } from '../alert/alert';
 
 /*
   Generated class for the ProximaxProvider provider.
@@ -61,6 +63,7 @@ export class ProximaxProvider {
   constructor(
     public http: HttpClient,
     private storage: Storage,
+    private alertProvider: AlertProvider
   ) {
 
     this.networkType = AppConfig.sirius.networkType;
@@ -126,27 +129,50 @@ export class ProximaxProvider {
     return SimpleWallet.create(name, password, this.networkType);
   }
 
-/**
- * 
- * @param password 
- * @param encryptedKey 
- * @param iv 
- */
-
+  /**
+   * 
+   * @param password 
+   * @param encryptedKey 
+   * @param iv 
+   */
   decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
-    const common: commonInterface = {
-      password: password.value,
-      privateKey: ''
-    };
+    try {
+      if (iv !== '' && password && encryptedKey !== '') {
+        const common: commonInterface = {
+          password: password.value,
+          privateKey: ''
+        };
+
+        const account: walletInterface = {
+          encrypted: encryptedKey,
+          iv: iv,
+        };
+
+        if (!crypto.passwordToPrivatekey(common, account, 'pass:bip32')) {
+          this.alertProvider.showMessage('Invalid password');
+          return null;
+        }
+
+        if (common) {
+          return common.privateKey;;
+        }
+
+        return null;
+      } else {
+        this.alertProvider.showMessage('You do not have a valid account selected');
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+
+    
 
 
-    const wallet: walletInterface = {
-      encrypted: encryptedKey,
-      iv: iv,
-    };
+    
 
-    Crypto.passwordToPrivateKey(common, wallet, 2);
-    return common.privateKey;
+    // Crypto.passwordToPrivateKey(common, wallet, 'pass:bip32');
+    // return common.privateKey;
   }
 
 
@@ -370,7 +396,7 @@ export class ProximaxProvider {
       minimumFractionDigits: divisibility
     });
   }
-  
+
   /**
    * 
    * @param amount 
