@@ -68,7 +68,7 @@ export class WalletProvider {
         wallet.encryptedPrivateKey.iv
       ).toUpperCase(), wallet.network
     );
-    const selectWallet =[{ account: wallet, walletColor: walletColor, publicAccount: publicAccount }]
+    const selectWallet = { account: wallet, walletColor: walletColor, publicAccount: publicAccount }
     catapultAccounts.push({ account: wallet, walletColor: walletColor, publicAccount: publicAccount });
     dataAccount['catapultAccounts'] = catapultAccounts;
     const data: AccountInterface[] = await this.storage.get('accounts');
@@ -107,9 +107,6 @@ export class WalletProvider {
     });
   }
 
-
-
-
   // -----------------------------------------------------------------------
 
   /**
@@ -136,13 +133,10 @@ export class WalletProvider {
         .then(password => {
           // Get user's password
           const myPassword = new Password(password);
-
           // Convert current wallet to SimpleWallet
           const myWallet = this.convertToSimpleWallet(wallet)
-
           // Unlock wallet to get an account using user's password 
           const account = myWallet.open(myPassword);
-
           observer.next(account);
 
         });
@@ -174,16 +168,12 @@ export class WalletProvider {
     });
   };
 
-
-
-
   /**
    * Update the wallet name of the given wallet.
    * @param wallet The wallet to change the name.
    * @param newWalletName The new name for the wallet.
    */
   public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
-    // return;
     return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
         let _wallets: any = wallets[dataAccountSelected.user];
@@ -194,21 +184,15 @@ export class WalletProvider {
             _wallets[i].walletColor = walletColor;
             updateWallet = _wallets[i];
           };
-
         }
-
-
-
         _wallets = _wallets.map(_ => {
           return {
             wallet: _.wallet,
             walletColor: _.walletColor
           }
         });
-
         const WALLET = {};
         WALLET[dataAccountSelected.user] = _wallets;
-
         return this.storage.set('wallets', WALLET).then(_ => {
           return updateWallet;
         });
@@ -217,15 +201,12 @@ export class WalletProvider {
   }
 
   deleteWallet(wallet: SimpleWallet) {
-
     return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
         let _wallets: Array<any> = wallets[dataAccountSelected.user];
 
-        console.log(_wallets, wallet);
         _wallets.map((res, index) => {
           if (res.wallet.name == wallet.name) {
-            console.log("Deleting your wallet: ", wallet.name)
             _wallets.splice(index, 1);
 
             _wallets = _wallets.map(_ => {
@@ -234,10 +215,8 @@ export class WalletProvider {
                 walletColor: _.walletColor
               }
             });
-
             const WALLET = {};
             WALLET[dataAccountSelected.user] = _wallets;
-
             return this.storage.set('wallets', WALLET);
           }
         })
@@ -262,7 +241,6 @@ export class WalletProvider {
       return this.getLocalWallets().then(wallets => {
         const _wallets = wallets[dataAccountSelected.user];
         for (var i = 0; i < _wallets.length; i++) {
-          console.log('wallet storage', _wallets[i])
           if (_wallets[i].wallet.name === walletName || _wallets[i].wallet.address.address === walletAddress) {
             exists = true;
             break;
@@ -278,21 +256,17 @@ export class WalletProvider {
    * @return promise with selected wallet
    */
   public getSelectedWallet(): Promise<SimpleWallet> {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      return this.storage.get('selectedWallet').then(wallets => {
-        console.log('*************************', wallets);
-        
-        let _wallet = null;
-        if (wallets) {
-          const selectedWallet = wallets;
-          this.selectedWallet = selectedWallet
-          _wallet = <SimpleWallet>(selectedWallet);
-        } else {
-          _wallet = null;
-        }
+    return this.storage.get('selectedWallet').then(wallets => {
+      let _wallet = null;
+      if (wallets) {
+        const selectedWallet = wallets;
+        this.selectedWallet = selectedWallet
+        _wallet = <SimpleWallet>(selectedWallet);
+      } else {
+        _wallet = null;
+      }
 
-        return _wallet;
-      });
+      return _wallet;
     });
   }
 
@@ -303,7 +277,6 @@ export class WalletProvider {
     return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.storage.get('wallets').then(wallets => {
         let _wallets = wallets ? wallets : {};
-        console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
         const WALLETS = _wallets[dataAccountSelected.user] ? _wallets[dataAccountSelected.user] : [];
 
         if (wallets) {
@@ -359,82 +332,28 @@ export class WalletProvider {
   /**
    * Get loaded wallets from localStorage
    */
-  public getWallets(): Promise<any> {
+  getWallets(): Promise<any> {
     return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", dataAccountSelected.user)
-      // return this.storage.get('wallets').then(wallets => {
-        console.log("LOG: WalletProvider -> constructor -> data", dataAccountSelected)
-        let _wallets = dataAccountSelected || {};
-        const WALLETS = _wallets['catapultAccounts'] || [];
-        console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
+      let _wallets = dataAccountSelected || {};
+      const WALLETS = _wallets['catapultAccounts'] || [];
+      if (WALLETS) {
+        const walletsMap = WALLETS.map(walletFile => {
+          let wallet = walletFile as SimpleWallet;
+          wallet.walletColor = walletFile['walletColor'];
+          return wallet;
+        });
+        _wallets['catapultAccounts'] = walletsMap;
+      } else {
+        _wallets['catapultAccounts'] = [];
+      }
 
-        if (WALLETS) {
-          const walletsMap = WALLETS.map(walletFile => {
-            console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
-
-            // if (walletFile.name) {
-              // return
-              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            // } else {
-              let wallet = walletFile as SimpleWallet;
-              wallet.walletColor = walletFile['walletColor'];
-
-              console.log('>>>>>>>>>>>>>>>>>', wallet);
-              
-              return wallet;
-            // }
-          });
-
-          _wallets['catapultAccounts'] = walletsMap;
-        } else {
-          _wallets['catapultAccounts'] = [];
-        }
-
-        return _wallets['catapultAccounts'];
-      // });
+      return _wallets['catapultAccounts'];
     });
   }
 
-  // private convertJSONWalletToFileWallet(wallet, walletColor): SimpleWallet {
-  //   let walletString = Base64.encode(
-  //     JSON.stringify({
-  //       address: wallet.accounts[0].address,
-  //       creationDate: DateTime.local().toString(),
-  //       encryptedPrivateKey: wallet.accounts[0].encrypted,
-  //       iv: wallet.accounts[0].iv,
-  //       network:
-  //         wallet.accounts[0].network == -104
-  //           ? NetworkTypes.TEST_NET
-  //           : NetworkTypes.MAIN_NET,
-  //       name: wallet.name,
-  //       type: 'simple',
-  //       schema: 1,
-  //     })
-  //   );
-  //   let importedWallet = SimpleWallet.readFromWLT(walletString);
-  //   importedWallet.walletColor = walletColor;
-  //   return importedWallet;
-  // }
+  setSelectedWallet(wallet: SimpleWallet) {
+    return this.storage.set('selectedWallet', wallet);
 
-  /**
-   * Set a selected wallet
-   */
-  //  setSelectedWallet(wallet): Promise<any> {
-  //   this.storage.set('selectedWallet', wallet);
-  //   return;
-  // }
-
-  public setSelectedWallet(wallet: SimpleWallet) {
-    return Promise.all([
-      this.authProvider.getDataAccountSelected(),
-      this.storage.get('selectedWallet')
-    ]).then(results => {
-      const user = results[0].user;
-      const SELECTED_WALLET = results[1] ? results[1] : {};
-      SELECTED_WALLET[user] = wallet;
-
-      return this.storage.set('selectedWallet', wallet);
-    });
   }
 
   /**
@@ -451,53 +370,10 @@ export class WalletProvider {
   }
 
 
-  decrypt(common: any, current: any, account: any = '', algo: any = '', network: any = '') {
-    // const acct = current;
-    // const net = NetworkType.TEST_NET;
-    // const alg = 2;
-    // const walletAccount = {
-    //   encrypted: current.encryptedPrivateKey.encryptedKey,
-    //   iv: current.encryptedPrivateKey.iv
-    // }
-    // console.log('common', common)
-    // console.log('walletAccount', walletAccount)
-    // console.log('alg', alg)
-    // // Try to generate or decrypt key
-    // if (!Crypto.passwordToPrivateKey(common, walletAccount, alg)) {
-    //   // console.log('passwordToPrivatekeyy ')
-    //   setTimeout(() => {
-    //     console.log('Error Invalid password')
-    //     // this.sharedService.showError('Error', '¡Invalid password!');
-    //   }, 500);
-    //   return false;
-    // }
-    // if (common.isHW) {
-    //   return true;
-    // }
-    // // console.log('pase common.common ', common.privateKey)
-    // // console.log('pase common.net ', net)
-    // // console.log('pase common.acct.address ', acct.address.address)
-    // if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address.address)) {
-    //   setTimeout(() => {
-    //     console.log('Error Invalid password')
-    //     // this.sharedService.showError('Error', '¡Invalid password!');
-    //   }, 500);
-    //   return false;
-    // }
-    // // console.log('!this.isPrivateKeyValid......')
-    // //Get public account from private key
-    // this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
-    // // console.log('this.publicAccount ', this.publicAccount )
-    // return true;
-  }
-
-
   isPrivateKeyValid(privateKey: any) {
     if (privateKey.length !== 64 && privateKey.length !== 66) {
-      console.error('Private key length must be 64 or 66 characters !');
       return false;
     } else if (!this.isHexadecimal(privateKey)) {
-      console.error('Private key must be hexadecimal only !');
       return false;
     } else {
       return true;

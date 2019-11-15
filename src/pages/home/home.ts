@@ -161,8 +161,6 @@ export class HomePage {
 
     this.walletProvider.getWallets().then(wallets => {
 
-
-      console.log('wallets<<<<<<<<<<<', wallets);
       this.wallets = wallets;
       // this.wallets = this.walletProvider.convertToSimpleWallets(wallets);
       console.log(
@@ -172,7 +170,6 @@ export class HomePage {
 
       if (this.wallets.length > 0) {
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
-          console.log('selectedWallet>>>>>>>', selectedWallet);
           
           if (selectedWallet) {
             if (Array.isArray(selectedWallet)) {
@@ -206,11 +203,10 @@ export class HomePage {
 
           // Slide to selected wallet
           this.wallets.forEach((wallet, index) => {
-            if (this.selectedWallet.name === wallet.name) {
+            if (this.selectedWallet.account.name === wallet['account'].name) {
               this.slides.slideTo(index);
             }
           });
-
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
             console.log(
               "4. LOG: HomePage -> ionViewWillEnter -> account",
@@ -354,17 +350,13 @@ export class HomePage {
     this.isLoading = false;
   }
 
-   onWalletSelect(wallet) {
-    console.log("LOG: HomePage -> onWalletSelect -> wallet", wallet);
-    console.log("LOG: HomePage -> onWalletSelect -> this.selectedWallet", this.selectedWallet);
-    if (this.selectedWallet === wallet) {
+   async onWalletSelect(wallet) {
+    if (this.selectedWallet.account === wallet.account) {
       this.selectedWallet = wallet;
     }
-     this.walletProvider.setSelectedWallet(wallet).then( () => {
-      setTimeout(() => {
-         this.init();
-      }, 1000);
-      // 
+     await this.walletProvider.setSelectedWallet(wallet).then( async () => {
+         await this.init();
+      
     });
   }
 
@@ -543,16 +535,8 @@ export class HomePage {
   }
 
   slideChanged() {
-    console.log("slideChanged");
     let currentIndex = this.slides.getActiveIndex();
-    console.log("Current index is", currentIndex);
-
-    console.log(this.wallets.length);
-    console.log(this.wallets.length != currentIndex);
-    
     if (this.wallets.length != currentIndex) {
-      console.log(this.wallets[currentIndex]);
-      
       this.onWalletSelect(this.wallets[currentIndex]);
       this.haptic.selection();
     } else {
