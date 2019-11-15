@@ -102,23 +102,37 @@
         <form [formGroup]="formGroup" (ngSubmit)="createAccount(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
-            <ion-input formControlName="name" type="text" autocapitalize="none"
-              placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()">
+            <ion-input [maxlength]="configurationForm.nameWallet.maxLength"
+              [minlength]="configurationForm.nameWallet.minLength" formControlName="name" type="text"
+              autocapitalize="none" placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}"
+              (input)="updateName()">
             </ion-input>
           </ion-item>
 
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.CREATE.IMPORT.PRIVATE_KEY.LABEL" | translate}}</ion-label>
-            <ion-textarea rows="3" formControlName="privateKey" type="text" autocapitalize="none"
-              placeholder="{{'WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER' | translate}}"></ion-textarea>
+            <ion-textarea rows="3" [maxlength]="configurationForm.privateKey.maxLength"
+              [minlength]="configurationForm.privateKey.minLength" formControlName="privateKey" type="text"
+              autocapitalize="none" placeholder="{{'WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER' | translate}}">
+            </ion-textarea>
           </ion-item>
 
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
-            <ion-input formControlName="password" type="password" autocapitalize="none"
+            <ion-input [maxlength]="configurationForm.passwordWallet.maxLength"
+            [minlength]="configurationForm.passwordWallet.minLength" formControlName="password" type="password" autocapitalize="none"
               placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}">
             </ion-input>
           </ion-item>
+
+
+          <br>
+          <br>
+
+          <ion-checkbox [(ngModel)]="checkSwap" [ngModelOptions]="{standalone: true}" ></ion-checkbox>
+          <ion-label stacked no-margin>{{"SERVICES.SWAP_PROCESS.DESC" | translate}}</ion-label>
+
+          <br>
 
           <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
             {{"WALLETS.CREATE.IMPORT" | translate}}

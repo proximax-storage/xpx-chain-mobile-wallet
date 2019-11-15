@@ -27,6 +27,7 @@ import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 })
 export class WalletAddPrivateKeyPage {
 
+  checkSwap = false;
   catapultWallet: SimpleWallet;
   nemWallet: SimpleWalletNEM;
   App = App;
@@ -59,7 +60,6 @@ export class WalletAddPrivateKeyPage {
     this.configurationForm = this.sharedService.configurationForm;
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.createForm();
-
   }
 
 
@@ -74,35 +74,40 @@ export class WalletAddPrivateKeyPage {
       const decrypted = await this.authProvider.decryptAccountUser(form.password);
       if (decrypted) {
         this.catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
-        this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
-        this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
-          if (value) {
-            this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
-          } else {
-            this.walletProvider.storeWalletCatapult(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
-              this.goToBackup(this.catapultWallet);
-            });
+        const existAccount = await this.walletProvider.validateExistAccount(this.catapultWallet);
+        if (!existAccount) {
+          this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
+          // this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
 
-            console.log('this.nemWallet', this.nemWallet);
-            const nis1Wallet = this.nem.createAccountPrivateKey(form.privateKey);
-            const publicAccount = this.nem.createPublicAccount(nis1Wallet.publicKey);
+          this.walletProvider.storeWalletCatapult(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
+            this.goToBackup(this.catapultWallet);
+          });
+
+          console.log('this.nemWallet', this.nemWallet);
+          const nis1Wallet = this.nem.createAccountPrivateKey(form.privateKey);
+          const publicAccount = this.nem.createPublicAccount(nis1Wallet.publicKey);
+          if (this.checkSwap) {
             this.nem.getAccountInfoNis1(publicAccount, form.name).then((data: AccountsInfoNis1Interface) => {
               if (data) {
                 this.showSwap(data);
               }
             });
-            /*this.nem.getOwnedMosaics(this.nemWallet.address).subscribe(mosacis => {
-              for (let index = 0; index < mosacis.length; index++) {
-                const element = mosacis[index];
-                if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
-                  this.walletProvider.storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor).then(_ => {
-                    this.showSwap();
-                  });
-                }
-              }
-            });*/
           }
-        });
+
+          /*this.nem.getOwnedMosaics(this.nemWallet.address).subscribe(mosacis => {
+            for (let index = 0; index < mosacis.length; index++) {
+              const element = mosacis[index];
+              if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
+                this.walletProvider.storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor).then(_ => {
+                  this.showSwap();
+                });
+              }
+            }
+          });*/
+          // });
+        } else {
+          this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
+        }
       } else {
         this.alertProvider.showMessage('Invalid password');
       }
@@ -260,30 +265,15 @@ export class WalletAddPrivateKeyPage {
       accountInfoNis1: data
     });
   }
-  // ------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  showModal(page, params) {
+  /**
+   *
+   *
+   * @param {*} page
+   * @param {*} params
+   * @memberof WalletAddPrivateKeyPage
+   */
+  showModal(page: any, params: any) {
     const modal = this.modalCtrl.create(page, { data: params }, {
       enableBackdropDismiss: false,
       showBackdrop: true
@@ -291,7 +281,11 @@ export class WalletAddPrivateKeyPage {
     modal.present();
   }
 
-
+  /**
+   *
+   *
+   * @memberof WalletAddPrivateKeyPage
+   */
   updateName() {
     let name = this.formGroup.value.name
     if (name) {
@@ -300,7 +294,6 @@ export class WalletAddPrivateKeyPage {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     }
   }
-
 }
 
 

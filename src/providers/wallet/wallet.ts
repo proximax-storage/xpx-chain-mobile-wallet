@@ -134,6 +134,29 @@ export class WalletProvider {
     });
   }
 
+  /**
+   *
+   *
+   * @param {SimpleWallet} account
+   * @memberof WalletProvider
+   */
+  async validateExistAccount(account: SimpleWallet) {
+    const data: AccountInterface[] = await this.storage.get('accounts');
+    let exist = false;
+    data.forEach((element: AccountInterface) => {
+      element.catapultAccounts.forEach((el) => {
+        const address = this.proximaxProvider.createFromRawAddress(el.account.address['address']).pretty();
+        if (address === account.address.pretty()) {
+          exist = true;
+        } else if (account.name === el.account.name) {
+          exist = true;
+        }
+      });
+    });
+
+    return exist;
+  }
+
   // -----------------------------------------------------------------------
 
   /**
