@@ -116,7 +116,9 @@ export class SendPage {
         );
       } else {
         this.currentWallet = currentWallet;
-        this.address = this.proximaxProvider.createFromRawAddress(this.currentWallet.address.address)
+        console.log('this.currentWalle', this.currentWallet);
+        
+        this.address = this.proximaxProvider.createFromRawAddress(this.currentWallet.account.address.address)
         this.wallet = this.address.plain();
         this.mosaicsProvider
           .getMosaics(this.address)

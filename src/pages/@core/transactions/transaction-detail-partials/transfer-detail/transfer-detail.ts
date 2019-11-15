@@ -26,6 +26,7 @@ export class TransferDetailComponent {
   public ownerAddress: any;
   public message: any;
   public messageShow = false;
+  show: boolean;
 
   constructor(
     private wallet: WalletProvider,
@@ -37,40 +38,52 @@ export class TransferDetailComponent {
   
   ngOnInit() {
     this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];    
-    this._setOwner();
+    // this._setOwner();
     this._getMosaicInfo();
   }
 
-  private _setOwner() {
-    this.wallet.getSelectedWallet().then(wallet => {
-      this.ownerAddress = wallet.address;
-    });
-  }
+  // private _setOwner() {
+  //   this.wallet.getSelectedWallet().then(wallet => {
+  //     console.log('wallet',wallet['account'].address.address);
+      
+  //     this.ownerAddress = wallet['account'].address.address;
+
+  //     console.log('ownerAddress',this.ownerAddress);
+  //   });
+  // }
 
   getAbsoluteAmount(amount, divisibility){
     return  this.proximaxProvider.amountFormatter(amount, divisibility)
   }
 
   private async _getMosaicInfo() {
+    console.log('this.this.tx', this.tx);
+    
     // Get mosaic details
-    this.mosaics = this.mosaics.filter(m1 => {
-      return this.tx.mosaics.filter(m2 => {
-        return m2.id.id.toHex() === m1.hex
-      })
-    }).map(m1=>{
-      return this.tx.mosaics.map(m2 => {
-        return new DefaultMosaic(
-          {
-            namespaceId: m1.namespaceId,
-            hex: m1.hex,
-            mosaicId: m1.mosaicId,
-            amount: m2.amount.compact(),
-            amountCompact: m2.amount.compact(),
-            divisibility: m1.divisibility
-          }
-          )
-      })
-    })[0]
+    if (this.tx.mosaics.length > 0){
+      this.show = true;
+      this.mosaics = this.mosaics.filter(m1 => {
+        return this.tx.mosaics.filter(m2 => {
+          return m2.id.id.toHex() === m1.hex
+        })
+      }).map(m1=>{
+        return this.tx.mosaics.map(m2 => {
+          return new DefaultMosaic(
+            {
+              namespaceId: m1.namespaceId,
+              hex: m1.hex,
+              mosaicId: m1.mosaicId,
+              amount: m2.amount.compact(),
+              amountCompact: m2.amount.compact(),
+              divisibility: m1.divisibility
+            }
+            )
+        })
+      })[0]
+    } else {
+      this.show = false;
+    }
+   
 
      const valid = this.IsJsonString(this.tx.message.payload);
 

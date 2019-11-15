@@ -58,6 +58,8 @@ export class MosaicsProvider {
   }
 
   mosaicsAmountViewFromAddress(address: Address) : Observable<MosaicAmountView[]> {
+    console.log('addressaddressaddress',address);
+    
     return this.proximaxProvider.mosaicsAmountViewFromAddress(address);
   }
 

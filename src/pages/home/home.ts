@@ -160,7 +160,11 @@ export class HomePage {
     this.showLoaders();
 
     this.walletProvider.getWallets().then(wallets => {
-      this.wallets = this.walletProvider.convertToSimpleWallets(wallets);
+
+
+      console.log('wallets<<<<<<<<<<<', wallets);
+      this.wallets = wallets;
+      // this.wallets = this.walletProvider.convertToSimpleWallets(wallets);
       console.log(
         "1. LOG: HomePage -> ionViewWillEnter -> this.wallets",
         this.wallets
@@ -168,6 +172,8 @@ export class HomePage {
 
       if (this.wallets.length > 0) {
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
+          console.log('selectedWallet>>>>>>>', selectedWallet);
+          
           if (selectedWallet) {
             if (Array.isArray(selectedWallet)) {
               console.log(
@@ -205,7 +211,7 @@ export class HomePage {
             }
           });
 
-          this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.address.address)
+          this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
             console.log(
               "4. LOG: HomePage -> ionViewWillEnter -> account",
               this.address
@@ -245,9 +251,9 @@ export class HomePage {
                     "8. LOG: HomePage -> getTransactions -> selectedWallet",
                     this.selectedWallet
                   );
-                  // this.getTransactions(this.address);
-                  // this.getTransactionsUnconfirmed(this.address);
-                  // this.getTransactionsAggregate(this.address);
+                  this.getTransactions(this.selectedWallet);
+                  this.getTransactionsUnconfirmed(this.selectedWallet);
+                  this.getTransactionsAggregate(this.selectedWallet);
                 });
             } catch (error) {
               // this.hideLoaders();

@@ -68,12 +68,13 @@ export class WalletProvider {
         wallet.encryptedPrivateKey.iv
       ).toUpperCase(), wallet.network
     );
-
+    const selectWallet =[{ account: wallet, walletColor: walletColor, publicAccount: publicAccount }]
     catapultAccounts.push({ account: wallet, walletColor: walletColor, publicAccount: publicAccount });
     dataAccount['catapultAccounts'] = catapultAccounts;
     const data: AccountInterface[] = await this.storage.get('accounts');
     const otherAccounts: AccountInterface[] = data.filter(x => x.user !== dataAccount.user);
     otherAccounts.push(dataAccount);
+    this.authProvider.setSelectedWallet(selectWallet);
     this.authProvider.setSelectedAccount(dataAccount);
     this.storage.set('accounts', otherAccounts);
     return dataAccount;
@@ -359,33 +360,36 @@ export class WalletProvider {
   public getWallets(): Promise<any> {
     return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", dataAccountSelected.user)
-      return this.storage.get('wallets').then(wallets => {
-        console.log("LOG: WalletProvider -> constructor -> data", wallets)
-        let _wallets = wallets || {};
-        const WALLETS = _wallets[dataAccountSelected.user] || [];
+      // return this.storage.get('wallets').then(wallets => {
+        console.log("LOG: WalletProvider -> constructor -> data", dataAccountSelected)
+        let _wallets = dataAccountSelected || {};
+        const WALLETS = _wallets['catapultAccounts'] || [];
         console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
 
         if (WALLETS) {
           const walletsMap = WALLETS.map(walletFile => {
             console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
 
-            if (walletFile.name) {
-              return
+            // if (walletFile.name) {
+              // return
               // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            } else {
-              let wallet = walletFile.wallet as SimpleWallet;
+            // } else {
+              let wallet = walletFile as SimpleWallet;
               wallet.walletColor = walletFile['walletColor'];
+
+              console.log('>>>>>>>>>>>>>>>>>', wallet);
+              
               return wallet;
-            }
+            // }
           });
 
-          _wallets[dataAccountSelected.user] = walletsMap;
+          _wallets['catapultAccounts'] = walletsMap;
         } else {
-          _wallets[dataAccountSelected.user] = [];
+          _wallets['catapultAccounts'] = [];
         }
 
-        return _wallets[dataAccountSelected.user];
-      });
+        return _wallets['catapultAccounts'];
+      // });
     });
   }
 

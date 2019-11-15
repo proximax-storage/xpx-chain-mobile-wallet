@@ -40,6 +40,9 @@ export class WalletDetailsPage {
     console.log("SIRIUS CHAIN WALLET: WalletDetailsPage -> this.navParams.data", this.navParams.data)
     this.totalBalance = this.navParams.get('totalBalance');
     this.selectedAccount = this.navParams.get('selectedAccount');
+
+    console.log('this.selectedAccount', this.selectedAccount);
+    
     // this.getAccountInfo();
   }
 
