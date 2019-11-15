@@ -141,6 +141,7 @@ export class AuthProvider {
     this.storage.set('selectedAccount', account);
     return;
   }
+  
   setSelectedWallet(wallet): Promise<any> {
     return this.storage.set('selectedWallet', wallet);
   }

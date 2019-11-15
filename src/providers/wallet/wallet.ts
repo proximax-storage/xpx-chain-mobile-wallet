@@ -48,6 +48,10 @@ export class WalletProvider {
     return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
   }
 
+  public createSimpleWallet( walletName: string, password: string): SimpleWallet {
+    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  }
+
   /**
    * getWallets()
    */
@@ -143,12 +147,6 @@ export class WalletProvider {
  * @param selected network
  * @return Promise with wallet created
  */
-  public createSimpleWallet(
-    { walletName, password }:
-      { walletName: string; password: string; }):
-    SimpleWallet {
-    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
-  }
 
 
 
