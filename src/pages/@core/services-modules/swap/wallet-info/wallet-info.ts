@@ -8,7 +8,6 @@ import { App } from '../../../../../providers/app/app';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../../../../app/app.config'
-import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import { ConfigurationForm, SharedService } from '../../../../../providers/shared-service/shared-service';
 import { SimpleWallet, Password, PublicAccount as PublicAccountTsjs, Address as AddressTsjs } from 'tsjs-xpx-chain-sdk';
