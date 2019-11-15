@@ -86,8 +86,6 @@ export class WalletAddPrivateKeyPage {
           console.log('this.nemWallet', this.nemWallet);
           const nis1Wallet = this.nem.createAccountPrivateKey(form.privateKey);
           const publicAccount = this.nem.createPublicAccount(nis1Wallet.publicKey);
-          console.log(this.checkSwap);
-          
           if (this.checkSwap) {
             this.nem.getAccountInfoNis1(publicAccount, form.name).then((data: AccountsInfoNis1Interface) => {
               if (data) {

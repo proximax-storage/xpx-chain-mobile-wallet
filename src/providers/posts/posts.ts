@@ -20,11 +20,7 @@ export class PostsProvider {
     public http: HttpClient, 
     private storage: Storage
   ) {
-    console.log('Hello PostsProvider Provider');
-    this.seenPosts
-
     this.getSeenPosts().then(posts=> {
-			console.log("LOG: PostsProvider -> constructor -> posts", posts);
       this.seenPosts = posts || [];
     })
   }
@@ -32,10 +28,6 @@ export class PostsProvider {
   public getAll(): Observable<any> {
     let url = 'https://proximax-wallet-dashboard.herokuapp.com/posts?_sort=createdAt:DESC';
     return this.http.get(url);
-
-    // let url = 'https://proximax-wallet-dashboard.herokuapp.com/posts';
-    // let requestObservable = this.http.get(url);
-    // return this.cache.observable('posts', requestObservable, 60*60) // 1 hour validity
   }
 
   public seenPost(postId): Promise<any> {
