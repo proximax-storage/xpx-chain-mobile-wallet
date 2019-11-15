@@ -28,8 +28,11 @@ export class ReceivePage {
     private haptic: HapticProvider,
     private platform: Platform
   ) {
-    const account = this.navParams.data;
-    this.address = (account as Account).address.plain()
+    const wallet = this.navParams.data;
+    console.log('account', wallet);
+    
+    this.address = wallet.account.address.address
+    // this.address = (account as Account).address.plain()
 
     this.platform.ready().then((readySource) => {
       if (this.platform.width() <= 330) {
