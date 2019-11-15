@@ -25,15 +25,16 @@
         <ion-card-content>
           <br>
 
-          <h1 wallet-name text-center> {{selectedAccount?.name}}</h1>
+          
+          <h1 wallet-name text-center> {{selectedAccount.account?.name}}</h1>
 
           <h1 color="dark" text-center> ≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h1>
           <!-- <h2 color="dark"  text-center>≈${{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2> -->
 
             <ion-list transparent-items>
-                <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
+                <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
                     <ion-icon name='custom-copy' item-end></ion-icon>
-                    <p text-justify address *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
+                    <p text-justify address *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
                 </ion-item>
               </ion-list>
               <button gradient-button quarter-width color-5 medium (click)="moreDetails()">
@@ -76,7 +77,7 @@
       <!-- if transfer  -->
       <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
         [mosaics]="mosaics" 
-        [owner]="selectedAccount.address.plain()" [status]="'Partial'">
+        [owner]="selectedAccount.account.address.address" [status]="'Partial'">
       </transfer-transaction>
     </ion-card>
 
@@ -87,7 +88,7 @@
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
           [mosaics]="mosaics" 
-          [owner]="selectedAccount.address.plain()" [status]="'Confirmed'">
+          [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
         </transfer-transaction>
       </ion-card>
 

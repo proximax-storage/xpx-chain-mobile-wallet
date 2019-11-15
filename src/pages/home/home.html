@@ -121,7 +121,7 @@
         <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy"
           (click)="gotoTransactionDetail(transaction)">
           <!-- if transfer  -->
-          <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Partial'"></transfer-transaction>
+          <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Partial'"></transfer-transaction>
         </ion-card>
       </ion-list>
     </div>
