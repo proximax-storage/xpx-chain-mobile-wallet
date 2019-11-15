@@ -1,4 +1,3 @@
-import { CoingeckoProvider } from './../../../../../providers/coingecko/coingecko';
 import { AssetTransferable, Address, TransferTransaction, PlainMessage } from 'nem-library';
 import { NemProvider, AccountsInfoNis1Interface } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
@@ -8,10 +7,11 @@ import { UtilitiesProvider } from '../../../../../providers/utilities/utilities'
 import { App } from '../../../../../providers/app/app';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthProvider } from '../../../../../providers/auth/auth';
 import { AppConfig } from '../../../../../app/app.config'
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
+import { ConfigurationForm, SharedService } from '../../../../../providers/shared-service/shared-service';
+import { SimpleWallet, Password } from 'tsjs-xpx-chain-sdk';
 
 /**
  * Generated class for the WalletInfoPage page.
@@ -27,10 +27,13 @@ import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 })
 export class WalletInfoPage {
 
+  password = '';
+  blockButton = false;
+  maxAmount: number = 0;
   publicAccount: any;
   transferTransaction: TransferTransaction;
   hash: any;
-  catapultWallet: any;
+  catapultWallet: SimpleWallet;
   message: PlainMessage;
   selectedMosaic: AssetTransferable;
   credentials: { password: string; privateKey: string };
@@ -60,6 +63,11 @@ export class WalletInfoPage {
   App = App;
   decimalCount: number;
   accountInfoNis1: AccountsInfoNis1Interface;
+  insufficientBalance = false;
+  configurationForm: ConfigurationForm = {};
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
+  processing = false;
 
   constructor(
     public navCtrl: NavController,
@@ -76,41 +84,34 @@ export class WalletInfoPage {
     private alertCtrl: AlertController,
     private haptic: HapticProvider,
     private modalCtrl: ModalController,
+    private sharedService: SharedService
   ) {
 
-    // Show loader
-    let options: LoadingOptions = {
-      content: 'Getting account information...'
-    };
-
-
-    let loader = this.loadingCtrl.create(options);
+    this.configurationForm = this.sharedService.configurationForm;
+    const options: LoadingOptions = { content: 'Getting account information...' };
+    const loader = this.loadingCtrl.create(options);
     loader.present();
-    console.log('\n\n ESTOS SON LOS PARAMETROS --> ', this.navParams.data.data, '\n\n');
+    console.log('------------------> ', this.navParams.data.data);
+
     this.nemWallet = this.navParams.data.data.nemWallet;
-    this.catapultWallet = this.navParams.data.data.catapultWallet;
-    this.privateKey = this.navParams.data.data.privateKey;
+    this.catapultWallet = Object.assign({}, this.navParams.data.data.catapultWallet);
+    // this.privateKey = this.navParams.data.data.privateKey;
     this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
-    // 0. initialize form
     this.createForm();
-    loader.dismiss();
     this.address = new Address(this.nemWallet.address.value);
+    this.maxAmount = this.accountInfoNis1.balance.length;
+    this.amountChange();
+    loader.dismiss();
+
     /*this.address = new Address(this.nemWallet.address.value);
-
-    
-
     // 1. Get wallet info
     this.getAccountInfo(this.address);
-
     // 2. Get mosaics
     this.ownedMosaics(this.address);
-
     // 3. Display XPX and ask for amount to be converted
     // TODO: Reuse Send Mosaic Page - ETA 30 mins
-
     // 4. Subscribe to amount change
     this.onAmountChange();
-
     // 5. Get coin price
     this.coingeckoProvider.getDetails('proximax').subscribe(coin => {
       this.coinGecko = coin;
@@ -123,17 +124,95 @@ export class WalletInfoPage {
         privateKey: ''
       };
     })
-
     loader.dismiss(); */
   }
 
 
-  createForm() {
-    // Initialize form
-    this.form = this.formBuilder.group({
-      amount: ['', Validators.required],
+  async createTransaction() {
+    if (!this.processing) {
+      this.processing = true;
+      const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultWallet.encryptedPrivateKey.encryptedKey, this.catapultWallet.encryptedPrivateKey.iv); 
+      console.log('decrypt', decrypt);
+      if (decrypt) {
+
+      }
+      /*if (this.ownedAccountSwap) {
+        if (this.walletService.decrypt(common, this.ownedAccountSwap)) {
+          const account = this.nemProvider.createAccountPrivateKey(common['privateKey']);
+          const quantity = this.form.get("amount").value;
+          //const assetId = this.ownedAccountSwap.mosaic.assetId;
+          const assetId = this.accountToSwap.mosaic.assetId;
+          // console.log(assetId);
+          const msg = PlainMessage.create(this.ownedAccountSwap.publicAccount.publicKey);
+          const transaction = await this.nemProvider.createTransaction(msg, assetId, quantity);
+          // console.log('\nTRANSACTION CREATED -->', transaction)
+          const publicAccount = this.proximaxProvider.createPublicAccount(this.ownedAccountSwap.publicAccount.publicKey);
+          this.anounceTransaction(transaction, account, publicAccount);
+        } else {
+          this.spinnerVisibility = false;
+          this.processing = false;
+        }
+      } else {
+        this.router.navigate([`/${AppConfig.routes.home}`]);
+      }*/
+    }
+  }
+
+
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  amountChange() {
+    this.form.get('amount').valueChanges.subscribe(value => {
+      if (value !== null && value !== undefined) {
+        if (value > parseFloat(this.accountInfoNis1.balance.split(',').join(''))) {
+          this.blockButton = true;
+          this.insufficientBalance = true;
+        } else if (value === 0) {
+          this.blockButton = true;
+          this.insufficientBalance = false;
+        } else {
+          this.blockButton = false;
+          this.insufficientBalance = false;
+        }
+      } else {
+        this.form.get('amount').setValue('0.000000');
+      }
     });
   }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  createForm() {
+    this.form = this.formBuilder.group({
+      amount: ['', Validators.required],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(this.configurationForm.passwordWallet.minLength),
+        Validators.minLength(this.configurationForm.passwordWallet.minLength)
+      ]]
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {Event} e
+   * @memberof WalletInfoPage
+   */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
+  }
+
+  // ------------------------------------------------------------------------------------
 
   confirmSwap() {
     let alert = this.alertCtrl.create({
@@ -156,11 +235,11 @@ export class WalletInfoPage {
       ]
     });
     alert.present();
-    
+
   }
 
   async onSubmit() {
-    let options:LoadingOptions = {
+    let options: LoadingOptions = {
       content: 'Initiating swap...'
     };
     let loader = this.loadingCtrl.create(options);
@@ -177,18 +256,18 @@ export class WalletInfoPage {
 
         console.log("TCL: onSubmit -> this.credentials.privateKey", this.credentials.privateKey)
         // return;
-        
+
         const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.privateKey, AppConfig.sirius.networkType)
         console.log('this.publicAccount publicKey', publicAccount.publicKey)
-        
+
         const account = this.nemProvider.createAccountPrivateKey(this.privateKey);
         console.log('this.account', account)
-        
-        const transaction = await this.nemProvider.createTransaction(publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
+
+        const transaction = await this.nemProvider.createTransaction(publicAccount.publicKey, this.selectedMosaic.assetId, quantity);
         this.transferTransaction = transaction;
 
         console.log('this.transferTransaction', this.transferTransaction)
-        
+
         this.nemProvider.anounceTransaction(transaction, account)
           .then(resp => {
             this.hash = resp.transactionHash;
@@ -202,24 +281,9 @@ export class WalletInfoPage {
         this.showGenericError();
       }
     }
-    
+
   }
 
-  clearPlaceholder() {
-    this.amountPlaceholder = "";
-  }
-
-  onAmountChange() {
-    this.form.get('amount').valueChanges.subscribe(value => {
-      if (value > this.mosaic.balance) {
-        const message = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
-        this.alertProvider.showMessage(message);
-        this.amount = 0;
-      }
-    });
-  }
-
-  
 
   ownedMosaics(address: Address) {
     console.log()
@@ -267,7 +331,7 @@ export class WalletInfoPage {
     //     direction: 'backward'
     //   }
     // );
-    this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.catapultWallet.address);
+    // this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.catapultWallet.address);
   }
 
   showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction, address: Address) {
@@ -284,11 +348,11 @@ export class WalletInfoPage {
   showModal(page, params) {
     console.log("TCL: showModal -> params", params)
     console.log("Showing modal");
-    const modal = this.modalCtrl.create(page, params , {
+    const modal = this.modalCtrl.create(page, params, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
-    modal.present().then(_=>{
+    modal.present().then(_ => {
       this.dismiss();
     })
   }
@@ -343,7 +407,7 @@ export class WalletInfoPage {
     return 0;
   }
 
-  checkAllowedInput(e) {this.message
+  /*checkAllowedInput(e) {
     const AMOUNT = this.form.get('amount').value;
     console.log("LOG: WalletInfoPage -> checkAllowedInput -> AMOUNT", AMOUNT);
 
@@ -378,8 +442,8 @@ export class WalletInfoPage {
       }
       console.log("LOG: WalletInfoPage -> checkAllowedInput -> this.periodCount", this.periodCount);
     }
-  }
+  }*/
 
- 
+
 
 }
