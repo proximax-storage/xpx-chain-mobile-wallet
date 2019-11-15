@@ -144,14 +144,16 @@ export class WalletProvider {
     const data: AccountInterface[] = await this.storage.get('accounts');
     let exist = false;
     data.forEach((element: AccountInterface) => {
-      element.catapultAccounts.forEach((el) => {
-        const address = this.proximaxProvider.createFromRawAddress(el.account.address['address']).pretty();
-        if (address === account.address.pretty()) {
-          exist = true;
-        } else if (account.name === el.account.name) {
-          exist = true;
-        }
-      });
+      if (element.catapultAccounts) {
+        element.catapultAccounts.forEach((el) => {
+          const address = this.proximaxProvider.createFromRawAddress(el.account.address['address']).pretty();
+          if (address === account.address.pretty()) {
+            exist = true;
+          } else if (account.name === el.account.name) {
+            exist = true;
+          }
+        });
+      }
     });
 
     return exist;
