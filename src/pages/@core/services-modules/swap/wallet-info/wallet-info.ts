@@ -1,4 +1,4 @@
-import { AssetTransferable, Address, TransferTransaction, PlainMessage } from 'nem-library';
+import { AssetTransferable, Address, TransferTransaction, PlainMessage, PublicAccount, Account as AccountNIS1 } from 'nem-library';
 import { NemProvider, AccountsInfoNis1Interface } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
@@ -11,7 +11,8 @@ import { AppConfig } from '../../../../../app/app.config'
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import { ConfigurationForm, SharedService } from '../../../../../providers/shared-service/shared-service';
-import { SimpleWallet, Password } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Password, PublicAccount as PublicAccountTsjs, Address as AddressTsjs } from 'tsjs-xpx-chain-sdk';
+import { first, timeout } from 'rxjs/operators';
 
 /**
  * Generated class for the WalletInfoPage page.
@@ -34,14 +35,14 @@ export class WalletInfoPage {
   transferTransaction: TransferTransaction;
   hash: any;
   catapultWallet: SimpleWallet;
-  message: PlainMessage;
+  publicKey: string;
   selectedMosaic: AssetTransferable;
   credentials: { password: string; privateKey: string };
   privateKey: string;
   total: number;
   address: Address;
   nemWallet: any;
-  recipient = AppConfig.swap.burnAccountAddress
+  recipient = AppConfig.swap.burnAddress;
   optionsXPX = {
     prefix: '',
     thousands: ',',
@@ -92,49 +93,30 @@ export class WalletInfoPage {
     const loader = this.loadingCtrl.create(options);
     loader.present();
     console.log('------------------> ', this.navParams.data.data);
-
     this.nemWallet = this.navParams.data.data.nemWallet;
     this.catapultWallet = Object.assign({}, this.navParams.data.data.catapultWallet);
-    // this.privateKey = this.navParams.data.data.privateKey;
     this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
-    this.createForm();
     this.address = new Address(this.nemWallet.address.value);
     this.maxAmount = this.accountInfoNis1.balance.length;
+    this.createForm();
     this.amountChange();
     loader.dismiss();
-
-    /*this.address = new Address(this.nemWallet.address.value);
-    // 1. Get wallet info
-    this.getAccountInfo(this.address);
-    // 2. Get mosaics
-    this.ownedMosaics(this.address);
-    // 3. Display XPX and ask for amount to be converted
-    // TODO: Reuse Send Mosaic Page - ETA 30 mins
-    // 4. Subscribe to amount change
-    this.onAmountChange();
-    // 5. Get coin price
-    this.coingeckoProvider.getDetails('proximax').subscribe(coin => {
-      this.coinGecko = coin;
-    });
-    // 6. Get password  
-    this.authProvider.getPassword().then(password => {
-      console.log('password', password)
-      this.credentials = {
-        password: password,
-        privateKey: ''
-      };
-    })
-    loader.dismiss(); */
   }
 
 
   async createTransaction() {
     if (!this.processing) {
       this.processing = true;
-      const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultWallet.encryptedPrivateKey.encryptedKey, this.catapultWallet.encryptedPrivateKey.iv); 
+      const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultWallet.encryptedPrivateKey.encryptedKey, this.catapultWallet.encryptedPrivateKey.iv);
       console.log('decrypt', decrypt);
       if (decrypt) {
-
+        const account = this.nemProvider.createAccountPrivateKey(decrypt);
+        const quantity = this.form.get("amount").value;
+        const assetId = this.accountInfoNis1.mosaic.assetId;
+        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(decrypt, this.catapultWallet.network);
+        const payloadTx = PlainMessage.create(publicAccount.publicKey);
+        const transaction = await this.nemProvider.createTransaction(payloadTx, assetId, quantity);
+        this.anounceTransaction(transaction, account, publicAccount);
       }
       /*if (this.ownedAccountSwap) {
         if (this.walletService.decrypt(common, this.ownedAccountSwap)) {
@@ -155,6 +137,76 @@ export class WalletInfoPage {
       } else {
         this.router.navigate([`/${AppConfig.routes.home}`]);
       }*/
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {TransferTransaction} transaction
+   * @param {AccountNIS1} account
+   * @param {PublicAccountTsjs} siriusAccount
+   * @memberof WalletInfoPage
+   */
+  anounceTransaction(transaction: TransferTransaction, account: AccountNIS1, siriusAccount: PublicAccountTsjs) {
+    let options: LoadingOptions = {
+      content: 'Initiating swap...'
+    };
+    let loader = this.loadingCtrl.create(options);
+    loader.present();
+    try {
+      this.nemProvider.anounceTransaction(transaction, account).pipe(first()).pipe((timeout(AppConfig.timeOutTransactionNis1))).subscribe(next => {
+        if (next && next['message'] && next['message'].toLowerCase() === 'success') {
+          this.transferTransaction = transaction;
+          this.publicKey = transaction.message.payload;
+          this.hash = next['transactionHash'].data;
+          this.showSuccessMessage()
+          loader.dismiss();
+          // console.log('next --->', next);
+          /*this.routeContinue = `/${AppConfig.routes.home}`;
+          this.transactionNis1 = {
+            siriusAddres: siriusAccount.address.pretty(),
+            nis1Timestamp: this.nemProvider.getTimeStampTimeWindow(transaction),
+            nis1PublicKey: transaction.signer.publicKey,
+            nis1TransactionHash: next['transactionHash'].data
+          };
+  
+          let walletNis1Storage: CurrentWalletTransNis;
+          if (this.walletService.getCurrentWallet()) {
+            walletNis1Storage = this.walletService.getWalletTransNisStorage().find(el => el.name === this.walletService.getCurrentWallet().name);
+          } else {
+            walletNis1Storage = this.walletService.getWalletTransNisStorage().find(el => el.name === this.walletService.accountWalletCreated.wallet.name);
+          }
+  
+          const transactionWalletNis1: WalletTransactionsNis1Interface = {
+            name: (this.walletService.getCurrentWallet()) ? this.walletService.currentWallet.name : this.walletService.accountWalletCreated.wallet.name,
+            transactions: (walletNis1Storage) ? walletNis1Storage.transactions : []
+          };
+  
+          transactionWalletNis1.transactions.push(this.transactionNis1);
+          this.nemProvider.saveAccountWalletTransNisStorage(transactionWalletNis1);
+          this.processing = false;
+          this.spinnerVisibility = false;
+          this.showCertifiedSwap = true;
+          this.walletService.accountWalletCreated = null;
+          this.sharedService.showSuccess('', next['message']);*/
+        } else {
+          loader.dismiss();
+          this.nemProvider.validateCodeMsgError(next['code'], next['message']);
+          /*this.showCertifiedSwap = false;
+          this.nemProvider.validateCodeMsgError(next['code'], next['message']);
+          this.spinnerVisibility = false
+          this.processing = false;*/
+        }
+      }, error => {
+        loader.dismiss();
+        this.nemProvider.validateCodeMsgError(error.error.code, error.error.message);
+        /*this.nemProvider.validateCodeMsgError(error.error.code, error.error.message);
+        this.spinnerVisibility = false
+        this.processing = false;*/
+      });
+    } catch (error) {
+      loader.dismiss();
     }
   }
 
@@ -203,6 +255,29 @@ export class WalletInfoPage {
   /**
    *
    *
+   * @memberof WalletInfoPage
+   */
+  confirmSwap() {
+    let alert = this.alertCtrl.create({
+      title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
+      message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
+      buttons: [{
+        text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
+        role: 'cancel',
+        handler: () => { }
+      }, {
+        text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
+        handler: () => {
+          this.createTransaction()
+        }
+      }]
+    });
+    alert.present();
+  }
+
+  /**
+   *
+   *
    * @param {Event} e
    * @memberof WalletInfoPage
    */
@@ -212,31 +287,46 @@ export class WalletInfoPage {
     this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
   }
 
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  showSuccessMessage() {
+    console.log("NIS1 transaction has been made.")
+    this.navCtrl.setRoot('TabsPage', {}, {
+      animate: true,
+      direction: 'backward'
+    });
+    this.showWalletCertificate(this.publicKey, this.hash, this.transferTransaction, this.catapultWallet.address);
+  }
+
+  /**
+   *
+   *
+   * @param {PlainMessage} publicKey
+   * @param {*} hash
+   * @param {TransferTransaction} transaction
+   * @param {AddressTsjs} address
+   * @memberof WalletInfoPage
+   */
+  showWalletCertificate(publicKey: string, hash: any, transaction: TransferTransaction, address: AddressTsjs) {
+    console.log('11111111111111111111111', publicKey);
+    console.log('hashhashhashhashhash', hash);
+    console.log('transactiontransactiontransactiontransaction', transaction);
+    console.log('addressaddressaddressaddress', address);
+    const page = "SwapCertificatePage"
+    this.showModal(page, {
+      publicKey: publicKey,
+      transactionHash: hash,
+      timestamp: transaction.timeWindow.timeStamp,
+      address: address
+    });
+  }
+
   // ------------------------------------------------------------------------------------
 
-  confirmSwap() {
-    let alert = this.alertCtrl.create({
-      title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
-      message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
-      buttons: [
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
-          handler: () => {
-            this.onSubmit()
-          }
-        }
-      ]
-    });
-    alert.present();
 
-  }
 
   async onSubmit() {
     let options: LoadingOptions = {
@@ -321,29 +411,9 @@ export class WalletInfoPage {
     return false;
   }
 
-  showSuccessMessage() {
-    console.log("NIS1 transaction has been made.")
-    // this.navCtrl.setRoot(
-    //   'TabsPage',
-    //   {},
-    //   {
-    //     animate: true,
-    //     direction: 'backward'
-    //   }
-    // );
-    // this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.catapultWallet.address);
-  }
 
-  showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction, address: Address) {
-    const page = "SwapCertificatePage"
-    this.showModal(page, {
-      publicKey: publicKey,
-      transactionHash: hash,
-      timestamp: transaction.timeWindow.timeStamp,
-      address: address
-    });
 
-  }
+
 
   showModal(page, params) {
     console.log("TCL: showModal -> params", params)

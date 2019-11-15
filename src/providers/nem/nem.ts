@@ -79,7 +79,7 @@ export class NemProvider {
       let accountsMultisigInfo = [];
       const addressOwnedSwap = this.createAddressToString(publicAccount.address.pretty());
       const accountInfoOwnedSwap = await this.getAccountInfo(addressOwnedSwap).pipe(first()).pipe((timeout(15000))).toPromise();
-      console.log('accountInfoOwnedSwap', accountInfoOwnedSwap);
+      // console.log('accountInfoOwnedSwap', accountInfoOwnedSwap);
       if (accountInfoOwnedSwap['meta']['cosignatories'].length === 0) {
         let nis1AccountsInfo: AccountsInfoNis1Interface;
         // INFO ACCOUNTS MULTISIG
@@ -105,22 +105,22 @@ export class NemProvider {
         try {
           // SEARCH INFO OWNED SWAP
           const ownedMosaic = await this.getOwnedMosaics(addressOwnedSwap).pipe(first()).pipe((timeout(20000))).toPromise();
-          console.log('ownedMosaic --->', ownedMosaic);
+          // console.log('ownedMosaic --->', ownedMosaic);
           const xpxFound = ownedMosaic.find(el => el.assetId.namespaceId === 'prx' && el.assetId.name === 'xpx');
-          console.log('xpxFound ---->', xpxFound);
+          // console.log('xpxFound ---->', xpxFound);
           if (xpxFound) {
             const balance = await this.validateBalanceAccounts(xpxFound, addressOwnedSwap);
-            console.log('balance ---->', balance);
+            // console.log('balance ---->', balance);
             nis1AccountsInfo = this.buildAccountInfoNIS1(publicAccount, accountsMultisigInfo, balance, cosignatoryOf, false, name, xpxFound);
             this.setNis1AccountsFound$(nis1AccountsInfo);
             return nis1AccountsInfo;
           } else if (cosignatoryOf.length > 0) {
-            console.log('cosignatoryOf zero');
+            // console.log('cosignatoryOf zero');
             nis1AccountsInfo = this.buildAccountInfoNIS1(publicAccount, accountsMultisigInfo, null, cosignatoryOf, false, name, null);
             this.setNis1AccountsFound$(nis1AccountsInfo);
             return nis1AccountsInfo;
           } else {
-            console.log('The account has no balance to swap.');
+            // console.log('The account has no balance to swap.');
             // this.alertProvider.showMessage('The account has no balance to swap.');
             this.setNis1AccountsFound$(null);
           }
@@ -143,36 +143,45 @@ export class NemProvider {
     }
   }
 
+  /**
+   *
+   *
+   * @param {AssetTransferable} xpxFound
+   * @param {Address} addressSigner
+   * @returns
+   * @memberof NemProvider
+   */
   async validateBalanceAccounts(xpxFound: AssetTransferable, addressSigner: Address) {
-    console.log('xpxFound --> ', xpxFound);
+    // console.log('xpxFound --> ', xpxFound);
     const quantityFillZeros = this.utilitiesProvider.addZeros(6, xpxFound.quantity);
     let realQuantity: any = this.amountFormatter(quantityFillZeros, xpxFound, 6);
     const unconfirmedTxn = await this.getUnconfirmedTransaction(addressSigner);
-    console.log('Address  ---> ', addressSigner);
+    // console.log('Address  ---> ', addressSigner);
     if (unconfirmedTxn.length > 0) {
       //let quantity = realQuantity;
-      console.log('realQuantity', realQuantity);
+      // console.log('realQuantity', realQuantity);
       for (const item of unconfirmedTxn) {
-        console.log('transaction unconfirmed -->', item);
-        console.log(item['otherTransaction']['_assets']);
-        console.log(this.utilitiesProvider.hexToAscii(item['otherTransaction'].message.payload), '\n\n');
+        // console.log('transaction unconfirmed -->', item);
+
         let existMosaic = null;
         if (item.type === 257 && item['signer']['address']['value'] === addressSigner['value'] && item['_assets'].length > 0) {
           existMosaic = item['_assets'].find((mosaic) => mosaic.assetId.namespaceId === 'prx' && mosaic.assetId.name === 'xpx');
         } else if (item.type === 4100 && item['otherTransaction']['type'] === 257 && item['otherTransaction']['signer']['address']['value'] === addressSigner['value']) {
+          // console.log(item['otherTransaction']['_assets']);
+          // console.log(this.utilitiesProvider.hexToAscii(item['otherTransaction'].message.payload), '\n\n');
           existMosaic = item['otherTransaction']['_assets'].find((mosaic) => mosaic.assetId.namespaceId === 'prx' && mosaic.assetId.name === 'xpx');
         }
 
-        console.log('existMosaic -->', existMosaic);
+        // console.log('existMosaic -->', existMosaic);
         if (existMosaic) {
           const unconfirmedFormatter = parseFloat(this.amountFormatter(existMosaic.quantity, xpxFound, 6));
-          console.log('\n unconfirmedFormatter --->', unconfirmedFormatter);
+          // console.log('\n unconfirmedFormatter --->', unconfirmedFormatter);
           const quantityWhitoutFormat = realQuantity.split(',').join('');
-          console.log('\nquantityWhitoutFormat --->', quantityWhitoutFormat);
+          // console.log('\nquantityWhitoutFormat --->', quantityWhitoutFormat);
           const residue = this.utilitiesProvider.subtractAmount(parseFloat(quantityWhitoutFormat), unconfirmedFormatter);
-          console.log('\nresidue --->', residue, '\n');
+          // console.log('\nresidue --->', residue, '\n');
           const quantityFormat = this.amountFormatter(parseInt((residue).toString().split('.').join('')), xpxFound, 6);
-          console.log('quantityFormat --->', quantityFormat);
+          // console.log('quantityFormat --->', quantityFormat);
           realQuantity = quantityFormat;
         }
       }
@@ -183,6 +192,18 @@ export class NemProvider {
     }
   }
 
+  /**
+   *
+   *
+   * @param {TransferTransaction} transaction
+   * @param {Account} cosignerAccount
+   * @returns
+   * @memberof NemProvider
+   */
+  anounceTransaction(transaction: TransferTransaction, cosignerAccount: Account) {
+    const signedTransaction = cosignerAccount.signTransaction(transaction);
+    return this.http.post(`${AppConfig.swap.url}/transaction/announce`, signedTransaction).pipe(first()).pipe((timeout(AppConfig.timeOutTransactionNis1)));
+  }
 
   /**
    *
@@ -309,6 +330,69 @@ export class NemProvider {
     this.nis1AccountsFoundSubject.next(accounts);
   }
 
+  /**
+   *
+   *
+   * @param {number} errorCode
+   * @param {string} errorMessage
+   * @memberof NemProvider
+   */
+  validateCodeMsgError(errorCode: number, errorMessage: string) {
+    switch (errorCode) {
+      case 521:
+      case 535:
+      case 542:
+      case 551:
+      case 565:
+      case 582:
+      case 591:
+      case 610:
+      case 622:
+      case 672:
+      case 711:
+        this.alertProvider.showMessage('Some data is invalid');
+        break;
+
+      case 501:
+      case 635:
+      case 641:
+      case 685:
+      case 691:
+        this.alertProvider.showMessage('Service not available');
+        break;
+
+      case 655:
+      case 666:
+        this.alertProvider.showMessage('Insufficient XPX Balance');
+        break;
+
+      case 511:
+        this.alertProvider.showMessage('Daily limit exceeded (5 swaps)');
+        break;
+
+      case 705:
+        this.alertProvider.showMessage('Invalid Url');
+        break;
+
+      case 722:
+      case 822:
+        this.alertProvider.showMessage('Account not allowed');
+        break;
+
+      case 541:
+        this.alertProvider.showMessage('Account not allowed');
+        break;
+
+      default:
+        if (errorMessage) {
+          this.alertProvider.showMessage(errorMessage.toString().split('_').join(' '));
+        } else {
+          this.alertProvider.showMessage('Error! try again later');
+        }
+        break;
+    }
+  }
+
   // --------------------------------------------------------------------------------
 
 
@@ -353,15 +437,33 @@ export class NemProvider {
     return Account.createWithPrivateKey(privateKey);
   }
 
-  async createTransaction(message: string, assetId: AssetId, quantity: number) {
-    const assetTransferable = await this.assetHttp.getAssetTransferableWithRelativeAmount(assetId, quantity).toPromise();
-    // console.log('\n\n\n\nValue resultAssets:\n', resultAssets, '\n\n\n\nEnd value\n\n');
+  /**
+   *
+   *
+   * @param {PlainMessage} message
+   * @param {AssetId} assetId
+   * @param {number} quantity
+   * @returns
+   * @memberof NemProvider
+   */
+  async createTransaction(message: PlainMessage, assetId: AssetId, quantity: number) {
+    let resultAssets: any = await this.assetHttp.getAssetTransferableWithAbsoluteAmount(assetId, quantity).toPromise();
+    const part = quantity.toString().split('.');
+    const cant = (part.length === 1) ? 6 : 6 - part[1].length;
+    for (let index = 0; index < cant; index++) {
+      if (part.length === 1) {
+        part[0] += 0;
+      } else {
+        part[1] += 0;
+      }
+    }
+
+    resultAssets['quantity'] = Number(part.join(''));
     return TransferTransaction.createWithAssets(
-      // TimeWindow.createWithDeadline(),
       this.createWithDeadline(),
-      new Address(AppConfig.swap.burnAccountAddress),
-      [assetTransferable],
-      PlainMessage.create(message)
+      new Address(AppConfig.swap.burnAddress),
+      [resultAssets],
+      message
     );
   }
 
@@ -378,10 +480,7 @@ export class NemProvider {
     return new TimeWindow(timeStampDateTime, deadlineDateTime);
   }
 
-  anounceTransaction(transferTransaction: TransferTransaction, cosignerAccount: Account) {
-    const signedTransaction = cosignerAccount.signTransaction(transferTransaction);
-    return this.transactionHttp.announceTransaction(signedTransaction).toPromise();
-  }
+
 }
 
 

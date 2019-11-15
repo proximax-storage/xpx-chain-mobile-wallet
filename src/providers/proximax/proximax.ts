@@ -158,7 +158,7 @@ export class ProximaxProvider {
 
         return null;
       } else {
-        this.alertProvider.showMessage('You do not have a valid account selected');
+        this.alertProvider.showMessage('You do not have a valid account selected.');
         return null;
       }
     } catch (error) {
@@ -173,6 +173,7 @@ export class ProximaxProvider {
     // Crypto.passwordToPrivateKey(common, wallet, 'pass:bip32');
     // return common.privateKey;
   }
+  
 
 
   /**
@@ -275,10 +276,7 @@ export class ProximaxProvider {
    * @param privateKey 
    * @param networkType 
    */
-
   getPublicAccountFromPrivateKey(privateKey: string, networkType: NetworkType): PublicAccount {
-    // console.log("TCL: ProximaxProvider -> privateKey", privateKey, networkType)
-
     return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
 
