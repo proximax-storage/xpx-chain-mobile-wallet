@@ -36,19 +36,19 @@
             <ion-item *ngIf="selectedAccount">
                 <ion-icon name='custom-account' item-start></ion-icon>
                 {{"WALLETS.WALLET_NAME" | translate}}:
-                <span item-end>{{selectedAccount?.name }}</span>
+                <span item-end>{{selectedAccount.account?.name }}</span>
             </ion-item>
 
-            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
+            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
                 <ion-icon name='custom-balance' item-start></ion-icon>
                 {{"WALLETS.BALANCE" | translate}}:
                 <span item-end *ngIf="selectedAccount">${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</span>
             </ion-item>
 
-            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
+            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
                 <ion-icon name='custom-address' item-start></ion-icon>
                 {{"WALLETS.ADDRESS" | translate}}:
-                <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
+                <p text-justify  *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
             </ion-item>
           
           </ion-list>

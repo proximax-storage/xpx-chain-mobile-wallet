@@ -280,9 +280,11 @@ export class WalletProvider {
   public getSelectedWallet(): Promise<SimpleWallet> {
     return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
       return this.storage.get('selectedWallet').then(wallets => {
+        console.log('*************************', wallets);
+        
         let _wallet = null;
         if (wallets) {
-          const selectedWallet = wallets[dataAccountSelected.user];
+          const selectedWallet = wallets;
           this.selectedWallet = selectedWallet
           _wallet = <SimpleWallet>(selectedWallet);
         } else {
@@ -417,6 +419,11 @@ export class WalletProvider {
   /**
    * Set a selected wallet
    */
+  //  setSelectedWallet(wallet): Promise<any> {
+  //   this.storage.set('selectedWallet', wallet);
+  //   return;
+  // }
+
   public setSelectedWallet(wallet: SimpleWallet) {
     return Promise.all([
       this.authProvider.getDataAccountSelected(),
@@ -426,7 +433,7 @@ export class WalletProvider {
       const SELECTED_WALLET = results[1] ? results[1] : {};
       SELECTED_WALLET[user] = wallet;
 
-      return this.storage.set('selectedWallet', SELECTED_WALLET);
+      return this.storage.set('selectedWallet', wallet);
     });
   }
 

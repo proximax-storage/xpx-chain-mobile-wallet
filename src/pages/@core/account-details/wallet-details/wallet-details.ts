@@ -54,15 +54,17 @@ export class WalletDetailsPage {
   }
 
   showExportPrivateKeyModal() {
-    this.authProvider.getPassword().then(password => {
-      let credentials = {
-        password: password,
-        privateKey: ''
-      };
+   // LI
+   
+    // this.authProvider.getPassword().then(password => {
+    //   let credentials = {
+    //     password: password,
+    //     privateKey: ''
+    //   };
 
-      let page = "PrivateKeyPage";
-      this.showModal(page, { password: credentials.password });
-    })
+    //   let page = "PrivateKeyPage";
+    //   this.showModal(page, { password: credentials.password });
+    // })
   }
 
   dismiss() {
