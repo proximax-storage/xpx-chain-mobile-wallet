@@ -74,7 +74,7 @@
 
           <button gradient-button half color-5 ion-button icon-end no-margin
             [disabled]="msgErrorBalance || blockButton || form.invalid" type="submit" color="dark"
-            (click)="createTransaction()">
+            (click)="confirmSwap()">
             {{"WALLETS.BUTTON.CONFIRM" | translate}}
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="processing"></span>
             <ion-icon name="arrow-round-up" *ngIf="!processing"></ion-icon>
