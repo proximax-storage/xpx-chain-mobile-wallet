@@ -53,7 +53,7 @@ export class WalletListPage {
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController
   ) {
-    const wallets = this.navParams.data.wallets;
+    const wallets = this.navParams.data.account;
     console.log("SIRIUS CHAIN WALLET: WalletListPage -> wallets", wallets)
 
     this.wallets = wallets;

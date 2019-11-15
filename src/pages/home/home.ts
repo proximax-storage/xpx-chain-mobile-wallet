@@ -519,6 +519,8 @@ export class HomePage {
     let currentIndex = this.slides.getActiveIndex();
     if (this.wallets.length != currentIndex) {
       this.onWalletSelect(this.wallets[currentIndex]);
+      console.log('this.wallets', this.wallets);
+      
       this.haptic.selection();
     } else {
       this.mosaics = null;
@@ -531,17 +533,22 @@ export class HomePage {
   }
 
   showWalletList() {
+    console.log('aqio log');
+    
     this.haptic.impact({ type: "heavy" });
     const page = "WalletListPage";
     this.utils
       .showInsetModal(page, { wallets: this.wallets })
       .subscribe(data => {
-        // console.log(
-        //   "SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data",
-        //   data
-        // );
-        const wallet = data.wallet;
+        console.log(
+          "SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data",
+          data
+        );
+        const wallet = data.account;
         const index = data.index;
+        console.log('wallet',wallet);
+        console.log('index',index);
+        
         if (wallet) {
           this.slides.slideTo(index);
           this.onWalletSelect(wallet);
