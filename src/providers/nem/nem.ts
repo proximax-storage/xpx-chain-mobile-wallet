@@ -31,6 +31,7 @@ import { first, timeout } from "rxjs/operators";
 import { UtilitiesProvider } from "../utilities/utilities";
 import { AlertProvider } from "../alert/alert";
 import { HttpClient } from "@angular/common/http";
+import { HapticProvider } from "../haptic/haptic";
 
 @Injectable()
 export class NemProvider {
@@ -52,6 +53,7 @@ export class NemProvider {
   nis1AccountsFound$: Observable<AccountsInfoNis1Interface> = this.nis1AccountsFoundSubject.asObservable(); // RJ
 
   constructor(
+    private haptic: HapticProvider,
     private http: HttpClient,
     private alertProvider: AlertProvider,
     private utilitiesProvider: UtilitiesProvider
@@ -82,26 +84,6 @@ export class NemProvider {
       // console.log('accountInfoOwnedSwap', accountInfoOwnedSwap);
       if (accountInfoOwnedSwap['meta']['cosignatories'].length === 0) {
         let nis1AccountsInfo: AccountsInfoNis1Interface;
-        // INFO ACCOUNTS MULTISIG
-        /*if (accountInfoOwnedSwap['meta']['cosignatoryOf'].length > 0) {
-          cosignatoryOf = accountInfoOwnedSwap['meta']['cosignatoryOf'];
-          for (let multisig of cosignatoryOf) {
-            try {
-              const addressMultisig = this.createAddressToString(multisig.address);
-              const ownedMosaic = await this.getOwnedMosaics(addressMultisig).pipe(first()).pipe((timeout(20000))).toPromise();
-              const xpxFound = ownedMosaic.find(el => el.assetId.namespaceId === 'prx' && el.assetId.name === 'xpx');
-              if (xpxFound) {
-                multisig.balance = await this.validateBalanceAccounts(xpxFound, addressMultisig);
-                multisig.mosaic = xpxFound;
-                accountsMultisigInfo.push(multisig);
-              }
-            } catch (error) {
-              cosignatoryOf = [];
-              accountsMultisigInfo = [];
-            }
-          }
-        }*/
-
         try {
           // SEARCH INFO OWNED SWAP
           const ownedMosaic = await this.getOwnedMosaics(addressOwnedSwap).pipe(first()).pipe((timeout(20000))).toPromise();
@@ -115,7 +97,6 @@ export class NemProvider {
             this.setNis1AccountsFound$(nis1AccountsInfo);
             return nis1AccountsInfo;
           } else if (cosignatoryOf.length > 0) {
-            // console.log('cosignatoryOf zero');
             nis1AccountsInfo = this.buildAccountInfoNIS1(publicAccount, accountsMultisigInfo, null, cosignatoryOf, false, name, null);
             this.setNis1AccountsFound$(nis1AccountsInfo);
             return nis1AccountsInfo;
@@ -350,6 +331,7 @@ export class NemProvider {
       case 622:
       case 672:
       case 711:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Some data is invalid');
         break;
 
@@ -358,35 +340,43 @@ export class NemProvider {
       case 641:
       case 685:
       case 691:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Service not available');
         break;
 
       case 655:
       case 666:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Insufficient XPX Balance');
         break;
 
       case 511:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Daily limit exceeded (5 swaps)');
         break;
 
       case 705:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Invalid Url');
         break;
 
       case 722:
       case 822:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Account not allowed');
         break;
 
       case 541:
+        this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Account not allowed');
         break;
 
       default:
         if (errorMessage) {
+          this.haptic.notification({ type: 'warning' });
           this.alertProvider.showMessage(errorMessage.toString().split('_').join(' '));
         } else {
+          this.haptic.notification({ type: 'warning' });
           this.alertProvider.showMessage('Error! try again later');
         }
         break;

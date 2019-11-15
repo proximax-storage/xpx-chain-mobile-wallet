@@ -1,4 +1,4 @@
-import { AssetTransferable, Address, TransferTransaction, PlainMessage, PublicAccount, Account as AccountNIS1 } from 'nem-library';
+import { AssetTransferable, Address, TransferTransaction, PlainMessage, Account as AccountNIS1 } from 'nem-library';
 import { NemProvider, AccountsInfoNis1Interface } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
@@ -83,7 +83,6 @@ export class WalletInfoPage {
     public alertProvider: AlertProvider,
     public translateService: TranslateService,
     private alertCtrl: AlertController,
-    private haptic: HapticProvider,
     private modalCtrl: ModalController,
     private sharedService: SharedService
   ) {
@@ -275,6 +274,10 @@ export class WalletInfoPage {
     alert.present();
   }
 
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
   /**
    *
    *
@@ -304,120 +307,11 @@ export class WalletInfoPage {
   /**
    *
    *
-   * @param {PlainMessage} publicKey
-   * @param {*} hash
-   * @param {TransferTransaction} transaction
-   * @param {AddressTsjs} address
+   * @param {*} page
+   * @param {*} params
    * @memberof WalletInfoPage
    */
-  showWalletCertificate(publicKey: string, hash: any, transaction: TransferTransaction, address: AddressTsjs) {
-    console.log('11111111111111111111111', publicKey);
-    console.log('hashhashhashhashhash', hash);
-    console.log('transactiontransactiontransactiontransaction', transaction);
-    console.log('addressaddressaddressaddress', address);
-    const page = "SwapCertificatePage"
-    this.showModal(page, {
-      publicKey: publicKey,
-      transactionHash: hash,
-      timestamp: transaction.timeWindow.timeStamp,
-      address: address
-    });
-  }
-
-  // ------------------------------------------------------------------------------------
-
-
-
-  async onSubmit() {
-    let options: LoadingOptions = {
-      content: 'Initiating swap...'
-    };
-    let loader = this.loadingCtrl.create(options);
-
-    loader.present();
-    let quantity = this.form.get('amount').value;
-
-    if (this.multisig) {
-      // console.log('es multifirma', transferTransaction);
-
-    } else {
-
-      if (this._allowedToSendTx()) {
-
-        console.log("TCL: onSubmit -> this.credentials.privateKey", this.credentials.privateKey)
-        // return;
-
-        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.privateKey, AppConfig.sirius.networkType)
-        console.log('this.publicAccount publicKey', publicAccount.publicKey)
-
-        const account = this.nemProvider.createAccountPrivateKey(this.privateKey);
-        console.log('this.account', account)
-
-        const transaction = await this.nemProvider.createTransaction(publicAccount.publicKey, this.selectedMosaic.assetId, quantity);
-        this.transferTransaction = transaction;
-
-        console.log('this.transferTransaction', this.transferTransaction)
-
-        this.nemProvider.anounceTransaction(transaction, account)
-          .then(resp => {
-            this.hash = resp.transactionHash;
-            this.showSuccessMessage()
-            loader.dismiss();
-          })
-          .catch(error => {
-            this.showErrorMessage(error)
-          });
-      } else {
-        this.showGenericError();
-      }
-    }
-
-  }
-
-
-  ownedMosaics(address: Address) {
-    console.log()
-    this.nemProvider.getOwnedMosaics(address).subscribe(mosaics => {
-      // console.log('LOG: WalletInfoPage -> ownedMosaics -> mosaics', mosaics);
-      let xpx = mosaics.filter(m => {
-        return m.assetId.name === 'xpx' && m.assetId.namespaceId === 'prx'
-      })
-      // console.log('LOG: WalletInfoPage -> ownedMosaics -> xpx', xpx);
-      if (xpx) {
-        const XPX = xpx[0];
-        this.selectedMosaic = XPX;
-        this.mosaic = {
-          namespaceId: XPX.assetId.namespaceId,
-          mosaicId: XPX.assetId.name,
-          balance: XPX.quantity
-        }
-      }
-    })
-  }
-
-
-
-  /**
- * User checking if it can do the send transaction.
- */
-  private _allowedToSendTx() {
-    if (this.credentials.password) {
-      try {
-        return true;
-      } catch (err) {
-        return false;
-      }
-    }
-    return false;
-  }
-
-
-
-
-
-  showModal(page, params) {
-    console.log("TCL: showModal -> params", params)
-    console.log("Showing modal");
+  showModal(page: any, params: any) {
     const modal = this.modalCtrl.create(page, params, {
       enableBackdropDismiss: false,
       showBackdrop: true
@@ -427,93 +321,23 @@ export class WalletInfoPage {
     })
   }
 
-  showErrorMessage(error) {
-    this.haptic.notification({ type: 'warning' });
-    console.log(error);
-    if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-      this.alertProvider.showMessage(
-        'Sorry, you don\'t have enough balance to continue the transaction.'
-      );
-    } else if (
-      error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
-    ) {
-      this.alertProvider.showMessage(
-        'The note you entered is too long. Please try again.'
-      );
-    } else if (error.statusCode == 404) {
-      this.alertProvider.showMessage(
-        'This address does not belong to this network'
-      );
-    } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
-      this.alertProvider.showMessage(
-        'Transaction is not allowed for multisignature enabled wallets.'
-      );
-    } else {
-      // this.alertProvider.showMessage(
-      //   'An error occured. Please try again.'
-      // );
-      this.alertProvider.showMessage(
-        error
-      );
-    }
+  /**
+   *
+   *
+   * @param {PlainMessage} publicKey
+   * @param {*} hash
+   * @param {TransferTransaction} transaction
+   * @param {AddressTsjs} address
+   * @memberof WalletInfoPage
+   */
+  showWalletCertificate(publicKey: string, hash: any, transaction: TransferTransaction, address: AddressTsjs) {
+    const page = "SwapCertificatePage"
+    this.showModal(page, {
+      publicKey: publicKey,
+      transactionHash: hash,
+      timestamp: transaction.timeWindow.timeStamp,
+      address: address
+    });
   }
-
-  showGenericError() {
-    this.translateService.get('APP.ERROR').subscribe(
-      value => {
-        let alertTitle = value;
-        this.alertProvider.showMessage(alertTitle);
-      });
-
-  }
-
-  dismiss() {
-    this.viewCtrl.dismiss();
-  }
-
-  countDecimals(value) {
-    if (Math.floor(value) !== value)
-      return value.toString().split(".")[1].length || 0;
-    return 0;
-  }
-
-  /*checkAllowedInput(e) {
-    const AMOUNT = this.form.get('amount').value;
-    console.log("LOG: WalletInfoPage -> checkAllowedInput -> AMOUNT", AMOUNT);
-
-    // Prevent "+" and "-"
-    if (e.key === "-" || e.key === "+" || e.charCode === 43 || e.charCode === 45 || e.keyCode === 189 || e.keyCode === 187 || e.key === "Unindentified" || e.keyCode === 229) {
-      e.preventDefault();
-      if (AMOUNT == null) {
-        this.form.get('amount').setValue("")
-        this.form.get('amount').reset();
-        this.periodCount = 0
-      }
-    }
-
-    if (AMOUNT == null) {
-      this.periodCount = 0;
-    }
-
-    if (this.decimalCount >= 6 && e.key !== "Backspace") {
-      e.preventDefault();
-    }
-
-    if ((e.charCode >= 48 && e.charCode <= 57) || (e.key == "." || e.charCode == 46 || e.keyCode == 8 || e.key == "Backspace")) {
-
-      // Check for "." or char code "46"
-      if (e.key == "." || e.charCode == 46) {
-        ++this.periodCount;
-      }
-
-      if (this.periodCount > 1) {
-        e.preventDefault();
-        --this.periodCount;
-      }
-      console.log("LOG: WalletInfoPage -> checkAllowedInput -> this.periodCount", this.periodCount);
-    }
-  }*/
-
-
 
 }
