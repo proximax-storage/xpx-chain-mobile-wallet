@@ -4,7 +4,6 @@ import { App } from '../../../../../providers/app/app';
 import { TransferTransaction } from '../../../../../models/transfer-transaction';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { TransactionType } from 'tsjs-xpx-chain-sdk';
-import { AppConfig } from '../../../../../app/app.config';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 @Component({

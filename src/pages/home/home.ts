@@ -354,13 +354,17 @@ export class HomePage {
     this.isLoading = false;
   }
 
-  async onWalletSelect(wallet) {
+   onWalletSelect(wallet) {
     console.log("LOG: HomePage -> onWalletSelect -> wallet", wallet);
+    console.log("LOG: HomePage -> onWalletSelect -> this.selectedWallet", this.selectedWallet);
     if (this.selectedWallet === wallet) {
       this.selectedWallet = wallet;
     }
-    await this.walletProvider.setSelectedWallet(wallet).then(async () => {
-      await this.init();
+     this.walletProvider.setSelectedWallet(wallet).then( () => {
+      setTimeout(() => {
+         this.init();
+      }, 1000);
+      // 
     });
   }
 
@@ -543,7 +547,12 @@ export class HomePage {
     let currentIndex = this.slides.getActiveIndex();
     console.log("Current index is", currentIndex);
 
+    console.log(this.wallets.length);
+    console.log(this.wallets.length != currentIndex);
+    
     if (this.wallets.length != currentIndex) {
+      console.log(this.wallets[currentIndex]);
+      
       this.onWalletSelect(this.wallets[currentIndex]);
       this.haptic.selection();
     } else {

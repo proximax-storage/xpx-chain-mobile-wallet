@@ -4,7 +4,6 @@ import { IonicPage, ModalController, NavController, NavParams, ViewController } 
 import { AccountInfo, SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 import { ToastProvider } from '../../../../providers/toast/toast';
-import { AuthProvider } from './../../../../providers/auth/auth';
 import { TranslateService } from '@ngx-translate/core';
 
 /**
@@ -34,7 +33,6 @@ export class WalletDetailsPage {
     private toastProvider: ToastProvider,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,
-    private authProvider: AuthProvider,
     private translateService: TranslateService
   ) {
     console.log("SIRIUS CHAIN WALLET: WalletDetailsPage -> this.navParams.data", this.navParams.data)
@@ -54,15 +52,17 @@ export class WalletDetailsPage {
   }
 
   showExportPrivateKeyModal() {
-    this.authProvider.getPassword().then(password => {
-      let credentials = {
-        password: password,
-        privateKey: ''
-      };
+   // LI
 
-      let page = "PrivateKeyPage";
-      this.showModal(page, { password: credentials.password });
-    })
+    // this.authProvider.getPassword().then(password => {
+    //   let credentials = {
+    //     password: password,
+    //     privateKey: ''
+    //   };
+
+    //   let page = "PrivateKeyPage";
+    //   this.showModal(page, { password: credentials.password });
+    // })
   }
 
   dismiss() {

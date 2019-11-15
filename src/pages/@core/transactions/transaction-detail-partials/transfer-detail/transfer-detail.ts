@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TransactionType } from 'tsjs-xpx-chain-sdk';
 
-import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
@@ -29,7 +28,6 @@ export class TransferDetailComponent {
   show: boolean;
 
   constructor(
-    private wallet: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
