@@ -84,7 +84,7 @@ export class HomePage {
   selectedAccount: Account;
   accountInfo: AccountInfo;
 
-  @ViewChild(Nav) navChild:Nav;
+  @ViewChild(Nav) navChild: Nav;
   address: any;
 
   constructor(
@@ -106,34 +106,33 @@ export class HomePage {
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
   ) {
-  //   this.platform.ready().then(()=> {
+    //   this.platform.ready().then(()=> {
 
-  //     this.deeplinks.routeWithNavController(this.navChild, {
-  //      '/send': "SendPage",
-  //    }).subscribe((match) => {
-  //      console.log('Successfully routed', JSON.stringify(match));
+    //     this.deeplinks.routeWithNavController(this.navChild, {
+    //      '/send': "SendPage",
+    //    }).subscribe((match) => {
+    //      console.log('Successfully routed', JSON.stringify(match));
 
-  //      let page = "SendPage";
-  //      this.showModal(page, { mosaicSelectedName: 'xpx', payload: match.$args })
+    //      let page = "SendPage";
+    //      this.showModal(page, { mosaicSelectedName: 'xpx', payload: match.$args })
 
-  //      // isDeepLink = true;
-  //      // redirectLink = match.$route;
-  //      // params = match.$args
+    //      // isDeepLink = true;
+    //      // redirectLink = match.$route;
+    //      // params = match.$args
 
-  //      // return;
-  //    }, (nomatch) => {
-  //      console.log('Unmatched Route', nomatch);        
-  //  });
-  //  })
+    //      // return;
+    //    }, (nomatch) => {
+    //      console.log('Unmatched Route', nomatch);        
+    //  });
+    //  })
 
   }
 
-  ionViewDidEnter(){
-    
+  ionViewDidEnter() {
+
   }
 
   ionViewWillEnter() {
-    console.log("1 ionViewWillEnter");
     this.utils.setHardwareBack();
     this.init();
   }
@@ -162,43 +161,42 @@ export class HomePage {
     this.walletProvider.getWallets().then(wallets => {
 
       this.wallets = wallets;
-      // this.wallets = this.walletProvider.convertToSimpleWallets(wallets);
-      console.log(
-        "1. LOG: HomePage -> ionViewWillEnter -> this.wallets",
-        this.wallets
-      );
+      // console.log(
+      //   "1. LOG: HomePage -> ionViewWillEnter -> this.wallets",
+      //   this.wallets
+      // );
 
       if (this.wallets.length > 0) {
         this.walletProvider.getSelectedWallet().then(selectedWallet => {
-          
+
           if (selectedWallet) {
             if (Array.isArray(selectedWallet)) {
-              console.log(
-                "LOG: HomePage -> init -> selectedWallet",
-                JSON.stringify(selectedWallet, null, 2)
-              );
+              // console.log(
+              //   "LOG: HomePage -> init -> selectedWallet",
+              //   JSON.stringify(selectedWallet, null, 2)
+              // );
               this.selectedWallet = selectedWallet
                 ? selectedWallet[0]
                 : wallets[0];
-              console.log(
-                "3. LOG: HomePage -> ionViewWillEnter -> myWallet",
-                this.selectedWallet[0]
-              );
+              // console.log(
+              //   "3. LOG: HomePage -> ionViewWillEnter -> myWallet",
+              //   this.selectedWallet[0]
+              // );
             } else {
               this.selectedWallet = selectedWallet
                 ? selectedWallet
                 : wallets[0];
-              console.log(
-                "3. LOG: HomePage -> ionViewWillEnter -> myWallet",
-                this.selectedWallet
-              );
+              // console.log(
+              //   "3. LOG: HomePage -> ionViewWillEnter -> myWallet",
+              //   this.selectedWallet
+              // );
             }
           } else {
             this.selectedWallet = wallets[0];
-            console.log(
-              "LOG: HomePage -> init -> this.selectedWallet",
-              JSON.stringify(this.selectedWallet, null, 2)
-            );
+            // console.log(
+            //   "LOG: HomePage -> init -> this.selectedWallet",
+            //   JSON.stringify(this.selectedWallet, null, 2)
+            // );
           }
 
           // Slide to selected wallet
@@ -208,53 +206,48 @@ export class HomePage {
             }
           });
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
-            console.log(
-              "4. LOG: HomePage -> ionViewWillEnter -> account",
-              this.address
-            );
-            // this.selectedAccount = account;
+          console.log(
+            "4. LOG: HomePage -> ionViewWillEnter -> account",
+            this.address
+          );
+          try {
+            this.mosaicsProvider
+              .getMosaics(this.address)
+              .subscribe(mosaics => {
+                // console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
+                // console.log("6. LOG: HomePage -> init -> _myMergedMosaics");
+                this.mosaics = mosaics;
 
-            try {
-              this.mosaicsProvider
-                .getMosaics(this.address)
-                .subscribe(mosaics => {
-                  console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
+                // Compute wallet balance in USD
+                // console.log(
+                //   "7. LOG: HomePage -> computeTotalBalance -> mosaics",
+                //   mosaics
+                // );
+                this.mosaicsProvider
+                  .computeTotalBalance(mosaics)
+                  .then(total => {
+                    this.totalWalletBalance = total as number;
+                    // console.log(this.totalWalletBalance);
+                    // console.log(
+                    //   "SIRIUS CHAIN WALLET: HomePage -> init -> total",
+                    //   total
+                    // );
+                    // loader.dismiss();
+                  });
 
-                  console.log("6. LOG: HomePage -> init -> _myMergedMosaics");
-                  this.mosaics = mosaics;
-
-                  // Compute wallet balance in USD
-                  console.log(
-                    "7. LOG: HomePage -> computeTotalBalance -> mosaics",
-                    mosaics
-                  );
-                  this.mosaicsProvider
-                    .computeTotalBalance(mosaics)
-                    .then(total => {
-                      this.totalWalletBalance = total as number;
-
-                      console.log(this.totalWalletBalance);
-                      
-                      console.log(
-                        "SIRIUS CHAIN WALLET: HomePage -> init -> total",
-                        total
-                      );
-                      // loader.dismiss();
-                    });
-
-                  // Show Transactions
-                  console.log(
-                    "8. LOG: HomePage -> getTransactions -> selectedWallet",
-                    this.selectedWallet
-                  );
-                  this.getTransactions(this.selectedWallet);
-                  this.getTransactionsUnconfirmed(this.selectedWallet);
-                  this.getTransactionsAggregate(this.selectedWallet);
-                });
-            } catch (error) {
-              // this.hideLoaders();
-              this.showEmptyMessage();
-            }
+                // Show Transactions
+                // console.log(
+                //   "8. LOG: HomePage -> getTransactions -> selectedWallet",
+                //   this.selectedWallet
+                // );
+                this.getTransactions(this.selectedWallet);
+                this.getTransactionsUnconfirmed(this.selectedWallet);
+                this.getTransactionsAggregate(this.selectedWallet);
+              });
+          } catch (error) {
+            // this.hideLoaders();
+            this.showEmptyMessage();
+          }
         });
         this.hideEmptyMessage();
       } else {
@@ -298,10 +291,10 @@ export class HomePage {
             tx => tx.type == TransactionType.TRANSFER
           );
           this.confirmedTransactions = transferTransactions;
-          console.log(
-            "this.confirmedTransactions ",
-            this.confirmedTransactions
-          );
+          // console.log(
+          //   "this.confirmedTransactions ",
+          //   this.confirmedTransactions
+          // );
           this.showEmptyTransaction = false;
         } else {
           this.showEmptyTransaction = true;
@@ -320,10 +313,10 @@ export class HomePage {
             Transaction
           > = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
           this.unconfirmedTransactions = transferTransactionsUnconfirmed;
-          console.log(
-            "this.unconfirmedTransactions ",
-            this.unconfirmedTransactions
-          );
+          // console.log(
+          //   "this.unconfirmedTransactions ",
+          //   this.unconfirmedTransactions
+          // );
           this.showEmptyTransaction = false;
         } else {
           this.showEmptyTransaction = true;
@@ -337,11 +330,11 @@ export class HomePage {
     this.transactionsProvider
       .getAllTransactionsAggregate(account.publicAccount)
       .subscribe(transactions => {
-        console.log('TCL: HomePage -> getTransactionsAggregate -> aggregateTransactions', transactions);
+        // console.log('TCL: HomePage -> getTransactionsAggregate -> aggregateTransactions', transactions);
         if (transactions) {
           const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
           this.aggregateTransactions = transferTransactionsAggregate;
-          console.log("this.aggregateTransactions ", this.aggregateTransactions);
+          // console.log("this.aggregateTransactions ", this.aggregateTransactions);
           this.showEmptyTransaction = false;
         } else {
           this.showEmptyTransaction = true;
@@ -350,28 +343,25 @@ export class HomePage {
     this.isLoading = false;
   }
 
-   async onWalletSelect(wallet) {
+  async onWalletSelect(wallet) {
     if (this.selectedWallet.account === wallet.account) {
       this.selectedWallet = wallet;
     }
-     await this.walletProvider.setSelectedWallet(wallet).then( async () => {
-         await this.init();
-      
+    await this.walletProvider.setSelectedWallet(wallet).then(async () => {
+      await this.init();
+
     });
   }
 
   async showWalletDetails(wallet) {
     this.selectedWallet = wallet;
     let page = "TransactionListPage";
-
     let selectedAccount = this.selectedWallet;
     let transactions = this.confirmedTransactions;
     let aggregateTransactions = this.aggregateTransactions;
     let total = this.totalWalletBalance;
     let mosaics = this.mosaics;
-
     let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
-
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,
       showBackdrop: true
@@ -381,15 +371,13 @@ export class HomePage {
     });
   }
 
-  getAbsoluteAmount(amount, divisibility){
-    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
 
   onWalletPress(wallet) {
     this.haptic.impact({ style: "heavy" });
-
     this.selectedWallet = wallet;
-
     let editButton = this.translateService.instant("WALLETS.EDIT");
     let deleteButton = this.translateService.instant("WALLETS.DELETE");
     let cancelButton = this.translateService.instant("WALLETS.BUTTON.CANCEL");
@@ -419,7 +407,6 @@ export class HomePage {
           role: "cancel",
           icon: this.platform.is("ios") ? null : "close",
           handler: () => {
-            console.log("Cancel clicked");
           }
         }
       ]
@@ -446,10 +433,6 @@ export class HomePage {
   }
 
   public gotoCoinPrice(mosaic) {
-    console.log("mosaicmosaicmosaic", mosaic);
-    // console.log("LOG: HomePage -> publicgotoCoinPrice -> mosaic", mosaic);
-    // console.log("SIRIUS CHAIN WALLET: HomePage -> gotoCoinPrice -> this.confirmedTransactions", this.confirmedTransactions)
-
     let coinName: string;
 
     if (mosaic.mosaicId === "xem") {
@@ -465,7 +448,6 @@ export class HomePage {
     }
 
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
-      console.log("LOG: HomePage -> publicgotoCoinPrice -> price", price);
       const totalBalance = mosaic.amount * price;
       const mosaicHex = mosaic.hex;
       const mosaicId = mosaic.mosaicId;
@@ -498,7 +480,6 @@ export class HomePage {
 
   gotoTransactionDetail(tx) {
     const page = "TransactionDetailPage";
-
     const transactions = tx;
     const mosaics = this.mosaics;
     const payload = { transactions, mosaics };
@@ -555,10 +536,10 @@ export class HomePage {
     this.utils
       .showInsetModal(page, { wallets: this.wallets })
       .subscribe(data => {
-        console.log(
-          "SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data",
-          data
-        );
+        // console.log(
+        //   "SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data",
+        //   data
+        // );
         const wallet = data.wallet;
         const index = data.index;
         if (wallet) {

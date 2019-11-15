@@ -8,7 +8,7 @@
     <ion-item transparent>
       <h2 padding-left title color="dark">
         <strong>
-            {{ "WALLETS.TITLE" | translate }}
+          {{ "WALLETS.TITLE" | translate }}
         </strong>
       </h2>
       <button ion-button icon-only item-end clear (click)="showAddWalletPrompt()">
@@ -19,9 +19,8 @@
 
   <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
     <ion-slide *ngFor="let wallet of wallets"
-      [attr.selected]="selectedWallet?.name === wallet.account?.name ? true : null"
-       (press)="showWalletList()">
-      <div class="wallet" >
+      [attr.selected]="selectedWallet?.name === wallet.account?.name ? true : null" (press)="showWalletList()">
+      <div class="wallet">
         <div class="wallet-content" [ngClass]="wallet.walletColor" (click)="showWalletDetails(wallet)">
           <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
 
@@ -73,9 +72,11 @@
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
             <h2 ion-text color="dark">{{ mosaic.mosaicId | uppercase}}</h2>
-            <p ion-text color="dark">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</p>
+            <p ion-text color="dark">
+              {{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}
+            </p>
             <section text-right item-right>
-              
+
               <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
             </section>
           </ion-item>
@@ -121,7 +122,9 @@
         <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy"
           (click)="gotoTransactionDetail(transaction)">
           <!-- if transfer  -->
-          <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Partial'"></transfer-transaction>
+          <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER"
+            [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Partial'">
+          </transfer-transaction>
         </ion-card>
       </ion-list>
     </div>
@@ -142,28 +145,27 @@
     <!-- Transactions -->
     <ion-list transparent-items *ngIf="!isLoading && confirmedTransactions">
       <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy"
-        (click)="gotoTransactionDetail(transaction)">        
+        (click)="gotoTransactionDetail(transaction)">
 
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-          [mosaics]="mosaics" 
-          [owner]="address.plain()" [status]="'Confirmed'">
+          [mosaics]="mosaics" [owner]="address.plain()" [status]="'Confirmed'">
         </transfer-transaction>
       </ion-card>
     </ion-list>
-    
-     <!-- Skeleton loader -->
-     <section *ngIf="isLoading">
-       <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
-         <skeleton-loader></skeleton-loader>
-       </ion-card>
-       <ion-card no-border>
-         <ion-item text-center>
-           <ion-spinner name="dots"></ion-spinner>
-         </ion-item>
-       </ion-card>
-     </section>
-     <!-- ./Skeleton loader -->
+
+    <!-- Skeleton loader -->
+    <section *ngIf="isLoading">
+      <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
+        <skeleton-loader></skeleton-loader>
+      </ion-card>
+      <ion-card no-border>
+        <ion-item text-center>
+          <ion-spinner name="dots"></ion-spinner>
+        </ion-item>
+      </ion-card>
+    </section>
+    <!-- ./Skeleton loader -->
 
     <ion-grid padding empty *ngIf="showEmptyTransaction">
       <ion-row>

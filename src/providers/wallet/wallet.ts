@@ -35,7 +35,6 @@ export class WalletProvider {
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
   }
 
-
   /**
    *
    *
@@ -49,6 +48,35 @@ export class WalletProvider {
     return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
   }
 
+  /**
+   * getWallets()
+   */
+  getWallets(): Promise<any> {
+    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+      let _wallets = dataAccountSelected || {};
+      const WALLETS = _wallets['catapultAccounts'] || [];
+      if (WALLETS) {
+        const walletsMap = WALLETS.map(walletFile => {
+          let wallet = walletFile as SimpleWallet;
+          wallet.walletColor = walletFile['walletColor'];
+          return wallet;
+        });
+        _wallets['catapultAccounts'] = walletsMap;
+      } else {
+        _wallets['catapultAccounts'] = [];
+      }
+
+      return _wallets['catapultAccounts'];
+    });
+  }
+
+  /**
+   * 
+   * @param wallet 
+   */
+  setSelectedWallet(wallet: SimpleWallet) {
+    return this.storage.set('selectedWallet', wallet);
+  }
 
   /**
    *
@@ -79,7 +107,6 @@ export class WalletProvider {
     this.storage.set('accounts', otherAccounts);
     return dataAccount;
   }
-
 
   /**
    *
@@ -332,29 +359,6 @@ export class WalletProvider {
   /**
    * Get loaded wallets from localStorage
    */
-  getWallets(): Promise<any> {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      let _wallets = dataAccountSelected || {};
-      const WALLETS = _wallets['catapultAccounts'] || [];
-      if (WALLETS) {
-        const walletsMap = WALLETS.map(walletFile => {
-          let wallet = walletFile as SimpleWallet;
-          wallet.walletColor = walletFile['walletColor'];
-          return wallet;
-        });
-        _wallets['catapultAccounts'] = walletsMap;
-      } else {
-        _wallets['catapultAccounts'] = [];
-      }
-
-      return _wallets['catapultAccounts'];
-    });
-  }
-
-  setSelectedWallet(wallet: SimpleWallet) {
-    return this.storage.set('selectedWallet', wallet);
-
-  }
 
   /**
    * Remove selected Wallet
