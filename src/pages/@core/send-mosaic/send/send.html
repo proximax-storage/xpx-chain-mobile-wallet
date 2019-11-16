@@ -155,7 +155,7 @@
 
   <section text-center>
     <button gradient-button half color-6 ion-button icon-end no-margin
-      [disabled]="msgErrorBalance || msgErrorUnsupported || form.invalid" (click)="send(form)">
+      [disabled]="msgErrorBalance || msgErrorUnsupported || form.invalid" (click)="send()">
       {{"WALLETS.SEND" | translate}}
       <ion-icon name="arrow-round-up"></ion-icon>
     </button>

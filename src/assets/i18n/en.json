@@ -3,6 +3,7 @@
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Your transaction is now being processed.",
     "APP.ERROR": "Something went wrong. Please try again",
     "APP.INVALID.USERNAME_OR_PASSWORD": "The username or password you entered is incorrect.",
+    "APP.INVALID.PASSWORD": "The password is invalid.",
     "APP.BUTTON.TRY_AGAIN": "Try again",
     "APP.COMMON.USERNAME": "Username",
     "APP.COMMON.USERNAME.PLACEHOLDER": "Enter your username",

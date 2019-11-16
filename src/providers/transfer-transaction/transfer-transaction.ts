@@ -1,11 +1,9 @@
 import { HelperProvider } from './../helper/helper';
-import { WalletProvider } from './../wallet/wallet';
 import { AppConfig } from './../../app/app.config';
 import { Injectable } from '@angular/core';
-import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, Password, Account, SignedTransaction, TransactionHttp, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
+import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, Account, SignedTransaction, TransactionHttp, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
 import { MosaicModel } from './mosaic.model';
 import { Observable } from 'rxjs';
-import { AuthProvider } from '../auth/auth';
 import { Storage } from '@ionic/storage';
 
 /*
@@ -24,8 +22,6 @@ export class TransferTransactionProvider {
   httpNodeUrl: any;
 
   constructor(
-    private walletProvider: WalletProvider,
-    private authProvider: AuthProvider,
     private storage: Storage,
     private helper: HelperProvider
   ) {
@@ -83,40 +79,30 @@ export class TransferTransactionProvider {
   send(pk, net): Observable<TransactionAnnounceResponse> {
 
     return new Observable(observer => {
-
+      // 1. account
       const account = Account.createFromPrivateKey(pk, net);
 
-      // 1. Get account
-      // this.getAccount().subscribe(account => {
-        const _account = account;
-        console.log('LOG: TransferTransactionProvider -> send -> _account', _account);
+      // const _account = account;
+      // 2. Get transfer transaction
+      const transferTransaction = this.build();
 
-        // 2. Get transfer transaction
-        const transferTransaction = this.build();
+      // 3. Sign and announce a transaction
+      const signedTxn = account.sign(transferTransaction, AppConfig.sirius.networkGenerationHash);
+      console.log('LOG: TransferTransactionProvider -> send -> signedTxn', signedTxn);
 
-        // 3. Sign and announce a transaction
-        const signedTxn = account.sign(transferTransaction, AppConfig.sirius.networkGenerationHash);
-        console.log('LOG: TransferTransactionProvider -> send -> signedTxn', signedTxn);
+      // 4. Monitor transaction status
+      this.checkTransaction(signedTxn);
 
-        // 4. Monitor transaction status
-        this.checkTransaction(signedTxn);
-
-        // 5. Announce transaction
-        const transactionHttp = new TransactionHttp(this.httpNodeUrl);
-        transactionHttp.announce(signedTxn).subscribe(response => {
-          observer.next(response);
-        }, (err) => {
-          observer.error(err);
-        }, () => {
-          observer.complete();
-        });
-
-      // })
-
-
+      // 5. Announce transaction
+      const transactionHttp = new TransactionHttp(this.httpNodeUrl);
+      transactionHttp.announce(signedTxn).subscribe(response => {
+        observer.next(response);
+      }, (err) => {
+        observer.error(err);
+      }, () => {
+        observer.complete();
+      });
     });
-
-
   }
 
   private checkTransaction(txn: SignedTransaction): Promise<boolean> {
@@ -142,36 +128,4 @@ export class TransferTransactionProvider {
       }, 1000);
     });
   }
-
-  private getAccount(): Observable<Account> {
-    return new Observable(observer => {
-
-      // Get selected Wallet
-      this.walletProvider.getSelectedWallet().then(selectedWallet => {
-        console.log('LOG: TransferTransactionProvider -> selectedWallet', selectedWallet);
-
-        const _selectedWallet = selectedWallet;
-
-        // Get user's password and unlock the wallet to get the account
-        this.authProvider
-          .getPassword()
-          .then(password => {
-            console.log('LOG: TransferTransactionProvider -> password', password);
-            // Get user's password
-            const myPassword = new Password(password);
-
-            // Convert current wallet to SimpleWallet
-            const myWallet = this.walletProvider.convertToSimpleWallet(_selectedWallet);
-
-            // Unlock wallet to get an account using user's password 
-            const account = myWallet.open(myPassword);
-
-            observer.next(account);
-
-          });
-
-      })
-    });
-  }
-
 }

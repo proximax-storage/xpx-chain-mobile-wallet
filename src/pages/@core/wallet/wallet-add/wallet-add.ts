@@ -142,7 +142,7 @@ export class WalletAddPage {
           }
         })
       } else {
-        this.alertProvider.showMessage('Invalid password');
+        this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
       }
     } catch (error) {
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));

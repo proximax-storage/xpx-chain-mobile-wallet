@@ -33,10 +33,9 @@ import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
 
 import { AppConfig } from '../../app/app.config';
-import { commonInterface, walletInterface } from '../interfaces/shared.interfaces';
+import { commonInterface } from '../interfaces/shared.interfaces';
 import { Storage } from '@ionic/storage';
 import { flatMap, filter, map, toArray, catchError } from 'rxjs/operators';
-import { AlertProvider } from '../alert/alert';
 
 /*
   Generated class for the ProximaxProvider provider.
@@ -62,7 +61,6 @@ export class ProximaxProvider {
   constructor(
     public http: HttpClient,
     private storage: Storage,
-    private alertProvider: AlertProvider
   ) {
 
     this.networkType = AppConfig.sirius.networkType;

@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, ViewController, Platform } from 'i
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
-import { Account } from 'tsjs-xpx-chain-sdk';
 import { HapticProvider } from '../../../providers/haptic/haptic';
 /*
 * See https://ionicframework.com/docs/components/#navigation for more info on
