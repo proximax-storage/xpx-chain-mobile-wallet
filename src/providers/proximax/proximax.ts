@@ -169,13 +169,6 @@ export class ProximaxProvider {
   }
 
 
-  /**
- * Decrypt private key
- * @param password password
- * @param encriptedData Object containing private_key encrypted and salt
- * @return Decrypted private key
- */
-
   public createFromPrivateKey(
     walletName: string,
     password: string,
