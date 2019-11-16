@@ -35,7 +35,10 @@ export class WalletDetailsPage {
   passwordIcon: string = "ios-eye-outline";
   pass: boolean = false;
   export: boolean = true;
+  deletePass: boolean = false;
+  delete: boolean = true;
   configurationForm: ConfigurationForm = {};
+  privateKey: string = '';
 
 
   constructor(
@@ -96,36 +99,52 @@ export class WalletDetailsPage {
   showExportPrivateKeyModal() {
     this.pass = true;
     this.export = false
-  }
-
-  exportCancel() {
-    this.pass = false;
-    this.export = true
+    this.deletePass = false;
+    this.delete = true
     this.form.get("password").setValue('');
   }
 
-  exportAceptar() {
-    const password =  new Password(this.form.get("password").value);
-    const iv = this.selectedAccount.account.encryptedPrivateKey.iv;
-    const encryptedKey = this.selectedAccount.account.encryptedPrivateKey.encryptedKey;
-    const privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
-
-    if (privateKey) {
+  cancel(val) {
+    if (val === 1) {
       this.pass = false;
       this.export = true
-      this.form.get("password").setValue('');
-      this.haptic.notification({ type: 'success' });
-      this.socialSharing
-        .share(
-          `Private key of ${this.selectedAccount.account.name}: \n${privateKey}`,
-          null,
-          null,
-          null
-        )
-        .then(_ => {
-          this.dismiss();
-        });
+    } else {
+      this.deletePass = false;
+      this.delete = true
+    }
+    this.form.get("password").setValue('');
+  }
 
+  aceptar(val) {
+    this.privateKey = ''
+    let password = new Password(this.form.get("password").value);
+    const iv = this.selectedAccount.account.encryptedPrivateKey.iv;
+    const encryptedKey = this.selectedAccount.account.encryptedPrivateKey.encryptedKey;
+    this.privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
+
+    if (this.privateKey) {
+      if (val === 1) {
+        this.pass = false;
+        this.export = true
+
+        this.haptic.notification({ type: 'success' });
+        this.socialSharing
+          .share(
+            `Private key of ${this.selectedAccount.account.name}: \n${this.privateKey}`,
+            null,
+            null,
+            null
+          )
+          .then(_ => {
+            this.dismiss();
+          });
+      } else {
+        this.deletePass = false;
+        this.delete = true
+    let page = "WalletDeletePage";
+    this.showModal(page, { wallet: this.selectedAccount });
+      }
+      this.form.get("password").setValue('');
     } else {
       this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
     }
@@ -141,8 +160,11 @@ export class WalletDetailsPage {
   }
 
   showWalletDelete() {
-    let page = "WalletDeletePage";
-    this.showModal(page, { wallet: this.selectedAccount });
+    this.deletePass = true;
+    this.delete = false
+    this.pass = false;
+    this.export = true
+    this.form.get("password").setValue('');
   }
 
   showModal(page, params) {

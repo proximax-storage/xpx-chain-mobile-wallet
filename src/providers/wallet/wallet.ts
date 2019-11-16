@@ -257,33 +257,37 @@ export class WalletProvider {
   }
 
   deleteWallet(wallet: SimpleWallet) {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      return this.getLocalWallets().then(wallets => {
-        let _wallets: Array<any> = wallets[dataAccountSelected.user];
+    console.log('....................', wallet);
 
-        _wallets.map((res, index) => {
-          if (res.wallet.name == wallet.name) {
-            _wallets.splice(index, 1);
+    // LI
+    
+      // return this.authProvider.getDataAccountSelected().then(wallets => {
+      //   console.log('....................wallets', wallets);
+        
+      //   let _wallets: Array<any> = wallets.catapultAccounts;
 
-            _wallets = _wallets.map(_ => {
-              return {
-                wallet: _.wallet,
-                walletColor: _.walletColor
-              }
-            });
-            const WALLET = {};
-            WALLET[dataAccountSelected.user] = _wallets;
-            return this.storage.set('wallets', WALLET);
-          }
-        })
-        _wallets
-        return;
+      //   _wallets.map((res, index) => {
+      //     if (res.account.name == wallet['account'].name) {
+      //       _wallets.splice(index, 1);
+
+      //       _wallets = _wallets.map(_ => {
+      //         return {
+      //           wallet: _.wallet,
+      //           walletColor: _.walletColor
+      //         }
+      //       });
+      //       // const WALLET = {};
+      //       const  WALLET= _wallets;
+      //       return this.storage.set('selectedAccount', WALLET);
+      //     }
+      //   })
+      //   _wallets
+      //   return;
 
 
 
 
-      });
-    });
+      // });
   }
 
   /**

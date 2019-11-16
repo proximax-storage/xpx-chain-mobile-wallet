@@ -61,49 +61,72 @@
 
     <ion-row *ngIf="pass">
       <form [formGroup]="form">
-
-
         <ion-item transparent padding>
           <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
-          <ion-input formControlName="password" [type]="passwordType" placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
           <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
             <ion-icon item-right color="dark" [name]="passwordIcon">
             </ion-icon>
           </button>
         </ion-item>
-
-        <ion-grid normal>
-          <ion-row>
-            <ion-col>
-              <button (click)="exportCancel()"  gradient-button full color-5 ion-button icon-start no-margin>
-                {{"WALLETS.BUTTON.CANCEL" | translate}}
-              </button>
-            </ion-col>
-            <ion-col>
-              <button (click)="exportAceptar()"  [disabled]="form.invalid" gradient-button full color-5 ion-button icon-end no-margin>
-                {{"WALLETS.SEND" | translate}}
-              </button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
       </form>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngIf="pass">
+        <ion-col>
+          <button (click)="cancel(1)" gradient-button full color-5  no-margin>
+              {{"WALLETS.BUTTON.CANCEL" | translate}}
+          </button>
+        </ion-col>
+        <ion-col>
+          <button (click)="aceptar(1)"  [disabled]="form.invalid" gradient-button full color-5  no-margin>
+              {{"WALLETS.SEND" | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+
+    <ion-row >
       <button reduce-margin gradient-button quarter-width color-5 medium (click)="showWalletUpdate()">
         {{"WALLETS.EDIT" | translate}}
       </button>
     </ion-row>
 
-    <ion-row align-items-center>
+    <ion-row align-items-center *ngIf="delete">
       <ion-col col="12" align-self-center>
         <button text-center full ion-button color="danger" clear (click)="showWalletDelete()">
           {{"WALLETS.DELETE" | translate}}
         </button>
       </ion-col>
     </ion-row>
+
+    <ion-row *ngIf="deletePass">
+        <form [formGroup]="form">
+          <ion-item transparent padding>
+            <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+            <ion-input formControlName="password" [type]="passwordType"
+              placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+  
+            <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+              <ion-icon item-right color="dark" [name]="passwordIcon">
+              </ion-icon>
+            </button>
+          </ion-item>
+        </form>
+      </ion-row>
+  
+      <ion-row *ngIf="deletePass">
+          <ion-col>
+            <button (click)="cancel(2)" gradient-button full color-5  no-margin>
+                {{"WALLETS.BUTTON.CANCEL" | translate}}
+            </button>
+          </ion-col>
+          <ion-col>
+            <button (click)="aceptar(2)"  [disabled]="form.invalid" gradient-button full color-5  no-margin>
+                {{"WALLETS.SEND" | translate}}
+            </button>
+          </ion-col>
+        </ion-row>
   </ion-card>
-
-
 </ion-content>
