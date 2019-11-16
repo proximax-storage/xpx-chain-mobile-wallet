@@ -102,16 +102,15 @@ export class NemProvider {
             return nis1AccountsInfo;
           } else {
             // console.log('The account has no balance to swap.');
-            // this.alertProvider.showMessage('The account has no balance to swap.');
+            this.alertProvider.showMessage('The account has no balance to swap.');
             this.setNis1AccountsFound$(null);
           }
         } catch (error) {
-          console.log(error);
-          // this.alertProvider.showMessage('It was not possible to connect to the server, try later');
+          this.alertProvider.showMessage('It was not possible to connect to the server, try later');
           this.setNis1AccountsFound$(null);
         }
       } else {
-        // this.alertProvider.showMessage('Swap does not support this account type');
+        this.alertProvider.showMessage('Swap does not support this account type');
         this.setNis1AccountsFound$(null);
       }
 
@@ -423,7 +422,14 @@ export class NemProvider {
     return common.privateKey;
   }
 
-  createAccountPrivateKey(privateKey: string) {
+  /**
+   *
+   *
+   * @param {string} privateKey
+   * @returns {Account}
+   * @memberof NemProvider
+   */
+  createAccountPrivateKey(privateKey: string): Account {
     return Account.createWithPrivateKey(privateKey);
   }
 

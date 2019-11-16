@@ -3,6 +3,7 @@ import { Storage } from '@ionic/storage';
 import findIndex from 'lodash/findIndex';
 import crypto from 'crypto';
 import { Convert, SimpleWallet, PublicAccount } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet as SimpleWalletNIS1, PublicAccount as PublicAccountNIS1 } from 'nem-library';
 import CryptoJS from 'crypto-js';
 
 
@@ -41,7 +42,8 @@ export class AuthProvider {
       const account = {
         user: user.toLowerCase(),
         encrypted: encrypted.toString(),
-        catapultAccounts: null
+        catapultAccounts: null,
+        nis1Accounts: null
       };
 
       this.setSelectedAccount(account);
@@ -230,6 +232,11 @@ export interface AccountInterface {
   catapultAccounts: {
     account: SimpleWallet,
     publicAccount: PublicAccount,
+    walletColor: string
+  }[],
+  nis1Accounts: {
+    account: SimpleWalletNIS1,
+    publicAccount: PublicAccountNIS1,
     walletColor: string
   }[]
 }

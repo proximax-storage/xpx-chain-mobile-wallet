@@ -10,6 +10,7 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { Password } from 'tsjs-xpx-chain-sdk';
+import { NemProvider } from '../../../../providers/nem/nem';
 
 /**
  * Generated class for the WalletAddPage page.
@@ -36,6 +37,7 @@ export class WalletAddPage {
   catapultWallet: any;
 
   constructor(
+    private nem: NemProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
@@ -136,7 +138,7 @@ export class WalletAddPage {
           if (value) {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
-            this.walletProvider.storeWalletCatapult(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
+            this.walletProvider.storeWalletCatapult(this.catapultWallet, null, this.walletColor, new Password(form.password)).then(_ => {
               this.goToBackup(this.catapultWallet);
             });
           }

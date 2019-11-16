@@ -3,13 +3,28 @@ import { Storage } from '@ionic/storage';
 
 import { AuthProvider, AccountInterface } from '../auth/auth';
 import {
-  SimpleWallet, Password, Address, EncryptedPrivateKey,
-  AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
-  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, NetworkCurrencyMosaic
+  SimpleWallet,
+  Password,
+  Address,
+  EncryptedPrivateKey,
+  AccountInfo,
+  MosaicAmountView,
+  NetworkType,
+  PublicAccount,
+  TransferTransaction,
+  Deadline,
+  PlainMessage,
+  Mosaic,
+  MosaicId,
+  UInt64,
+  Account,
+  NetworkCurrencyMosaic
 } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet as SimpleWalletNis1} from 'nem-library';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
+import { NemProvider } from '../nem/nem';
 
 /*
  Generated class for the NemProvider provider.
@@ -28,6 +43,7 @@ export class WalletProvider {
   selectedWallet: any;
 
   constructor(
+    private nemProvider: NemProvider,
     private storage: Storage,
     private authProvider: AuthProvider,
     private proximaxProvider: ProximaxProvider
@@ -90,18 +106,34 @@ export class WalletProvider {
    * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWalletCatapult(wallet: SimpleWallet, walletColor: string, password: Password): Promise<AccountInterface> {
+  async storeWalletCatapult(catapultAccount: SimpleWallet, nis1Account: SimpleWalletNis1, walletColor: string, password: Password): Promise<AccountInterface> {
     const dataAccount = await this.authProvider.getDataAccountSelected();
     const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
+    const nis1Accounts = (dataAccount.nis1Accounts) ? dataAccount.nis1Accounts : [];
     const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
       this.proximaxProvider.decryptPrivateKey(
         password,
-        wallet.encryptedPrivateKey.encryptedKey,
-        wallet.encryptedPrivateKey.iv
-      ).toUpperCase(), wallet.network
+        catapultAccount.encryptedPrivateKey.encryptedKey,
+        catapultAccount.encryptedPrivateKey.iv
+      ).toUpperCase(), catapultAccount.network
     );
-    const selectWallet = { account: wallet, walletColor: walletColor, publicAccount: publicAccount }
-    catapultAccounts.push({ account: wallet, walletColor: walletColor, publicAccount: publicAccount });
+
+    if (nis1Account){
+      const publicAccount = this.nemProvider.createAccountPrivateKey(
+        this.proximaxProvider.decryptPrivateKey(
+          password,
+          catapultAccount.encryptedPrivateKey.encryptedKey,
+          catapultAccount.encryptedPrivateKey.iv
+        ).toUpperCase()
+      );
+
+      const accountnis1 = { account: nis1Account, walletColor: walletColor, publicAccount: publicAccount };
+      nis1Accounts.push(accountnis1);
+      dataAccount['nis1Accounts'] = nis1Accounts;
+    }
+    
+    const selectWallet = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
+    catapultAccounts.push(selectWallet);
     dataAccount['catapultAccounts'] = catapultAccounts;
     const data: AccountInterface[] = await this.storage.get('accounts');
     const otherAccounts: AccountInterface[] = data.filter(x => x.user !== dataAccount.user);
@@ -110,32 +142,6 @@ export class WalletProvider {
     this.authProvider.setSelectedAccount(dataAccount);
     this.storage.set('accounts', otherAccounts);
     return dataAccount;
-  }
-
-  /**
-   *
-   *
-   * @param {*} walletC
-   * @param {*} walletN
-   * @param {*} walletColor
-   * @returns {Promise<SimpleWallet>}
-   * @memberof WalletProvider
-   */
-  storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
-    let result = [];
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      return this.getLocalWalletsNis().then(value => {
-        let wallets = value;
-        result = wallets[dataAccountSelected.user];
-
-        result.push({ wallet: walletC, walletNis1: walletN, walletColor: walletColor });
-
-        wallets[dataAccountSelected.user] = result;
-
-        this.storage.set('walletsNis1', wallets);
-        return walletN;
-      });
-    });
   }
 
   /**
