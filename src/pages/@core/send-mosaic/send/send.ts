@@ -117,9 +117,11 @@ export class SendPage {
       } else {
         this.currentWallet = currentWallet;
         console.log('this.currentWalle', this.currentWallet);
-        
+
         this.address = this.proximaxProvider.createFromRawAddress(this.currentWallet.account.address.address)
         this.wallet = this.address.plain();
+        console.log(' this.wallet', this.wallet);
+
         this.mosaicsProvider
           .getMosaics(this.address)
           .subscribe(mosaics => {
@@ -233,14 +235,19 @@ export class SendPage {
           ? value.split("-").join("")
           : "";
 
+      console.log('accountRecipient', accountRecipient);
+      console.log('accountRecipient length', accountRecipient.length);
+
       if (
         accountRecipient !== null &&
         accountRecipient !== undefined &&
         accountRecipient.length === 40
       ) {
+
         if (
+
           !this.proximaxProvider.verifyNetworkAddressEqualsNetwork(
-            this.walletProvider.selectedWallet.address.plain(),
+            this.walletProvider.selectedWallet.account.address.address,
             accountRecipient
           )
         ) {
@@ -328,61 +335,40 @@ export class SendPage {
   /**
    * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
    */
-  send() {
-    if (!this.form.get("amount").value) this.form.get("amount").setValue(0);
-    if (!this.form.get("senderAddress").value || !this.form.get("recipientAddress").value) {
-      if (this.addressSourceType.to === "contact") {
-        this.alertProvider.showMessage("Please select a recipient first.");
-      } else {
-        this.alertProvider.showMessage("Please enter the recipient's address first.");
-      }
-      return;
-    }
+  send(form) {
+    console.log('form', form.value);
     const password = new Password(this.form.get("password").value);
-    const iv = this.currentWallet.encryptedPrivateKey.iv;
-    const encryptedKey = this.currentWallet.encryptedPrivateKey.encryptedKey;
+    const iv = this.currentWallet.account.encryptedPrivateKey.iv;
+    const encryptedKey = this.currentWallet.account.encryptedPrivateKey.encryptedKey;
+    const privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
 
-      const privateKey = this.proximaxProvider.decryptPrivateKey(password, iv,encryptedKey);
-      console.log('privateKeyprivateKey', privateKey);
-      
-      if(privateKey != ''){
-        try {
-          let message = this.form.get("message").value;
-          const prueba = this.selectedCoin.market_data.current_price.usd;
-          console.log("por este multiploca", prueba);
-          let total =
-            this.selectedCoin.market_data.current_price.usd *
-            Number(this.form.get("amount").value);
-    
-          // Show confirm transaction
-          let page = "SendMosaicConfirmationPage";
-          const modal = this.modalCtrl.create(
-            page,
-            {
-              ...this.form.value,
-              mosaic: this.selectedMosaic,
-              currentWallet: this.currentWallet,
-              transactionType: "normal",
-              total: total,
-              message: message
-            },
-            {
-              enableBackdropDismiss: false,
-              showBackdrop: true
-            }
-          );
-          modal.present();
-          // }
-        } catch (err) {
-          this.alertProvider.showMessage(
-            this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
-          );
+    if (privateKey) {
+      console.log(privateKey);
+      // Show confirm transaction
+      let message = this.form.get("message").value;
+      let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
+      let page = "SendMosaicConfirmationPage";
+      const modal = this.modalCtrl.create(
+        page,
+        {
+          ...this.form.value,
+          mosaic: this.selectedMosaic,
+          currentWallet: this.currentWallet,
+          transactionType: "normal",
+          total: total,
+          message: message,
+          privateKey: privateKey
+
+        },
+        {
+          enableBackdropDismiss: false,
+          showBackdrop: true
         }
-      } else {
-        console.log('error mwnor ');
-        
-      }
-
+      );
+      modal.present();
+    } else {
+      this.alertProvider.showMessage("password invalid");
+    }
   }
 
   dismiss() {
