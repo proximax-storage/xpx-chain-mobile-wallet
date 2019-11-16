@@ -139,14 +139,14 @@ export class ImportWalletPage {
             for (let index = 0; index < mosacis.length; index++) {
               const element = mosacis[index];
               if (element.assetId.name === 'xpx') {
-                this.walletProvider.storeWalletNis1(catapultWallet, nemWallet, this.walletColor).then(_ => {
+                /*this.walletProvider.storeWalletNis1(catapultWallet, nemWallet, this.walletColor).then(_ => {
                   // RJ
-                  /*this.walletProvider.storeWallet({ wallet: catapultWallet, walletColor: this.walletColor }).then(_ => {
+                  this.walletProvider.storeWallet({ wallet: catapultWallet, walletColor: this.walletColor }).then(_ => {
                     this.walletProvider.setSelectedWallet(catapultWallet);
                     loader.dismiss();
                     this.showWalletInfoPage(nemWallet, catapultWallet, form.privateKey);
-                  });*/
-                });
+                  });
+                });*/
               }
             }
           });

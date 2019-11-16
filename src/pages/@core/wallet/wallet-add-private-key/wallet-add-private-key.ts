@@ -76,16 +76,15 @@ export class WalletAddPrivateKeyPage {
         this.catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
         const existAccount = await this.walletProvider.validateExistAccount(this.catapultWallet);
         if (!existAccount) {
-          this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
           // this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
 
-          this.walletProvider.storeWalletCatapult(this.catapultWallet, this.walletColor, new Password(form.password)).then(_ => {
+          this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
+          this.walletProvider.storeWalletCatapult(this.catapultWallet, this.nemWallet, this.walletColor, new Password(form.password)).then(_ => {
             this.goToBackup(this.catapultWallet);
           });
 
-          console.log('this.nemWallet', this.nemWallet);
-          const nis1Wallet = this.nem.createAccountPrivateKey(form.privateKey);
-          const publicAccount = this.nem.createPublicAccount(nis1Wallet.publicKey);
+          const nis1Account = this.nem.createAccountPrivateKey(form.privateKey);
+          const publicAccount = this.nem.createPublicAccount(nis1Account.publicKey);
           if (this.checkSwap) {
             this.nem.getAccountInfoNis1(publicAccount, form.name).then((data: AccountsInfoNis1Interface) => {
               if (data) {
@@ -186,7 +185,6 @@ export class WalletAddPrivateKeyPage {
    */
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-
     // Hide Tabs
     let tabs = document.querySelectorAll('.tabbar');
     if (tabs !== null) {
