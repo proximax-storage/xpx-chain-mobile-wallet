@@ -226,6 +226,9 @@ export class SendPage {
     this.amount = null;
   }
 
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
+  }
   subscribeValue() {
     // Account recipient
     this.form.get("recipientAddress").valueChanges.subscribe(value => {
