@@ -21,7 +21,6 @@ export class WalletBackupQrcodePage {
   QRData: string;
   walletName: string;
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -29,18 +28,33 @@ export class WalletBackupQrcodePage {
     private haptic: HapticProvider,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-  ) {
-    console.log("SIRIUS CHAIN WALLET: WalletBackupQrcodePage -> this.navParams.data", this.navParams.data)
+  ) {}
+
+  /**
+   *
+   *
+   * @memberof WalletBackupQrcodePage
+   */
+  ionViewDidLoad() {
+    this.privateKey = this.navParams.data.privateKey;
+    this.walletName = this.navParams.data.walletName;
+    this.QRData = this.navParams.data.privateKey;
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletBackupQrcodePage');
-    this.QRData = this.privateKey;
-  }
+  /**
+   *
+   *
+   * @memberof WalletBackupQrcodePage
+   */
   dismiss() {
     this.viewCtrl.dismiss();
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupQrcodePage
+   */
   copy() {
     this.clipboard.copy(this.privateKey).then(_ => {
       this.haptic.notification({ type: 'success' });
@@ -49,14 +63,13 @@ export class WalletBackupQrcodePage {
     });
   }
 
-
+  /**
+   *
+   *
+   * @memberof WalletBackupQrcodePage
+   */
   goHome() {
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {
-        animate: true
-      }
-    );
+    this.navCtrl.setRoot('TabsPage', { animate: true });
   }
 
 }

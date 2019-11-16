@@ -6,7 +6,6 @@ import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet
 import { SocialSharing } from '../../../../../node_modules/@ionic-native/social-sharing';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
 /**
  * Generated class for the WalletBackupPage page.
  *
@@ -23,6 +22,7 @@ import { WalletProvider } from '../../../../providers/wallet/wallet';
 export class WalletBackupPage {
   App = App;
 
+  data = null;
   options: Array<{
     name: string;
     value: number;
@@ -39,66 +39,86 @@ export class WalletBackupPage {
     private walletBackupProvider: WalletBackupProvider,
     private socialSharing: SocialSharing,
     private modalCtrl: ModalController,
-    private utils: UtilitiesProvider,
-    private walletProvider: WalletProvider
+    private utils: UtilitiesProvider
   ) {
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-    console.log("SIRIUS CHAIN WALLET: PrivateKeyPage -> ionViewWillEnter -> currentWallet", currentWallet)
-      if (currentWallet) {
-      this.currentWallet = currentWallet;
-
-      //LI
-      // this.walletProvider.getAccount(currentWallet).subscribe(account=> {
-      //   this.privateKey = account.privateKey;
-      // })
-      }
-    });
+    this.data = this.navParams.data;
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   ionViewDidLoad() {
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   ionViewDidLeave() {
     this.navCtrl.popToRoot();
   }
 
-
-  goHome() {
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {
-        animate: true
-      }
-    );
-  }
-
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   copy() {
-    this.walletBackupProvider.copyToClipboard(this.privateKey);
+    this.walletBackupProvider.copyToClipboard(this.data.privateKey);
     this.goHome();
   }
 
-  share() {
-      this.socialSharing.share(
-      this.privateKey, null, null)
-      // this.goHome();
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  dismiss() {
+    this.goHome();
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   gotoQRCodePage() {
     let page = "WalletBackupQrcodePage";
-    const modal = this.modalCtrl.create(page, {privateKey: this.privateKey, walletName: this.currentWallet.name } ,{
+    const modal = this.modalCtrl.create(page, { privateKey: this.data.privateKey, walletName: this.data.wallet.name }, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
     modal.present();
-    
   }
 
-  dismiss() {
-    this.goHome();
+
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  goHome() {
+    this.navCtrl.setRoot('TabsPage', { animate: true });
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  share() {
+    this.socialSharing.share(this.data.privateKey, null, null)
   }
 }

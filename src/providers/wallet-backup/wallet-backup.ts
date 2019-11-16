@@ -17,23 +17,15 @@ export class WalletBackupProvider {
     private toastProvider: ToastProvider,
     private translateService: TranslateService
   ) {
-    console.log('Hello WalletBackupProvider Provider');
   }
 
 
   copyToClipboard(privateKey) {
-    this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(
-      value => {
-        let alertTitle = value;
-        return this.clipboard.copy(privateKey)
-          .then(_ => {
-            return this.toastProvider.show(alertTitle,
-              3,
-              true
-            );
-          });
-      }
-    )
-
+    this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
+      let alertTitle = value;
+      return this.clipboard.copy(privateKey).then(_ => {
+        return this.toastProvider.show(alertTitle, 3, true);
+      });
+    });
   }
 }

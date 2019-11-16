@@ -40,6 +40,9 @@ export class WalletAddPrivateKeyPage {
 
   tablet: boolean = false;
   configurationForm: ConfigurationForm = {};
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
+
 
   constructor(
     public navCtrl: NavController,
@@ -80,7 +83,7 @@ export class WalletAddPrivateKeyPage {
 
           this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
           this.walletProvider.storeWalletCatapult(this.catapultWallet, this.nemWallet, this.walletColor, new Password(form.password)).then(_ => {
-            this.goToBackup(this.catapultWallet);
+            this.goToBackup(this.catapultWallet, form.privateKey);
           });
 
           const nis1Account = this.nem.createAccountPrivateKey(form.privateKey);
@@ -165,8 +168,8 @@ export class WalletAddPrivateKeyPage {
    * @returns
    * @memberof WalletAddPrivateKeyPage
    */
-  goToBackup(wallet: any) {
-    return this.navCtrl.push('WalletBackupPage', wallet);
+  goToBackup(wallet: SimpleWallet, privateKey: string) {
+    return this.navCtrl.push('WalletBackupPage', {wallet: wallet, privateKey: privateKey});
   }
 
   /**
@@ -276,6 +279,18 @@ export class WalletAddPrivateKeyPage {
       showBackdrop: true
     });
     modal.present();
+  }
+
+  /**
+   *
+   *
+   * @param {Event} e
+   * @memberof WalletAddPrivateKeyPage
+   */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
   }
 
   /**
