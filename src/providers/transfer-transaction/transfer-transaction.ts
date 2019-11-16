@@ -80,12 +80,14 @@ export class TransferTransactionProvider {
     return TransferTransaction.create(Deadline.create(), this.recipient, this.mosaics, message, AppConfig.sirius.networkType);
   }
 
-  send(): Observable<TransactionAnnounceResponse> {
+  send(pk, net): Observable<TransactionAnnounceResponse> {
 
     return new Observable(observer => {
 
+      const account = Account.createFromPrivateKey(pk, net);
+
       // 1. Get account
-      this.getAccount().subscribe(account => {
+      // this.getAccount().subscribe(account => {
         const _account = account;
         console.log('LOG: TransferTransactionProvider -> send -> _account', _account);
 
@@ -109,7 +111,7 @@ export class TransferTransactionProvider {
           observer.complete();
         });
 
-      })
+      // })
 
 
     });

@@ -4,7 +4,7 @@ import { Component, trigger, transition, style, group, animate } from '@angular/
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet, Password} from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet} from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
@@ -125,6 +125,7 @@ export class SendMosaicConfirmationPage {
     // Prepare transfer Transaction
     this.prepareTransaction();
   }
+
   prepareTransaction() {
     
     const mosaicModel = new MosaicModel();
@@ -147,16 +148,10 @@ export class SendMosaicConfirmationPage {
     console.log('transactionType', this.data.transactionType);
     if (this.data.transactionType == 'multisig') {
       console.log("Multisig transfer");
-      if (this._allowedToSendTx()) {
-        // TODO: Multisig Send
-      } else {
-        this.showGenericError();
-      }
     } else if (this.data.transactionType = 'normal'){
       console.log("Normal transfer");
-      if (this._allowedToSendTx()) {
-        
-        this.transferTransaction.send().subscribe(response => {
+ 
+        this.transferTransaction.send(this.data.privateKey, this.data.currentWallet.account.network).subscribe(response => {
           this.showSuccessMessage();
         }, (err) => {
             this.showErrorMessage(err);
@@ -166,7 +161,6 @@ export class SendMosaicConfirmationPage {
       } else {
         this.showGenericError();
       }
-    }
   }
 
   showGenericError() {
@@ -177,6 +171,7 @@ export class SendMosaicConfirmationPage {
       });
 
   }
+
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });
     console.log(error);
@@ -206,6 +201,7 @@ export class SendMosaicConfirmationPage {
               
               
   }
+
   showSuccessMessage() {
 
     this.displaySuccessMessage = true;
@@ -240,16 +236,16 @@ export class SendMosaicConfirmationPage {
   /**
    * User checking if it can do the send transaction.
    */
-  private _allowedToSendTx() {
-    // TODO: do some checking before send transaction
+  // private _allowedToSendTx() {
+  //   // TODO: do some checking before send transaction
     
-    if (this.credentials.password) {
-      const myPassword = new Password(this.credentials.password);
-      console.log('myPassword', myPassword)
-        return true;
-    }
-    return false;
-  }
+  //   if (this.credentials.password) {
+  //     const myPassword = new Password(this.credentials.password);
+  //     console.log('myPassword', myPassword)
+  //       return true;
+  //   }
+  //   return false;
+  // }
 
   dismiss() {
     this.viewCtrl.dismiss();

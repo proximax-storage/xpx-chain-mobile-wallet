@@ -87,7 +87,7 @@
             <ion-item>
               <img item-left logo-small [src]="App.USER">
               <h2 ion-text color="dark" *ngIf="data.senderName">{{ data.senderName }}</h2>
-              <p small ion-text color="dark" [attr.text-wrap]="!data.senderName ? true : null">{{ data.senderAddress.address }}</p>
+              <p small ion-text color="dark" [attr.text-wrap]="!data.senderName ? true : null">{{ data.currentWallet.account.address.address }}</p>
             </ion-item>
           </ion-card>
 

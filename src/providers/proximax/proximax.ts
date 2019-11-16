@@ -128,52 +128,20 @@ export class ProximaxProvider {
     return SimpleWallet.create(name, password, this.networkType);
   }
 
-  /**
-   * 
-   * @param password 
-   * @param encryptedKey 
-   * @param iv 
-   */
   decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
-    try {
-      if (iv !== '' && password && encryptedKey !== '') {
-        const common: commonInterface = {
-          password: password.value,
-          privateKey: ''
-        };
+    const common: commonInterface = {
+      password: password.value,
+      privateKey: ''
+    };
 
-        const account: walletInterface = {
-          encrypted: encryptedKey,
-          iv: iv,
-        };
+    const wallet: { encrypted: string; iv: string; } = {
+      encrypted: encryptedKey,
+      iv: iv,
+    };
 
-        if (!crypto.passwordToPrivatekey(common, account, 'pass:bip32')) {
-          this.alertProvider.showMessage('Invalid password');
-          return null;
-        }
-
-        if (common) {
-          return common.privateKey;;
-        }
-
-        return null;
-      } else {
-        this.alertProvider.showMessage('You do not have a valid account selected.');
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
-
-    
-
-
-    
-
-    // Crypto.passwordToPrivateKey(common, wallet, 'pass:bip32');
-    // return common.privateKey;
+    crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+    return common.privateKey;
   }
-  
 
 
   /**
