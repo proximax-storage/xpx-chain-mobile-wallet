@@ -9,7 +9,6 @@ import {
 } from "ionic-angular";
 import { App } from "../../../../../providers/app/app";
 import { SimpleWallet as NISWallet } from "nem-library";
-import { AuthProvider } from "../../../../../providers/auth/auth";
 import { SimpleWallet } from "tsjs-xpx-chain-sdk";
 
 /**
@@ -81,7 +80,7 @@ export class Nis1WalletListPage {
   showWalletInfoPage(nemWallet: NISWallet, catapultWallet: SimpleWallet) {
 
 
-    this.walletProvider.getAccount(catapultWallet).subscribe(account=> {
+    this.walletProvider.getAccount(catapultWallet).subscribe(account => {
       const page = "WalletInfoPage";
       this.showModal(page, {
         nemWallet: nemWallet,
@@ -89,6 +88,6 @@ export class Nis1WalletListPage {
         privateKey: account.privateKey
       });
     })
-    
+
   }
 }

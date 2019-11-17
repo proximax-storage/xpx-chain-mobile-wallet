@@ -100,6 +100,8 @@ export class WalletAddPrivateKeyPage {
         this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
       }
     } catch (error) {
+      console.log(error);
+      
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
     }
   }
