@@ -90,8 +90,9 @@ export class WalletProvider {
    * @memberof WalletProvider
    */
   async getAccountsNis1() {
-    const wallet = await this.storage.get('wallets');
-    console.log('all wallets', wallet);
+    const selectedWallet: WalletInterface = await this.storage.get('selectedWallet');
+    console.log('selectedWallet', selectedWallet);
+    return (selectedWallet && selectedWallet.nis1Accounts) ? selectedWallet.nis1Accounts : [];
   }
 
   /**
@@ -194,7 +195,7 @@ export class WalletProvider {
     );
 
     if (nis1Account) {
-      const publicAccount = this.nemProvider.createAccountPrivateKey(
+      const publicAccountNis1 = this.nemProvider.createAccountPrivateKey(
         this.proximaxProvider.decryptPrivateKey(
           password,
           catapultAccount.encryptedPrivateKey.encryptedKey,
@@ -202,7 +203,13 @@ export class WalletProvider {
         ).toUpperCase()
       );
 
-      const accountnis1 = { account: nis1Account, walletColor: walletColor, publicAccount: publicAccount };
+      const accountnis1 = { 
+        account: nis1Account,
+        walletColor: walletColor,
+        publicAccount: publicAccountNis1,
+        publicAccountCatapult: publicAccount
+      };
+
       nis1Accounts.push(accountnis1);
       walletSelected['nis1Accounts'] = nis1Accounts;
     }
@@ -304,9 +311,7 @@ export class WalletProvider {
   public getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
-      this.authProvider
-        .getPassword()
-        .then(password => {
+      this.authProvider.getPassword().then(password => {
           // Get user's password
           const myPassword = new Password(password);
           // Convert current wallet to SimpleWallet
@@ -314,7 +319,6 @@ export class WalletProvider {
           // Unlock wallet to get an account using user's password 
           const account = myWallet.open(myPassword);
           observer.next(account);
-
         });
     });
   }
@@ -463,36 +467,6 @@ export class WalletProvider {
   }
 
   /**
- * Get loaded wallets from localStorage
- */
-  public getLocalWalletsNis(): Promise<any> {
-    return this.getWalletSelected().then(dataAccountSelected => {
-      return this.storage.get('walletsNis1').then(wallets => {
-        let _wallets = wallets ? wallets : {};
-        console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
-        const WALLETS = _wallets[dataAccountSelected.user] ? _wallets[dataAccountSelected.user] : [];
-
-        if (wallets) {
-          const walletsMap = WALLETS.map(walletFile => {
-            if (walletFile.name) {
-              return
-              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            } else {
-              return { wallet: <SimpleWallet>(walletFile.wallet), walletNis1: <SimpleWallet>(walletFile.walletNis1), walletColor: walletFile.walletColor };
-            }
-          });
-
-          _wallets[dataAccountSelected.user] = walletsMap;
-        } else {
-          _wallets[dataAccountSelected.user] = [];
-        }
-
-        return _wallets;
-      });
-    });
-  }
-
-  /**
    * Get loaded wallets from localStorage
    */
 
@@ -564,5 +538,6 @@ export interface CatapultsAccountsInterface {
 export interface NIS1AccountsInterface {
   account: SimpleWalletNIS1,
   publicAccount: PublicAccountNIS1,
+  publicAccountCatapult: PublicAccount,
   walletColor: string
 }

@@ -37,25 +37,25 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    const _tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
-    this.tx = _tx;
-
+    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
     console.log('this.tx', this.tx);
-    
+    console.log('this.mosaics', this.mosaics);
     if (this.tx.mosaics.length > 0) {
       this.MOSAIC_INFO = this.mosaics.find(mosaic => {
-        return mosaic.hex == _tx.mosaics[0].id.toHex()
+        console.log(mosaic);
+        return mosaic.hex == this.tx.mosaics[0].id.toHex()
       });
-      this.AMOUNT = this.proximaxProvider.amountFormatter(_tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
+
+      console.log('this.MOSAIC_INFO', this.MOSAIC_INFO);
+      
+      this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
     } else {
       this.AMOUNT = 0
     }
+
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
     console.log('this.MOSAIC_INFO', this.MOSAIC_INFO);
     console.log('this.LOGO', this.LOGO);
-
-
-
   }
 }

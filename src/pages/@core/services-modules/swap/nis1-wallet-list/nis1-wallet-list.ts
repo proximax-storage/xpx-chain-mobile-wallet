@@ -1,5 +1,5 @@
 import { ModalController } from "ionic-angular";
-import { WalletProvider } from "./../../../../../providers/wallet/wallet";
+import { WalletProvider, NIS1AccountsInterface } from "./../../../../../providers/wallet/wallet";
 import { Component } from "@angular/core";
 import {
   IonicPage,
@@ -9,7 +9,7 @@ import {
 } from "ionic-angular";
 import { App } from "../../../../../providers/app/app";
 import { SimpleWallet as NISWallet } from "nem-library";
-import { SimpleWallet } from "tsjs-xpx-chain-sdk";
+import { SimpleWallet, PublicAccount } from "tsjs-xpx-chain-sdk";
 
 /**
  * Generated class for the Nis1WalletListPage page.
@@ -24,7 +24,9 @@ import { SimpleWallet } from "tsjs-xpx-chain-sdk";
   templateUrl: "nis1-wallet-list.html"
 })
 export class Nis1WalletListPage {
+
   App = App;
+  accountsNIS1: NIS1AccountsInterface[] = null;
   wallets: any;
 
   constructor(
@@ -37,22 +39,33 @@ export class Nis1WalletListPage {
     this.getWallet();
   }
 
-  getWallet() {
-    this.walletProvider.getLocalWalletsNis().then(wallets => {
-      // this.walletProvider.getac().then(dataAccountSelected => {
-      //   this.wallets = wallets[dataAccountSelected.user];
-      // });
-    });
-  }
+  ionViewDidLoad() {}
 
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad Nis1WalletListPage");
-  }
-
+  /**
+   *
+   *
+   * @memberof Nis1WalletListPage
+   */
   dismiss() {
     this.viewCtrl.dismiss();
   }
 
+  /**
+   *
+   *
+   * @memberof Nis1WalletListPage
+   */
+  getWallet() {
+    this.walletProvider.getAccountsNis1().then(accountsNis1 => {
+      this.accountsNIS1 = accountsNis1;
+    });
+  }
+
+  /**
+   *
+   *
+   * @memberof Nis1WalletListPage
+   */
   importNis1Wallet() {
     const page = "ImportWalletPage";
     this.showModal(page, {
@@ -61,6 +74,24 @@ export class Nis1WalletListPage {
     });
   }
 
+
+  /**
+   *
+   *
+   * @param {NIS1AccountsInterface} nis1Account
+   * @memberof Nis1WalletListPage
+   */
+  openAccountNis1(nis1Account: NIS1AccountsInterface) {
+    this.showWalletInfoPage(nis1Account.account, nis1Account.publicAccountCatapult);
+  }
+
+  /**
+   *
+   *
+   * @param {*} page
+   * @param {*} params
+   * @memberof Nis1WalletListPage
+   */
   showModal(page, params) {
     const modal = this.modalCtrl.create(
       page,
@@ -73,21 +104,21 @@ export class Nis1WalletListPage {
     modal.present();
   }
 
-  openWalletNis1(nemWallet) {
-    this.showWalletInfoPage(nemWallet.walletNis1, nemWallet.wallet);
-  }
-
-  showWalletInfoPage(nemWallet: NISWallet, catapultWallet: SimpleWallet) {
-
-
-    this.walletProvider.getAccount(catapultWallet).subscribe(account => {
+  /**
+   *
+   *
+   * @param {NISWallet} nemWallet
+   * @param {SimpleWallet} catapultWallet
+   * @memberof Nis1WalletListPage
+   */
+  showWalletInfoPage(nemWallet: NISWallet, publicAccountCatapult: PublicAccount) {
+    /*this.walletProvider.getAccount(catapultWallet).subscribe(account => {
       const page = "WalletInfoPage";
       this.showModal(page, {
         nemWallet: nemWallet,
         catapultWallet: catapultWallet,
         privateKey: account.privateKey
       });
-    })
-
+    })*/
   }
 }
