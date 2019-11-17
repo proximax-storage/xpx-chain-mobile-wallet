@@ -54,7 +54,7 @@ export class TransactionDetailPage {
 
     this.mosaics = payload.mosaics;
     this.createForm()
-    this.walletProvider.getSelectedWallet().then(selectedAccount => {
+    this.walletProvider.getAccountSelected().then(selectedAccount => {
       this.currentAccount = selectedAccount;
     });
   }
