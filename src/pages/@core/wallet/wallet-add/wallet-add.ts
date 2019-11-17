@@ -34,6 +34,8 @@ export class WalletAddPage {
   tablet: boolean = false;
   configurationForm: ConfigurationForm = {};
   catapultWallet: any;
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
 
   constructor(
     public navCtrl: NavController,
@@ -149,6 +151,19 @@ export class WalletAddPage {
     }
   }
 
+    /**
+   *
+   *
+   * @param {Event} e
+   * @memberof WalletAddPrivateKeyPage
+   */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
+  }
+
+  
   updateName() {
     let name = this.formGroup.value.name
     // console.log("LOG: WalletAddPage -> updateName -> name", name);
