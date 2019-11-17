@@ -122,7 +122,9 @@ export class WalletDetailsPage {
     const encryptedKey = this.selectedAccount.account.encryptedPrivateKey.encryptedKey;
     this.privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
 
-    if (this.privateKey) {
+    console.log('this.privateKey', this.privateKey);
+    
+    if (this.privateKey && this.privateKey !== '' && (this.privateKey.length === 64 || this.privateKey.length === 66) ) {
       if (val === 1) {
         this.pass = false;
         this.export = true
@@ -156,7 +158,7 @@ export class WalletDetailsPage {
 
   showWalletUpdate() {
     let page = "WalletUpdatePage";
-    this.showModal(page, { wallet: this.selectedAccount });
+    this.showModal(page, { wallet: this.selectedAccount,  totalBalance: this.totalBalance});
   }
 
   showWalletDelete() {

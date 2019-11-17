@@ -93,10 +93,15 @@
           </ion-item>
 
           <ion-item transparent padding>
-            <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
-            <ion-input formControlName="password" type="password" autocapitalize="none" placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}">
-            </ion-input>
-          </ion-item>
+              <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+              <ion-input formControlName="password" [type]="passwordType"
+                placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+  
+              <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+                <ion-icon item-right color="dark" [name]="passwordIcon">
+                </ion-icon>
+              </button>
+            </ion-item>
           <br>
           <br>
 

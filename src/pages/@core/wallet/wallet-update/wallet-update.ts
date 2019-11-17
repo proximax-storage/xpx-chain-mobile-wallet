@@ -68,12 +68,12 @@ export class WalletUpdatePage {
     console.log(this.navParams.get('wallet'));
     this.selectedWallet = this.navParams.get('wallet');
     this.walletColor = this.selectedWallet.walletColor;
-    this.walletName = this.selectedWallet.name;
-    this.previousWalletName = this.selectedWallet.name;
-    this.walletAddress = this.selectedWallet.address.plain()
-    this.walletTotal = this.selectedWallet.total;
+    this.walletName = this.selectedWallet['account'].name;
+    this.previousWalletName = this.selectedWallet['account'].name;
+    this.walletAddress = this.selectedWallet['account'].address.address
+    this.walletTotal = this.navParams.get('totalBalance');
 
-    console.log("Total", this.walletTotal);
+    console.log("Total", this.navParams.get('totalBalance'));
 
     this.formGroup = this.formBuilder.group({
       name: [
