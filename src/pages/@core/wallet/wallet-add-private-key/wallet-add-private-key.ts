@@ -28,14 +28,14 @@ import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 export class WalletAddPrivateKeyPage {
 
   checkSwap = false;
-  catapultWallet: SimpleWallet;
-  nemWallet: SimpleWalletNEM;
+  catapultAccount: SimpleWallet;
+  nis1Account: SimpleWalletNEM;
   App = App;
   formGroup: FormGroup;
 
   PASSWORD: string;
 
-  walletColor: string = "wallet-1";
+  accountColor: string = "wallet-1";
   walletName: string = "Primary";
 
   tablet: boolean = false;
@@ -59,7 +59,7 @@ export class WalletAddPrivateKeyPage {
     private modalCtrl: ModalController,
     private sharedService: SharedService
   ) {
-    this.walletColor = 'wallet-1';
+    this.accountColor = 'wallet-1';
     this.configurationForm = this.sharedService.configurationForm;
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.createForm();
@@ -76,14 +76,12 @@ export class WalletAddPrivateKeyPage {
     try {
       const decrypted = await this.authProvider.decryptAccountUser(form.password);
       if (decrypted) {
-        this.catapultWallet = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
-        const existAccount = await this.walletProvider.validateExistAccount(this.catapultWallet);
+        this.catapultAccount = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
+        const existAccount = await this.walletProvider.validateExistAccount(this.catapultAccount);
         if (!existAccount) {
-          // this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
-
-          this.nemWallet = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
-          this.walletProvider.storeWalletCatapult(this.catapultWallet, this.nemWallet, this.walletColor, new Password(form.password)).then(_ => {
-            this.goToBackup(this.catapultWallet, form.privateKey);
+          this.nis1Account = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
+          this.walletProvider.storeWalletCatapult(this.catapultAccount, this.nis1Account, this.accountColor, new Password(form.password)).then(_ => {
+            this.goToBackup(this.catapultAccount, form.privateKey);
           });
 
           const nis1Account = this.nem.createAccountPrivateKey(form.privateKey);
@@ -95,18 +93,6 @@ export class WalletAddPrivateKeyPage {
               }
             });
           }
-
-          /*this.nem.getOwnedMosaics(this.nemWallet.address).subscribe(mosacis => {
-            for (let index = 0; index < mosacis.length; index++) {
-              const element = mosacis[index];
-              if (element.assetId.name === 'xpx' && element.assetId.namespaceId === 'prx') {
-                this.walletProvider.storeWalletNis1(this.catapultWallet, this.nemWallet, this.walletColor).then(_ => {
-                  this.showSwap();
-                });
-              }
-            }
-          });*/
-          // });
         } else {
           this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
         }
@@ -157,8 +143,8 @@ export class WalletAddPrivateKeyPage {
    * @param {string} color
    * @memberof WalletAddPrivateKeyPage
    */
-  changeWalletColor(color: string) {
-    this.walletColor = color;
+  changeAccountColor(color: string) {
+    this.accountColor = color;
   }
 
   /**
@@ -242,7 +228,7 @@ export class WalletAddPrivateKeyPage {
         },
         {
           text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
-          handler: () => this.showWalletInfoPage(this.nemWallet, this.catapultWallet, data)
+          handler: () => this.showWalletInfoPage(this.nis1Account, this.catapultAccount, data)
         }
       ]
     });
@@ -252,16 +238,16 @@ export class WalletAddPrivateKeyPage {
   /**
    *
    *
-   * @param {SimpleWalletNEM} nemWallet
-   * @param {SimpleWallet} catapultWallet
+   * @param {SimpleWalletNEM} nis1Account
+   * @param {SimpleWallet} catapultAccount
    * @param {AccountsInfoNis1Interface} data
    * @memberof WalletAddPrivateKeyPage
    */
-  showWalletInfoPage(nemWallet: SimpleWalletNEM, catapultWallet: SimpleWallet, data: AccountsInfoNis1Interface) {
+  showWalletInfoPage(nis1Account: SimpleWalletNEM, catapultAccount: SimpleWallet, data: AccountsInfoNis1Interface) {
     const page = "WalletInfoPage"
     this.showModal(page, {
-      nemWallet: nemWallet,
-      catapultWallet: catapultWallet,
+      nis1Account: nis1Account,
+      catapultAccount: catapultAccount,
       accountInfoNis1: data
     });
   }

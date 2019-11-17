@@ -349,7 +349,6 @@ export class HomePage {
     }
     await this.walletProvider.setSelectedWallet(wallet).then(async () => {
       await this.init();
-
     });
   }
 

@@ -33,17 +33,16 @@ export class Nis1WalletListPage {
     public navParams: NavParams,
     private viewCtrl: ViewController,
     private walletProvider: WalletProvider,
-    private modalCtrl: ModalController,
-    private authProvider: AuthProvider
+    private modalCtrl: ModalController
   ) {
     this.getWallet();
   }
 
   getWallet() {
     this.walletProvider.getLocalWalletsNis().then(wallets => {
-      this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-        this.wallets = wallets[dataAccountSelected.user];
-      });
+      // this.walletProvider.getac().then(dataAccountSelected => {
+      //   this.wallets = wallets[dataAccountSelected.user];
+      // });
     });
   }
 
