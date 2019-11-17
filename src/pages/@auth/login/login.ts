@@ -8,6 +8,7 @@ import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../providers/haptic/haptic';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { WalletProvider } from '../../../providers/wallet/wallet';
 
 
 /**
@@ -29,6 +30,7 @@ export class LoginPage implements OnInit {
 
 
   constructor(
+    private walletProvider: WalletProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
@@ -68,7 +70,7 @@ export class LoginPage implements OnInit {
       const decrypted = await this.authProvider.decryptAccountUser(form.password, form.user);
       if (decrypted) {
         this.haptic.notification({ type: 'success' });
-        this.authProvider.setSelectedAccount(decrypted);
+        this.walletProvider.setSelectedAccount(decrypted);
         this.gotoHome();
       } else {
         this.utils.showInsetModal('TryAgainPage', {}, 'small');

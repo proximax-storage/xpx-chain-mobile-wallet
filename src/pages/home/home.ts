@@ -14,7 +14,7 @@ import {
 } from "ionic-angular";
 
 import { App as AppConfig } from "../../providers/app/app";
-import { WalletProvider } from "../../providers/wallet/wallet";
+import { WalletProvider, CatapultsAccountsInterface } from "../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../providers/utilities/utilities";
 import { AlertProvider } from "../../providers/alert/alert";
 import { HapticProvider } from "../../providers/haptic/haptic";
@@ -27,6 +27,7 @@ import {
   TransactionType,
   Transaction,
   AggregateTransaction,
+  PublicAccount,
 } from "tsjs-xpx-chain-sdk";
 import { MosaicsProvider } from "../../providers/mosaics/mosaics";
 import { TransactionsProvider } from "../../providers/transactions/transactions";
@@ -62,7 +63,7 @@ export class HomePage {
   AppConfig = AppConfig;
 
   mosaics: Array<DefaultMosaic> = [];
-  wallets: Array<SimpleWallet> = [];
+  accounts: Array<CatapultsAccountsInterface> = [];
 
   fakeList: Array<any>;
   data: any[] = [];
@@ -80,8 +81,8 @@ export class HomePage {
 
   tablet: boolean;
 
-  selectedWallet: any;
-  selectedAccount: Account;
+  selectedWallet: CatapultsAccountsInterface;
+  selectedAccount: CatapultsAccountsInterface;
   accountInfo: AccountInfo;
 
   @ViewChild(Nav) navChild: Nav;
@@ -137,6 +138,11 @@ export class HomePage {
     this.init();
   }
 
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
   async init() {
     this.fakeList = [{}, {}];
     this.totalWalletBalance = 0;
@@ -152,98 +158,59 @@ export class HomePage {
     };
 
     let loader = this.loadingCtrl.create(options);
-
     loader.present();
     this.totalWalletBalance = 0;
-
     this.showLoaders();
-
-    this.walletProvider.getWallets().then(wallets => {
-
-      this.wallets = wallets;
-      // console.log(
-      //   "1. LOG: HomePage -> ionViewWillEnter -> this.wallets",
-      //   this.wallets
-      // );
-
-      if (this.wallets.length > 0) {
-        this.walletProvider.getSelectedWallet().then(selectedWallet => {
-
-          if (selectedWallet) {
-            if (Array.isArray(selectedWallet)) {
-              // console.log(
-              //   "LOG: HomePage -> init -> selectedWallet",
-              //   JSON.stringify(selectedWallet, null, 2)
-              // );
-              this.selectedWallet = selectedWallet
-                ? selectedWallet[0]
-                : wallets[0];
-              // console.log(
-              //   "3. LOG: HomePage -> ionViewWillEnter -> myWallet",
-              //   this.selectedWallet[0]
-              // );
-            } else {
-              this.selectedWallet = selectedWallet
-                ? selectedWallet
-                : wallets[0];
-              // console.log(
-              //   "3. LOG: HomePage -> ionViewWillEnter -> myWallet",
-              //   this.selectedWallet
-              // );
-            }
+    this.walletProvider.getAccountsCatapult().then(catapulAccounts => {
+      console.log('catapulAccountscatapulAccountscatapulAccounts', catapulAccounts);
+      this.accounts = catapulAccounts;
+      if (this.accounts.length > 0) {
+        this.walletProvider.getAccountSelected().then(selectedAccount => {
+          if (selectedAccount) {
+            this.selectedAccount = selectedAccount;
           } else {
-            this.selectedWallet = wallets[0];
-            // console.log(
-            //   "LOG: HomePage -> init -> this.selectedWallet",
-            //   JSON.stringify(this.selectedWallet, null, 2)
-            // );
+            this.selectedAccount = catapulAccounts[0];
           }
 
           // Slide to selected wallet
-          this.wallets.forEach((wallet, index) => {
-            if (this.selectedWallet.account.name === wallet['account'].name) {
+          this.accounts.forEach((acc, index) => {
+            if (this.selectedAccount.account.name === acc.account.name) {
               this.slides.slideTo(index);
             }
           });
-          this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
-          console.log(
-            "4. LOG: HomePage -> ionViewWillEnter -> account",
-            this.address
-          );
+
+          this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
+          console.log("4. LOG: HomePage -> ionViewWillEnter -> account", this.address);
           try {
-            this.mosaicsProvider
-              .getMosaics(this.address)
-              .subscribe(mosaics => {
-                // console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
-                // console.log("6. LOG: HomePage -> init -> _myMergedMosaics");
-                this.mosaics = mosaics;
+            this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
+              // console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
+              // console.log("6. LOG: HomePage -> init -> _myMergedMosaics");
+              this.mosaics = mosaics;
 
-                // Compute wallet balance in USD
+              // Compute wallet balance in USD
+              // console.log(
+              //   "7. LOG: HomePage -> computeTotalBalance -> mosaics",
+              //   mosaics
+              // );
+              this.mosaicsProvider.computeTotalBalance(mosaics).then(total => {
+                this.totalWalletBalance = total as number;
+                // console.log(this.totalWalletBalance);
                 // console.log(
-                //   "7. LOG: HomePage -> computeTotalBalance -> mosaics",
-                //   mosaics
+                //   "SIRIUS CHAIN WALLET: HomePage -> init -> total",
+                //   total
                 // );
-                this.mosaicsProvider
-                  .computeTotalBalance(mosaics)
-                  .then(total => {
-                    this.totalWalletBalance = total as number;
-                    // console.log(this.totalWalletBalance);
-                    // console.log(
-                    //   "SIRIUS CHAIN WALLET: HomePage -> init -> total",
-                    //   total
-                    // );
-                    // loader.dismiss();
-                  });
-
-                // Show Transactions
-                // console.log(
-                //   "8. LOG: HomePage -> getTransactions -> selectedWallet",
-                //   this.selectedWallet
-                // );
-                this.getTransactions(this.selectedWallet);
-                this.getTransactionsUnconfirmed(this.selectedWallet);
-                this.getTransactionsAggregate(this.selectedWallet);
+                // loader.dismiss();
               });
+
+              // Show Transactions
+              // console.log(
+              //   "8. LOG: HomePage -> getTransactions -> selectedWallet",
+              //   this.selectedWallet
+              // );
+              this.getTransactions(this.selectedAccount.publicAccount);
+              this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
+              this.getTransactionsAggregate(this.selectedAccount.publicAccount);
+            });
           } catch (error) {
             // this.hideLoaders();
             this.showEmptyMessage();
@@ -281,82 +248,74 @@ export class HomePage {
     this.confirmedTransactions = null;
   }
 
-  getTransactions(account: Account) {
+  getTransactions(publicAccount: PublicAccount) {
     this.isLoading = true;
-    this.transactionsProvider
-      .getAllTransactionsFromAccount(account.publicAccount)
-      .subscribe(transactions => {
-        if (transactions) {
-          const transferTransactions: Array<Transaction> = transactions.filter(
-            tx => tx.type == TransactionType.TRANSFER
-          );
-          this.confirmedTransactions = transferTransactions;
-          // console.log(
-          //   "this.confirmedTransactions ",
-          //   this.confirmedTransactions
-          // );
-          this.showEmptyTransaction = false;
-        } else {
-          this.showEmptyTransaction = true;
-        }
-      });
+    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
+      if (transactions) {
+        const transferTransactions: Array<Transaction> = transactions.filter(
+          tx => tx.type == TransactionType.TRANSFER
+        );
+        this.confirmedTransactions = transferTransactions;
+        // console.log(
+        //   "this.confirmedTransactions ",
+        //   this.confirmedTransactions
+        // );
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true;
+      }
+    });
     this.isLoading = false;
   }
 
-  getTransactionsUnconfirmed(account: Account) {
+  getTransactionsUnconfirmed(publicAccount: PublicAccount) {
     this.isLoading = true;
-    this.transactionsProvider
-      .getAllTransactionsUnconfirmed(account.publicAccount)
-      .subscribe(transactions => {
-        if (transactions) {
-          const transferTransactionsUnconfirmed: Array<
-            Transaction
-          > = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
-          this.unconfirmedTransactions = transferTransactionsUnconfirmed;
-          // console.log(
-          //   "this.unconfirmedTransactions ",
-          //   this.unconfirmedTransactions
-          // );
-          this.showEmptyTransaction = false;
-        } else {
-          this.showEmptyTransaction = true;
-        }
-      });
+    this.transactionsProvider.getAllTransactionsUnconfirmed(publicAccount).subscribe(transactions => {
+      if (transactions) {
+        const transferTransactionsUnconfirmed: Array<
+          Transaction
+        > = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
+        this.unconfirmedTransactions = transferTransactionsUnconfirmed;
+        // console.log(
+        //   "this.unconfirmedTransactions ",
+        //   this.unconfirmedTransactions
+        // );
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true;
+      }
+    });
     this.isLoading = false;
   }
 
-  getTransactionsAggregate(account: Account) {
+  getTransactionsAggregate(publicAccount: PublicAccount) {
     this.isLoading = true;
-    this.transactionsProvider
-      .getAllTransactionsAggregate(account.publicAccount)
-      .subscribe(transactions => {
-        // console.log('TCL: HomePage -> getTransactionsAggregate -> aggregateTransactions', transactions);
-        if (transactions) {
-          const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
-          this.aggregateTransactions = transferTransactionsAggregate;
-          // console.log("this.aggregateTransactions ", this.aggregateTransactions);
-          this.showEmptyTransaction = false;
-        } else {
-          this.showEmptyTransaction = true;
-        }
-      });
+    this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
+      // console.log('TCL: HomePage -> getTransactionsAggregate -> aggregateTransactions', transactions);
+      if (transactions) {
+        const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
+        this.aggregateTransactions = transferTransactionsAggregate;
+        // console.log("this.aggregateTransactions ", this.aggregateTransactions);
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true;
+      }
+    });
     this.isLoading = false;
   }
 
-  async onWalletSelect(wallet) {
-    if (this.selectedWallet.account === wallet.account) {
-      this.selectedWallet = wallet;
+  async onWalletSelect(selectedAccount: CatapultsAccountsInterface) {
+    if (this.selectedAccount.account === selectedAccount.account) {
+      this.selectedAccount = selectedAccount;
     }
-    await this.walletProvider.setSelectedWallet(wallet).then(async () => {
+    await this.walletProvider.setSelectedAccount(selectedAccount).then(async () => {
       await this.init();
-
     });
   }
 
-  async showWalletDetails(wallet) {
-    this.selectedWallet = wallet;
+  async showWalletDetails(selectedAccount: CatapultsAccountsInterface) {
+    this.selectedAccount = selectedAccount;
     let page = "TransactionListPage";
-    let selectedAccount = this.selectedWallet;
     let transactions = this.confirmedTransactions;
     let aggregateTransactions = this.aggregateTransactions;
     let total = this.totalWalletBalance;
@@ -517,10 +476,10 @@ export class HomePage {
 
   slideChanged() {
     let currentIndex = this.slides.getActiveIndex();
-    if (this.wallets.length != currentIndex) {
-      this.onWalletSelect(this.wallets[currentIndex]);
-      console.log('this.wallets', this.wallets);
-      
+    if (this.accounts.length != currentIndex) {
+      this.onWalletSelect(this.accounts[currentIndex]);
+      console.log('this.accounts', this.accounts);
+
       this.haptic.selection();
     } else {
       this.mosaics = null;
@@ -534,24 +493,24 @@ export class HomePage {
 
   showWalletList() {
     console.log('aqio log');
-    
+
     this.haptic.impact({ type: "heavy" });
     const page = "WalletListPage";
     this.utils
-      .showInsetModal(page, { wallets: this.wallets })
+      .showInsetModal(page, { wallets: this.accounts })
       .subscribe(data => {
         console.log(
           "SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data",
           data
         );
-        const wallet = data.account;
+        const account = data.account;
         const index = data.index;
-        console.log('wallet',wallet);
-        console.log('index',index);
-        
-        if (wallet) {
+        console.log('wallet', account);
+        console.log('index', index);
+
+        if (account) {
           this.slides.slideTo(index);
-          this.onWalletSelect(wallet);
+          this.onWalletSelect(account);
         }
       });
   }

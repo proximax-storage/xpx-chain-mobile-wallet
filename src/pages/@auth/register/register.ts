@@ -7,6 +7,7 @@ import { HapticProvider } from '../../../providers/haptic/haptic';
 import { AlertProvider } from '../../../providers/alert/alert';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Keyboard } from '@ionic-native/keyboard';
+import { WalletProvider } from '../../../providers/wallet/wallet';
 
 /**
  * Generated class for the RegisterPage page.
@@ -30,6 +31,7 @@ export class RegisterPage implements OnInit {
   confirmPasswordIcon: string = "ios-eye-outline";
 
   constructor(
+    private walletProvider: WalletProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
@@ -88,7 +90,7 @@ export class RegisterPage implements OnInit {
     if (this.formRegisterUser.valid) {
       const user = this.formRegisterUser.get("user").value;
       const password = this.formRegisterUser.get("password").value;
-      this.authProvider.createUser(user, password).then(status => {
+      this.walletProvider.createUser(user, password).then(status => {
         if (status === "duplicate") {
           this.alertProvider.showMessage("Account already exist.");
           this.haptic.notification({ type: 'error' });

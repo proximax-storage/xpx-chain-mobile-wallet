@@ -112,29 +112,26 @@ export class WalletUpdatePage {
         });
     } else {
       this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
-				console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
+        console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
         if (isExist) {
-        this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
+          this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
         } else {
-          this.walletProvider
-            .updateWalletName(this.selectedWallet, form.name, this.walletColor)
-            .then(selectedWallet => {
-              console.log(selectedWallet);
-              return this.walletProvider.setSelectedWallet(selectedWallet.wallet);
-            })
-            .then(selectedWallet => {
-              this.haptic.notification({ type: 'success' });
-              this.goBack();
-            });
+          this.walletProvider.updateWalletName(this.selectedWallet, form.name, this.walletColor).then(selectedWallet => {
+            console.log(selectedWallet);
+            return this.walletProvider.setSelectedWallet(selectedWallet.wallet);
+          }).then(selectedWallet => {
+            this.haptic.notification({ type: 'success' });
+            this.goBack();
+          });
         }
       });
     }
   }
 
   updateName() {
-		let name = this.formGroup.value.name
-		console.log("LOG: WalletAddPage -> updateName -> name", name);
-    if(name) {
+    let name = this.formGroup.value.name
+    console.log("LOG: WalletAddPage -> updateName -> name", name);
+    if (name) {
       this.walletName = name;
     } else {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;

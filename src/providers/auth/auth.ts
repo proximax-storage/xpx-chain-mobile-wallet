@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import findIndex from 'lodash/findIndex';
 import crypto from 'crypto';
-import { Convert, SimpleWallet, PublicAccount } from 'tsjs-xpx-chain-sdk';
-import { SimpleWallet as SimpleWalletNIS1, PublicAccount as PublicAccountNIS1 } from 'nem-library';
+import { Convert } from 'tsjs-xpx-chain-sdk';
 import CryptoJS from 'crypto-js';
 
 
@@ -21,70 +20,25 @@ export class AuthProvider {
 
 
   /**
-   * RJ
-   *
-   * @param {string} user
-   * @param {string} password
-   * @returns
-   * @memberof AuthProvider
-   */
-  async createUser(user: string, password: string) {
-    const data = await this.storage.get('accounts');
-    const accounts: AccountInterface[] = data ? data : [];
-    let foundAccount = accounts.filter((account: any) => {
-      return account.user.includes(user);
-    });
-
-    if (foundAccount.length > 0) {
-      return "duplicate";
-    } else {
-      var encrypted = this.encryptAccount(password);
-      const account = {
-        user: user.toLowerCase(),
-        encrypted: encrypted.toString(),
-        catapultAccounts: null,
-        nis1Accounts: null
-      };
-
-      this.setSelectedAccount(account);
-      accounts.push(account);
-      return this.storage.set('accounts', accounts);
-    }
-  }
-
-  /**
-   *
-   *
-   * @returns
-   * @memberof AuthProvider
-   */
-  async getDataAccountSelected(): Promise<AccountInterface> {
-    const data = await this.storage.get('selectedAccount');
-    const result = data ? data : null;
-    return result;
-  }
-
-
-  /**
-   * RJ
+   * 
    *
    * @param {string} password
    * @memberof AuthProvider
    */
-  async decryptAccountUser(p: string, nameAccount?: string) {
+  async decryptAccountUser(p: string, nameAccountUser?: string) {
     try {
-      let account = null;
-      if (nameAccount) {
-        const accounts = await this.storage.get('accounts');
-        account = accounts.find((x: any) => x.user === nameAccount);
+      let wallet = null;
+      if (nameAccountUser) {
+        const wallets = await this.storage.get('wallets');
+        wallet = wallets.find((x: any) => x.user === nameAccountUser);
       } else {
-        account = await this.storage.get('selectedAccount');
+        wallet = await this.storage.get('selectedWallet');
       }
 
-      if (account && account.encrypted) {
-        const db = CryptoJS.AES.decrypt(account.encrypted, CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
+      if (wallet && wallet.encrypted) {
+        const db = CryptoJS.AES.decrypt(wallet.encrypted, CryptoJS.enc.Hex.stringify(this.ec(p, 20)));
         const d = db.toString(CryptoJS.enc.Utf8);
-        return (d !== '' && d.length === 64 && Convert.isHexString(d)) ? account : null;
+        return (d !== '' && d.length === 64 && Convert.isHexString(d)) ? wallet : null;
       }
 
       return null;
@@ -95,7 +49,7 @@ export class AuthProvider {
 
 
   /**
-  * RJ
+  * 
   *
   * @returns
   * @memberof AuthProvider
@@ -126,35 +80,10 @@ export class AuthProvider {
   */
   logout() {
     this.storage.set('isLoggedIn', false);
-    this.storage.set('selectedAccount', null);
+    this.storage.set('selectedWallet', null);
   }
 
-  /**
-   * RJ
-   *
-   * @param {string} user
-   * @param {string} password
-   * @returns {Promise<any>}
-   * @memberof AuthProvider
-   */
-  setSelectedAccount(account: AccountInterface): Promise<any> {
-    this.storage.set('isAccountCreated', true);
-    this.storage.set('isLoggedIn', true);
-    this.storage.set('selectedAccount', account);
-    return;
-  }
-
-  /**
-   *
-   *
-   * @param {*} wallet
-   * @returns {Promise<any>}
-   * @memberof AuthProvider
-   */
-  setSelectedWallet(wallet: { account: SimpleWallet; walletColor: string; publicAccount: PublicAccount; }): Promise<any> {
-    return this.storage.set('selectedWallet', wallet);
-  }
-
+  
 
 
   // -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -226,17 +155,3 @@ export class AuthProvider {
   }
 }
 
-export interface AccountInterface {
-  user: string;
-  encrypted: string;
-  catapultAccounts: {
-    account: SimpleWallet,
-    publicAccount: PublicAccount,
-    walletColor: string
-  }[],
-  nis1Accounts: {
-    account: SimpleWalletNIS1,
-    publicAccount: PublicAccountNIS1,
-    walletColor: string
-  }[]
-}

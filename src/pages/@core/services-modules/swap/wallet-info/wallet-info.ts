@@ -33,14 +33,14 @@ export class WalletInfoPage {
   publicAccount: any;
   transferTransaction: TransferTransaction;
   hash: any;
-  catapultWallet: SimpleWallet;
+  catapultAccount: SimpleWallet;
   publicKey: string;
   selectedMosaic: AssetTransferable;
   credentials: { password: string; privateKey: string };
   privateKey: string;
   total: number;
   address: Address;
-  nemWallet: any;
+  nis1Account: any;
   recipient = AppConfig.swap.burnAddress;
   optionsXPX = {
     prefix: '',
@@ -91,10 +91,10 @@ export class WalletInfoPage {
     const loader = this.loadingCtrl.create(options);
     loader.present();
     console.log('------------------> ', this.navParams.data.data);
-    this.nemWallet = this.navParams.data.data.nemWallet;
-    this.catapultWallet = Object.assign({}, this.navParams.data.data.catapultWallet);
+    this.nis1Account = this.navParams.data.data.nis1Account;
+    this.catapultAccount = Object.assign({}, this.navParams.data.data.catapultAccount);
     this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
-    this.address = new Address(this.nemWallet.address.value);
+    this.address = new Address(this.nis1Account.address.value);
     this.maxAmount = this.accountInfoNis1.balance.length;
     this.createForm();
     this.amountChange();
@@ -105,13 +105,13 @@ export class WalletInfoPage {
   async createTransaction() {
     if (!this.processing) {
       this.processing = true;
-      const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultWallet.encryptedPrivateKey.encryptedKey, this.catapultWallet.encryptedPrivateKey.iv);
+      const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultAccount.encryptedPrivateKey.encryptedKey, this.catapultAccount.encryptedPrivateKey.iv);
       console.log('decrypt', decrypt);
       if (decrypt) {
         const account = this.nemProvider.createAccountPrivateKey(decrypt);
         const quantity = this.form.get("amount").value;
         const assetId = this.accountInfoNis1.mosaic.assetId;
-        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(decrypt, this.catapultWallet.network);
+        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(decrypt, this.catapultAccount.network);
         const payloadTx = PlainMessage.create(publicAccount.publicKey);
         const transaction = await this.nemProvider.createTransaction(payloadTx, assetId, quantity);
         this.anounceTransaction(transaction, account, publicAccount);
@@ -300,7 +300,7 @@ export class WalletInfoPage {
       animate: true,
       direction: 'backward'
     });
-    this.showWalletCertificate(this.publicKey, this.hash, this.transferTransaction, this.catapultWallet.address);
+    this.showWalletCertificate(this.publicKey, this.hash, this.transferTransaction, this.catapultAccount.address);
   }
 
   /**

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
-import { AuthProvider, AccountInterface } from '../auth/auth';
+import { AuthProvider } from '../auth/auth';
 import {
   SimpleWallet,
   Password,
@@ -20,7 +20,7 @@ import {
   Account,
   NetworkCurrencyMosaic
 } from 'tsjs-xpx-chain-sdk';
-import { SimpleWallet as SimpleWalletNis1} from 'nem-library';
+import { SimpleWallet as SimpleWalletNIS1, PublicAccount as PublicAccountNIS1 } from 'nem-library';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
@@ -51,51 +51,126 @@ export class WalletProvider {
     this.httpUrl = AppConfig.sirius.httpNodeUrl;
   }
 
+
   /**
    *
    *
-   * @param {string} walletName
+   * @param {string} user
    * @param {string} password
-   * @param {string} privateKey
-   * @returns {SimpleWallet}
+   * @returns
    * @memberof WalletProvider
    */
-  createAccountFromPrivateKey(walletName: string, password: string, privateKey: string): SimpleWallet {
-    return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
-  }
-
-  public createSimpleWallet( walletName: string, password: string): SimpleWallet {
-    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
-  }
-
-  /**
-   * getWallets()
-   */
-  getWallets(): Promise<any> {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
-      let _wallets = dataAccountSelected || {};
-      const WALLETS = _wallets['catapultAccounts'] || [];
-      if (WALLETS) {
-        const walletsMap = WALLETS.map(walletFile => {
-          let wallet = walletFile as SimpleWallet;
-          wallet.walletColor = walletFile['walletColor'];
-          return wallet;
-        });
-        _wallets['catapultAccounts'] = walletsMap;
-      } else {
-        _wallets['catapultAccounts'] = [];
-      }
-
-      return _wallets['catapultAccounts'];
+  async createUser(user: string, password: string) {
+    const data = await this.storage.get('wallets');
+    const wallets: WalletInterface[] = data ? data : [];
+    let foundWallet = wallets.filter((wallet: any) => {
+      return wallet.user.includes(user);
     });
+
+    if (foundWallet.length > 0) {
+      return "duplicate";
+    } else {
+      var encrypted = this.authProvider.encryptAccount(password);
+      const wallet = {
+        user: user.toLowerCase(),
+        encrypted: encrypted.toString(),
+        catapultAccounts: null,
+        nis1Accounts: null
+      };
+
+      this.setSelectedWallet(wallet);
+      wallets.push(wallet);
+      return this.storage.set('wallets', wallets);
+    }
   }
 
   /**
-   * 
-   * @param wallet 
+   *
+   *
+   * @memberof WalletProvider
    */
-  setSelectedWallet(wallet: SimpleWallet) {
-    return this.storage.set('selectedWallet', wallet);
+  async getAccountsNis1() {
+    const wallet = await this.storage.get('wallets');
+    console.log('all wallets', wallet);
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<CatapultsAccountsInterface>}
+   * @memberof WalletProvider
+   */
+  async getAccountSelected(): Promise<CatapultsAccountsInterface> {
+    const data = await this.storage.get('selectedAccount');
+    const result = data ? data : null;
+    return result;
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<any>}
+   * @memberof WalletProvider
+   */
+  async getWallets(): Promise<any> {
+    const dataAccountSelected = await this.getWalletSelected();
+    let _wallets = dataAccountSelected || {};
+    const WALLETS = _wallets['catapultAccounts'] || [];
+    if (WALLETS) {
+      const walletsMap = WALLETS.map(walletFile => {
+        let wallet = (walletFile as SimpleWallet);
+        wallet.walletColor = walletFile['walletColor'];
+        return wallet;
+      });
+      _wallets['catapultAccounts'] = walletsMap;
+    }
+    else {
+      _wallets['catapultAccounts'] = [];
+    }
+    return _wallets['catapultAccounts'];
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<WalletInterface>}
+   * @memberof WalletProvider
+   */
+  async getWalletSelected(): Promise<WalletInterface> {
+    const data = await this.storage.get('selectedWallet');
+    const result = data ? data : null;
+    return result;
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<CatapultsAccountsInterface[]>}
+   * @memberof WalletProvider
+   */
+  async getAccountsCatapult(): Promise<CatapultsAccountsInterface[]> {
+    const walletSelected = await this.getWalletSelected();
+    return (walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<SimpleWallet>}
+   * @memberof WalletProvider
+   */
+  async getSelectedWallet(): Promise<SimpleWallet> {
+    let wallets = await this.storage.get('selectedWallet');
+    let _wallet = null;
+    if (wallets) {
+      const selectedWallet = wallets;
+      this.selectedWallet = selectedWallet;
+      _wallet = (<SimpleWallet>(selectedWallet));
+    }
+    else {
+      _wallet = null;
+    }
+    return _wallet;
   }
 
   /**
@@ -106,10 +181,10 @@ export class WalletProvider {
    * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWalletCatapult(catapultAccount: SimpleWallet, nis1Account: SimpleWalletNis1, walletColor: string, password: Password): Promise<AccountInterface> {
-    const dataAccount = await this.authProvider.getDataAccountSelected();
-    const catapultAccounts = (dataAccount.catapultAccounts) ? dataAccount.catapultAccounts : [];
-    const nis1Accounts = (dataAccount.nis1Accounts) ? dataAccount.nis1Accounts : [];
+  async storeWalletCatapult(catapultAccount: SimpleWallet, nis1Account: SimpleWalletNIS1, walletColor: string, password: Password): Promise<WalletInterface> {
+    const walletSelected = await this.getWalletSelected();
+    const catapultAccounts = (walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
+    const nis1Accounts = (walletSelected.nis1Accounts) ? walletSelected.nis1Accounts : [];
     const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
       this.proximaxProvider.decryptPrivateKey(
         password,
@@ -118,7 +193,7 @@ export class WalletProvider {
       ).toUpperCase(), catapultAccount.network
     );
 
-    if (nis1Account){
+    if (nis1Account) {
       const publicAccount = this.nemProvider.createAccountPrivateKey(
         this.proximaxProvider.decryptPrivateKey(
           password,
@@ -129,19 +204,19 @@ export class WalletProvider {
 
       const accountnis1 = { account: nis1Account, walletColor: walletColor, publicAccount: publicAccount };
       nis1Accounts.push(accountnis1);
-      dataAccount['nis1Accounts'] = nis1Accounts;
+      walletSelected['nis1Accounts'] = nis1Accounts;
     }
-    
-    const selectWallet = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
-    catapultAccounts.push(selectWallet);
-    dataAccount['catapultAccounts'] = catapultAccounts;
-    const data: AccountInterface[] = await this.storage.get('accounts');
-    const otherAccounts: AccountInterface[] = data.filter(x => x.user !== dataAccount.user);
-    otherAccounts.push(dataAccount);
-    this.authProvider.setSelectedWallet(selectWallet);
-    this.authProvider.setSelectedAccount(dataAccount);
-    this.storage.set('accounts', otherAccounts);
-    return dataAccount;
+
+    const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
+    catapultAccounts.push(accountCatapult);
+    walletSelected['catapultAccounts'] = catapultAccounts;
+    const wallet: WalletInterface[] = await this.storage.get('wallets');
+    const otherWallets: WalletInterface[] = wallet.filter(x => x.user !== walletSelected.user);
+    otherWallets.push(walletSelected);
+    this.setSelectedAccount(accountCatapult);
+    this.setSelectedWallet(walletSelected);
+    this.storage.set('wallets', otherWallets);
+    return walletSelected;
   }
 
   /**
@@ -151,9 +226,9 @@ export class WalletProvider {
    * @memberof WalletProvider
    */
   async validateExistAccount(account: SimpleWallet) {
-    const data: AccountInterface[] = await this.storage.get('accounts');
+    const wallet: WalletInterface[] = await this.storage.get('wallets');
     let exist = false;
-    data.forEach((element: AccountInterface) => {
+    wallet.forEach((element: WalletInterface) => {
       if (element.catapultAccounts) {
         element.catapultAccounts.forEach((el) => {
           const address = this.proximaxProvider.createFromRawAddress(el.account.address['address']).pretty();
@@ -169,17 +244,62 @@ export class WalletProvider {
     return exist;
   }
 
-  // -----------------------------------------------------------------------
 
   /**
- * Create Simple Wallet
- * @param walletName wallet idenitifier for app
- * @param password wallet's password
- * @param selected network
- * @return Promise with wallet created
- */
+  *
+  *
+  * @param {string} walletName
+  * @param {string} password
+  * @param {string} privateKey
+  * @returns {SimpleWallet}
+  * @memberof WalletProvider
+  */
+  createAccountFromPrivateKey(walletName: string, password: string, privateKey: string): SimpleWallet {
+    return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
+  }
+
+  /**
+   *
+   *
+   * @param {string} walletName
+   * @param {string} password
+   * @returns {SimpleWallet}
+   * @memberof WalletProvider
+   */
+  createSimpleWallet(walletName: string, password: string): SimpleWallet {
+    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  }
 
 
+  /**
+   *
+   *
+   * @param {SimpleWallet} wallet
+   * @returns
+   * @memberof WalletProvider
+   */
+  setSelectedAccount(account: { account: SimpleWallet, walletColor: string, publicAccount: PublicAccount }) {
+    return this.storage.set('selectedAccount', account);
+  }
+
+
+  /**
+   *
+   *
+   * @param {WalletInterface} account
+   * @returns {Promise<any>}
+   * @memberof WalletProvider
+   */
+  setSelectedWallet(wallet: WalletInterface): Promise<any> {
+    this.storage.set('isAccountCreated', true);
+    this.storage.set('isLoggedIn', true);
+    this.storage.set('selectedWallet', wallet);
+    return;
+  }
+
+  
+
+  // -----------------------------------------------------------------------
 
   public getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
@@ -230,7 +350,7 @@ export class WalletProvider {
    * @param newWalletName The new name for the wallet.
    */
   public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+    return this.getWalletSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
         let _wallets: any = wallets[dataAccountSelected.user];
         let updateWallet: any;
@@ -260,34 +380,34 @@ export class WalletProvider {
     console.log('....................', wallet);
 
     // LI
-    
-      // return this.authProvider.getDataAccountSelected().then(wallets => {
-      //   console.log('....................wallets', wallets);
-        
-      //   let _wallets: Array<any> = wallets.catapultAccounts;
 
-      //   _wallets.map((res, index) => {
-      //     if (res.account.name == wallet['account'].name) {
-      //       _wallets.splice(index, 1);
+    // return this.getWalletSelected().then(wallets => {
+    //   console.log('....................wallets', wallets);
 
-      //       _wallets = _wallets.map(_ => {
-      //         return {
-      //           wallet: _.wallet,
-      //           walletColor: _.walletColor
-      //         }
-      //       });
-      //       // const WALLET = {};
-      //       const  WALLET= _wallets;
-      //       return this.storage.set('selectedAccount', WALLET);
-      //     }
-      //   })
-      //   _wallets
-      //   return;
+    //   let _wallets: Array<any> = wallets.catapultAccounts;
 
+    //   _wallets.map((res, index) => {
+    //     if (res.account.name == wallet['account'].name) {
+    //       _wallets.splice(index, 1);
 
+    //       _wallets = _wallets.map(_ => {
+    //         return {
+    //           wallet: _.wallet,
+    //           walletColor: _.walletColor
+    //         }
+    //       });
+    //       // const WALLET = {};
+    //       const  WALLET= _wallets;
+    //       return this.storage.set('selectedAccount', WALLET);
+    //     }
+    //   })
+    //   _wallets
+    //   return;
 
 
-      // });
+
+
+    // });
   }
 
   /**
@@ -297,7 +417,7 @@ export class WalletProvider {
    */
   public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+    return this.getWalletSelected().then(dataAccountSelected => {
       return this.getLocalWallets().then(wallets => {
         const _wallets = wallets[dataAccountSelected.user];
         for (var i = 0; i < _wallets.length; i++) {
@@ -311,30 +431,13 @@ export class WalletProvider {
     });
   }
 
-  /**
-   * Retrieves selected wallet
-   * @return promise with selected wallet
-   */
-  public getSelectedWallet(): Promise<SimpleWallet> {
-    return this.storage.get('selectedWallet').then(wallets => {
-      let _wallet = null;
-      if (wallets) {
-        const selectedWallet = wallets;
-        this.selectedWallet = selectedWallet
-        _wallet = <SimpleWallet>(selectedWallet);
-      } else {
-        _wallet = null;
-      }
 
-      return _wallet;
-    });
-  }
 
   /**
    * Get loaded wallets from localStorage
    */
   public getLocalWallets(): Promise<any> {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+    return this.getWalletSelected().then(dataAccountSelected => {
       return this.storage.get('wallets').then(wallets => {
         let _wallets = wallets ? wallets : {};
         const WALLETS = _wallets[dataAccountSelected.user] ? _wallets[dataAccountSelected.user] : [];
@@ -363,7 +466,7 @@ export class WalletProvider {
  * Get loaded wallets from localStorage
  */
   public getLocalWalletsNis(): Promise<any> {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+    return this.getWalletSelected().then(dataAccountSelected => {
       return this.storage.get('walletsNis1').then(wallets => {
         let _wallets = wallets ? wallets : {};
         console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
@@ -397,7 +500,7 @@ export class WalletProvider {
    * Remove selected Wallet
    */
   public unsetSelectedWallet() {
-    return this.authProvider.getDataAccountSelected().then(dataAccountSelected => {
+    return this.getWalletSelected().then(dataAccountSelected => {
       this.storage.get('selectedWallet').then(selectedWallet => {
         delete selectedWallet[dataAccountSelected.user];
 
@@ -442,4 +545,24 @@ export class WalletProvider {
     };
   }
 
+}
+
+
+export interface WalletInterface {
+  user: string;
+  encrypted: string;
+  catapultAccounts: CatapultsAccountsInterface[],
+  nis1Accounts: NIS1AccountsInterface[]
+}
+
+export interface CatapultsAccountsInterface {
+  account: SimpleWallet,
+  publicAccount: PublicAccount,
+  walletColor: string
+}
+
+export interface NIS1AccountsInterface {
+  account: SimpleWalletNIS1,
+  publicAccount: PublicAccountNIS1,
+  walletColor: string
 }
