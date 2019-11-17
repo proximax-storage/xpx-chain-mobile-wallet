@@ -16,7 +16,6 @@ import { Storage } from '@ionic/storage';
 export class TransferTransactionProvider {
   getFee(): number {
     const tx = this.build();
-    console.log("TCL: TransferTransactionProvider -> getFee -> tx", tx);
     return this.helper.getRelativeAmount(tx.maxFee.compact());
   }
   httpNodeUrl: any;
@@ -76,11 +75,11 @@ export class TransferTransactionProvider {
     return TransferTransaction.create(Deadline.create(), this.recipient, this.mosaics, message, AppConfig.sirius.networkType);
   }
 
-  send(pk, net): Observable<TransactionAnnounceResponse> {
+  send(privateKey, networkType): Observable<TransactionAnnounceResponse> {
 
     return new Observable(observer => {
       // 1. account
-      const account = Account.createFromPrivateKey(pk, net);
+      const account = Account.createFromPrivateKey(privateKey, networkType);
 
       // const _account = account;
       // 2. Get transfer transaction
@@ -112,7 +111,7 @@ export class TransferTransactionProvider {
       setTimeout(async () => {
         try {
           const status = await transactionHttp.getTransactionStatus(txn.hash).toPromise();
-          console.log('TCL: SimpleTransfer -> status, ' + JSON.stringify(status, null, 3));
+          // console.log('TCL: SimpleTransfer -> status, ' + JSON.stringify(status, null, 3));
           if (status.group === 'confirmed') {
             // TODO: notification
             resolve(true);

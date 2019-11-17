@@ -99,9 +99,9 @@
     "WALLETS.SEND.NOTES" : "Notas (Opcional)",
     "WALLETS.CONFIRM.TITLE" : "Confirmar Transacción",
     "WALLETS.SEND.LABEL.NOTES" : "Notas",
-    "WALLETS.SEND.LABEL.FEE" : "Cuota",
+    "WALLETS.SEND.LABEL.FEE" : "Fee",
     "WALLETS.SEND.LABEL.FROM" : "Desde",
-    "WALLETS.SEND.LABEL.TO" : "a",
+    "WALLETS.SEND.LABEL.TO" : "A",
     "WALLETS.SEND.ERROR.BALANCE" : "Saldo insuficiente",
     "WALLETS.SEND.ERROR.CAMERA1" : "Se ha prohibido el acceso a la cámara; habilítelo en la aplicación Configuración para continuar.",
     "WALLETS.SEND.ERROR.CAMERA2" : "El acceso a la cámara está deshabilitado. Habilítelo en la aplicación Configuración.",
@@ -129,7 +129,7 @@
     "WALLETS.TRANSACTION.DETAIL.DATE" : "Fecha",
     "WALLETS.TRANSACTION.DETAIL.SENDER" : "Remitente",
     "WALLETS.TRANSACTION.DETAIL.RECEIVER" : "Receptor",
-    "WALLETS.TRANSACTION.DETAIL.FEE" : "Cuota",
+    "WALLETS.TRANSACTION.DETAIL.FEE" : "Fee",
     "WALLETS.TRANSACTION.DETAIL.BLOCK" : "Bloque",
     "WALLETS.TRANSACTION.DETAIL.HASH" : "Hash",
     "WALLETS.TRANSACTION.DETAIL.MESSAGE" : "Mensaje",
@@ -229,5 +229,10 @@
     "SETTINGS.LANGUAGE.DUTCH": "Holandés",
     "SETTINGS.LANGUAGE.RUSSIAN": "Ruso",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamita",
-    "SETTINGS.LOGOUT" : "Cerrar sesión"
+    "SETTINGS.LOGOUT" : "Cerrar sesión",
+
+    "TRANSACTION_DETAIL.COSIGN": "Aprobar para continuar",
+    "TRANSACTION_DETAIL.COSIGN_DONE": "Cosignatario",
+    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Esta transacción de transferencia multigrado ha sido firmada con éxito"
+
 }
