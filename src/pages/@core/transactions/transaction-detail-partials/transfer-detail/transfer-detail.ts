@@ -55,8 +55,6 @@ export class TransferDetailComponent {
   }
 
   private async _getMosaicInfo() {
-    console.log('this.this.tx', this.tx);
-    
     // Get mosaic details
     if (this.tx.mosaics.length > 0){
       this.show = true;

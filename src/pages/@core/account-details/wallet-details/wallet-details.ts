@@ -84,6 +84,7 @@ export class WalletDetailsPage {
       ]
     });
   }
+  
   /**
  *
  *

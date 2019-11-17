@@ -37,9 +37,9 @@ export class TransferTransactionComponent {
   }
 
   async getMosaicInfo() {
-    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
-    console.log('this.tx', this.tx);
-    console.log('this.mosaics', this.mosaics);
+    const _tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
+    this.tx = _tx;
+    
     if (this.tx.mosaics.length > 0) {
       this.MOSAIC_INFO = this.mosaics.find(mosaic => {
         console.log(mosaic);
@@ -55,7 +55,7 @@ export class TransferTransactionComponent {
 
     this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
     this.STATUS = this.status;
-    console.log('this.MOSAIC_INFO', this.MOSAIC_INFO);
-    console.log('this.LOGO', this.LOGO);
+    // console.log('this.MOSAIC_INFO', this.MOSAIC_INFO);
+    // console.log('this.LOGO', this.LOGO);
   }
 }

@@ -100,9 +100,9 @@
     "WALLETS.SEND.NOTES": "Notes(Optional)",
     "WALLETS.CONFIRM.TITLE": "Confirm Transaction",
     "WALLETS.SEND.LABEL.NOTES": "Notes",
-    "WALLETS.SEND.LABEL.FEE": "FEE",
-    "WALLETS.SEND.LABEL.FROM": "FROM",
-    "WALLETS.SEND.LABEL.TO": "TO",
+    "WALLETS.SEND.LABEL.FEE": "Fee",
+    "WALLETS.SEND.LABEL.FROM": "From",
+    "WALLETS.SEND.LABEL.TO": "To",
     "WALLETS.SEND.ERROR.BALANCE": "Insufficient balance",
     "WALLETS.SEND.ERROR.CAMERA1": "Access to the camera has been prohibited.  Please enable it in your phone's settings to continue.",
     "WALLETS.SEND.ERROR.CAMERA2": "Camera access is disabled.  Please enable it in your phone's settings.",
@@ -231,7 +231,7 @@
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamese",
     "SETTINGS.LOGOUT": "Logout",
 
-    "TRANSACTION_DETAIL.COSIGN": "Cosign",
+    "TRANSACTION_DETAIL.COSIGN": "Approve to continue",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosigned",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "This multisig tranfer transaction has been successfuly cosigned"
 }

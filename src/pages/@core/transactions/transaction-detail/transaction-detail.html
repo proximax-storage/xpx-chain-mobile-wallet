@@ -12,10 +12,10 @@
     </ion-title>
 
     <ion-buttons end>
-        <button ion-button icon-only (click)="dismiss()" color="dark">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
+      <button ion-button icon-only (click)="dismiss()" color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -23,8 +23,10 @@
   <ion-list transparent-items *ngIf="tx">
 
     <!-- if transfer  -->
-    <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER" [tx]="tx" [mosaics]="mosaics" [owner]="selectedAccount?.address?.plain()"></transfer-detail>
-    <transfer-detail *ngIf="tx?.type === TransactionType.AGGREGATE_BONDED" [tx]="tx" [mosaics]="mosaics" [owner]="selectedAccount?.address?.plain()"></transfer-detail>
+    <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER" [tx]="tx" [mosaics]="mosaics"
+      [owner]="selectedAccount?.address?.plain()"></transfer-detail>
+    <transfer-detail *ngIf="tx?.type === TransactionType.AGGREGATE_BONDED" [tx]="tx" [mosaics]="mosaics"
+      [owner]="selectedAccount?.address?.plain()"></transfer-detail>
 
     <!-- if importance transfer -->
     <!-- <importance-transfer-detail *ngIf="tx.type == TransactionTypes.IMPORTANCE_TRANSFER" [tx]="tx"></importance-transfer-detail> -->
@@ -44,13 +46,26 @@
     <!-- if provision namespace  -->
     <!-- <provision-namespace-detail *ngIf="tx.type == TransactionTypes.PROVISION_NAMESPACE" [tx]="tx"></provision-namespace-detail> -->
 
- 
+
   </ion-list>
 
 </ion-content>
 
-<ion-footer no-border *ngIf="tx.type === TransactionType.AGGREGATE_BONDED" [hidden]="!this.isSelectedAccountMultisig && (!!this.selectedAccount && toShowCosign(tx))">
-  <button gradient-button quarter-width color-5 medium (click)="cosign(tx)">
-      {{"TRANSACTION_DETAIL.COSIGN" | translate}}
+<ion-footer no-border *ngIf="tx.type === TransactionType.AGGREGATE_BONDED" [hidden]="!this.isSelectedAccountMultisig && (!!this.currentAccount && toShowCosign(tx))">
+  
+  <form [formGroup]="form">
+    <ion-item transparent padding>
+      <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+      <ion-input formControlName="password" [type]="passwordType"
+        placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+      <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+        <ion-icon item-right color="dark" [name]="passwordIcon">
+        </ion-icon>
+      </button>
+    </ion-item>
+  </form>
+  <button gradient-button quarter-width color-5 medium  [disabled]="form.invalid" (click)="cosign(tx)">
+    {{"TRANSACTION_DETAIL.COSIGN" | translate}}
   </button>
 </ion-footer>
