@@ -183,6 +183,7 @@
     "SERVICES.SWAP_PROCESS.SIRIUS_WALLET": "Sirius Address",
     "SERVICES.SWAP_PROCESS.CERTIFICATE": "Swap Certificate",
     "SERVICES.SWAP_PROCESS.GETTING_INFORMATION": "Getting account information...",
+    "SERVICES.SWAP_PROCESS.INITIALIZING_SWAP": "Initializing swap...",
     "SERVICES.SWAP_PROCESS.SERVICE_NOT_AVAILABLE": "Service not available",
     "SERVICES.SWAP_PROCESS.VALIDATION_1": "The account has no balance to swap.",
     "SERVICES.SWAP_PROCESS.VALIDATION_2": "It was not possible to connect to the server, try later",
@@ -243,7 +244,6 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "Russian",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamese",
     "SETTINGS.LOGOUT": "Logout",
-
     "TRANSACTION_DETAIL.COSIGN": "Approve to continue",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosigned",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "This multisig tranfer transaction has been successfuly cosigned."
