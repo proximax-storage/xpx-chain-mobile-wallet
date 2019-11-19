@@ -9,7 +9,7 @@ import {
 } from "ionic-angular";
 import { App } from "../../../../../providers/app/app";
 import { SimpleWallet as NISWallet } from "nem-library";
-import { SimpleWallet, PublicAccount } from "tsjs-xpx-chain-sdk";
+import { PublicAccount } from "tsjs-xpx-chain-sdk";
 
 /**
  * Generated class for the Nis1WalletListPage page.
