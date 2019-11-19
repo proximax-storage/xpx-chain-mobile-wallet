@@ -183,6 +183,8 @@
     "SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE" : "¡Tenga en cuenta! El proceso de intercambio puede tardar algunas horas en completarse. Si elige continuar, recibirá un ticket con su transacción de intercambio para su referencia.",
     "SERVICES.SWAP_PROCESS.SIRIUS_WALLET": "Dirección de Sirius",
     "SERVICES.SWAP_PROCESS.CERTIFICATE": "Certificado de intercambio",
+    "SERVICES.SWAP_PROCESS.GETTING_INFORMATION": "Obteniendo información...",
+    "SERVICES.SWAP_PROCESS.SERVICE_NOT_AVAILABLE": "Servicio no disponible",
     "SETTINGS" : "Ajustes",
     "SETTINGS.WALLET_GUIDE" : "Guía de la wallet",
     "SETTINGS.WALLET_GUIDE.DESC" : "Lo que necesita saber para tomar las medidas adecuadas para asegurar su wallet. ",

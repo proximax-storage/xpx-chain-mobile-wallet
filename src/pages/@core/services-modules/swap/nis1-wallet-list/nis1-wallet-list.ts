@@ -6,6 +6,7 @@ import {
   NavController,
   NavParams
 } from "ionic-angular";
+import { TranslateService } from '@ngx-translate/core';
 import { App } from "../../../../../providers/app/app";
 import { NemProvider, AccountsInfoNis1Interface } from "../../../../../providers/nem/nem";
 import { AlertProvider } from "../../../../../providers/alert/alert";
@@ -36,7 +37,8 @@ export class Nis1WalletListPage {
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
     private walletProvider: WalletProvider,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private translateService: TranslateService,
   ) {
     this.walletProvider.getAccountsNis1().then(accountsNis1 => {
       this.accountsNIS1 = accountsNis1;
@@ -52,7 +54,7 @@ export class Nis1WalletListPage {
    */
   async openAccountNis1(nis1Account: NIS1AccountsInterface) {
     let options: LoadingOptions = {
-      content: 'Getting account information...'
+      content: this.translateService.instant("SERVICES.SWAP_PROCESS.GETTING_INFORMATION"),
     };
     let loader = this.loadingCtrl.create(options);
     loader.present();
@@ -78,8 +80,7 @@ export class Nis1WalletListPage {
         }
       }, error => loader.dismiss());
     } else {
-      // this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE")
-      this.alertProvider.showMessage('Service not available');
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.SERVICE_NOT_AVAILABLE"));
     }
   }
 

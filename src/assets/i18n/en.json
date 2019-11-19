@@ -182,6 +182,8 @@
     "SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE": "Please note!  The swap process may take a few hours to complete.  If you choose to proceed, you will receive a certificate with your swap transaction for your reference.",
     "SERVICES.SWAP_PROCESS.SIRIUS_WALLET": "Sirius Address",
     "SERVICES.SWAP_PROCESS.CERTIFICATE": "Swap Certificate",
+    "SERVICES.SWAP_PROCESS.GETTING_INFORMATION": "Getting account information...",
+    "SERVICES.SWAP_PROCESS.SERVICE_NOT_AVAILABLE": "Service not available",
     "SETTINGS": "Settings",
     "SETTINGS.WALLET_GUIDE": "Wallet Guide",
     "SETTINGS.WALLET_GUIDE.DESC": "What you need to know to take appropriate steps to secure your wallet. ",

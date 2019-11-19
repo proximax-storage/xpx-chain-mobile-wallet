@@ -31,20 +31,13 @@ export class SwapCertificatePage {
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
   ) {
-
-    const params = this.navParams.data;
-    console.log("TCL: SwapCertificatePage -> this.navParams.data", JSON.stringify(this.navParams.data, null, 4))
-    console.log('params this.params', JSON.stringify(params, null, 4));
-    this.publicKey = params.publicKey;
-    this.transactionHash = params.transactionHash;
-    let address = Address.createFromRawAddress(params.address.address);
+    this.publicKey = this.navParams.data.publicKey;
+    this.transactionHash = this.navParams.data.transactionHash;
+    let address = Address.createFromRawAddress(this.navParams.data.address.address);
     this.address = address.pretty();
-    this.timestamp = new Date(params.timestamp);
+    this.timestamp = new Date(this.navParams.data.timestamp);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SwapCertificatePage');
-  }
 
   qrCreate() {
     let qr = qrcode(10, 'H')
@@ -64,12 +57,7 @@ export class SwapCertificatePage {
 
   dismiss() {
     this.viewCtrl.dismiss();
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {
-        animate: true
-      }
-    );
+    this.navCtrl.setRoot('TabsPage', { animate: true });
   }
 
 }
