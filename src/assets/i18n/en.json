@@ -187,7 +187,6 @@
     "SERVICES.SWAP_PROCESS.VALIDATION_1": "The account has no balance to swap.",
     "SERVICES.SWAP_PROCESS.VALIDATION_2": "It was not possible to connect to the server, try later",
     "SERVICES.SWAP_PROCESS.VALIDATION_3": "Swap does not support this account type",
-    "SERVICES.SWAP_PROCESS.VALIDATION_4": "It was not possible to connect to the server, try later.",
     "SERVICES.SWAP_PROCESS.VALIDATION_5": "Some data is invalid",
     "SERVICES.SWAP_PROCESS.VALIDATION_6": "Invalid Timestamp",
     "SERVICES.SWAP_PROCESS.VALIDATION_7": "Service not available",

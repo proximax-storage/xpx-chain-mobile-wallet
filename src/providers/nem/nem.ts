@@ -119,7 +119,7 @@ export class NemProvider {
       return null;
     } catch (error) {
       console.log(error);
-      this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_4"));
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_2"));
       this.setNis1AccountsFound$(null);
       return null;
     }
