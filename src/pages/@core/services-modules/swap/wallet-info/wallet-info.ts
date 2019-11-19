@@ -90,7 +90,6 @@ export class WalletInfoPage {
     const options: LoadingOptions = { content: 'Getting account information...' };
     const loader = this.loadingCtrl.create(options);
     loader.present();
-    console.log('------------------> ', this.navParams.data.data);
     this.nis1Account = this.navParams.data.data.nis1Account;
     this.catapultAccount = Object.assign({}, this.navParams.data.data.catapultAccount);
     this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
@@ -101,12 +100,15 @@ export class WalletInfoPage {
     loader.dismiss();
   }
 
-
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
   async createTransaction() {
     if (!this.processing) {
       this.processing = true;
       const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultAccount.encryptedPrivateKey.encryptedKey, this.catapultAccount.encryptedPrivateKey.iv);
-      console.log('decrypt', decrypt);
       if (decrypt) {
         const account = this.nemProvider.createAccountPrivateKey(decrypt);
         const quantity = this.form.get("amount").value;
@@ -116,25 +118,6 @@ export class WalletInfoPage {
         const transaction = await this.nemProvider.createTransaction(payloadTx, assetId, quantity);
         this.anounceTransaction(transaction, account, publicAccount);
       }
-      /*if (this.ownedAccountSwap) {
-        if (this.walletService.decrypt(common, this.ownedAccountSwap)) {
-          const account = this.nemProvider.createAccountPrivateKey(common['privateKey']);
-          const quantity = this.form.get("amount").value;
-          //const assetId = this.ownedAccountSwap.mosaic.assetId;
-          const assetId = this.accountToSwap.mosaic.assetId;
-          // console.log(assetId);
-          const msg = PlainMessage.create(this.ownedAccountSwap.publicAccount.publicKey);
-          const transaction = await this.nemProvider.createTransaction(msg, assetId, quantity);
-          // console.log('\nTRANSACTION CREATED -->', transaction)
-          const publicAccount = this.proximaxProvider.createPublicAccount(this.ownedAccountSwap.publicAccount.publicKey);
-          this.anounceTransaction(transaction, account, publicAccount);
-        } else {
-          this.spinnerVisibility = false;
-          this.processing = false;
-        }
-      } else {
-        this.router.navigate([`/${AppConfig.routes.home}`]);
-      }*/
     }
   }
 
@@ -160,48 +143,13 @@ export class WalletInfoPage {
           this.hash = next['transactionHash'].data;
           this.showSuccessMessage()
           loader.dismiss();
-          // console.log('next --->', next);
-          /*this.routeContinue = `/${AppConfig.routes.home}`;
-          this.transactionNis1 = {
-            siriusAddres: siriusAccount.address.pretty(),
-            nis1Timestamp: this.nemProvider.getTimeStampTimeWindow(transaction),
-            nis1PublicKey: transaction.signer.publicKey,
-            nis1TransactionHash: next['transactionHash'].data
-          };
-  
-          let walletNis1Storage: CurrentWalletTransNis;
-          if (this.walletService.getCurrentWallet()) {
-            walletNis1Storage = this.walletService.getWalletTransNisStorage().find(el => el.name === this.walletService.getCurrentWallet().name);
-          } else {
-            walletNis1Storage = this.walletService.getWalletTransNisStorage().find(el => el.name === this.walletService.accountWalletCreated.wallet.name);
-          }
-  
-          const transactionWalletNis1: WalletTransactionsNis1Interface = {
-            name: (this.walletService.getCurrentWallet()) ? this.walletService.currentWallet.name : this.walletService.accountWalletCreated.wallet.name,
-            transactions: (walletNis1Storage) ? walletNis1Storage.transactions : []
-          };
-  
-          transactionWalletNis1.transactions.push(this.transactionNis1);
-          this.nemProvider.saveAccountWalletTransNisStorage(transactionWalletNis1);
-          this.processing = false;
-          this.spinnerVisibility = false;
-          this.showCertifiedSwap = true;
-          this.walletService.accountWalletCreated = null;
-          this.sharedService.showSuccess('', next['message']);*/
         } else {
           loader.dismiss();
           this.nemProvider.validateCodeMsgError(next['code'], next['message']);
-          /*this.showCertifiedSwap = false;
-          this.nemProvider.validateCodeMsgError(next['code'], next['message']);
-          this.spinnerVisibility = false
-          this.processing = false;*/
         }
       }, error => {
         loader.dismiss();
         this.nemProvider.validateCodeMsgError(error.error.code, error.error.message);
-        /*this.nemProvider.validateCodeMsgError(error.error.code, error.error.message);
-        this.spinnerVisibility = false
-        this.processing = false;*/
       });
     } catch (error) {
       loader.dismiss();
@@ -273,6 +221,11 @@ export class WalletInfoPage {
     alert.present();
   }
 
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
   dismiss() {
     this.viewCtrl.dismiss();
   }

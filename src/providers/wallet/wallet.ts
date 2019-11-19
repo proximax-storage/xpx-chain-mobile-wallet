@@ -87,6 +87,20 @@ export class WalletProvider {
   /**
    *
    *
+   * @param {PublicAccount} publicAccountCatapult
+   * @returns
+   * @memberof WalletProvider
+   */
+  async filterCatapultAccountInWalletSelected(publicAccountCatapult: PublicAccount) {
+    const myWalletSelected = await this.getWalletSelected();
+    console.log('This my wallet selected --->', myWalletSelected);
+    const myAccountFiltered = myWalletSelected.catapultAccounts.find(x => x.publicAccount.publicKey === publicAccountCatapult.publicKey);
+    return (myAccountFiltered) ? myAccountFiltered : null;
+  }
+
+  /**
+   *
+   *
    * @memberof WalletProvider
    */
   async getAccountsNis1() {

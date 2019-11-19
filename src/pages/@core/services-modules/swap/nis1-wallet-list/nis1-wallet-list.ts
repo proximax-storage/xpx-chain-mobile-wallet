@@ -1,15 +1,14 @@
-import { ModalController } from "ionic-angular";
+import { ModalController, LoadingOptions, LoadingController, ViewController } from "ionic-angular";
 import { WalletProvider, NIS1AccountsInterface } from "./../../../../../providers/wallet/wallet";
 import { Component } from "@angular/core";
 import {
   IonicPage,
   NavController,
-  NavParams,
-  ViewController
+  NavParams
 } from "ionic-angular";
 import { App } from "../../../../../providers/app/app";
-import { SimpleWallet as NISWallet } from "nem-library";
-import { PublicAccount } from "tsjs-xpx-chain-sdk";
+import { NemProvider, AccountsInfoNis1Interface } from "../../../../../providers/nem/nem";
+import { AlertProvider } from "../../../../../providers/alert/alert";
 
 /**
  * Generated class for the Nis1WalletListPage page.
@@ -30,16 +29,59 @@ export class Nis1WalletListPage {
   wallets: any;
 
   constructor(
+    private alertProvider: AlertProvider,
+    private nemProvider: NemProvider,
+    private viewCtrl: ViewController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    private viewCtrl: ViewController,
+    private loadingCtrl: LoadingController,
     private walletProvider: WalletProvider,
     private modalCtrl: ModalController
   ) {
-    this.getWallet();
+    this.walletProvider.getAccountsNis1().then(accountsNis1 => {
+      this.accountsNIS1 = accountsNis1;
+    });
   }
 
-  ionViewDidLoad() {}
+
+  /**
+   *
+   *
+   * @param {NIS1AccountsInterface} nis1Account
+   * @memberof Nis1WalletListPage
+   */
+  async openAccountNis1(nis1Account: NIS1AccountsInterface) {
+    let options: LoadingOptions = {
+      content: 'Getting account information...'
+    };
+    let loader = this.loadingCtrl.create(options);
+    loader.present();
+
+    const myAccountCatapult = await this.walletProvider.filterCatapultAccountInWalletSelected(nis1Account.publicAccountCatapult);
+    if (myAccountCatapult) {
+      const publicAccountNis1 = this.nemProvider.createPublicAccount(nis1Account.publicAccount.publicKey);
+      this.nemProvider.getAccountInfoNis1(publicAccountNis1, nis1Account.account.name).then((data: AccountsInfoNis1Interface) => {
+        loader.dismiss();
+        if (data) {
+          const modal = this.modalCtrl.create('WalletInfoPage', {
+            data: {
+              nis1Account: nis1Account.account,
+              catapultAccount: myAccountCatapult.account,
+              accountInfoNis1: data
+            }
+          }, {
+            enableBackdropDismiss: false,
+            showBackdrop: true
+          });
+
+          modal.present();
+        }
+      }, error => loader.dismiss());
+    } else {
+      // this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE")
+      this.alertProvider.showMessage('Service not available');
+    }
+  }
 
   /**
    *
@@ -55,70 +97,11 @@ export class Nis1WalletListPage {
    *
    * @memberof Nis1WalletListPage
    */
-  getWallet() {
-    this.walletProvider.getAccountsNis1().then(accountsNis1 => {
-      this.accountsNIS1 = accountsNis1;
-    });
-  }
-
-  /**
-   *
-   *
-   * @memberof Nis1WalletListPage
-   */
-  importNis1Wallet() {
-    const page = "ImportWalletPage";
-    this.showModal(page, {
+  goImportAccount() {
+    this.navCtrl.push("WalletAddPrivateKeyPage", {
       name: "",
-      privateKey: ""
+      privateKey: "",
+      password: ""
     });
-  }
-
-
-  /**
-   *
-   *
-   * @param {NIS1AccountsInterface} nis1Account
-   * @memberof Nis1WalletListPage
-   */
-  openAccountNis1(nis1Account: NIS1AccountsInterface) {
-    this.showWalletInfoPage(nis1Account.account, nis1Account.publicAccountCatapult);
-  }
-
-  /**
-   *
-   *
-   * @param {*} page
-   * @param {*} params
-   * @memberof Nis1WalletListPage
-   */
-  showModal(page, params) {
-    const modal = this.modalCtrl.create(
-      page,
-      { data: params },
-      {
-        enableBackdropDismiss: false,
-        showBackdrop: true
-      }
-    );
-    modal.present();
-  }
-
-  /**
-   *
-   *
-   * @param {NISWallet} nemWallet
-   * @param {SimpleWallet} catapultWallet
-   * @memberof Nis1WalletListPage
-   */
-  showWalletInfoPage(nemWallet: NISWallet, publicAccountCatapult: PublicAccount) {
-    /*this.walletProvider.getAccount(catapultWallet).subscribe(account => {
-      const page = "WalletInfoPage";
-      this.showModal(page, {
-        nemWallet: nemWallet,
-        catapultWallet: catapultWallet,
-        privateKey: account.privateKey
-      });
-    })*/
   }
 }

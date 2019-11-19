@@ -325,7 +325,6 @@ export class NemProvider {
       case 551:
       case 565:
       case 582:
-      case 591:
       case 610:
       case 622:
       case 672:
@@ -333,6 +332,11 @@ export class NemProvider {
         this.haptic.notification({ type: 'warning' });
         this.alertProvider.showMessage('Some data is invalid');
         break;
+
+      case 591:
+          this.haptic.notification({ type: 'warning' });
+          this.alertProvider.showMessage('Invalid Timestamp');
+          break;
 
       case 501:
       case 635:
