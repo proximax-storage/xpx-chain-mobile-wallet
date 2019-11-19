@@ -122,8 +122,6 @@ export class WalletDetailsPage {
     const iv = this.selectedAccount.account.encryptedPrivateKey.iv;
     const encryptedKey = this.selectedAccount.account.encryptedPrivateKey.encryptedKey;
     this.privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
-
-    console.log('this.privateKey', this.privateKey);
     
     if (this.privateKey && this.privateKey !== '' && (this.privateKey.length === 64 || this.privateKey.length === 66) ) {
       if (val === 1) {

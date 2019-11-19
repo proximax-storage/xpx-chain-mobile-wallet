@@ -68,6 +68,7 @@
     "WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER": "Enter your private key",
     "WALLETS.EDIT": "Edit account",
     "WALLETS.EDIT.PROMPT": "Update {{walletName}} account",
+    "WALLETS.EDIT.WALLET.EXIST": "Wallet name already exist. Please choose a new one",
     "WALLETS.EDIT.DESC": "To save your changes, update the info below and press Save.",
     "WALLETS.DELETE": "Delete account",
     "WALLETS.DELETE.WARNING": "You are about to delete {{walletName}} account!",
@@ -233,5 +234,5 @@
 
     "TRANSACTION_DETAIL.COSIGN": "Approve to continue",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosigned",
-    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "This multisig tranfer transaction has been successfuly cosigned"
+    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "This multisig tranfer transaction has been successfuly cosigned."
 }
