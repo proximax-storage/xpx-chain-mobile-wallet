@@ -195,7 +195,7 @@ deleteWallet(wallet: SimpleWallet) {
    */
   async getAccountsCatapult(): Promise<CatapultsAccountsInterface[]> {
     const walletSelected = await this.getWalletSelected();
-    return (walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
+    return (walletSelected && walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
   }
 
     /**
