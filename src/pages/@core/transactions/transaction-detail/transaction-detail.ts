@@ -56,6 +56,8 @@ export class TransactionDetailPage {
     this.createForm()
     this.walletProvider.getAccountSelected().then(selectedAccount => {
       this.currentAccount = selectedAccount;
+      console.log('this.currentAccount....', this.currentAccount.account.address.address);
+      
     });
   }
 

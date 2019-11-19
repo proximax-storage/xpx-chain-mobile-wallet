@@ -103,7 +103,7 @@ export class SendPage {
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
+    this.walletProvider.getAccountSelected().then(currentWallet => {
 
       if (!currentWallet) {
         this.navCtrl.setRoot(

@@ -233,6 +233,6 @@
 
     "TRANSACTION_DETAIL.COSIGN": "Aprobar para continuar",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosignatario",
-    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Esta transacción de transferencia multigrado ha sido firmada con éxito"
+    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Esta transacción ha sido firmada con éxito"
 
 }

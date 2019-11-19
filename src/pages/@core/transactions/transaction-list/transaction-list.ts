@@ -79,8 +79,6 @@ export class TransactionListPage {
     this.aggregateTransactions = payload.aggregateTransactions;
     this.selectedAccount = payload.selectedAccount;
 
-    console.log('..............',  this.selectedAccount );
-    
     this.mosaics = payload.mosaics;
 
     if(this.confirmedTransactions === null){

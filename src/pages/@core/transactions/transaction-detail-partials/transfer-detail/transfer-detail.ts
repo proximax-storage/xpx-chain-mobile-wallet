@@ -32,6 +32,9 @@ export class TransferDetailComponent {
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
   ) {
+
+    console.log('this.owner', this.owner);
+    
   }
   
   ngOnInit() {

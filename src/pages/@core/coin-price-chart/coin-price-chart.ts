@@ -121,6 +121,9 @@ export class CoinPriceChartPage {
      // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
+
+    console.log('selectedAccount', this.selectedAccount);
+    
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;

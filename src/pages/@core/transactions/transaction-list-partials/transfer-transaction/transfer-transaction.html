@@ -1,18 +1,4 @@
-<!-- 
-  export class TransferTransaction {
-    deadline: Deadline;
-    maxFee: UInt64;
-    message: Message;
-    mosaics: Mosaic[];
-    networkType: 168
-    recipient: Address;
-    signature: string;
-    signer: PublicAccount;
-    transactionInfo: TransactionInfo;
-    type: number
-    version: number
-}
- -->
+
 <ion-card-header reduce-transfer-tx-header>
   <ion-item>
     <img logo-small item-left [src]="LOGO" alt="logo">
@@ -25,8 +11,8 @@
       </small>
     </p>
 
-    <h2 ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' || MOSAIC_INFO?.hex ==='' ">Mensaje</h2>
-    <p ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' || MOSAIC_INFO?.hex ==='' ">
+    <h2 ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' && MOSAIC_INFO?.hex ==='' ">Mensaje</h2>
+    <p ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' ">
       <small *ngIf="owner == tx?.recipient.plain()">
         Recibido
       </small>
@@ -35,10 +21,6 @@
       </small>
     </p>
     <section item-right>
-
-      <!-- <h2 text-right ion-text color="dark" *ngIf="!hiden">
-        0
-      </h2> -->
 
       <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient.plain() && AMOUNT !== 0">
         +{{ AMOUNT  }}

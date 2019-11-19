@@ -410,7 +410,7 @@ export class HomePage {
       const mosaicId = mosaic.mosaicId;
       const namespaceId = mosaic.namespaceId;
       const coinId = coinName;
-      const selectedAccount = this.selectedWallet;
+      const selectedAccount = this.selectedAccount;
       const transactions = this.confirmedTransactions;
       const mosaicAmount = mosaic.amount;
       const mosaics = this.mosaics;
