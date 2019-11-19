@@ -21,8 +21,6 @@ import { HapticProvider } from "../../providers/haptic/haptic";
 import { GetMarketPricePipe } from "../../pipes/get-market-price/get-market-price";
 import { TranslateService } from "@ngx-translate/core";
 import {
-  SimpleWallet,
-  Account,
   AccountInfo,
   TransactionType,
   Transaction,
