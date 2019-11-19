@@ -4,7 +4,6 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { AuthProvider } from '../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
@@ -35,26 +34,37 @@ export class WalletUpdatePage {
   walletAddress: string = "TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH";
   walletTotal: number = 0;
   previousWalletName: any;
-  valid: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private walletProvider: WalletProvider,
-    private authProvider: AuthProvider,
     private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
     private translateService: TranslateService
   ) {
-    // this.walletColor = "wallet-1"; // to be change with current wallet color
     this.init();
   }
 
   changeWalletColor(color) {
     this.walletColor = color;
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss()
+  }
+
+  goBack() {
+    return this.navCtrl.setRoot(
+      'TabsPage',
+      {},
+      {
+        animate: true,
+      }
+    );
   }
 
   ionViewWillEnter() {
@@ -66,7 +76,6 @@ export class WalletUpdatePage {
   }
 
   init() {
-    console.log(this.navParams.get('wallet'));
     this.selectedWallet = this.navParams.get('wallet');
     this.walletColor = this.selectedWallet.walletColor;
     this.walletName = this.selectedWallet['account'].name;
@@ -74,60 +83,33 @@ export class WalletUpdatePage {
     this.walletAddress = this.selectedWallet['account'].address.address
     this.walletTotal = this.navParams.get('totalBalance');
 
-    console.log("Total", this.navParams.get('totalBalance'));
-
     this.formGroup = this.formBuilder.group({
       name: [
         this.selectedWallet.name || '',
         [Validators.minLength(3)]
       ]
     });
-
-    // this.authProvider.getPassword().then(password => {
-    //   this.PASSWORD = password;
-    // });
-  }
-
-  goBack() {
-    return this.navCtrl.setRoot(
-      'TabsPage',
-      {},
-      {
-        animate: true,
-        // direction: 'forward'
-      }
-    );
   }
 
   onSubmit(form) {
-    console.log('form.name', form.name);
-    console.log('this.previousWalletName', this.previousWalletName);
     this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
-      console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
       if (isExist) {
-        this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.EDIT.WALLET.EXIST"));
       } else {
-        this.walletProvider.updateWalletName(this.selectedWallet['account'], form.name, this.walletColor)
-          .then(selectedWallet => {
-            this.haptic.notification({ type: 'success' });
-            this.goBack();
-          });
+        this.walletProvider.updateWalletName(this.selectedWallet['account'], form.name, this.walletColor).then(_ => {
+          this.haptic.notification({ type: 'success' });
+          this.goBack();
+        });
       }
     });
-
   }
 
   updateName() {
     let name = this.formGroup.value.name
-    console.log("LOG: WalletAddPage -> updateName -> name", name);
     if (name) {
       this.walletName = name;
     } else {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     }
-  }
-
-  dismiss() {
-    this.viewCtrl.dismiss()
   }
 }

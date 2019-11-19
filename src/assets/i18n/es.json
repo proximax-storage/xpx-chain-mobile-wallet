@@ -67,6 +67,7 @@
     "WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER" : "Ingrese su llave privada",
     "WALLETS.EDIT" : "Editar cuenta",
     "WALLETS.EDIT.PROMPT" : "Actualizar la cuenta {{walletName}}.",
+    "WALLETS.EDIT.WALLET.EXIST": "El nombre de la billetera ya existe. Por favor elija uno nuevo",
     "WALLETS.EDIT.DESC" : "Para guardar sus cambios, actualice la información a continuación y presione Guardar.",
     "WALLETS.DELETE" : "Eliminar cuenta",
     "WALLETS.DELETE.WARNING" : "¡Estás a punto de eliminar la cuenta {{walletName}}!",
