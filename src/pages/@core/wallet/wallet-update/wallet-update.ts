@@ -35,6 +35,7 @@ export class WalletUpdatePage {
   walletAddress: string = "TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH";
   walletTotal: number = 0;
   previousWalletName: any;
+  valid: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -78,13 +79,13 @@ export class WalletUpdatePage {
     this.formGroup = this.formBuilder.group({
       name: [
         this.selectedWallet.name || '',
-        [Validators.minLength(3), Validators.required]
+        [Validators.minLength(3)]
       ]
     });
 
-    this.authProvider.getPassword().then(password => {
-      this.PASSWORD = password;
-    });
+    // this.authProvider.getPassword().then(password => {
+    //   this.PASSWORD = password;
+    // });
   }
 
   goBack() {
@@ -99,33 +100,21 @@ export class WalletUpdatePage {
   }
 
   onSubmit(form) {
-    if (this.previousWalletName == form.name) {
-      this.walletProvider
-        .updateWalletName(this.selectedWallet, form.name, this.walletColor)
-        .then(selectedWallet => {
-          console.log(selectedWallet);
-          return this.walletProvider.setSelectedWallet(selectedWallet.wallet);
-        })
-        .then(selectedWallet => {
-          this.haptic.notification({ type: 'success' });
-          this.goBack();
-        });
-    } else {
-      this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
-        console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
-        if (isExist) {
-          this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
-        } else {
-          this.walletProvider.updateWalletName(this.selectedWallet, form.name, this.walletColor).then(selectedWallet => {
-            console.log(selectedWallet);
-            return this.walletProvider.setSelectedWallet(selectedWallet.wallet);
-          }).then(selectedWallet => {
+    console.log('form.name', form.name);
+    console.log('this.previousWalletName', this.previousWalletName);
+    this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
+      console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
+      if (isExist) {
+        this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
+      } else {
+        this.walletProvider.updateWalletName(this.selectedWallet['account'], form.name, this.walletColor)
+          .then(selectedWallet => {
             this.haptic.notification({ type: 'success' });
             this.goBack();
           });
-        }
-      });
-    }
+      }
+    });
+
   }
 
   updateName() {

@@ -11,8 +11,8 @@
       </small>
     </p>
 
-    <h2 ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' || MOSAIC_INFO?.hex ==='' ">Mensaje</h2>
-    <p ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' || MOSAIC_INFO?.hex ==='' ">
+    <h2 ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' && MOSAIC_INFO?.hex ==='' ">Mensaje</h2>
+    <p ion-text color="dark" *ngIf="MOSAIC_INFO?.mosaicId === '' ">
       <small *ngIf="owner == tx?.recipient.plain()">
         Recibido
       </small>

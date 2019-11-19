@@ -203,7 +203,7 @@ export class WalletProvider {
         ).toUpperCase()
       );
 
-      const accountnis1 = { 
+      const accountnis1 = {
         account: nis1Account,
         walletColor: walletColor,
         publicAccount: publicAccountNis1,
@@ -304,7 +304,7 @@ export class WalletProvider {
     return;
   }
 
-  
+
 
   // -----------------------------------------------------------------------
 
@@ -312,14 +312,14 @@ export class WalletProvider {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
       this.authProvider.getPassword().then(password => {
-          // Get user's password
-          const myPassword = new Password(password);
-          // Convert current wallet to SimpleWallet
-          const myWallet = this.convertToSimpleWallet(wallet)
-          // Unlock wallet to get an account using user's password 
-          const account = myWallet.open(myPassword);
-          observer.next(account);
-        });
+        // Get user's password
+        const myPassword = new Password(password);
+        // Convert current wallet to SimpleWallet
+        const myWallet = this.convertToSimpleWallet(wallet)
+        // Unlock wallet to get an account using user's password 
+        const account = myWallet.open(myPassword);
+        observer.next(account);
+      });
     });
   }
 
@@ -349,33 +349,45 @@ export class WalletProvider {
   };
 
   /**
-   * Update the wallet name of the given wallet.
-   * @param wallet The wallet to change the name.
-   * @param newWalletName The new name for the wallet.
+   * 
+   * @param wallet 
+   * @param newWalletName 
+   * @param walletColor 
    */
   public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
-    return this.getWalletSelected().then(dataAccountSelected => {
-      return this.getLocalWallets().then(wallets => {
-        let _wallets: any = wallets[dataAccountSelected.user];
-        let updateWallet: any;
-        for (let i = 0; i < _wallets.length; i++) {
-          if (_wallets[i].wallet.name == wallet.name) {
-            _wallets[i].wallet.name = newWalletName;
-            _wallets[i].walletColor = walletColor;
-            updateWallet = _wallets[i];
-          };
-        }
-        _wallets = _wallets.map(_ => {
-          return {
-            wallet: _.wallet,
-            walletColor: _.walletColor
-          }
-        });
-        const WALLET = {};
-        WALLET[dataAccountSelected.user] = _wallets;
-        return this.storage.set('wallets', WALLET).then(_ => {
-          return updateWallet;
-        });
+    return this.getLocalWallets().then(wallets => {
+      let _catapultAccounts: any = wallets.catapultAccounts;
+      let _nis1Accounts: any = wallets.nis1Accounts;
+      let updateWallet: any;
+      for (let i = 0; i < _catapultAccounts.length; i++) {
+
+        if (_catapultAccounts[i].account.name == wallet.name) {
+          _catapultAccounts[i].account.name = newWalletName;
+          _catapultAccounts[i].walletColor = walletColor;
+          updateWallet = _catapultAccounts[i];
+        };
+      }
+      for (let i = 0; i < _nis1Accounts.length; i++) {
+
+        if (_nis1Accounts[i].account.name == wallet.name) {
+          _nis1Accounts[i].account.name = newWalletName;
+          _nis1Accounts[i].walletColor = walletColor;
+        };
+      }
+
+      let _wallets = {
+        catapultAccounts: _catapultAccounts,
+        encrypted: wallets.encrypted,
+        nis1Accounts: _nis1Accounts,
+        user: wallets.user
+      }
+
+      let WALLET = [];
+      WALLET.push(_wallets);
+      this.storage.set('selectedWallet', _wallets);
+      this.storage.set('selectedWallet', _wallets);
+      return this.storage.set('wallets', WALLET).then(_ => {
+        return updateWallet;
       });
     });
   }
@@ -421,17 +433,15 @@ export class WalletProvider {
    */
   public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
-    return this.getWalletSelected().then(dataAccountSelected => {
-      return this.getLocalWallets().then(wallets => {
-        const _wallets = wallets[dataAccountSelected.user];
-        for (var i = 0; i < _wallets.length; i++) {
-          if (_wallets[i].wallet.name === walletName || _wallets[i].wallet.address.address === walletAddress) {
-            exists = true;
-            break;
-          }
+    return this.getLocalWallets().then(wallets => {
+      let _catapultAccounts: any = wallets.catapultAccounts;
+      for (var i = 0; i < _catapultAccounts.length; i++) {
+        if (_catapultAccounts[i].account.name === walletName || _catapultAccounts[i].account.address.address === walletAddress) {
+          exists = true;
+          break;
         }
-        return exists;
-      });
+      }
+      return exists;
     });
   }
 
@@ -441,28 +451,24 @@ export class WalletProvider {
    * Get loaded wallets from localStorage
    */
   public getLocalWallets(): Promise<any> {
-    return this.getWalletSelected().then(dataAccountSelected => {
-      return this.storage.get('wallets').then(wallets => {
-        let _wallets = wallets ? wallets : {};
-        const WALLETS = _wallets[dataAccountSelected.user] ? _wallets[dataAccountSelected.user] : [];
-
-        if (wallets) {
-          const walletsMap = WALLETS.map(walletFile => {
-            if (walletFile.name) {
-              return
-              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            } else {
-              return { wallet: <SimpleWallet>(walletFile.wallet), walletColor: walletFile.walletColor };
-            }
-          });
-
-          _wallets[dataAccountSelected.user] = walletsMap;
-        } else {
-          _wallets[dataAccountSelected.user] = [];
+    return this.storage.get('wallets').then(wallets => {
+      let complete = wallets[0]
+      let _wallets = wallets[0].catapultAccounts ? wallets[0].catapultAccounts : {};
+      const WALLETS = _wallets ? _wallets : [];
+      if (wallets) {
+        const walletsMap = WALLETS.map(walletFile => {
+          return { account: <SimpleWallet>(walletFile.account), publicAccount: walletFile.publicAccount, walletColor: walletFile.walletColor };
+        });
+        _wallets = {
+          catapultAccounts: walletsMap,
+          encrypted: complete.encrypted,
+          nis1Accounts: complete.nis1Accounts,
+          user: complete.user
         }
-
-        return _wallets;
-      });
+      } else {
+        _wallets = [];
+      }
+      return _wallets;
     });
   }
 
