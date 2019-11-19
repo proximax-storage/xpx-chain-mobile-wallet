@@ -32,6 +32,7 @@ import { UtilitiesProvider } from "../utilities/utilities";
 import { AlertProvider } from "../alert/alert";
 import { HttpClient } from "@angular/common/http";
 import { HapticProvider } from "../haptic/haptic";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class NemProvider {
@@ -56,7 +57,8 @@ export class NemProvider {
     private haptic: HapticProvider,
     private http: HttpClient,
     private alertProvider: AlertProvider,
-    private utilitiesProvider: UtilitiesProvider
+    private utilitiesProvider: UtilitiesProvider,
+    private translateService: TranslateService,
   ) {
     let serverConfig: ServerConfig[];
     serverConfig = [{ protocol: "https", domain: "bctestnetswap.xpxsirius.io", port: 7890 } as ServerConfig]
@@ -102,22 +104,22 @@ export class NemProvider {
             return nis1AccountsInfo;
           } else {
             // console.log('The account has no balance to swap.');
-            this.alertProvider.showMessage('The account has no balance to swap.');
+            this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_1"));
             this.setNis1AccountsFound$(null);
           }
         } catch (error) {
-          this.alertProvider.showMessage('It was not possible to connect to the server, try later');
+          this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_2"));
           this.setNis1AccountsFound$(null);
         }
       } else {
-        this.alertProvider.showMessage('Swap does not support this account type');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_3"));
         this.setNis1AccountsFound$(null);
       }
 
       return null;
     } catch (error) {
       console.log(error);
-      this.alertProvider.showMessage('It was not possible to connect to the server, try later.');
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_4"));
       this.setNis1AccountsFound$(null);
       return null;
     }
@@ -132,36 +134,23 @@ export class NemProvider {
    * @memberof NemProvider
    */
   async validateBalanceAccounts(xpxFound: AssetTransferable, addressSigner: Address) {
-    // console.log('xpxFound --> ', xpxFound);
     const quantityFillZeros = this.utilitiesProvider.addZeros(6, xpxFound.quantity);
     let realQuantity: any = this.amountFormatter(quantityFillZeros, xpxFound, 6);
     const unconfirmedTxn = await this.getUnconfirmedTransaction(addressSigner);
-    // console.log('Address  ---> ', addressSigner);
     if (unconfirmedTxn.length > 0) {
-      //let quantity = realQuantity;
-      // console.log('realQuantity', realQuantity);
       for (const item of unconfirmedTxn) {
-        // console.log('transaction unconfirmed -->', item);
-
         let existMosaic = null;
         if (item.type === 257 && item['signer']['address']['value'] === addressSigner['value'] && item['_assets'].length > 0) {
           existMosaic = item['_assets'].find((mosaic) => mosaic.assetId.namespaceId === 'prx' && mosaic.assetId.name === 'xpx');
         } else if (item.type === 4100 && item['otherTransaction']['type'] === 257 && item['otherTransaction']['signer']['address']['value'] === addressSigner['value']) {
-          // console.log(item['otherTransaction']['_assets']);
-          // console.log(this.utilitiesProvider.hexToAscii(item['otherTransaction'].message.payload), '\n\n');
           existMosaic = item['otherTransaction']['_assets'].find((mosaic) => mosaic.assetId.namespaceId === 'prx' && mosaic.assetId.name === 'xpx');
         }
 
-        // console.log('existMosaic -->', existMosaic);
         if (existMosaic) {
           const unconfirmedFormatter = parseFloat(this.amountFormatter(existMosaic.quantity, xpxFound, 6));
-          // console.log('\n unconfirmedFormatter --->', unconfirmedFormatter);
           const quantityWhitoutFormat = realQuantity.split(',').join('');
-          // console.log('\nquantityWhitoutFormat --->', quantityWhitoutFormat);
           const residue = this.utilitiesProvider.subtractAmount(parseFloat(quantityWhitoutFormat), unconfirmedFormatter);
-          // console.log('\nresidue --->', residue, '\n');
           const quantityFormat = this.amountFormatter(parseInt((residue).toString().split('.').join('')), xpxFound, 6);
-          // console.log('quantityFormat --->', quantityFormat);
           realQuantity = quantityFormat;
         }
       }
@@ -330,12 +319,12 @@ export class NemProvider {
       case 672:
       case 711:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Some data is invalid');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_5"));
         break;
 
       case 591:
           this.haptic.notification({ type: 'warning' });
-          this.alertProvider.showMessage('Invalid Timestamp');
+          this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_6"));
           break;
 
       case 501:
@@ -344,34 +333,34 @@ export class NemProvider {
       case 685:
       case 691:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Service not available');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_7"));
         break;
 
       case 655:
       case 666:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Insufficient XPX Balance');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_8"));
         break;
 
       case 511:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Daily limit exceeded (5 swaps)');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_9"));
         break;
 
       case 705:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Invalid Url');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_10"));
         break;
 
       case 722:
       case 822:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Account not allowed');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_11"));
         break;
 
       case 541:
         this.haptic.notification({ type: 'warning' });
-        this.alertProvider.showMessage('Account not allowed');
+        this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_11"));
         break;
 
       default:
@@ -380,7 +369,7 @@ export class NemProvider {
           this.alertProvider.showMessage(errorMessage.toString().split('_').join(' '));
         } else {
           this.haptic.notification({ type: 'warning' });
-          this.alertProvider.showMessage('Error! try again later');
+          this.alertProvider.showMessage(this.translateService.instant("SERVICES.SWAP_PROCESS.VALIDATION_7"));
         }
         break;
     }
