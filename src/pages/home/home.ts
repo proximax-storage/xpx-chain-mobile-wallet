@@ -178,7 +178,6 @@ export class HomePage {
           });
 
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
-          console.log("4. LOG: HomePage -> ionViewWillEnter -> account", this.address);
           try {
             this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
               // console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
