@@ -170,16 +170,23 @@ export class HomePage {
             this.selectedAccount = catapulAccounts[0];
           }
 
+          console.log('paso aqui ');
+          
           // Slide to selected wallet
           this.accounts.forEach((acc, index) => {
             if (this.selectedAccount.account.name === acc.account.name) {
               this.slides.slideTo(index);
             }
           });
-
+          console.log('paso aqui 2 ');
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
+          console.log('this.address', this.address);
+          
           try {
+            console.log('entra en el try');
             this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
+
+              console.log('paso la consulta');
               // console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
               // console.log("6. LOG: HomePage -> init -> _myMergedMosaics");
               this.mosaics = mosaics;
@@ -207,8 +214,13 @@ export class HomePage {
               this.getTransactions(this.selectedAccount.publicAccount);
               this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
               this.getTransactionsAggregate(this.selectedAccount.publicAccount);
-            });
+            }, error =>{
+              console.log('error ', error);
+            }
+            );
           } catch (error) {
+            console.log('error ', error);
+            
             // this.hideLoaders();
             this.showEmptyMessage();
           }
