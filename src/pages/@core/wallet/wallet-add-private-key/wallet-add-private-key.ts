@@ -13,6 +13,7 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { NemProvider, AccountsInfoNis1Interface } from '../../../../providers/nem/nem';
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -57,7 +58,8 @@ export class WalletAddPrivateKeyPage {
     private storage: Storage,
     private translateService: TranslateService,
     private modalCtrl: ModalController,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private barcodeScanner: BarcodeScanner,
   ) {
     this.accountColor = 'wallet-1';
     this.configurationForm = this.sharedService.configurationForm;
@@ -208,6 +210,18 @@ export class WalletAddPrivateKeyPage {
    */
   ionViewDidLoad() {
     this.storage.set('isQrActive', true);
+  }
+
+
+  scan() {
+    this.storage.set("isQrActive", true);
+    this.barcodeScanner.scan().then(barcodeData => {
+      console.info('Barcode data', barcodeData);
+      let privKey = JSON.parse(barcodeData.text);
+      if (privKey) {
+        this.formGroup.patchValue({ privateKey: privKey })
+      }
+    });
   }
 
   /**

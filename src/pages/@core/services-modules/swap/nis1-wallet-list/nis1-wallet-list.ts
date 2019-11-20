@@ -99,10 +99,11 @@ export class Nis1WalletListPage {
    * @memberof Nis1WalletListPage
    */
   goImportAccount() {
-    this.navCtrl.push("WalletAddPrivateKeyPage", {
-      name: "",
-      privateKey: "",
-      password: ""
-    });
+    this.dismiss();
+     this.navCtrl.push("WalletAddPrivateKeyPage", {
+       name: "",
+       privateKey: "",
+       password: ""
+     });
   }
 }
