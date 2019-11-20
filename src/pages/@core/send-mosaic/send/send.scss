@@ -1,7 +1,5 @@
 page-send {
-  ion-input {
-    color: color($colors, dark);
-  }
+
 
   [amount] {
     ion-label {
@@ -26,6 +24,7 @@ page-send {
     }
   }
 
+  
   ion-card[amount] {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
@@ -72,7 +71,10 @@ page-send {
   }
 
 
-
+[bold]{
+  font-size: 17px !important;
+  font-weight: bold;
+}
 
   .list .item-inner {
     border-bottom: none !important;
@@ -110,6 +112,9 @@ page-send {
     font-size: 1.4rem !important;
   }
 
-  
+    [background-white] {
+    background-color: white !important;
+
+  }
 
 }
