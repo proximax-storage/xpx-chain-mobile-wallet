@@ -43,6 +43,8 @@ export class WalletAddPrivateKeyPage {
   configurationForm: ConfigurationForm = {};
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
+  privateKey: any;
+  prefix: any;
 
 
   constructor(
@@ -78,11 +80,20 @@ export class WalletAddPrivateKeyPage {
     try {
       const decrypted = await this.authProvider.decryptAccountUser(form.password);
       if (decrypted) {
-        this.catapultAccount = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, form.privateKey);
+
+        this.privateKey = form.privateKey;
+        this.prefix = '';
+        if (this.privateKey.length > 64) {
+          const newPrivateKey = this.privateKey;
+          this.prefix = newPrivateKey.slice(0, -64);
+          this.privateKey = newPrivateKey.slice(2);
+        }
+
+        this.catapultAccount = this.walletProvider.createAccountFromPrivateKey(form.name, form.password, this.privateKey);
         const existAccount = await this.walletProvider.validateExistAccount(this.catapultAccount);
         if (!existAccount) {
           this.nis1Account = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
-          this.walletProvider.storeWalletCatapult(this.catapultAccount, this.nis1Account, this.accountColor, new Password(form.password)).then(_ => {
+          this.walletProvider.storeWalletCatapult(this.catapultAccount, this.nis1Account, this.accountColor, new Password(form.password), this.prefix).then(_ => {
             this.goToBackup(this.catapultAccount, form.privateKey);
           });
 
@@ -103,7 +114,7 @@ export class WalletAddPrivateKeyPage {
       }
     } catch (error) {
       console.log(error);
-      
+
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
     }
   }
@@ -136,7 +147,7 @@ export class WalletAddPrivateKeyPage {
       ]]
     });
 
-    
+
     if (this.navParams.data) {
       this.formGroup.setValue(this.navParams.data);
     }
@@ -161,7 +172,7 @@ export class WalletAddPrivateKeyPage {
    * @memberof WalletAddPrivateKeyPage
    */
   goToBackup(wallet: SimpleWallet, privateKey: string) {
-    return this.navCtrl.push('WalletBackupPage', {wallet: wallet, privateKey: privateKey});
+    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, privateKey: privateKey });
   }
 
   /**

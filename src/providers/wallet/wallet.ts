@@ -288,7 +288,7 @@ export class WalletProvider {
    * @returns {Promise<dataAccount>}
    * @memberof WalletProvider
    */
-  async storeWalletCatapult(catapultAccount: SimpleWallet, nis1Account: SimpleWalletNIS1, walletColor: string, password: Password): Promise<WalletInterface> {
+  async storeWalletCatapult(catapultAccount: SimpleWallet, nis1Account: SimpleWalletNIS1, walletColor: string, password: Password, prefix: string): Promise<WalletInterface> {
     const walletSelected = await this.getWalletSelected();
     const catapultAccounts = (walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
     const nis1Accounts = (walletSelected.nis1Accounts) ? walletSelected.nis1Accounts : [];
@@ -311,6 +311,7 @@ export class WalletProvider {
 
       const accountnis1 = {
         account: nis1Account,
+        prefix: prefix,
         walletColor: walletColor,
         publicAccount: publicAccountNis1,
         publicAccountCatapult: publicAccount
@@ -320,7 +321,7 @@ export class WalletProvider {
       walletSelected['nis1Accounts'] = nis1Accounts;
     }
 
-    const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
+    const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount}
     catapultAccounts.push(accountCatapult);
     walletSelected['catapultAccounts'] = catapultAccounts;
     const wallet: WalletInterface[] = await this.storage.get('wallets');
