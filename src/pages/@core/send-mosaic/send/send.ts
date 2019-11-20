@@ -51,9 +51,8 @@ export class SendPage {
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
-  amount: number;
+  amount: number = 0;
   selectedMosaicName: string;
-  amountPlaceholder: string = "0";
   periodCount = 0;
   decimalCount: number = 0;
   optionsXPX = {
@@ -62,10 +61,12 @@ export class SendPage {
     decimal: ".",
     precision: "6"
   };
-
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
   payload: any = {};
   configurationForm: ConfigurationForm = {};
   address: any;
+  maxAmount: number;
 
   constructor(
     public navCtrl: NavController,
@@ -94,11 +95,13 @@ export class SendPage {
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
     }
-
+    
+    
 
 
     this.createForm();
     this.subscribeValue();
+    this.amount = 0;
   }
 
   ionViewWillEnter() {
@@ -227,8 +230,12 @@ export class SendPage {
   }
 
   getAbsoluteAmount(amount, divisibility) {
-    return this.proximaxProvider.amountFormatter(amount, divisibility)
+    const amountFormatter = this.proximaxProvider.amountFormatter(amount, divisibility)
+  //   this.maxAmount = String(amountFormatter).length
+  //   console.log('this.maxAmount', this.maxAmount);
+    return amountFormatter;
   }
+
   subscribeValue() {
     // Account recipient
     this.form.get("recipientAddress").valueChanges.subscribe(value => {
@@ -239,7 +246,7 @@ export class SendPage {
           : "";
 
       if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-        if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.account.address.address, accountRecipient)) {
+        if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, accountRecipient)) {
           // this.blockSendButton = true;
           this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
@@ -344,6 +351,18 @@ export class SendPage {
     }
   }
 
+    /**
+   *
+   *
+   * @param {Event} e
+   * @memberof WalletInfoPage
+   */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
+  }
+
   dismiss() {
     this.viewCtrl.dismiss();
   }
@@ -372,9 +391,6 @@ export class SendPage {
       });
   }
 
-  clearPlaceholder() {
-    this.amountPlaceholder = "";
-  }
 
   countDecimals(value) {
     if (Math.floor(value) !== value)

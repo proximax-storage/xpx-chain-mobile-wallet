@@ -53,14 +53,26 @@ export class SendMosaicSelectPage {
   ) {
     this.fakeList = [{}, {}];
     this.selectedMosaicc = this.navParams.data.selectedMosaic;
+
+    console.log('this.navParams.data', this.navParams.data);
+    
   }
 
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
+  }
+  
   async ionViewWillEnter() {
-    this.walletProvider.getSelectedWallet().then(selectedWallet => {
+    this.walletProvider.getAccountSelected().then(selectedWallet => {
       this.selectedWallet = selectedWallet
-        this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.address.address)
+      console.log('this.selectedWallet', this.selectedWallet);
+      
+        this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
         this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics=>{
           this.mosaics = mosaics;
+
+          console.log('this.mosaics', this.mosaics);
+          
         })
     });
   }
