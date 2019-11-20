@@ -136,10 +136,12 @@ export class WalletAddPrivateKeyPage {
       ]]
     });
 
+    
     if (this.navParams.data) {
       this.formGroup.setValue(this.navParams.data);
     }
   }
+
 
   /**
    *
