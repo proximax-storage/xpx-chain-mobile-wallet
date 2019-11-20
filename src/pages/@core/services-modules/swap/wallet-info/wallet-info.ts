@@ -87,7 +87,7 @@ export class WalletInfoPage {
   ) {
 
     this.configurationForm = this.sharedService.configurationForm;
-    const options: LoadingOptions = { content: 'Getting account information...' };
+    const options: LoadingOptions = { content: this.translateService.instant("SERVICES.SWAP_PROCESS.GETTING_INFORMATION") };
     const loader = this.loadingCtrl.create(options);
     loader.present();
     this.nis1Account = this.navParams.data.data.nis1Account;
@@ -131,7 +131,7 @@ export class WalletInfoPage {
    */
   anounceTransaction(transaction: TransferTransaction, account: AccountNIS1, siriusAccount: PublicAccountTsjs) {
     let options: LoadingOptions = {
-      content: 'Initiating swap...'
+      content: this.translateService.instant("SERVICES.SWAP_PROCESS.INITIALIZING_SWAP")
     };
     let loader = this.loadingCtrl.create(options);
     loader.present();

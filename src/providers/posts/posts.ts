@@ -17,10 +17,10 @@ export class PostsProvider {
 
 
   constructor(
-    public http: HttpClient, 
+    public http: HttpClient,
     private storage: Storage
   ) {
-    this.getSeenPosts().then(posts=> {
+    this.getSeenPosts().then(posts => {
       this.seenPosts = posts || [];
     })
   }
@@ -37,7 +37,7 @@ export class PostsProvider {
       if (posts) {
         posts = posts.filter(_ => _.id != postId);
         posts.push({ id: postId });
-          
+
       } else {
         posts = [{ id: postId }]; // Genesis post
       }
@@ -65,16 +65,15 @@ export class PostsProvider {
   }
 
   public isNew(postId) {
-      if (this.seenPosts) {
-        let posts = this.seenPosts.filter(_ => _.id === postId);
-				console.log("LOG: PostsProvider -> publicisNew -> posts", posts);
-        if(posts.length > 0) {
-          return true;
-        } else {
-          return false;
-        } 
+    if (this.seenPosts) {
+      let posts = this.seenPosts.filter(_ => _.id === postId);
+      if (posts.length > 0) {
+        return true;
       } else {
         return false;
       }
+    } else {
+      return false;
+    }
   }
 }

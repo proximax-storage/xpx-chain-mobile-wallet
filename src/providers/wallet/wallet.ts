@@ -161,7 +161,6 @@ deleteWallet(wallet: SimpleWallet) {
    */
   async filterCatapultAccountInWalletSelected(publicAccountCatapult: PublicAccount) {
     const myWalletSelected = await this.getWalletSelected();
-    console.log('This my wallet selected --->', myWalletSelected);
     const myAccountFiltered = myWalletSelected.catapultAccounts.find(x => x.publicAccount.publicKey === publicAccountCatapult.publicKey);
     return (myAccountFiltered) ? myAccountFiltered : null;
   }
@@ -196,7 +195,7 @@ deleteWallet(wallet: SimpleWallet) {
    */
   async getAccountsCatapult(): Promise<CatapultsAccountsInterface[]> {
     const walletSelected = await this.getWalletSelected();
-    return (walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
+    return (walletSelected && walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
   }
 
     /**

@@ -38,7 +38,7 @@ export class Nis1WalletListPage {
     private loadingCtrl: LoadingController,
     private walletProvider: WalletProvider,
     private modalCtrl: ModalController,
-    private translateService: TranslateService,
+    private translateService: TranslateService
   ) {
     this.walletProvider.getAccountsNis1().then(accountsNis1 => {
       this.accountsNIS1 = accountsNis1;

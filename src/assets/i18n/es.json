@@ -184,7 +184,18 @@
     "SERVICES.SWAP_PROCESS.SIRIUS_WALLET": "Dirección de Sirius",
     "SERVICES.SWAP_PROCESS.CERTIFICATE": "Certificado de intercambio",
     "SERVICES.SWAP_PROCESS.GETTING_INFORMATION": "Obteniendo información...",
+    "SERVICES.SWAP_PROCESS.INITIALIZING_SWAP": "Iniciando swap...",
     "SERVICES.SWAP_PROCESS.SERVICE_NOT_AVAILABLE": "Servicio no disponible",
+    "SERVICES.SWAP_PROCESS.VALIDATION_1": "La cuenta no tiene balance para intercambiar.",
+    "SERVICES.SWAP_PROCESS.VALIDATION_2": "No fue posible conectarse al servidor, intente más tarde",
+    "SERVICES.SWAP_PROCESS.VALIDATION_3": "Swap no admite este tipo de cuenta",
+    "SERVICES.SWAP_PROCESS.VALIDATION_5": "Alguno de los datos ingrados no son válidos.",
+    "SERVICES.SWAP_PROCESS.VALIDATION_6": "Fecha inválida",
+    "SERVICES.SWAP_PROCESS.VALIDATION_7": "Servicio no disponible",
+    "SERVICES.SWAP_PROCESS.VALIDATION_8": "Balance XPX es insuficiente",
+    "SERVICES.SWAP_PROCESS.VALIDATION_9": "Límite diario excedido (5 intercambios)",
+    "SERVICES.SWAP_PROCESS.VALIDATION_10": "Url inválida",
+    "SERVICES.SWAP_PROCESS.VALIDATION_11": "Cuenta no permitida para hacer swap",
     "SETTINGS" : "Ajustes",
     "SETTINGS.WALLET_GUIDE" : "Guía de la wallet",
     "SETTINGS.WALLET_GUIDE.DESC" : "Lo que necesita saber para tomar las medidas adecuadas para asegurar su wallet. ",
@@ -233,9 +244,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "Ruso",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamita",
     "SETTINGS.LOGOUT" : "Cerrar sesión",
-
     "TRANSACTION_DETAIL.COSIGN": "Aprobar para continuar",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosignatario",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Esta transacción ha sido firmada con éxito"
-
 }
