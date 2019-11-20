@@ -70,7 +70,7 @@ export class LoginPage implements OnInit {
       const decrypted = await this.authProvider.decryptAccountUser(form.password, form.user);
       if (decrypted) {
         this.haptic.notification({ type: 'success' });
-        this.walletProvider.setSelectedAccount(decrypted);
+        this.walletProvider.setSelectedWallet(decrypted);
         this.gotoHome();
       } else {
         this.utils.showInsetModal('TryAgainPage', {}, 'small');

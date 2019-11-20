@@ -43,11 +43,11 @@ export class WalletProvider {
   }
 
 
-    /**
-   * Check If Wallet Name Exists
-   * @param walletName
-   * @return Promise that resolves a boolean if exists
-   */
+  /**
+ * Check If Wallet Name Exists
+ * @param walletName
+ * @return Promise that resolves a boolean if exists
+ */
   checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
     return this.getLocalWallets().then(wallets => {
@@ -94,63 +94,63 @@ export class WalletProvider {
     }
   }
 
-    /**
-  *
-  *
-  * @param {string} walletName
-  * @param {string} password
-  * @param {string} privateKey
-  * @returns {SimpleWallet}
-  * @memberof WalletProvider
-  */
- createAccountFromPrivateKey(walletName: string, password: string, privateKey: string): SimpleWallet {
-  return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
-}
+  /**
+*
+*
+* @param {string} walletName
+* @param {string} password
+* @param {string} privateKey
+* @returns {SimpleWallet}
+* @memberof WalletProvider
+*/
+  createAccountFromPrivateKey(walletName: string, password: string, privateKey: string): SimpleWallet {
+    return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
+  }
 
-/**
- *
- *
- * @param {string} walletName
- * @param {string} password
- * @returns {SimpleWallet}
- * @memberof WalletProvider
- */
-createSimpleWallet(walletName: string, password: string): SimpleWallet {
-  return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
-}
+  /**
+   *
+   *
+   * @param {string} walletName
+   * @param {string} password
+   * @returns {SimpleWallet}
+   * @memberof WalletProvider
+   */
+  createSimpleWallet(walletName: string, password: string): SimpleWallet {
+    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  }
 
-deleteWallet(wallet: SimpleWallet) {
-  return this.getLocalWallets().then(wallets => {
-    let _catapultAccounts: any = wallets.catapultAccounts;
-    let _nis1Accounts: any = wallets.nis1Accounts;
+  deleteWallet(wallet: SimpleWallet) {
+    return this.getLocalWallets().then(wallets => {
+      let _catapultAccounts: any = wallets.catapultAccounts;
+      let _nis1Accounts: any = wallets.nis1Accounts;
 
-    _catapultAccounts.map((res, index) => {
-      if (res.account.name == wallet['account'].name) {
-        _catapultAccounts.splice(index, 1);
+      _catapultAccounts.map((res, index) => {
+        if (res.account.name == wallet['account'].name) {
+          _catapultAccounts.splice(index, 1);
+        }
+      });
+
+      _nis1Accounts.map((res, index) => {
+        if (res.account.name == wallet['account'].name) {
+          _nis1Accounts.splice(index, 1);
+        }
+      });
+
+      let _wallets = {
+        catapultAccounts: _catapultAccounts,
+        encrypted: wallets.encrypted,
+        nis1Accounts: _nis1Accounts,
+        user: wallets.user
       }
+
+      let walletsDeleted = [];
+      walletsDeleted.push(_wallets);
+      this.storage.set('selectedAccount', _catapultAccounts[0]);
+      this.storage.set('selectedWallet', _wallets);
+      this.storage.set('wallets', walletsDeleted)
+      return;
     });
-
-    _nis1Accounts.map((res, index) => {
-      if (res.account.name == wallet['account'].name) {
-        _nis1Accounts.splice(index, 1);
-      }
-    });
-
-    let _wallets = {
-      catapultAccounts: _catapultAccounts,
-      encrypted: wallets.encrypted,
-      nis1Accounts: _nis1Accounts,
-      user: wallets.user
-    }
-
-    let walletsDeleted = [];
-    walletsDeleted.push(_wallets);
-    this.storage.set('selectedAccount', _catapultAccounts[0]);
-    this.storage.set('selectedWallet', _wallets);
-    this.storage.set('wallets', walletsDeleted)
-    return;
-  });
-}
+  }
 
   /**
    *
@@ -187,21 +187,21 @@ deleteWallet(wallet: SimpleWallet) {
     return result;
   }
 
-    /**
-   *
-   *
-   * @returns {Promise<CatapultsAccountsInterface[]>}
-   * @memberof WalletProvider
-   */
+  /**
+ *
+ *
+ * @returns {Promise<CatapultsAccountsInterface[]>}
+ * @memberof WalletProvider
+ */
   async getAccountsCatapult(): Promise<CatapultsAccountsInterface[]> {
     const walletSelected = await this.getWalletSelected();
     return (walletSelected && walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
   }
 
-    /**
-   * Get Wallet Local
-   * @return Promise that returns wallets
-   */
+  /**
+ * Get Wallet Local
+ * @return Promise that returns wallets
+ */
   public getLocalWallets(): Promise<any> {
     return this.storage.get('wallets').then(wallets => {
       let complete = wallets[0]
@@ -224,12 +224,12 @@ deleteWallet(wallet: SimpleWallet) {
     });
   }
 
-   /**
-   *
-   *
-   * @returns {Promise<SimpleWallet>}
-   * @memberof WalletProvider
-   */
+  /**
+  *
+  *
+  * @returns {Promise<SimpleWallet>}
+  * @memberof WalletProvider
+  */
   async getSelectedWallet(): Promise<SimpleWallet> {
     let wallets = await this.storage.get('selectedWallet');
     let _wallet = null;
@@ -243,7 +243,7 @@ deleteWallet(wallet: SimpleWallet) {
     }
     return _wallet;
   }
-  
+
   /**
    *
    *
@@ -359,13 +359,13 @@ deleteWallet(wallet: SimpleWallet) {
     return;
   }
 
-   /**
-   * 
-   * @param wallet 
-   * @param newWalletName 
-   * @param walletColor 
-   */
-   updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
+  /**
+  * 
+  * @param wallet 
+  * @param newWalletName 
+  * @param walletColor 
+  */
+  updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
     return this.getLocalWallets().then(wallets => {
       let _catapultAccounts: any = wallets.catapultAccounts;
       let _nis1Accounts: any = wallets.nis1Accounts;
@@ -398,8 +398,8 @@ deleteWallet(wallet: SimpleWallet) {
       this.storage.set('selectedAccount', updateWallet);
       this.storage.set('selectedWallet', _wallets);
       this.storage.set('wallets', walletsUpdate)
-        return ;
-      });
+      return;
+    });
   }
 
 
