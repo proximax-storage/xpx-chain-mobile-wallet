@@ -27,6 +27,7 @@ export class LoginPage implements OnInit {
   formGroup: FormGroup;
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
+  user: any;
 
 
   constructor(
@@ -45,6 +46,10 @@ export class LoginPage implements OnInit {
     private translateService: TranslateService
   ) {
     this.createForm();
+    this.storage.get("wallets").then(results => {
+      this.user = results[0].user;
+      this.formGroup.get("user").setValue(this.user);
+    })
     this.passwordType = "password";
     this.passwordIcon = "ios-eye-outline";
 

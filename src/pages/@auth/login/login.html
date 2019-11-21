@@ -22,7 +22,7 @@
         <form [formGroup]="formGroup" (ngSubmit)="auth(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"APP.COMMON.USERNAME" | translate}}</ion-label>
-            <ion-input autocapitalize="none" type="text" formControlName="user"
+            <ion-input autocapitalize="none" type="text" formControlName="user" readonly
               placeholder="{{'APP.COMMON.USERNAME.PLACEHOLDER' | translate}}"></ion-input>
           </ion-item>
 
