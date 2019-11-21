@@ -8,7 +8,7 @@
 <ion-header no-border>
   <ion-navbar transparent>
     <ion-title>
-        <img class="wallet-logo" src="assets/imgs/slides/logo-proximax-sirius-wallet-beta.svg">
+      <img class="wallet-logo" src="assets/imgs/slides/logo-proximax-sirius-wallet-beta.svg">
     </ion-title>
 
     <ion-buttons end>
@@ -58,43 +58,114 @@
 
   <!-- Transactions -->
   <ion-list transparent-items *ngIf="!isLoading">
-    <h2 padding *ngIf="!showEmptyMessage">{{"WALLETS.TRANSACTIONS" | translate}}</h2>
 
-    <!-- Partial Transactions -->
-    <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy: trackByHash"
-      (click)="gotoTransactionDetail(transaction)">
-
-      <!-- if transfer  -->
-      <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
-        [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'">
-      </transfer-transaction>
-    </ion-card>
+    <!-- --------------------------- -->
+    <ion-grid normal>
+      <ion-segment mode='md' [(ngModel)]="menu" color="dark">
+        <ion-segment-button value="confirmed" checked>
+          CONFIRMED
+        </ion-segment-button>
+        <ion-segment-button value="unconfirmed">
+          UNCONFIRMED
+        </ion-segment-button>
+        <ion-segment-button value="partials">
+          PARTIALS
+        </ion-segment-button>
+      </ion-segment>
+    </ion-grid>
 
     <!-- Confirmed Transactions -->
-    <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
-      (click)="gotoTransactionDetail(transaction)">
+    <ng-container *ngIf="menu === 'confirmed'">
+      <ng-container *ngIf="confirmedTransactions?.length > 0; else showEmptyMessage">
+        <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
+          (click)="gotoTransactionDetail(transaction)">
+          <!-- if transfer  -->
+          <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
+            [status]="'Confirmed'">
+          </transactions>
+        </ion-card>
+      </ng-container>
 
-      <!-- if transfer  -->
-      <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
-        [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
-      </transfer-transaction>
-    </ion-card>
+      <ng-template #showEmptyMessage>
+        <ion-grid empty>
+          <ion-row>
+            <ion-col>
+              <br><br>
+              <img quarter-width [src]="App.STICKERS.SORRY">
+              <h6 ion-text color="grey" text-wrap>
+                <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
+              </h6>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-template>
+    </ng-container>
+
+    <!-- Unconfirmed Transactions -->
+    <ng-container *ngIf="menu === 'unconfirmed'">
+      <ng-container *ngIf="unconfirmedTransactions?.length > 0; else showEmptyMessage">
+        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash"
+          (click)="gotoTransactionDetail(transaction)">
+          <!-- if transfer  -->
+          <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
+            [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
+          </transactions>
+        </ion-card>
+      </ng-container>
+
+      <ng-template #showEmptyMessage>
+        <ng-container>
+          <ion-grid empty>
+            <ion-row>
+              <ion-col>
+                <br><br>
+                <img quarter-width [src]="App.STICKERS.SORRY">
+                <h6 ion-text color="grey" text-wrap>
+                  <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
+                </h6>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ng-container>
+      </ng-template>
+    </ng-container>
+
+    <!-- Partials Transactions -->
+    <ng-container *ngIf="menu === 'partials'">
+      <ng-container *ngIf="aggregateTransactions?.length > 0; else showEmptyMessage">
+        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy: trackByHash"
+          (click)="gotoTransactionDetail(transaction)">
+          <!-- if transfer  -->
+          <transactions *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
+            [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'">
+          </transactions>
+        </ion-card>
+      </ng-container>
+
+      <ng-template #showEmptyMessage>
+        <ion-grid empty>
+          <ion-row>
+            <ion-col>
+              <br><br>
+              <img quarter-width [src]="App.STICKERS.SORRY">
+              <h6 ion-text color="grey" text-wrap>
+                <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
+              </h6>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-template>
+    </ng-container>
 
 
+    <!-- <ion-list>
+      <ion-item *ngFor="let i of items">{{i}}</ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll> -->
+    <!-- --------------------------- -->
   </ion-list>
-  <!-- ./Transactions -->
-
-  <ion-grid padding empty *ngIf="showEmptyMessage" reduce-margin-top>
-    <ion-row padding>
-      <ion-col>
-        <br><br>
-        <img quarter-width [src]="App.STICKERS.SORRY">
-        <h6 ion-text color="grey" text-wrap>
-          <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
-        </h6>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 </ion-content>
 
 <ion-footer>
@@ -121,13 +192,3 @@
 <ng-template #loading>
   <ion-spinner name="dots"></ion-spinner>
 </ng-template>
-
-
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let i of items">{{i}}</ion-item>
-  </ion-list>
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-</ion-content>

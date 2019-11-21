@@ -105,7 +105,7 @@ export class HomePage {
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
   ) {
-    
+
   }
 
 
@@ -117,6 +117,57 @@ export class HomePage {
     this.utils.setHardwareBack();
     this.init();
   }
+
+
+
+  /**
+   *
+   *
+   * @param {CatapultsAccountsInterface} selectedAccount
+   * @memberof HomePage
+   */
+  async showWalletDetails(selectedAccount: CatapultsAccountsInterface) {
+    this.selectedAccount = selectedAccount;
+    let page = "TransactionListPage";
+    let transactions = this.confirmedTransactions;
+    let aggregateTransactions = this.aggregateTransactions;
+    let total = this.totalWalletBalance;
+    let mosaics = this.mosaics;
+    let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
+    const modal = this.modalCtrl.create(page, payload, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+
+    await modal.present().then(_ => {
+      this.init();
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @memberof HomePage
+   */
+  getTransactions(publicAccount: PublicAccount) {
+    this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
+      this.isLoading = false;
+      this.confirmedTransactions = transactions;
+      /*if (transactions) {
+        const transferTransactions: Array<Transaction> = transactions.filter(
+          tx => tx.type == TransactionType.TRANSFER
+        );
+        this.confirmedTransactions = transferTransactions;
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true;
+      }*/
+    }, error => this.isLoading = false);
+  }
+
+  // -----------------------------------------------------------------------------------
 
   /**
    *
@@ -215,26 +266,7 @@ export class HomePage {
     this.confirmedTransactions = null;
   }
 
-  getTransactions(publicAccount: PublicAccount) {
-    // this.proximaxProvider.getTransactionsFromAccountId();
-    this.isLoading = true;
-    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
-      if (transactions) {
-        const transferTransactions: Array<Transaction> = transactions.filter(
-          tx => tx.type == TransactionType.TRANSFER
-        );
-        this.confirmedTransactions = transferTransactions;
-        // console.log(
-        //   "this.confirmedTransactions ",
-        //   this.confirmedTransactions
-        // );
-        this.showEmptyTransaction = false;
-      } else {
-        this.showEmptyTransaction = true;
-      }
-    });
-    this.isLoading = false;
-  }
+  
 
   getTransactionsUnconfirmed(publicAccount: PublicAccount) {
     this.isLoading = true;
@@ -281,22 +313,7 @@ export class HomePage {
     });
   }
 
-  async showWalletDetails(selectedAccount: CatapultsAccountsInterface) {
-    this.selectedAccount = selectedAccount;
-    let page = "TransactionListPage";
-    let transactions = this.confirmedTransactions;
-    let aggregateTransactions = this.aggregateTransactions;
-    let total = this.totalWalletBalance;
-    let mosaics = this.mosaics;
-    let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
-    const modal = this.modalCtrl.create(page, payload, {
-      enableBackdropDismiss: false,
-      showBackdrop: true
-    });
-    await modal.present().then(_ => {
-      this.init();
-    });
-  }
+  
 
   getAbsoluteAmount(amount, divisibility) {
     return this.proximaxProvider.amountFormatter(amount, divisibility)

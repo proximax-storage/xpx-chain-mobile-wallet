@@ -1,4 +1,4 @@
-import { DefaultMosaic } from './../../../../../models/default-mosaic';
+import { DefaultMosaic } from '../../../../../models/default-mosaic';
 import { Component, Input } from '@angular/core';
 import { App } from '../../../../../providers/app/app';
 import { TransferTransaction } from '../../../../../models/transfer-transaction';
@@ -9,10 +9,10 @@ import { AppConfig } from '../../../../../app/app.config';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'transfer-transaction',
-  templateUrl: 'transfer-transaction.html'
+  selector: 'transactions',
+  templateUrl: 'transactions.html'
 })
-export class TransferTransactionComponent {
+export class TransactionComponent {
   hiden: boolean;
   @Input() tx: TransferTransaction; // Type conversion for better code completion
   @Input() mosaics: DefaultMosaic[] = [];
@@ -90,7 +90,7 @@ export class TransferTransactionComponent {
                   this.MESSAGE_ = "ProximaX Swap";
                   this.MOSAIC_INFO = null;
                   this.AMOUNT = null;
-                  this.LOGO = App.LOGO.DEFAULT;
+                  this.LOGO = App.LOGO.SWAP;
                   this.showTx = true;
                   /*newTransaction = Object.assign({}, this.tx['innerTransactions'][0]);
                   newTransaction['transactionInfo'] = transaction.transactionInfo;

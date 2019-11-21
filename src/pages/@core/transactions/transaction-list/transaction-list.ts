@@ -27,10 +27,14 @@ import { HapticProvider } from '../../../../providers/haptic/haptic';
   providers: [GetMarketPricePipe]
 })
 export class TransactionListPage {
+
   /** Transaction list member variables */
-
-
   items = [];
+  menu = 'confirmed';
+  aggregateTransactions: Array<AggregateTransaction> = [];
+  confirmedTransactions = [];
+  unconfirmedTransactions = [];
+
   // --------------------------------------------------
   
   App = App;
@@ -39,9 +43,6 @@ export class TransactionListPage {
   currentWallet: SimpleWallet;
   fakeList: Array<any>;
 
-  unconfirmedTransactions: Array<any>;
-  aggregateTransactions: Array<AggregateTransaction> = [];
-  confirmedTransactions: Array<any>;
   showEmptyMessage: boolean;
   isLoading: boolean;
 
@@ -62,10 +63,6 @@ export class TransactionListPage {
   selectedAccount: any;
 
   mosaics: any[] = [];
-
-
-
-
 
   constructor(
     public navCtrl: NavController,
@@ -94,7 +91,6 @@ export class TransactionListPage {
     if (this.confirmedTransactions === null) {
       this.showEmptyMessage = true;
     }
-
 
     for (let i = 0; i < 30; i++) {
       this.items.push(this.items.length);

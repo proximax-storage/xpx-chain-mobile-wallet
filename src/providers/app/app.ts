@@ -29,6 +29,7 @@ export class App {
     SFT: `assets/imgs/mosaics/sft.png`,
     XAR: `assets/imgs/mosaics/xar.png`,
     DEFAULT: `assets/imgs/mosaics/default.png`,
+    SWAP: `assets/imgs/xpx-swap.png`,
   };
   public static USER = `${App.ASSETS}/user.svg`;
   public static INFO = `${App.ASSETS}/info.svg`;
