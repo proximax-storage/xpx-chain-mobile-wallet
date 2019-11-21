@@ -160,7 +160,6 @@ export class HomePage {
     this.totalWalletBalance = 0;
     this.showLoaders();
     this.walletProvider.getAccountsCatapult().then(catapulAccounts => {
-      console.log('catapulAccountscatapulAccountscatapulAccounts', catapulAccounts);
       this.accounts = catapulAccounts;
       if (this.accounts.length > 0) {
         this.walletProvider.getAccountSelected().then(selectedAccount => {
@@ -170,64 +169,41 @@ export class HomePage {
             this.selectedAccount = catapulAccounts[0];
           }
 
-          console.log('paso aqui ');
-          
           // Slide to selected wallet
           this.accounts.forEach((acc, index) => {
             if (this.selectedAccount.account.name === acc.account.name) {
               this.slides.slideTo(index);
             }
           });
-          console.log('paso aqui 2 ');
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
-          console.log('this.address', this.address);
-          
           try {
-            console.log('entra en el try');
             this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
+              if (mosaics === null) {
+                this.showEmptyMessage();
+              } else {
 
-              console.log('paso la consulta');
-              // console.log("5. TCL: HomePage -> init -> mosaics", mosaics);
-              // console.log("6. LOG: HomePage -> init -> _myMergedMosaics");
-              this.mosaics = mosaics;
+                this.mosaics = mosaics;
+                this.mosaicsProvider.computeTotalBalance(mosaics).then(total => {
+                  this.totalWalletBalance = total as number;
+                  // loader.dismiss();
+                });
+                this.getTransactions(this.selectedAccount.publicAccount);
+                this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
+                this.getTransactionsAggregate(this.selectedAccount.publicAccount);
+              }
 
-              // Compute wallet balance in USD
-              // console.log(
-              //   "7. LOG: HomePage -> computeTotalBalance -> mosaics",
-              //   mosaics
-              // );
-              this.mosaicsProvider.computeTotalBalance(mosaics).then(total => {
-                this.totalWalletBalance = total as number;
-                // console.log(this.totalWalletBalance);
-                // console.log(
-                //   "SIRIUS CHAIN WALLET: HomePage -> init -> total",
-                //   total
-                // );
-                // loader.dismiss();
-              });
-
-              // Show Transactions
-              // console.log(
-              //   "8. LOG: HomePage -> getTransactions -> selectedWallet",
-              //   this.selectedWallet
-              // );
-              this.getTransactions(this.selectedAccount.publicAccount);
-              this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
-              this.getTransactionsAggregate(this.selectedAccount.publicAccount);
-            }, error =>{
+            }, error => {
               console.log('error ', error);
             }
             );
           } catch (error) {
             console.log('error ', error);
-            
-            // this.hideLoaders();
+            this.hideEmptyMessage();
             this.showEmptyMessage();
           }
         });
         this.hideEmptyMessage();
       } else {
-        // this.hideLoaders();
         this.showEmptyMessage();
       }
       this.hideLoaders();

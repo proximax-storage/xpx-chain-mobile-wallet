@@ -35,12 +35,6 @@ export class MosaicsProvider {
 
 
 
-
-
-  // ----------------------------------------------------------------------------------------------------------------
-
-
-
   getDefaultMosaics(): Array<DefaultMosaic> {
     const XPX = new DefaultMosaic({ namespaceId: "prx", mosaicId: "xpx", hex: AppConfig.xpxHexId, amount: 0, amountCompact: 0, divisibility: 0 });
     // const NPXS = new DefaultMosaic({ namespaceId: "pundix", mosaicId: "npxs", hex: "1e29b3356f3e24e5", amount: 0, divisibility:0 });
@@ -85,6 +79,8 @@ export class MosaicsProvider {
           })
 
           observer.next(this.getMosaicMetaData(activeMosaics));
+        }, error => {
+          observer.next(null)
         })
     })
   }
@@ -290,4 +286,3 @@ export class MosaicsProvider {
   }
 
 }
-
