@@ -18,6 +18,7 @@ export class MyApp {
   @ViewChild(Nav) navChild:Nav;
 
   match : DeeplinkMatch;
+  listNodes: string[];
 
   constructor(
     statusBar: StatusBar,
@@ -110,11 +111,10 @@ export class MyApp {
 
   getNode(){
     this.storage.get("node").then(nodeStorage => {
-      if(nodeStorage === null || nodeStorage === undefined){
-        this.storage.set("node", AppConfig.sirius.httpNodeUrl);
-      }
+      this.listNodes =  AppConfig.sirius.nodes
+      const nodeSelected = (nodeStorage === null || nodeStorage === '') ? this.listNodes[Math.floor(Math.random() * this.listNodes.length)] : nodeStorage;
+        this.storage.set("node", nodeSelected);
     })
-
   }
 
   initOnPauseResume() {

@@ -7,6 +7,11 @@ export const AppConfig = {
   },
   timeOutTransactionNis1: 20000,
   sirius: {
+    nodes: [
+      "https://bctestnet1.brimstone.xpxsirius.io",
+      "https://bctestnet2.brimstone.xpxsirius.io",
+      "https://bctestnet3.brimstone.xpxsirius.io"
+    ],
     httpNodeUrl: "https://bctestnet1.brimstone.xpxsirius.io",
     wsNodeUrl: "ws://bctestnet1.brimstone.xpxsirius.io:3000",
     networkType: NetworkType.TEST_NET,
@@ -29,7 +34,7 @@ export const AppConfig = {
     burnAddress: 'TBF4LAZUEJMBIOC6J24D6ZGGXE5W775TX555CTTN',
     addressAccountMultisig: 'VAWOEOWTABXR7O3ZAK2XNA5GIBNE6PZIXDAFDWBU',
     addressAccountSimple: 'VCWLIYQPQAJSYWMWL5BHUCA3VOWVOXZ3WTNJPTUJ',
-      nodes: [
+    nodes: [
       { protocol: "https", domain: "bctestnetswap.xpxsirius.io", port: 7890 } as ServerConfig
     ],
   }
