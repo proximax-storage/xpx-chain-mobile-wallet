@@ -69,7 +69,7 @@ export class MosaicsProvider {
       scan((acc, v) => acc.concat(v), []),
       last()
     )
-    .subscribe(async mosaicAmountViewArray =>{     
+    .subscribe(async mosaicAmountViewArray =>{    
 
       // Filter out expired mosaics (5760)
       const activeMosaics = await mosaicAmountViewArray.filter((_:MosaicAmountView)=> _.mosaicInfo.duration.compact() != 5760 && _.mosaicInfo.duration.compact() != 11520)
@@ -79,6 +79,8 @@ export class MosaicsProvider {
       })
 
       observer.next(this.getMosaicMetaData(activeMosaics));
+    }, error => {
+      observer.next(null)
     })
   })
   }
