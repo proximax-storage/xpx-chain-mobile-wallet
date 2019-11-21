@@ -29,13 +29,26 @@
       </ion-card-content>
     </ion-card>
   </section>
+
+  <ion-grid normal>
+    <ion-segment mode='md' [(ngModel)]="menu" color="dark">
+      <ion-segment-button value="confirmed" checked>
+        CONFIRMED
+      </ion-segment-button>
+      <ion-segment-button value="unconfirmed">
+        UNCONFIRMED
+      </ion-segment-button>
+      <ion-segment-button value="partials">
+        PARTIALS
+      </ion-segment-button>
+    </ion-segment>
+  </ion-grid>
 </ion-header>
 
 <ion-content background>
   <!-- Skeleton loader -->
   <ion-list transparent-items *ngIf="isLoading">
     <h2 padding *ngIf="!showEmptyMessage">{{"WALLETS.TRANSACTIONS" | translate}}</h2>
-
     <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
       <skeleton-loader></skeleton-loader>
     </ion-card>
@@ -49,22 +62,6 @@
 
   <!-- Transactions -->
   <ion-list transparent-items *ngIf="!isLoading">
-
-    <!-- --------------------------- -->
-    <ion-grid normal>
-      <ion-segment mode='md' [(ngModel)]="menu" color="dark">
-        <ion-segment-button value="confirmed" checked>
-          CONFIRMED
-        </ion-segment-button>
-        <ion-segment-button value="unconfirmed">
-          UNCONFIRMED
-        </ion-segment-button>
-        <ion-segment-button value="partials">
-          PARTIALS
-        </ion-segment-button>
-      </ion-segment>
-    </ion-grid>
-
     <!-- Confirmed Transactions -->
     <ng-container *ngIf="menu === 'confirmed'">
       <ng-container *ngIf="confirmedTransactions?.length > 0; else showEmptyMessage">
