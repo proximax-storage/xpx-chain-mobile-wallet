@@ -66,12 +66,16 @@
     <ng-container *ngIf="menu === 'confirmed'">
       <ng-container *ngIf="confirmedTransactions?.length > 0; else showEmptyMessage">
         <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
-          (click)="gotoTransactionDetail(transaction)">
+          (click)="gotoTransactionDetail(transaction, 'confirmed')">
           <!-- if transfer  -->
           <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
             [status]="'Confirmed'">
           </transactions>
         </ion-card>
+
+        <ion-infinite-scroll (ionInfinite)="getMoreConfirmedTxn($event)">
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
       </ng-container>
 
       <ng-template #showEmptyMessage>
@@ -93,7 +97,7 @@
     <ng-container *ngIf="menu === 'unconfirmed'">
       <ng-container *ngIf="unconfirmedTransactions?.length > 0; else showEmptyMessage">
         <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash"
-          (click)="gotoTransactionDetail(transaction)">
+          (click)="gotoTransactionDetail(transaction, 'unconfirmed')">
           <!-- if transfer  -->
           <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
             [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
@@ -122,7 +126,7 @@
     <ng-container *ngIf="menu === 'partials'">
       <ng-container *ngIf="aggregateTransactions?.length > 0; else showEmptyMessage">
         <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy: trackByHash"
-          (click)="gotoTransactionDetail(transaction)">
+          (click)="gotoTransactionDetail(transaction, 'partials')">
           <!-- if transfer  -->
           <transactions *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
             [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'">

@@ -23,7 +23,7 @@ export class MockDataProvider {
   init() {
     Promise.all([
       this.storage.get('pin'),
-      this.storage.get('wallets'),
+      this.storage.get('myWallets'),
       this.storage.get('accounts'),
       this.storage.get('selectedWallet'),
       this.storage.get('selectedAccount'),
@@ -38,7 +38,7 @@ export class MockDataProvider {
       // if (!PIN) this.storage.set('pin', this.pin); // TODO Enable during testing by ios
       if (!PIN) this.storage.set('pin', false); // TODO Disable during production
       if (!ACCOUNTS) this.storage.set('accounts', this.accounts);
-      if (!WALLETS) this.storage.set('wallets', this.wallets);
+      if (!WALLETS) this.storage.set('myWallets', this.wallets);
       if (!SELECTED_ACCOUNT) this.storage.set('selectedAccount', this.selectedAccount);
       if (!SELECTED_WALLET) this.storage.set('selectedWallet', this.selectedWallet);
     });

@@ -29,4 +29,8 @@ page-transaction-list {
   ion-grid[reduce-margin-top] {
     margin-top: -6em
   }
+
+  ion-infinite-scroll-content{
+    min-height: 10px !important;
+  }
 }

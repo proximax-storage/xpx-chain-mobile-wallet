@@ -2,13 +2,13 @@ import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams, ModalController, ViewController, ActionSheetController } from "ionic-angular";
 import { SimpleWallet, Transaction, Pageable, AccountInfoWithMetaData } from "nem-library";
 import { TranslateService } from '@ngx-translate/core';
+import { Clipboard } from "@ionic-native/clipboard";
 import { TransactionType, AggregateTransaction } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { CoinPriceChartProvider } from "../../../../providers/coin-price-chart/coin-price-chart";
 import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
 import { App } from "../../../../providers/app/app";
 import { ToastProvider } from "../../../../providers/toast/toast";
-import { Clipboard } from "@ionic-native/clipboard";
 import { GetMarketPricePipe } from "../../../../pipes/get-market-price/get-market-price";
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 
@@ -36,7 +36,7 @@ export class TransactionListPage {
   unconfirmedTransactions = [];
 
   // --------------------------------------------------
-  
+
   App = App;
   TransactionType = TransactionType;
 
@@ -98,20 +98,19 @@ export class TransactionListPage {
   }
 
 
-
-
-
-  doInfinite(infiniteScroll) {
-    console.log('Begin async operation');
-
+  getMoreConfirmedTxn(infiniteScroll) {
     setTimeout(() => {
+      console.log('Begin async operation');
+      infiniteScroll.complete();
+    }, 500);
+    /*setTimeout(() => {
       for (let i = 0; i < 30; i++) {
         this.items.push(this.items.length);
       }
 
       console.log('Async operation has ended');
       infiniteScroll.complete();
-    }, 500);
+    }, 500);*/
   }
 
 
@@ -202,11 +201,12 @@ export class TransactionListPage {
     return index;
   }
 
-  gotoTransactionDetail(tx) {
+  gotoTransactionDetail(tx: Transaction, status: string) {
     let page = "TransactionDetailPage";
     const transactions = tx;
     const mosaics = this.mosaics;
-    const payload = { transactions, mosaics }
+    const sts = status;
+    const payload = { transactions, mosaics, status };
     this.showModal(page, payload);
   }
 
