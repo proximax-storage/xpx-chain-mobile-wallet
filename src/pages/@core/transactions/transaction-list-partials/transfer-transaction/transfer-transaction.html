@@ -4,7 +4,7 @@
       <img logo-small item-left [src]="LOGO" alt="logo">
 
       <!-- Show MosaicInfo -->
-      <ng-container *ngIf="MOSAIC_INFO?.fullName || (!MOSAIC_INFO && MESSAGE_ !== '')">
+      <ng-container *ngIf="(MOSAIC_INFO && MOSAIC_INFO?.fullName ) || (!MOSAIC_INFO && MESSAGE_ !== '')">
         <h2 ion-text color="dark" style="display: flex;">
           <ng-container *ngIf="MOSAIC_INFO?.fullName">
             {{ MOSAIC_INFO.fullName }}
@@ -13,12 +13,14 @@
             {{ MESSAGE_ }}
           </ng-container>
 
-          <img logo-small style="height: 2rem; margin-left: .5rem;"
-            src="assets/imgs/arrow-transaction-receive-green-proximax-sirius-explorer.svg"
-            *ngIf="owner == tx?.recipient.plain()">
-          <img logo-small style="height: 2rem; margin-left: .5rem;"
-            src="assets/imgs/arrow-transaction-sender-orange-proximax-sirius-explorer.svg"
-            *ngIf="owner != tx?.recipient.plain()">
+          <ng-container *ngIf="tx && tx.recipient">
+            <img logo-small style="height: 2rem; margin-left: .5rem;"
+              src="assets/imgs/arrow-transaction-receive-green-proximax-sirius-explorer.svg"
+              *ngIf="owner == tx?.recipient.plain()">
+            <img logo-small style="height: 2rem; margin-left: .5rem;"
+              src="assets/imgs/arrow-transaction-sender-orange-proximax-sirius-explorer.svg"
+              *ngIf="owner != tx?.recipient.plain()">
+          </ng-container>
         </h2>
       </ng-container>
 
