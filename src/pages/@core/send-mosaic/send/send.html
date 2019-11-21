@@ -1,14 +1,10 @@
-<!--
-  Generated template for the SendPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header no-border>
 
   <ion-navbar transparent>
-    <ion-title>
+    <ion-title title color="dark">
+        <strong>
       <span ion-text color="dark">{{"WALLETS.SEND" | translate}}</span>
+    </strong>
     </ion-title>
 
     <ion-buttons end>
@@ -29,7 +25,9 @@
       <!-- Price -->
       <section title text-center>
         <h2 price ion-text color="dark" style="font-weight: bold;" *ngIf="selectedCoin">
-          {{'WALLETS.SEND.AMOUNT' | translate}}</h2>
+            {{'WALLETS.SEND.AMOUNT' | translate}}
+
+        </h2>
       </section>
 
 
@@ -37,16 +35,15 @@
       <ion-card amount *ngIf="platform.is('ios') || platform.is('android')">
         <ion-item>
           <ion-label>
-            <input pattern="^[+]?([0-9]*[.])?[0-9]+$" formControlName="amount"
-              [(ngModel)]="amount" currencyMask [options]="optionsXPX"
-              (keypress)="checkAllowedInput($event)" />
+            <input pattern="^[+]?([0-9]*[.])?[0-9]+$" formControlName="amount" [(ngModel)]="amount" currencyMask
+              [options]="optionsXPX" (keypress)="checkAllowedInput($event)" />
           </ion-label>
         </ion-item>
       </ion-card>
 
       <section total text-center>
         <h2 price ion-text color="dark" *ngIf="selectedCoin">
-          ≈ {{ selectedCoin?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }}</h2>
+          {{ selectedCoin?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }} USD</h2>
         <div *ngIf="msgErrorBalance !== ''">
           <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
         </div>
@@ -54,8 +51,8 @@
 
 
       <!-- Mosaic -->
-      <ion-card  *ngIf="selectedMosaic" (click)="selectMosaic()">
-          <ion-label text-left padding-left> {{ "WALLETS.BALANCE" | translate}}:</ion-label>
+      <ion-card *ngIf="selectedMosaic" (click)="selectMosaic()">
+        <ion-label text-left padding-left> {{ "WALLETS.BALANCE" | translate}}:</ion-label>
 
         <ion-item background-white>
           <ion-avatar item-start>
@@ -66,9 +63,10 @@
             {{ selectedMosaic?.namespaceId || selectedMosaic.hex.toLocaleUpperCase() }}</p>
 
           <section item-right>
-            <h2 ion-text color="dark" bold>{{getAbsoluteAmount(selectedMosaic.amountCompact, selectedMosaic.divisibility)}}</h2>
-            <p text-right color="dark" style="font-size: 10px !important" >
-                {{  ((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | currency: 'USD': 'symbol': '1.2-6'  }}
+            <h2 ion-text color="dark" bold>
+              {{getAbsoluteAmount(selectedMosaic.amountCompact, selectedMosaic.divisibility)}}</h2>
+            <p text-right color="dark" style="font-size: 10px !important">
+              {{  ((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | currency: 'USD': 'symbol': '1.2-6'  }}
             </p>
           </section>
         </ion-item>
@@ -83,7 +81,8 @@
       <!-- Recipient -->
       <ion-item select-contact no-lines>
         <ion-label ion-text color="dark"></ion-label>
-        <ion-select [selectOptions]="{title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate, subTitle: ''}" [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}" (ionChange)="onChangeTo($event)">
+        <ion-select [selectOptions]="{title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate, subTitle: ''}"
+          [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}" (ionChange)="onChangeTo($event)">
           <ion-option value="manual">{{"WALLETS.SEND.ADDRESS.OPTION1" | translate}}</ion-option>
           <ion-option value="contact">{{"WALLETS.SEND.ADDRESS.OPTION2" | translate}}</ion-option>
         </ion-select>
@@ -122,7 +121,7 @@
       </ion-card>
 
       <ion-card transparent>
-      <ion-item transparent padding>
+        <ion-item transparent padding>
           <ion-input formControlName="password" [type]="passwordType"
             placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
