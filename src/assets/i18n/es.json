@@ -29,6 +29,7 @@
     "WALLETS.TITLE" : "Cuentas",
     "WALLETS.WALLET_NAME" : "Nombre de la cuenta",
     "WALLETS.BALANCE" : "Balance",
+    "WALLETS.MOSAICS_MULTIPLE": "Multiple Activos",
     "WALLETS.MOSAICS" : "Activos",
     "WALLETS.TRANSACTIONS" : "Transacciones",
     "WALLETS.ADDRESS" : "Dirección",

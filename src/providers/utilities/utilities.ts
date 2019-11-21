@@ -26,7 +26,7 @@ export class UtilitiesProvider {
     private events: Events,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-  ) {}
+  ) { }
 
 
   /**
@@ -140,10 +140,10 @@ export class UtilitiesProvider {
   }
 
   disableHardwareBack() {
-      this.platform.registerBackButtonAction((event)=>{
-          console.log('Prevent Back Button Page Change');
-      }, 101); // Priority 101 will override back button handling (we set in app.component.ts) as it is bigger then priority 100 configured in app.component.ts file */
-  }   
+    this.platform.registerBackButtonAction((event) => {
+      console.log('Prevent Back Button Page Change');
+    }, 101); // Priority 101 will override back button handling (we set in app.component.ts) as it is bigger then priority 100 configured in app.component.ts file */
+  }
 
   setHardwareBackToPage(page: string) {
     return this.platform.registerBackButtonAction(() => {
@@ -162,10 +162,10 @@ export class UtilitiesProvider {
     this.app.getRootNavs()[0].setRoot(page, data, {
       animate: true,
       // direction: 'backward'
-    }).then(() =>{
+    }).then(() => {
       this.app.navPop();
       //....
-  });;
+    });;
   }
 
   copy(text: string, type: string) {
@@ -193,26 +193,35 @@ export class UtilitiesProvider {
    * @param mosaic The mosaic object for querying the logo
    */
   getLogo(mosaic: DefaultMosaic) {
-    if(!mosaic) {
+    if (!mosaic) {
       return AppProvider.LOGO.DEFAULT;
     } else if (
-      mosaic.namespaceId.toLowerCase() === 'prx' &&
-      mosaic.mosaicId.toLowerCase() === 'xpx' || mosaic.hex.toLowerCase() ===  AppConfig.xpxHexId
+      (
+        mosaic.namespaceId.toLowerCase() === 'prx' ||
+        mosaic.namespaceId.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
+      ) &&
+      (
+        mosaic.mosaicId.toLowerCase() === 'xpx' ||
+        mosaic.mosaicId.toLowerCase() === AppConfig.mosaicXpxInfo.id.toLowerCase()
+      ) || mosaic.hex.toLowerCase() === AppConfig.xpxHexId
     ) {
       return AppProvider.LOGO.XPX;
     } else if (
       mosaic.namespaceId.toLowerCase() === 'pundix' &&
-      mosaic.mosaicId.toLowerCase() === 'npxs' || mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
+      mosaic.mosaicId.toLowerCase() === 'npxs' ||
+      mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
     ) {
       return AppProvider.LOGO.NPXS;
     } else if (
       mosaic.namespaceId.toLowerCase() === 'sportsfix' &&
-      mosaic.mosaicId.toLowerCase() === 'sft' || mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
+      mosaic.mosaicId.toLowerCase() === 'sft' ||
+      mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
     ) {
       return AppProvider.LOGO.SFT;
     } else if (
       mosaic.namespaceId.toLowerCase() === 'xarcade' &&
-      mosaic.mosaicId.toLowerCase() === 'xar' || mosaic.hex.toLowerCase() === '59096674da68a7e5'
+      mosaic.mosaicId.toLowerCase() === 'xar' ||
+      mosaic.hex.toLowerCase() === '59096674da68a7e5'
     ) {
       return AppProvider.LOGO.XAR;
     } else {
@@ -220,16 +229,16 @@ export class UtilitiesProvider {
     }
   }
 
-    /**
-   * Get the logo of the specified language
-   * @param lange The language object for getting the logo
-   */
+  /**
+ * Get the logo of the specified language
+ * @param lange The language object for getting the logo
+ */
   getFlag(lang) {
     if (lang.value == "cn") {
       return AppProvider.FLAGS.CN;
     } else if (lang.value == "en") {
       return AppProvider.FLAGS.EN;
-    }  else if (lang.value == "es") {
+    } else if (lang.value == "es") {
       return AppProvider.FLAGS.ES;
     } else if (lang.value == "fr") {
       return AppProvider.FLAGS.FR;
@@ -238,13 +247,13 @@ export class UtilitiesProvider {
     } else if (lang.value == "kr") {
       return AppProvider.FLAGS.KR;
     }
-     else if (lang.value == "nl") {
+    else if (lang.value == "nl") {
       return AppProvider.FLAGS.NL;
     } else if (lang.value == "ru") {
       return AppProvider.FLAGS.RU;
     } else if (lang.value == "vt") {
       return AppProvider.FLAGS.VT;
-    } 
+    }
   }
 
   /**

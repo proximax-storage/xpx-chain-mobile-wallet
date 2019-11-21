@@ -30,6 +30,7 @@
     "WALLETS.TITLE": "Accounts",
     "WALLETS.WALLET_NAME": "Account name",
     "WALLETS.BALANCE": "Balance",
+    "WALLETS.MOSAICS_MULTIPLE": "Assets Multiple",
     "WALLETS.MOSAICS": "Assets",
     "WALLETS.TRANSACTIONS": "Transactions",
     "WALLETS.ADDRESS": "Address",
