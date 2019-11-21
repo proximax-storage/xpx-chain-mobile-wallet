@@ -71,12 +71,9 @@
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 ion-text color="dark">{{ mosaic.mosaicId | uppercase}}</h2>
-            <p ion-text color="dark">
-              {{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}
-            </p>
+            <h2 ion-text color="dark" *ngIf="mosaic.namespaceId != undefined && mosaic.namespaceId.length !=0 ">{{ mosaic.namespaceId | uppercase }}.{{ mosaic.mosaicId | uppercase}}</h2>
+            <h3 ion-text color="dark" *ngIf="mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</h3>
             <section text-right item-right>
-
               <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
             </section>
           </ion-item>
