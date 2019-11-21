@@ -46,7 +46,7 @@ export class LoginPage implements OnInit {
     private translateService: TranslateService
   ) {
     this.createForm();
-    this.storage.get("wallets").then(results => {
+    this.storage.get("myWallets").then(results => {
       this.user = results[0].user;
       this.formGroup.get("user").setValue(this.user);
     })

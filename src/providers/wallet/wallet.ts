@@ -75,7 +75,7 @@ export class WalletProvider {
    * @memberof WalletProvider
    */
   async createUser(user: string, password: string) {
-    const data = await this.storage.get('wallets');
+    const data = await this.storage.get('myWallets');
     const wallets: WalletInterface[] = data ? data : [];
     let foundWallet = wallets.filter((wallet: any) => {
       return wallet.user.includes(user);
@@ -94,7 +94,7 @@ export class WalletProvider {
 
       this.setSelectedWallet(wallet);
       wallets.push(wallet);
-      return this.storage.set('wallets', wallets);
+      return this.storage.set('myWallets', wallets);
     }
   }
 
@@ -151,7 +151,7 @@ export class WalletProvider {
       walletsDeleted.push(_wallets);
       this.storage.set('selectedAccount', _catapultAccounts[0]);
       this.storage.set('selectedWallet', _wallets);
-      this.storage.set('wallets', walletsDeleted)
+      this.storage.set('myWallets', walletsDeleted)
       return;
     });
   }
@@ -207,8 +207,7 @@ export class WalletProvider {
  * @return Promise that returns wallets
  */
   public getLocalWallets(): Promise<any> {
-    return this.storage.get('wallets').then(wallets => {
-      console.log('wallets', wallets);
+    return this.storage.get('myWallets').then(wallets => {
       let complete = wallets[0]
       let _wallets = wallets[0].catapultAccounts ? wallets[0].catapultAccounts : {};
       const WALLETS = _wallets ? _wallets : [];
@@ -333,12 +332,12 @@ export class WalletProvider {
     const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
     catapultAccounts.push(accountCatapult);
     walletSelected['catapultAccounts'] = catapultAccounts;
-    const wallet: WalletInterface[] = await this.storage.get('wallets');
+    const wallet: WalletInterface[] = await this.storage.get('myWallets');
     const otherWallets: WalletInterface[] = wallet.filter(x => x.user !== walletSelected.user);
     otherWallets.push(walletSelected);
     this.setSelectedAccount(accountCatapult);
     this.setSelectedWallet(walletSelected);
-    this.storage.set('wallets', otherWallets);
+    this.storage.set('myWallets', otherWallets);
     return walletSelected;
   }
 
@@ -407,7 +406,7 @@ export class WalletProvider {
       walletsUpdate.push(_wallets);
       this.storage.set('selectedAccount', updateWallet);
       this.storage.set('selectedWallet', _wallets);
-      this.storage.set('wallets', walletsUpdate)
+      this.storage.set('myWallets', walletsUpdate)
       return;
     });
   }
@@ -420,7 +419,7 @@ export class WalletProvider {
    * @memberof WalletProvider
    */
   async validateExistAccount(account: SimpleWallet) {
-    const wallet: WalletInterface[] = await this.storage.get('wallets');
+    const wallet: WalletInterface[] = await this.storage.get('myWallets');
     let exist = false;
     wallet.forEach((element: WalletInterface) => {
       if (element.catapultAccounts) {

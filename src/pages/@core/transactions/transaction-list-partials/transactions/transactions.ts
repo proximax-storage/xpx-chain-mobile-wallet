@@ -42,7 +42,6 @@ export class TransactionComponent {
 
   async validateTransaction() {
     console.log('this.tx', this.tx);
-    
     switch (this.tx.type) {
       case TransactionType.TRANSFER:
         console.log('-------- IS TYPE TRANSFER --------');
