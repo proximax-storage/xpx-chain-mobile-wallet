@@ -132,13 +132,12 @@ export class WalletAddPage {
     try {
       const decrypted = await this.authProvider.decryptAccountUser(form.password);
       if (decrypted) {
-        this.alertProvider.showMessage('decrip');
         this.catapultWallet = this.walletProvider.createSimpleWallet(form.name, form.password);
         this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
           if (value) {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
-            this.walletProvider.storeWalletCatapult(this.catapultWallet, null, this.walletColor, new Password(form.password)).then(_ => {
+            this.walletProvider.storeWalletCatapult(this.catapultWallet, null, this.walletColor, new Password(form.password), '').then(_ => {
               this.goToBackup(this.catapultWallet);
             });
           }

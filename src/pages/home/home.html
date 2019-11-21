@@ -22,7 +22,7 @@
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null" (press)="showWalletList()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
 
           <div *ngIf="!tablet">
             <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 22 : '...' }}</p>
