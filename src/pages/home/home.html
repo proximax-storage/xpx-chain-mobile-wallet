@@ -71,8 +71,11 @@
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 ion-text color="dark" *ngIf="mosaic.namespaceId != undefined && mosaic.namespaceId.length !=0 ">{{ mosaic.namespaceId | uppercase }}.{{ mosaic.mosaicId | uppercase}}</h2>
-            <h3 ion-text color="dark" *ngIf="mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</h3>
+            <h2 ion-text color="dark" *ngIf="mosaic.namespaceId != undefined && mosaic.namespaceId.length !=0 ">
+              {{ mosaic.namespaceId | uppercase }}.{{ mosaic.mosaicId | uppercase}}</h2>
+            <h3 ion-text color="dark" *ngIf="mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined">
+              {{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}
+            </h3>
             <section text-right item-right>
               <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
             </section>
@@ -112,6 +115,8 @@
 
 
 
+
+
   <div *ngIf="menu=='transactions'">
     <!-- Aggregate Transactions -->
     <div *ngIf="aggregateTransactions?.length>0">
@@ -143,7 +148,6 @@
     <ion-list transparent-items *ngIf="!isLoading && confirmedTransactions">
       <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy"
         (click)="gotoTransactionDetail(transaction)">
-
         <!-- if transfer  -->
         <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
           [mosaics]="mosaics" [owner]="address.plain()" [status]="'Confirmed'">

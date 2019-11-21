@@ -17,6 +17,8 @@ export class TransactionsProvider {
     console.log('Hello TransactionsProvider Provider');
   }
 
+  
+
   getAllTransactionsFromAccount(publicAccount: PublicAccount): Observable<Transaction[]> {
     const pageSize = 10;
     const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount, pageSize)

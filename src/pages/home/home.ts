@@ -105,27 +105,9 @@ export class HomePage {
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
   ) {
-    //   this.platform.ready().then(()=> {
-
-    //     this.deeplinks.routeWithNavController(this.navChild, {
-    //      '/send': "SendPage",
-    //    }).subscribe((match) => {
-    //      console.log('Successfully routed', JSON.stringify(match));
-
-    //      let page = "SendPage";
-    //      this.showModal(page, { mosaicSelectedName: 'xpx', payload: match.$args })
-
-    //      // isDeepLink = true;
-    //      // redirectLink = match.$route;
-    //      // params = match.$args
-
-    //      // return;
-    //    }, (nomatch) => {
-    //      console.log('Unmatched Route', nomatch);        
-    //  });
-    //  })
-
+    
   }
+
 
   ionViewDidEnter() {
 
@@ -234,6 +216,7 @@ export class HomePage {
   }
 
   getTransactions(publicAccount: PublicAccount) {
+    // this.proximaxProvider.getTransactionsFromAccountId();
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
       if (transactions) {
