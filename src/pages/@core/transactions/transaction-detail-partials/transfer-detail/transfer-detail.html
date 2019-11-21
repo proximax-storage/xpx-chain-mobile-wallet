@@ -1,23 +1,38 @@
 <!-- Mosaic/s -->
 <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
+
   <ion-item *ngIf="show">
     <img logo-small item-left [src]="utils.getLogo(mosaic)">
-    <h2 ion-text text-uppercase color="dark">{{ mosaic.mosaicId }}</h2>
-    <p text-uppercase ion-text color="dark">
-      <small>
-        {{ mosaic.namespaceId }}
-        
-      </small>
-    </p>
+
+    <!-- Show MosaicInfo -->
+    <ng-container>
+      <h2 ion-text color="dark" style="display: flex;">
+        <ng-container text-uppercase *ngIf="(mosaic.mosaicId &&  mosaic.namespaceId)">
+          <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }}
+          </h2>
+        </ng-container>
+
+        <ng-container *ngIf="tx && tx.recipient">
+          <img logo-small style="height: 2rem; margin-left: .5rem;"
+            src="assets/imgs/arrow-transaction-receive-green-proximax-sirius-explorer.svg"
+            *ngIf="owner == tx?.recipient.plain()">
+          <img logo-small style="height: 2rem; margin-left: .5rem;"
+            src="assets/imgs/arrow-transaction-sender-orange-proximax-sirius-explorer.svg"
+            *ngIf="owner != tx?.recipient.plain()">
+        </ng-container>
+      </h2>
+    </ng-container>
 
     <section item-right>
-      <h2 text-right ion-text color="success" *ngIf="owner == tx?.recipient?.address">
-        + {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
+      <h2 text-right ion-text color="dark">
+        {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
       </h2>
 
-      <h2 text-right ion-text color="danger" *ngIf="owner  != tx?.recipient?.address">
-        - {{ getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility) }}
-      </h2>
+      <p text-right ion-text color="dark">
+        <small>
+          {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
+        </small>
+      </p>
     </section>
   </ion-item>
 </ion-card>
@@ -61,7 +76,7 @@
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">
-          {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
+        {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
       </h2>
       <p text-wrap> {{ tx?.recipient?.address }}</p>
 
@@ -128,8 +143,8 @@
       </p>
 
       <p ion-text color="dark" *ngIf="!tx.message.payload">
-          {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
-      </p> 
+        {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
+      </p>
     </ion-item>
   </ion-card-content>
 </ion-card>
@@ -140,7 +155,7 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
       <p text-wrap ion-text color="dark">
         {{ message.message }}
-    </p> 
+      </p>
     </ion-item>
   </ion-card-content>
 </ion-card>

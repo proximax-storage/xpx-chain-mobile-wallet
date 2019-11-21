@@ -51,7 +51,7 @@
 
 </ion-content>
 
-<ion-footer no-border *ngIf="tx.type === TransactionType.AGGREGATE_BONDED" [hidden]="!this.isSelectedAccountMultisig && (!!this.currentAccount && toShowCosign(tx))">
+<ion-footer no-border *ngIf="tx.type === TransactionType.AGGREGATE_BONDED" [hidden]="!this.isSelectedAccountMultisig && (!!currentAccount && toShowCosign(tx))">
   
   <form [formGroup]="form">
     <ion-item transparent padding>
