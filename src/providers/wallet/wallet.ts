@@ -51,12 +51,16 @@ export class WalletProvider {
   checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
     return this.getLocalWallets().then(wallets => {
-      let _catapultAccounts: any = wallets.catapultAccounts;
-      for (var i = 0; i < _catapultAccounts.length; i++) {
-        if (_catapultAccounts[i].account.name === walletName || _catapultAccounts[i].account.address.address === walletAddress) {
-          exists = true;
-          break;
+      if (wallets.length != 0) {
+        let _catapultAccounts: any = wallets.catapultAccounts;
+        for (var i = 0; i < _catapultAccounts.length; i++) {
+          if (_catapultAccounts[i].account.name === walletName || _catapultAccounts[i].account.address.address === walletAddress) {
+            exists = true;
+            break;
+          }
         }
+      } else {
+        exists = false;
       }
       return exists;
     });
@@ -204,18 +208,23 @@ export class WalletProvider {
  */
   public getLocalWallets(): Promise<any> {
     return this.storage.get('wallets').then(wallets => {
+      console.log('wallets', wallets);
       let complete = wallets[0]
       let _wallets = wallets[0].catapultAccounts ? wallets[0].catapultAccounts : {};
       const WALLETS = _wallets ? _wallets : [];
-      if (wallets) {
-        const walletsMap = WALLETS.map(walletFile => {
-          return { account: <SimpleWallet>(walletFile.account), publicAccount: walletFile.publicAccount, walletColor: walletFile.walletColor };
-        });
-        _wallets = {
-          catapultAccounts: walletsMap,
-          encrypted: complete.encrypted,
-          nis1Accounts: complete.nis1Accounts,
-          user: complete.user
+      if (wallets[0].catapultAccounts != null) {
+        if (wallets) {
+          const walletsMap = WALLETS.map(walletFile => {
+            return { account: <SimpleWallet>(walletFile.account), publicAccount: walletFile.publicAccount, walletColor: walletFile.walletColor };
+          });
+          _wallets = {
+            catapultAccounts: walletsMap,
+            encrypted: complete.encrypted,
+            nis1Accounts: complete.nis1Accounts,
+            user: complete.user
+          }
+        } else {
+          _wallets = [];
         }
       } else {
         _wallets = [];
@@ -321,7 +330,7 @@ export class WalletProvider {
       walletSelected['nis1Accounts'] = nis1Accounts;
     }
 
-    const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount}
+    const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
     catapultAccounts.push(accountCatapult);
     walletSelected['catapultAccounts'] = catapultAccounts;
     const wallet: WalletInterface[] = await this.storage.get('wallets');

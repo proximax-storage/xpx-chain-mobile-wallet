@@ -1,30 +1,16 @@
-<!--
-  Generated template for the SendMosaicConfirmationPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<!--
-  Generated template for the SendPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header no-border>
-
+<ion-header no-border></ion-header>
   <ion-navbar transparent>
-      <ion-title>
-          <span ion-text color="dark">{{"WALLETS.CONFIRM.TITLE" | translate}}</span>
-        </ion-title>
-        <ion-buttons end>
-            <button ion-button icon-only (click)="dismiss()" color="dark">
-              <ion-icon name="close"></ion-icon>
-            </button>
-          </ion-buttons>
-      
+    <ion-title>
+      <strong>
+        <span ion-text color="dark">{{"WALLETS.CONFIRM.TITLE" | translate}}</span>
+      </strong>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
-
 </ion-header>
 
 <ion-content fullscreen background>
@@ -41,7 +27,8 @@
                 <img [src]="utils.getLogo(data.mosaic)">
               </ion-avatar>
               <h2 text-uppercase ion-text color="dark">{{ data.mosaic.mosaicId || '' }}</h2>
-              <p text-uppercase ion-text color="dark">{{  data.mosaic.namespaceId || data.mosaic.hex.toLocaleUpperCase()}}</p>
+              <p text-uppercase ion-text color="dark">
+                {{  data.mosaic.namespaceId || data.mosaic.hex.toLocaleUpperCase()}}</p>
 
               <section item-right>
                 <h2 ion-text color="dark">{{ data.amount | number: '1.6-6'  }}</h2>
@@ -81,26 +68,28 @@
 
           <!-- From -->
           <h6 margin-left text-left ion-text color="dark">
-              {{"WALLETS.SEND.LABEL.FROM" | translate}}
+            {{"WALLETS.SEND.LABEL.FROM" | translate}}
           </h6>
           <ion-card>
             <ion-item>
               <img item-left logo-small [src]="App.USER">
               <h2 ion-text color="dark" *ngIf="data.senderName">{{ data.senderName }}</h2>
-              <p small ion-text color="dark" [attr.text-wrap]="!data.senderName ? true : null">{{ data.currentWallet.account.address.address }}</p>
+              <p small ion-text color="dark" [attr.text-wrap]="!data.senderName ? true : null">
+                {{ data.currentWallet.account.address.address }}</p>
             </ion-item>
           </ion-card>
 
           <!-- To -->
           <h6 margin-left text-left ion-text color="dark">
-              {{"WALLETS.SEND.LABEL.TO" | translate}}
+            {{"WALLETS.SEND.LABEL.TO" | translate}}
           </h6>
           <ion-card>
             <ion-item>
               <img item-left logo-small [src]="App.USER">
 
               <h2 ion-text color="dark" *ngIf="data.recipientName">{{ data.recipientName }}</h2>
-              <p small ion-text color="dark" [attr.text-wrap]="!data.recipientName ? true : null">{{ data.recipientAddress }}</p>
+              <p small ion-text color="dark" [attr.text-wrap]="!data.recipientName ? true : null">
+                {{ data.recipientAddress }}</p>
             </ion-item>
           </ion-card>
         </ion-list>
@@ -109,7 +98,7 @@
       <ion-col buttons col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
           <button gradient-button color-5 type="submit" color="dark">
-              {{"WALLETS.BUTTON.CONFIRM" | translate}}
+            {{"WALLETS.BUTTON.CONFIRM" | translate}}
           </button>
         </form>
       </ion-col>
@@ -123,13 +112,13 @@
 
   <div padding *ngIf="displaySuccessMessage" class="achievement-container">
     <div class="medal">
-        <img class="image"  src="assets/imgs/success.svg" />
+      <img class="image" src="assets/imgs/success.svg" />
     </div>
     <div padding class="message">
       <h5 text-center>{{"APP.MESSAGE.SUCCESS.TITLE" | translate}}</h5>
       <p text-center>{{"APP.MESSAGE.SUCCESS.SUBTITLE" | translate}}</p>
     </div>
-</div>
+  </div>
 
 
 </ion-content>
