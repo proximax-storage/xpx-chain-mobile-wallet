@@ -229,9 +229,7 @@ export class HomePage {
       showBackdrop: true
     });
 
-    await modal.present().then(_ => {
-      // this.init();
-    });
+    modal.present();
   }
 
   /**
