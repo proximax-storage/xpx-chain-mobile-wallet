@@ -161,16 +161,30 @@ export class TransactionComponent {
               this.MOSAIC_INFO = null;
               this.AMOUNT = null;
               this.LOGO = App.LOGO.DEFAULT;
-              this.statusViewDetail = false;
               this.showTx = true;
+              if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
+                this.statusViewDetail = true;
+                this.type = 'TRANSFER';
+              } else {
+                this.statusViewDetail = false;
+                const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
+                this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
+              }
             }
           } else {
-            this.MESSAGE_ = 'Agregada Bonded';
+            this.MESSAGE_ = 'Aggregate Bonded';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
             this.LOGO = App.LOGO.DEFAULT;
-            this.statusViewDetail = false;
             this.showTx = true;
+            if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
+              this.statusViewDetail = true;
+              this.type = 'TRANSFER';
+            } else {
+              this.statusViewDetail = false;
+              const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
+              this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
+            }
           }
         } else {
           this.MESSAGE_ = 'Aggregate Bonded';
@@ -189,6 +203,7 @@ export class TransactionComponent {
         this.LOGO = App.LOGO.DEFAULT;
         this.statusViewDetail = false;
         this.showTx = true;
+        break;
     }
   }
 
