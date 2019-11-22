@@ -36,7 +36,7 @@
     "WALLETS.VESTED_BALANCE" : "Toegekende balans",
     "WALLETS.MORE_DETAILS" : "Meer details",
     "WALLETS.IMPORT.NAME_EXISTS" : "Dit account bestaat al. Probeer het opnieuw.",
-    "WALLETS.IMPORT.PRIVATE_KEY_INVALID" : "Onjuiste persoonlijke sleutel. Probeer het opnieuw.",
+    "WALLETS.IMPORT.PRIVATE_KEY_INVALID" : "Onjuiste persoonlijke sleutel.",
     "WALLETS.IMPORT.SWAP_TITLE" : "Swap Proces",
     "WALLETS.IMPORT.SWAP_MESSAGE" : "Uw recent geïmporteerde persoonlijke sleutel heeft een aantal mozaïeken op de NIS1 (NEM) blockchain. Wilt u deze mozaïeken overzetten naar de Sirius Chain en beschikbaar maken in dit account?",
     "WALLETS.EXPORT" : "Exporteer/back-up",

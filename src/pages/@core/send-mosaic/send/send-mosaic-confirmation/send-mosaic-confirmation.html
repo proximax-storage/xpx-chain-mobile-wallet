@@ -34,7 +34,7 @@
                 <h2 ion-text color="dark">{{ data.amount | number: '1.6-6'  }}</h2>
                 <p text-right text-left ion-text color="dark">
                   <small>
-                    {{ data.total | currency: 'USD': 'symbol': '1.2-6' }}
+                    USD$ {{ data.total | number: '1.2-6' }}
                   </small>
                 </p>
               </section>

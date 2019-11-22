@@ -35,7 +35,7 @@
     "WALLETS.VESTED_BALANCE" : "Solde acquis",
     "WALLETS.MORE_DETAILS" : "Plus de détails",
     "WALLETS.IMPORT.NAME_EXISTS":"Ce compte existe déjà.. Veuillez réessayer.",
-"WALLETS.IMPORT.PRIVATE_KEY_INVALID":"Clé privée non valide. Veuillez réessayer.",
+"WALLETS.IMPORT.PRIVATE_KEY_INVALID":"Clé privée non valide.",
 "WALLETS.IMPORT.SWAP_TITLE":"Processus du Swap",
 "WALLETS.IMPORT.SWAP_MESSAGE":"Votre clé privée récemment importée possède des actifs sur la Blockchain NIS1 (NEM).Aimeriez-vous transférer ces actifs à Sirius Chain et les rendre disponibles dans le wallet Sirius?",
     "WALLETS.EXPORT" : "Export /sauvegarde",

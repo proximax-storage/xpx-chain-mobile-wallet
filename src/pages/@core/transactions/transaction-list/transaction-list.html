@@ -16,7 +16,7 @@
       <ion-card-content>
         <br>
         <h1 wallet-name text-center> {{selectedAccount.account?.name}}</h1>
-        <h1 color="dark" text-center> ${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</h1>
+        <h1 color="dark" text-center> USD$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h1>
         <ion-list transparent-items>
           <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
             <ion-icon name='custom-copy' item-end></ion-icon>
