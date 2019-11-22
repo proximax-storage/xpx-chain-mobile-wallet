@@ -33,13 +33,13 @@
   <ion-grid normal>
     <ion-segment mode='md' [(ngModel)]="menu" color="dark">
       <ion-segment-button value="confirmed" checked>
-        CONFIRMED
+        {{"APP.ITEM.CONFIRMED" | translate}}
       </ion-segment-button>
       <ion-segment-button value="unconfirmed">
-        UNCONFIRMED
+        {{"APP.ITEM.UNCONFIRMED" | translate}}
       </ion-segment-button>
       <ion-segment-button value="partials">
-        PARTIALS
+        {{"APP.ITEM.PARTIALS" | translate}}
       </ion-segment-button>
     </ion-segment>
   </ion-grid>
@@ -65,11 +65,10 @@
     <!-- Confirmed Transactions -->
     <ng-container *ngIf="menu === 'confirmed'">
       <ng-container *ngIf="confirmedTransactions?.length > 0; else showEmptyMessage">
-        <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
-          (click)="gotoTransactionDetail(transaction, 'confirmed')">
+        <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash">
           <!-- if transfer  -->
           <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
-            [status]="'Confirmed'">
+            [status]="'Confirmed'" (viewTxDetail)="gotoTransactionDetail($event, 'confirmed')">
           </transactions>
         </ion-card>
 

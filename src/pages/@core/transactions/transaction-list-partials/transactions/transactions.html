@@ -1,5 +1,5 @@
 <ng-container *ngIf="showTx">
-  <ion-card-header reduce-transfer-tx-header>
+  <ion-card-header reduce-transfer-tx-header (click)="viewDetail(tx)">
     <ion-item>
       <img logo-small item-left [src]="LOGO" alt="logo">
 
@@ -38,9 +38,9 @@
     </ion-item>
 
     <ion-item transaction-status>
-      <section item-left>
+      <section item-left *ngIf="type !== ''">
         <p float-left ion-text color="dark">
-          <small>Transfer</small>
+          <small>{{type}}</small>
         </p>
       </section>
 
