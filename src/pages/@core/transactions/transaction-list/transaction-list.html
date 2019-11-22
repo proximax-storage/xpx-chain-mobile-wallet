@@ -46,32 +46,16 @@
 </ion-header>
 
 <ion-content background>
-  <!-- Skeleton loader -->
-  <ion-list transparent-items *ngIf="isLoading">
-    <h2 padding *ngIf="!showEmptyMessage">{{"WALLETS.TRANSACTIONS" | translate}}</h2>
-    <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
-      <skeleton-loader></skeleton-loader>
-    </ion-card>
-    <ion-card no-border>
-      <ion-item text-center>
-        <ion-spinner name="dots"></ion-spinner>
-      </ion-item>
-    </ion-card>
-  </ion-list>
-  <!-- ./Skeleton loader -->
-
   <!-- Transactions -->
   <ion-list transparent-items *ngIf="!isLoading">
     <!-- Confirmed Transactions -->
     <ng-container *ngIf="menu === 'confirmed'">
       <ng-container *ngIf="confirmedTransactions?.length > 0; else showEmptyMessage">
-        <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash">
-          <!-- if transfer  -->
+        <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions;">
           <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
-            [status]="'Confirmed'" (viewTxDetail)="gotoTransactionDetail($event, 'confirmed')">
+            [status]="'Confirmed'" (viewTxDetail)="goToTransactionDetail($event, 'confirmed')">
           </transactions>
         </ion-card>
-
         <ion-infinite-scroll (ionInfinite)="getMoreConfirmedTxn($event)">
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
@@ -95,8 +79,8 @@
     <!-- Unconfirmed Transactions -->
     <ng-container *ngIf="menu === 'unconfirmed'">
       <ng-container *ngIf="unconfirmedTransactions?.length > 0; else showEmptyMessage">
-        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy: trackByHash"
-          (click)="gotoTransactionDetail(transaction, 'unconfirmed')">
+        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions;"
+          (click)="goToTransactionDetail(transaction, 'unconfirmed')">
           <!-- if transfer  -->
           <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
             [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
@@ -124,8 +108,8 @@
     <!-- Partials Transactions -->
     <ng-container *ngIf="menu === 'partials'">
       <ng-container *ngIf="aggregateTransactions?.length > 0; else showEmptyMessage">
-        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy: trackByHash"
-          (click)="gotoTransactionDetail(transaction, 'partials')">
+        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions;"
+          (click)="goToTransactionDetail(transaction, 'partials')">
           <!-- if transfer  -->
           <transactions *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
             [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'">
@@ -147,15 +131,6 @@
         </ion-grid>
       </ng-template>
     </ng-container>
-
-
-    <!-- <ion-list>
-      <ion-item *ngFor="let i of items">{{i}}</ion-item>
-    </ion-list>
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll> -->
-    <!-- --------------------------- -->
   </ion-list>
 </ion-content>
 
