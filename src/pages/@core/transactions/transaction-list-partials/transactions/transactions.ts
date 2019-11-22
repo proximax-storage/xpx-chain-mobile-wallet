@@ -100,10 +100,8 @@ export class TransactionComponent {
    * @memberof TransactionComponent
    */
   async validateTransaction() {
-    console.log('this.tx', this.tx);
     switch (this.tx.type) {
       case TransactionType.TRANSFER:
-        console.log('-------- IS TYPE TRANSFER --------');
         if (this.tx.mosaics.length > 0) {
           if (this.tx.mosaics.length === 1) {
             if (this.tx.mosaics[0].id.toHex() === AppConfig.mosaicXpxInfo.id || this.tx.mosaics[0].id.toHex() === AppConfig.mosaicXpxInfo.namespaceId) {
@@ -121,7 +119,6 @@ export class TransactionComponent {
               this.type = 'TRANSFER';
             }
           } else {
-            console.log('------- MAS DE UN MOSAICO ------');
             this.MESSAGE_ = 'TRANSFER';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;

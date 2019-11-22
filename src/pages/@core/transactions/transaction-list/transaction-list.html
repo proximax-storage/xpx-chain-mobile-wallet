@@ -66,12 +66,10 @@
     <ng-container *ngIf="menu === 'confirmed'">
       <ng-container *ngIf="confirmedTransactions?.length > 0; else showEmptyMessage">
         <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash">
-          <!-- if transfer  -->
           <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
             [status]="'Confirmed'" (viewTxDetail)="gotoTransactionDetail($event, 'confirmed')">
           </transactions>
         </ion-card>
-
         <ion-infinite-scroll (ionInfinite)="getMoreConfirmedTxn($event)">
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>

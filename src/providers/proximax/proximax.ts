@@ -211,9 +211,9 @@ export class ProximaxProvider {
    * @param queryParams 
    */
 
-  getAllTransactionsFromAccount(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
-    // return null;
-    return this.accountHttp.transactions(publicAccount, new QueryParams(queryParams));
+  getAllTransactionsFromAccount(publicAccount: PublicAccount, id = null, queryParams = 100): Observable<Transaction[]> {
+    const query = (id) ? new QueryParams(queryParams, id) : new QueryParams(queryParams);
+    return this.accountHttp.transactions(publicAccount, query);
   }
 
   /**

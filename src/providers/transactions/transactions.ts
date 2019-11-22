@@ -18,10 +18,16 @@ export class TransactionsProvider {
   }
 
   
-
-  getAllTransactionsFromAccount(publicAccount: PublicAccount): Observable<Transaction[]> {
-    const pageSize = 100;
-    const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount, pageSize)
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @returns {Observable<Transaction[]>}
+   * @memberof TransactionsProvider
+   */
+  getAllTransactionsFromAccount(publicAccount: PublicAccount, id = null): Observable<Transaction[]> {
+    const pageSize = 10;
+    const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount, id, pageSize)
     return transaction;
   }
 

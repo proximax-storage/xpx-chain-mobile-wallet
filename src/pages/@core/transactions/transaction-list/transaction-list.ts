@@ -11,6 +11,8 @@ import { App } from "../../../../providers/app/app";
 import { ToastProvider } from "../../../../providers/toast/toast";
 import { GetMarketPricePipe } from "../../../../pipes/get-market-price/get-market-price";
 import { HapticProvider } from '../../../../providers/haptic/haptic';
+import { TransactionsProvider } from "../../../../providers/transactions/transactions";
+import { CatapultsAccountsInterface } from "../../../../providers/wallet/wallet";
 
 
 /**
@@ -60,9 +62,9 @@ export class TransactionListPage {
   // Multisignature
   isMultisig: boolean;
   accountInfo: AccountInfoWithMetaData;
-  selectedAccount: any;
-
+  selectedAccount: CatapultsAccountsInterface;
   mosaics: any[] = [];
+  searchMore = true;
 
   constructor(
     public navCtrl: NavController,
@@ -76,7 +78,8 @@ export class TransactionListPage {
     private toastProvider: ToastProvider,
     private actionSheetCtrl: ActionSheetController,
     private haptic: HapticProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private transactionsProvider: TransactionsProvider
   ) {
     const payload = this.navParams.data;
     console.log("SIRIUS CHAIN WALLET: TransactionListPage -> payload", payload)
@@ -85,8 +88,6 @@ export class TransactionListPage {
     this.confirmedTransactions = payload.transactions;
     this.aggregateTransactions = payload.aggregateTransactions;
     this.selectedAccount = payload.selectedAccount;
-    console.log('...........', this.aggregateTransactions);
-
     this.mosaics = payload.mosaics;
 
     if (this.confirmedTransactions === null) {
@@ -98,20 +99,34 @@ export class TransactionListPage {
     }
   }
 
-
-  getMoreConfirmedTxn(infiniteScroll) {
-    setTimeout(() => {
-      console.log('Begin async operation');
+  /**
+   *
+   *
+   * @param {*} infiniteScroll
+   * @memberof TransactionListPage
+   */
+  getMoreConfirmedTxn(infiniteScroll: any) {
+    if (this.searchMore) {
+      setTimeout(async () => {
+        const lastTransactionId = this.confirmedTransactions[this.confirmedTransactions.length - 1].transactionInfo.id;
+        console.log('Begin async operation', lastTransactionId);
+        this.transactionsProvider.getAllTransactionsFromAccount(this.selectedAccount.publicAccount, lastTransactionId).subscribe(
+          next => {
+            console.log('last 10 txn --->', next);
+            if (next.length > 0) {
+              next.forEach(element => {
+                this.confirmedTransactions.push(element);
+              });
+            } else {
+              this.searchMore = false;
+            }
+            infiniteScroll.complete();
+          }
+        );
+      }, 1500);
+    } else {
       infiniteScroll.complete();
-    }, 500);
-    /*setTimeout(() => {
-      for (let i = 0; i < 30; i++) {
-        this.items.push(this.items.length);
-      }
-
-      console.log('Async operation has ended');
-      infiniteScroll.complete();
-    }, 500);*/
+    }
   }
 
 

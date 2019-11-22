@@ -12,14 +12,6 @@ import {
   LoadingOptions,
   Nav
 } from "ionic-angular";
-
-import { App as AppConfig } from "../../providers/app/app";
-import { WalletProvider, CatapultsAccountsInterface } from "../../providers/wallet/wallet";
-import { UtilitiesProvider } from "../../providers/utilities/utilities";
-import { AlertProvider } from "../../providers/alert/alert";
-import { HapticProvider } from "../../providers/haptic/haptic";
-import { GetMarketPricePipe } from "../../pipes/get-market-price/get-market-price";
-import { TranslateService } from "@ngx-translate/core";
 import {
   AccountInfo,
   TransactionType,
@@ -27,9 +19,16 @@ import {
   AggregateTransaction,
   PublicAccount,
 } from "tsjs-xpx-chain-sdk";
+import { TranslateService } from "@ngx-translate/core";
+import { animate, style, transition, trigger } from "@angular/animations";
+import { App as AppConfig } from "../../providers/app/app";
+import { WalletProvider, CatapultsAccountsInterface } from "../../providers/wallet/wallet";
+import { UtilitiesProvider } from "../../providers/utilities/utilities";
+import { AlertProvider } from "../../providers/alert/alert";
+import { HapticProvider } from "../../providers/haptic/haptic";
+import { GetMarketPricePipe } from "../../pipes/get-market-price/get-market-price";
 import { MosaicsProvider } from "../../providers/mosaics/mosaics";
 import { TransactionsProvider } from "../../providers/transactions/transactions";
-import { animate, style, transition, trigger } from "@angular/animations";
 import { DefaultMosaic } from "../../models/default-mosaic";
 import { ProximaxProvider } from '../../providers/proximax/proximax';
 
@@ -72,7 +71,7 @@ export class HomePage {
 
   unconfirmedTransactions: Array<Transaction> = [];
   aggregateTransactions: Array<AggregateTransaction> = [];
-  confirmedTransactions: Array<any> = [];
+  confirmedTransactions = [];
   showEmptyTransaction: boolean = false;
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
@@ -88,13 +87,13 @@ export class HomePage {
 
   constructor(
     public app: App,
+    public actionSheetCtrl: ActionSheetController,
+    public alertProvider: AlertProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
-    public alertProvider: AlertProvider,
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
-    public actionSheetCtrl: ActionSheetController,
     public platform: Platform,
     private modalCtrl: ModalController,
     private haptic: HapticProvider,
@@ -104,70 +103,14 @@ export class HomePage {
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
-  ) {
+  ) { }
 
-  }
-
-
-  ionViewDidEnter() {
-
-  }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack();
+    console.log('\n\n ------------ ionViewWillEnter ---> this.init() -------------------');
     this.init();
   }
-
-
-
-  /**
-   *
-   *
-   * @param {CatapultsAccountsInterface} selectedAccount
-   * @memberof HomePage
-   */
-  async showWalletDetails(selectedAccount: CatapultsAccountsInterface) {
-    this.selectedAccount = selectedAccount;
-    let page = "TransactionListPage";
-    let transactions = this.confirmedTransactions;
-    let aggregateTransactions = this.aggregateTransactions;
-    let total = this.totalWalletBalance;
-    let mosaics = this.mosaics;
-    let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
-    const modal = this.modalCtrl.create(page, payload, {
-      enableBackdropDismiss: false,
-      showBackdrop: true
-    });
-
-    await modal.present().then(_ => {
-      this.init();
-    });
-  }
-
-  /**
-   *
-   *
-   * @param {PublicAccount} publicAccount
-   * @memberof HomePage
-   */
-  getTransactions(publicAccount: PublicAccount) {
-    this.isLoading = true;
-    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
-      this.isLoading = false;
-      this.confirmedTransactions = transactions;
-      /*if (transactions) {
-        const transferTransactions: Array<Transaction> = transactions.filter(
-          tx => tx.type == TransactionType.TRANSFER
-        );
-        this.confirmedTransactions = transferTransactions;
-        this.showEmptyTransaction = false;
-      } else {
-        this.showEmptyTransaction = true;
-      }*/
-    }, error => this.isLoading = false);
-  }
-
-  // -----------------------------------------------------------------------------------
 
   /**
    *
@@ -203,11 +146,12 @@ export class HomePage {
           }
 
           // Slide to selected wallet
-          this.accounts.forEach((acc, index) => {
+          /*this.accounts.forEach((acc, index) => {
             if (this.selectedAccount.account.name === acc.account.name) {
               this.slides.slideTo(index);
             }
-          });
+          });*/
+          
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
             this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
@@ -218,9 +162,11 @@ export class HomePage {
                 this.mosaics = mosaics;
                 this.mosaicsProvider.computeTotalBalance(mosaics).then(total => {
                   this.totalWalletBalance = total as number;
-                  // loader.dismiss();
                 });
-                this.getTransactions(this.selectedAccount.publicAccount);
+
+                console.log('\n\n  ---- INGRESA UNO ---- \n \n ');
+                this.confirmedTransactions = [];
+                this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
                 this.getTransactionsAggregate(this.selectedAccount.publicAccount);
               }
@@ -243,6 +189,154 @@ export class HomePage {
       loader.dismiss();
     });
   }
+
+  /**
+   *
+   *
+   * @param {CatapultsAccountsInterface} selectedAccount
+   * @memberof HomePage
+   */
+  async onWalletSelect(selectedAccount: CatapultsAccountsInterface) {
+    console.log('\n\n-----------onWalletSelect --> init()-----------------\n\n');
+
+    if (this.selectedAccount.account === selectedAccount.account) {
+      this.selectedAccount = selectedAccount;
+    }
+
+    await this.walletProvider.setSelectedAccount(selectedAccount).then(async () => {
+      await this.init();
+    });
+  }
+
+
+
+  /**
+   *
+   *
+   * @param {CatapultsAccountsInterface} selectedAccount
+   * @memberof HomePage
+   */
+  async showWalletDetails(selectedAccount: CatapultsAccountsInterface) {
+    console.log('------------showWalletDetails ---> this.init() -------------------');
+    this.selectedAccount = selectedAccount;
+    let page = "TransactionListPage";
+    let transactions = this.confirmedTransactions;
+    let aggregateTransactions = this.aggregateTransactions;
+    let total = this.totalWalletBalance;
+    let mosaics = this.mosaics;
+    let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
+    const modal = this.modalCtrl.create(page, payload, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+
+    await modal.present().then(_ => {
+      // this.init();
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {*} refresher
+   * @memberof HomePage
+   */
+  doRefresh(refresher: any) {
+    console.log('\n\n ------------ Begin async operation ---> this.init() -------------------');
+    setTimeout(async () => {
+      this.mosaics = null; // Triggers the skeleton list loader
+      try {
+        await this.init();
+        refresher.complete();
+      } catch (error) {
+        this.isLoading = false;
+        refresher.complete();
+      }
+    }, 1500);
+  }
+
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @memberof HomePage
+   */
+  getConfirmedTxn(publicAccount: PublicAccount, id = null) {
+    let options: LoadingOptions = {
+      content: "Loading..."
+    };
+
+    let loader = this.loadingCtrl.create(options);
+    loader.present();
+    this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount, id).subscribe(transactions => {
+      this.isLoading = false;
+      loader.dismiss();
+      if (transactions.length > 0) {
+        this.confirmedTransactions = (!this.confirmedTransactions) ? [] : this.confirmedTransactions;
+        const txn = this.confirmedTransactions;
+        transactions.forEach(element => {
+          txn.push(element);
+        });
+
+        this.confirmedTransactions = txn;
+        console.log('confirmedTransactions -----> ', this.confirmedTransactions);
+      }
+    }, error => {
+      this.isLoading = false;
+      loader.dismiss();
+    });
+  }
+
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
+  slideChanged() {
+    let currentIndex = this.slides.getActiveIndex();
+    if (this.accounts.length != currentIndex) {
+      this.onWalletSelect(this.accounts[currentIndex]);
+      this.haptic.selection();
+    } else {
+      this.mosaics = null;
+      this.isLoading = false;
+      this.unconfirmedTransactions = null;
+      this.confirmedTransactions = null;
+      this.showEmptyTransaction = true;
+      this.showEmptyMosaic = true;
+    }
+  }
+
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
+  showWalletList() {
+    console.log('\n\n AQUIIIII showWalletList');
+    this.haptic.impact({ type: "heavy" });
+    const page = "WalletListPage";
+    this.utils.showInsetModal(page, { wallets: this.accounts }).subscribe(data => {
+      console.log("SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data", data);
+      const account = data.account;
+      const index = data.index;
+      console.log('wallet', account);
+      console.log('index', index);
+      if (account) {
+        this.slides.slideTo(index);
+        this.onWalletSelect(account);
+      }
+    });
+  }
+
+
+  // -----------------------------------------------------------------------------------
+
+
+
+
+
   showEmptyMessage() {
     this.mosaics = null;
     this.confirmedTransactions = null;
@@ -250,13 +344,19 @@ export class HomePage {
     this.showEmptyMosaic = true;
     this.showEmptyTransaction = true;
   }
+
+
   hideEmptyMessage() {
     this.showEmptyMosaic = false;
     this.showEmptyTransaction = false;
   }
+
+
   hideLoaders() {
     this.isLoading = false;
   }
+
+
   showLoaders() {
     this.isLoading = true;
     this.showEmptyTransaction = true;
@@ -266,15 +366,11 @@ export class HomePage {
     this.confirmedTransactions = null;
   }
 
-  
-
   getTransactionsUnconfirmed(publicAccount: PublicAccount) {
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsUnconfirmed(publicAccount).subscribe(transactions => {
       if (transactions) {
-        const transferTransactionsUnconfirmed: Array<
-          Transaction
-        > = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
+        const transferTransactionsUnconfirmed: Array<Transaction> = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
         this.unconfirmedTransactions = transferTransactionsUnconfirmed;
         // console.log(
         //   "this.unconfirmedTransactions ",
@@ -303,17 +399,6 @@ export class HomePage {
     });
     this.isLoading = false;
   }
-
-  async onWalletSelect(selectedAccount: CatapultsAccountsInterface) {
-    if (this.selectedAccount.account === selectedAccount.account) {
-      this.selectedAccount = selectedAccount;
-    }
-    await this.walletProvider.setSelectedAccount(selectedAccount).then(async () => {
-      await this.init();
-    });
-  }
-
-  
 
   getAbsoluteAmount(amount, divisibility) {
     return this.proximaxProvider.amountFormatter(amount, divisibility)
@@ -441,62 +526,5 @@ export class HomePage {
       showBackdrop: true
     });
     modal.present();
-  }
-
-  doRefresh(refresher) {
-    console.log("Begin async operation", refresher);
-
-    setTimeout(async () => {
-      this.mosaics = null; // Triggers the skeleton list loader
-      console.log("Async operation has ended");
-      try {
-        await this.init();
-        refresher.complete();
-      } catch (error) {
-        this.isLoading = false;
-        refresher.complete();
-      }
-    }, 1500);
-  }
-
-  slideChanged() {
-    let currentIndex = this.slides.getActiveIndex();
-    if (this.accounts.length != currentIndex) {
-      this.onWalletSelect(this.accounts[currentIndex]);
-      console.log('this.accounts', this.accounts);
-
-      this.haptic.selection();
-    } else {
-      this.mosaics = null;
-      this.isLoading = false;
-      this.unconfirmedTransactions = null;
-      this.confirmedTransactions = null;
-      this.showEmptyTransaction = true;
-      this.showEmptyMosaic = true;
-    }
-  }
-
-  showWalletList() {
-    console.log('aqio log');
-
-    this.haptic.impact({ type: "heavy" });
-    const page = "WalletListPage";
-    this.utils
-      .showInsetModal(page, { wallets: this.accounts })
-      .subscribe(data => {
-        console.log(
-          "SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data",
-          data
-        );
-        const account = data.account;
-        const index = data.index;
-        console.log('wallet', account);
-        console.log('index', index);
-
-        if (account) {
-          this.slides.slideTo(index);
-          this.onWalletSelect(account);
-        }
-      });
   }
 }
