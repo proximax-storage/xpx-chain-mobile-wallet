@@ -98,7 +98,7 @@
     "WALLETS.SEND.ADDRESS.OPTION.TITLE" : "Opciones de entrada de dirección",
     "WALLETS.SEND.ADDRESS.OPTION1" : "Ingresar manualmente",
     "WALLETS.SEND.ADDRESS.OPTION2" : "Seleccione de la libreta de direcciones",
-    "WALLETS.SEND.NOTES" : "Notas (Opcional)",
+    "WALLETS.SEND.NOTES" : "Mensaje",
     "WALLETS.CONFIRM.TITLE" : "Confirmar Transacción",
     "WALLETS.SEND.LABEL.NOTES" : "Notas",
     "WALLETS.SEND.LABEL.FEE" : "Fee",

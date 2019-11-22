@@ -29,7 +29,7 @@ export class AuthProvider {
     try {
       let wallet = null;
       if (nameAccountUser) {
-        const wallets = await this.storage.get('wallets');
+        const wallets = await this.storage.get('myWallets');
         wallet = wallets.find((x: any) => x.user === nameAccountUser);
       } else {
         wallet = await this.storage.get('selectedWallet');
