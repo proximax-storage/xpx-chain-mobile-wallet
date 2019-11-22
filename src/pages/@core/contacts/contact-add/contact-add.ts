@@ -40,6 +40,9 @@ export class ContactAddPage {
   ) {
     this.init();
     this.subscribeValue();
+
+    console.log(this.walletProvider.selectesAccount.account.address.address);
+    
   }
 
 
@@ -71,7 +74,7 @@ export class ContactAddPage {
         const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
         if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
+          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectesAccount.account.address.address, accountRecipient)) {
             // this.blockSendButton = true;
             this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
           } else {
@@ -93,13 +96,15 @@ export class ContactAddPage {
    
     const DATA = form;
     if (!this.proximaxProvider.isValidAddress(CONTACT_ADDRESS)) {
-      this.alertProvider.showMessage(
-        this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_ERROR")
-      );
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_ERROR"));
     } else {
       DATA.address = CONTACT_ADDRESS;
-      this.contactsProvider.push(DATA).then(_ => {
-        this.gotoHome();
+      this.contactsProvider.push(DATA).then(result => {
+        if(!result){
+          this.gotoHome();
+        } else{
+          this.alertProvider.showMessage(this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_EXISTS"));
+        }
       });
     }
   }

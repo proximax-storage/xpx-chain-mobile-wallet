@@ -32,6 +32,7 @@ export class WalletProvider {
   publicAccount: PublicAccount;
   wallets: SimpleWallet[];
   selectedWallet: any;
+  selectesAccount: any;
 
   constructor(
     private authProvider: AuthProvider,
@@ -187,6 +188,7 @@ export class WalletProvider {
    */
   async getAccountSelected(): Promise<CatapultsAccountsInterface> {
     const data = await this.storage.get('selectedAccount');
+    this.selectesAccount = data;
     const result = data ? data : null;
     return result;
   }

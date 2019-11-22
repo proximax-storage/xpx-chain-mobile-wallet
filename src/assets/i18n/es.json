@@ -159,6 +159,7 @@
     "SERVICES.ADDRESS_BOOK.UPDATE.TITLE":"Actualizar contacto",
     "SERVICES.ADDRESS_BOOK.UPDATE.SUBTITLE":"Para actualizar un contacto cambia el siguiente formulario.",
     "SERVICES.ADDRESS_BOOK.DELETE.CONFIRM":"Eliminar {{contactName}}?",
+    "SERVICES.ADDRESS_BOOK.ADD_EXISTS": "Esta dirección ya pertenece a su lista de contactos.",
     "SERVICES.ADDRESS_BOOK.DELETE.WARNING":"Continuar con esta acción eliminará este contacto de su libreta de direcciones y no se podrá deshacer.",
     "SERVICES.ADDRESS_BOOK.CONFIRM_REMOVE":"¿Estás seguro de que deseas eliminar {{contact.name}}?",
     "SERVICES.MULTISIGN_SUPPORT.TITLE" : "Soporte Multisig",

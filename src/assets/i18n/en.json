@@ -158,6 +158,7 @@
     "SERVICES.ADDRESS_BOOK.UPDATE.TITLE": "Update Contact",
     "SERVICES.ADDRESS_BOOK.UPDATE.SUBTITLE": "To update a contact change the form below.",
     "SERVICES.ADDRESS_BOOK.DELETE.CONFIRM": "Delete {{contactName}}?",
+    "SERVICES.ADDRESS_BOOK.ADD_EXISTS": "This address already belongs to your contact list.",
     "SERVICES.ADDRESS_BOOK.DELETE.WARNING": "Continuing this action will delete this contact from your address book and it cannot be undone.",
     "SERVICES.ADDRESS_BOOK.CONFIRM_REMOVE": "Are you sure you want to remove {{contact.name}}?",
     "SERVICES.MULTISIGN_SUPPORT.TITLE": "Multisig Support",

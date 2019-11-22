@@ -168,19 +168,6 @@ export class ProximaxProvider {
     }
   }
 
-
-  public createFromPrivateKey(
-    walletName: string,
-    password: string,
-    privateKey: string
-  ): Account {
-    const _password = new Password(password);
-    const wallet = SimpleWallet.createFromPrivateKey(walletName, _password, privateKey, NetworkType.MIJIN_TEST);
-    const account = wallet.open(_password);
-    // console.log('Your account address is:', account.address.pretty(), 'and its private key', account.privateKey);
-    return account;
-  }
-
   /**
    * 
    * @param address 
