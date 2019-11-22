@@ -38,7 +38,7 @@ export class TransferDetailComponent {
   }
   
   ngOnInit() {
-    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];    
+    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];   
     // this._setOwner();
     this._getMosaicInfo();
   }

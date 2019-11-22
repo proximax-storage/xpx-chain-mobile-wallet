@@ -20,19 +20,19 @@ export class TransactionsProvider {
   
 
   getAllTransactionsFromAccount(publicAccount: PublicAccount): Observable<Transaction[]> {
-    const pageSize = 10;
+    const pageSize = 100;
     const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount, pageSize)
     return transaction;
   }
 
   getAllTransactionsUnconfirmed(publicAccount: PublicAccount): Observable<Transaction[]> {
-    const pageSize = 10;
+    const pageSize = 100;
     const transaction = this.proximaxProvider.getAllTransactionsUnconfirmed(publicAccount, pageSize)
     return transaction;
   }
 
   getAllTransactionsAggregate(publicAccount: PublicAccount): Observable<AggregateTransaction[]> {
-    const pageSize = 10;
+    const pageSize = 100;
     const transaction = this.proximaxProvider.getAllTransactionsAggregate(publicAccount, pageSize)
     return transaction;
   }

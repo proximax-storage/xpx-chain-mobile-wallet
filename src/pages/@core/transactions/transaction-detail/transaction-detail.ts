@@ -34,6 +34,7 @@ export class TransactionDetailPage {
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
   currentAccount: any;
+  status: any;
 
   constructor(
     private navParams: NavParams,
@@ -50,7 +51,8 @@ export class TransactionDetailPage {
   ) {
     this.configurationForm = this.sharedService.configurationForm;
     const payload = this.navParams.data;
-    this.tx = payload.transactions
+    this.tx = payload.transactions;
+    this.status = payload.status;
 
     this.mosaics = payload.mosaics;
     this.createForm()
@@ -122,6 +124,9 @@ export class TransactionDetailPage {
    * @param tx 
    */
   toShowCosign(tx: AggregateTransaction): boolean {
-    return tx.signer.publicKey === this.currentAccount.publicAccount.publicKey || !!tx.cosignatures.find(cosigner => cosigner.signer.publicKey === this.currentAccount.publicAccount.publicKey);
+    console.log('------', tx);
+    console.log('------', tx.deadline.value.minusMinutes(1439).toString()); 
+    
+    return tx.signer.publicKey === this.currentAccount.publicAccount.publicKey ||  this.status == 'confirmed' || !!tx.cosignatures.find(cosigner => cosigner.signer.publicKey === this.currentAccount.publicAccount.publicKey);
   }
 }

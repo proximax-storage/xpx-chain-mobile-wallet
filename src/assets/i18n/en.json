@@ -103,7 +103,7 @@
     "WALLETS.SEND.ADDRESS.OPTION.TITLE": "Address input options",
     "WALLETS.SEND.ADDRESS.OPTION1": "Enter manually",
     "WALLETS.SEND.ADDRESS.OPTION2": "Select from address book",
-    "WALLETS.SEND.NOTES": "Notes(Optional)",
+    "WALLETS.SEND.NOTES": "Message",
     "WALLETS.CONFIRM.TITLE": "Confirm Transaction",
     "WALLETS.SEND.LABEL.NOTES": "Notes",
     "WALLETS.SEND.LABEL.FEE": "Fee",
