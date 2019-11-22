@@ -15,7 +15,6 @@ import {
   Transaction,
   TransactionType,
   MultisigAccountInfo,
-  TransferTransaction,
 } from 'tsjs-xpx-chain-sdk';
 
 import { GetMarketPricePipe } from '../../../pipes/get-market-price/get-market-price';
