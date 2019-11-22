@@ -42,7 +42,7 @@
     "WALLETS.VESTED_BALANCE": "Vested Balance",
     "WALLETS.MORE_DETAILS": "More Details",
     "WALLETS.IMPORT.NAME_EXISTS": "This account already exists. Please choose a new one.",
-    "WALLETS.IMPORT.PRIVATE_KEY_INVALID": "Invalid private key. Please try again.",
+    "WALLETS.IMPORT.PRIVATE_KEY_INVALID": "Invalid private key.",
     "WALLETS.IMPORT.SWAP_TITLE": "Swap Process",
     "WALLETS.IMPORT.SWAP_MESSAGE": "Your recently imported private key has some assets on the NIS1 (NEM) blockchain.  Would you like to transfer these assets to Sirius Chain and make them available in the Sirius wallet?",
     "WALLETS.EXPORT": "Export/Backup",

@@ -35,7 +35,7 @@
     "WALLETS.VESTED_BALANCE" : "既得残高",
     "WALLETS.MORE_DETAILS" : "詳細",
     "WALLETS.IMPORT.NAME_EXISTS":"このアカウントは既に存在します。",
-    "WALLETS.IMPORT.PRIVATE_KEY_INVALID":"無効なプライベートキーです。もう一度やり直してください",
+    "WALLETS.IMPORT.PRIVATE_KEY_INVALID":"無効なプライベートキーです。",
     "WALLETS.IMPORT.SWAP_TITLE":"スワッププロセス",
     "WALLETS.IMPORT.SWAP_MESSAGE":"あなたが最近インポートしたNIS1(NEM)ブロックチェーンにはアセットがあります。これらのアセットをSiriusチェーンに移動し、Siriusウォレットでも利用可能にしますか？",
     "WALLETS.EXPORT" : "エクスポート/バックアップ",
