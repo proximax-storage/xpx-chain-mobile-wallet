@@ -40,7 +40,7 @@
 
       <section total text-center>
         <h2 price ion-text color="dark" *ngIf="selectedCoin">
-          {{ selectedCoin?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }} USD</h2>
+            USD$ {{ selectedCoin?.market_data.current_price.usd * amount  | number : '1.2-6' }}</h2>
         <div *ngIf="msgErrorBalance !== ''">
           <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
         </div>
@@ -63,7 +63,7 @@
             <h2 ion-text color="dark" bold>
               {{getAbsoluteAmount(selectedMosaic.amountCompact, selectedMosaic.divisibility)}}</h2>
             <p text-right color="dark" style="font-size: 10px !important">
-              {{  ((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | currency: 'USD': 'symbol': '1.2-6'  }}
+              USD$ {{((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | number : '1.2-6'  }}
             </p>
           </section>
         </ion-item>
