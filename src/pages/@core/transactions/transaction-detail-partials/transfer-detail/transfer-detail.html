@@ -1,3 +1,16 @@
+<ion-item *ngIf="messageShow" >
+  <img logo-small item-left src="assets/imgs/xpx-swap.png">
+
+  <ng-container >
+    <h2 ion-text color="dark" style="display: flex;" >
+      <ng-container>
+        <h2 ion-text color="dark">ProximaX Swap</h2>
+      </ng-container>
+    </h2>
+  </ng-container>
+
+</ion-item>
+
 <!-- Mosaic/s -->
 <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
 
@@ -128,6 +141,19 @@
 </ion-card>
 <!-- ./Hash -->
 
+<!-- .Hash Nis1-->
+<ion-card no-margin-bottom *ngIf="messageShow" (click)="utils.copy(message.message , 'message')">
+  <ion-card-content no-padding>
+    <ion-item>
+      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.HASH.NIS" | translate}}</h2>
+      <p text-wrap ion-text  text-uppercase color="dark">
+        {{ data.nis1Hash }}
+      </p>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+<!-- ./Hash Nis1 -->
+
 <!-- Message -->
 <ion-card no-margin-bottom *ngIf="!messageShow" (click)="utils.copy(tx.message.payload, 'message')">
   <ion-card-content no-padding>
@@ -154,7 +180,7 @@
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
       <p text-wrap ion-text color="dark">
-        {{ message.message }}
+        {{ data.message }}
       </p>
     </ion-item>
   </ion-card-content>

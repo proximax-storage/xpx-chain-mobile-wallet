@@ -23,9 +23,11 @@ export class TransferDetailComponent {
   @Input() owner: string;
   public App = App;
   public ownerAddress: any;
-  public message: any;
+  public data: any;
   public messageShow = false;
   show: boolean;
+  MESSAGE_: string;
+  LOGO: string;
 
   constructor(
     public utils: UtilitiesProvider,
@@ -40,6 +42,10 @@ export class TransferDetailComponent {
   ngOnInit() {
     this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];   
     // this._setOwner();
+
+
+    console.log('########################', this.tx);
+    
     this._getMosaicInfo();
   }
 
@@ -87,10 +93,13 @@ export class TransferDetailComponent {
      const valid = this.IsJsonString(this.tx.message.payload);
 
      if(valid){
-      this.message = JSON.parse(this.tx.message.payload);
-      if(this.message.message){
+      this.data = JSON.parse(this.tx.message.payload);
+      if(this.data.message){
         this.messageShow = true
-        return this.message;
+        return this.data;
+      } else if(this.data.nis1Hash){
+        this.messageShow = true
+        return this.data;
       }
      } else {
       this.messageShow = false
