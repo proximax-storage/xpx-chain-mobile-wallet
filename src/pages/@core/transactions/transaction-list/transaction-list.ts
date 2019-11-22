@@ -132,13 +132,10 @@ export class TransactionListPage {
   }
 
   showSendModal() {
-
     console.log(this.accountInfo);
-
     if (this.isMultisig) {
       this.haptic.selection();
       let page = 'SendMultisigPage';
-
       const title = this.translateService.instant("WALLETS.SEND.PROMPT");
       const normalTX = this.translateService.instant("WALLETS.SEND.NORMAL");
       const multisigTX = this.translateService.instant("WALLETS.SEND.MULTISIG");
@@ -201,6 +198,13 @@ export class TransactionListPage {
     return index;
   }
 
+  /**
+   *
+   *
+   * @param {Transaction} tx
+   * @param {string} status
+   * @memberof TransactionListPage
+   */
   gotoTransactionDetail(tx: Transaction, status: string) {
     let page = "TransactionDetailPage";
     const transactions = tx;

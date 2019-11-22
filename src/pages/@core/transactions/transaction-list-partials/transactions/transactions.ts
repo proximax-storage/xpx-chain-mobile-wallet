@@ -1,12 +1,13 @@
-import { DefaultMosaic } from '../../../../../models/default-mosaic';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { TransactionType } from 'tsjs-xpx-chain-sdk';
+import { TranslateService } from '@ngx-translate/core';
 import { App } from '../../../../../providers/app/app';
+import { DefaultMosaic } from '../../../../../models/default-mosaic';
 import { TransferTransaction } from '../../../../../models/transfer-transaction';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
-import { TransactionType } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import { AppConfig } from '../../../../../app/app.config';
-import { TranslateService } from '@ngx-translate/core';
+import { AlertProvider } from '../../../../../providers/alert/alert';
 
 @Component({
   selector: 'transactions',
@@ -18,9 +19,59 @@ export class TransactionComponent {
   @Input() mosaics: DefaultMosaic[] = [];
   @Input() owner: string;
   @Input() status: string;
+  @Output() viewTxDetail = new EventEmitter();
 
   transactionDetails: TransferTransaction;
-
+  arraTypeTransaction = {
+    transfer: {
+      id: TransactionType.TRANSFER,
+      name: "Transfer"
+    },
+    registerNameSpace: {
+      id: TransactionType.REGISTER_NAMESPACE,
+      name: "Register Namespace"
+    },
+    mosaicDefinition: {
+      id: TransactionType.MOSAIC_DEFINITION,
+      name: "Mosaic Definition"
+    },
+    mosaicSupplyChange: {
+      id: TransactionType.MOSAIC_SUPPLY_CHANGE,
+      name: "Mosaic Supply Change"
+    },
+    modifyMultisigAccount: {
+      id: TransactionType.MODIFY_MULTISIG_ACCOUNT,
+      name: "Modify Multisig Account"
+    },
+    aggregateComplete: {
+      id: TransactionType.AGGREGATE_COMPLETE,
+      name: "Aggregate Complete"
+    },
+    aggregateBonded: {
+      id: TransactionType.AGGREGATE_BONDED,
+      name: "Aggregate Bonded"
+    },
+    mosaicAlias: {
+      id: TransactionType.MOSAIC_ALIAS,
+      name: "Mosaic Alias"
+    },
+    addressAlias: {
+      id: TransactionType.ADDRESS_ALIAS,
+      name: "Address Alias"
+    },
+    lock: {
+      id: TransactionType.LOCK,
+      name: "LockFund"
+    },
+    secretLock: {
+      id: TransactionType.SECRET_LOCK,
+      name: "Secret lock"
+    },
+    secretProof: {
+      id: TransactionType.SECRET_PROOF,
+      name: "Secret proof"
+    }
+  };
   App = App;
   LOGO: string = App.LOGO.DEFAULT;
   AMOUNT: any = 0;
@@ -28,8 +79,11 @@ export class TransactionComponent {
   array: any[] = [];
   showTx = false;
   MESSAGE_ = '';
+  statusViewDetail: boolean = false;
+  type = '';
 
   constructor(
+    private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService
@@ -40,6 +94,11 @@ export class TransactionComponent {
     this.validateTransaction();
   }
 
+  /**
+   *
+   *
+   * @memberof TransactionComponent
+   */
   async validateTransaction() {
     console.log('this.tx', this.tx);
     switch (this.tx.type) {
@@ -58,25 +117,28 @@ export class TransactionComponent {
               this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
               this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
               this.showTx = true;
+              this.statusViewDetail = true;
+              this.type = 'TRANSFER';
             }
           } else {
             console.log('------- MAS DE UN MOSAICO ------');
-            this.MESSAGE_ = this.translateService.instant("WALLETS.MOSAICS_MULTIPLE");
+            this.MESSAGE_ = 'TRANSFER';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
             this.LOGO = App.LOGO.DEFAULT;
             this.showTx = true;
+            this.statusViewDetail = true;
           }
         } else {
-          this.MESSAGE_ = this.translateService.instant("WALLETS.TRANSACTION.DETAIL.MESSAGE");
+          this.MESSAGE_ = 'TRANSFER';
           this.MOSAIC_INFO = null;
           this.AMOUNT = null;
           this.LOGO = App.LOGO.DEFAULT;
           this.showTx = true;
+          this.statusViewDetail = true;
         }
         break;
       case TransactionType.AGGREGATE_BONDED:
-        console.log('ES AGREGADA BONDED', this.tx);
         if (this.tx['innerTransactions'].length === 1) {
           if (this.tx['innerTransactions'][0]["message"] && this.tx['innerTransactions'][0]["message"].payload !== "") {
             try {
@@ -91,29 +153,15 @@ export class TransactionComponent {
                   this.AMOUNT = null;
                   this.LOGO = App.LOGO.SWAP;
                   this.showTx = true;
-                  /*newTransaction = Object.assign({}, this.tx['innerTransactions'][0]);
-                  newTransaction['transactionInfo'] = transaction.transactionInfo;
-                  newTransaction['nis1Hash'] = msg['nis1Hash'];
-                  // newTransaction['transactionInfo'].hash = transaction.transactionInfo.hash;
-                  newTransaction.size = transaction.size;
-                  newTransaction.cosignatures = transaction['cosignatures'];
-                  if (group && group === 'confirmed') {
-                    let walletTransactionsNis = this.walletService.getWalletTransNisStorage().find(el => el.name === this.walletService.getCurrentWallet().name);
-                    if (walletTransactionsNis !== undefined && walletTransactionsNis !== null) {
-                      const transactions = walletTransactionsNis.transactions.filter(el => el.nis1TransactionHash !== msg["nis1Hash"]);
-                      walletTransactionsNis.transactions = transactions;
-                      this.walletService.setSwapTransactions$(walletTransactionsNis.transactions);
-                      this.walletService.saveAccountWalletTransNisStorage(walletTransactionsNis);
-                    }
-                  }*/
+                  this.statusViewDetail = true;
                 }
               }
             } catch (error) {
-              console.log(error);
-              this.MESSAGE_ = 'Agregada Bonded';
+              this.MESSAGE_ = 'Aggregate Bonded';
               this.MOSAIC_INFO = null;
               this.AMOUNT = null;
               this.LOGO = App.LOGO.DEFAULT;
+              this.statusViewDetail = false;
               this.showTx = true;
             }
           } else {
@@ -121,67 +169,40 @@ export class TransactionComponent {
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
             this.LOGO = App.LOGO.DEFAULT;
+            this.statusViewDetail = false;
             this.showTx = true;
           }
+        } else {
+          this.MESSAGE_ = 'Aggregate Bonded';
+          this.MOSAIC_INFO = null;
+          this.AMOUNT = null;
+          this.LOGO = App.LOGO.DEFAULT;
+          this.statusViewDetail = false;
+          this.showTx = true;
         }
-        /*if (transaction['innerTransactions'].length === 1) {
-          if (transaction['innerTransactions'][0]["message"] && transaction['innerTransactions'][0]["message"].payload !== "") {
-            let newTransaction: any = null;
-            try {
-              const msg = JSON.parse(transaction['innerTransactions'][0]["message"].payload);
-              const addressAccountMultisig = environment.swapAccount.addressAccountMultisig;
-              const addressAccountSimple = environment.swapAccount.addressAccountSimple;
-              const addressSender = transaction['innerTransactions'][0].signer.address.plain();
-              if ((addressSender === addressAccountMultisig) || (addressSender === addressAccountSimple)) {
-                if (msg && msg["type"] && msg["type"] === "Swap") {
-                  nameType = "ProximaX Swap";
-                  newTransaction = Object.assign({}, transaction['innerTransactions'][0]);
-                  newTransaction['transactionInfo'] = transaction.transactionInfo;
-                  newTransaction['nis1Hash'] = msg['nis1Hash'];
-                  // newTransaction['transactionInfo'].hash = transaction.transactionInfo.hash;
-                  newTransaction.size = transaction.size;
-                  newTransaction.cosignatures = transaction['cosignatures'];
-                  if (group && group === 'confirmed') {
-                    let walletTransactionsNis = this.walletService.getWalletTransNisStorage().find(el => el.name === this.walletService.getCurrentWallet().name);
-                    if (walletTransactionsNis !== undefined && walletTransactionsNis !== null) {
-                      const transactions = walletTransactionsNis.transactions.filter(el => el.nis1TransactionHash !== msg["nis1Hash"]);
-                      walletTransactionsNis.transactions = transactions;
-                      this.walletService.setSwapTransactions$(walletTransactionsNis.transactions);
-                      this.walletService.saveAccountWalletTransNisStorage(walletTransactionsNis);
-                    }
-                  }
-                }
-              }
-            } catch (error) { }
-
-            if (newTransaction !== null) {
-              isVerified = true;
-              transaction = newTransaction;
-            }
-          };
-        }*/
-
         break;
       default:
-        break;
+        const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
+        this.MESSAGE_ = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
+        this.MOSAIC_INFO = null;
+        this.AMOUNT = null;
+        this.LOGO = App.LOGO.DEFAULT;
+        this.statusViewDetail = false;
+        this.showTx = true;
     }
-    // this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
-    /*if (this.tx.mosaics.length > 0) {
-      this.MOSAIC_INFO = this.mosaics.find(mosaic => {
-        console.log(mosaic);
-        return mosaic.hex == this.tx.mosaics[0].id.toHex()
-      });
+  }
 
-      console.log('this.MOSAIC_INFO', this.MOSAIC_INFO);
-
-      this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
+  /**
+   *
+   *
+   * @param {Transaction} tx
+   * @memberof TransactionComponent
+   */
+  viewDetail(tx: any) {
+    if (this.statusViewDetail) {
+      this.viewTxDetail.emit(tx);
     } else {
-      this.AMOUNT = 0
+      this.alertProvider.showMessage(this.translateService.instant('APP.MESSAGE.ERROR_TXN_NOT_SUPPORT'));
     }
-
-    this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
-    this.STATUS = this.status;*/
-    // console.log('this.MOSAIC_INFO', this.MOSAIC_INFO);
-    // console.log('this.LOGO', this.LOGO);
   }
 }
