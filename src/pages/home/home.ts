@@ -62,7 +62,6 @@ export class HomePage {
   mosaics: Array<DefaultMosaic> = [];
   accounts: Array<CatapultsAccountsInterface> = [];
 
-  fakeList: Array<any>;
   data: any[] = [];
   totalWalletBalance = 0;
 
@@ -118,7 +117,6 @@ export class HomePage {
    * @memberof HomePage
    */
   async init() {
-    this.fakeList = [{}, {}];
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
 
@@ -219,12 +217,13 @@ export class HomePage {
   async showWalletDetails(selectedAccount: CatapultsAccountsInterface) {
     console.log('------------showWalletDetails ---> this.init() -------------------');
     this.selectedAccount = selectedAccount;
-    let page = "TransactionListPage";
-    let transactions = this.confirmedTransactions;
-    let aggregateTransactions = this.aggregateTransactions;
-    let total = this.totalWalletBalance;
-    let mosaics = this.mosaics;
-    let payload = { selectedAccount, transactions, aggregateTransactions, total, mosaics };
+    const page = "TransactionListPage";
+    const transactions = this.confirmedTransactions;
+    const unconfirmedTransactions = this.unconfirmedTransactions;
+    const aggregateTransactions = this.aggregateTransactions;
+    const total = this.totalWalletBalance;
+    const mosaics = this.mosaics;
+    const payload = { selectedAccount, transactions, aggregateTransactions, unconfirmedTransactions, total, mosaics };
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,
       showBackdrop: true
@@ -280,12 +279,51 @@ export class HomePage {
         });
 
         this.confirmedTransactions = txn;
-        console.log('confirmedTransactions -----> ', this.confirmedTransactions);
       }
     }, error => {
       this.isLoading = false;
       loader.dismiss();
     });
+  }
+
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @memberof HomePage
+   */
+  getTransactionsUnconfirmed(publicAccount: PublicAccount) {
+    this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsUnconfirmed(publicAccount).subscribe(transactions => {
+      if (transactions) {
+        const transferTransactionsUnconfirmed: Array<Transaction> = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
+        this.unconfirmedTransactions = transferTransactionsUnconfirmed;
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true;
+      }
+    });
+    this.isLoading = false;
+  }
+
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @memberof HomePage
+   */
+  getTransactionsAggregate(publicAccount: PublicAccount) {
+    this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
+      if (transactions) {
+        const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
+        this.aggregateTransactions = transferTransactionsAggregate;
+        this.showEmptyTransaction = false;
+      } else {
+        this.showEmptyTransaction = true;
+      }
+    });
+    this.isLoading = false;
   }
 
   /**
@@ -314,15 +352,11 @@ export class HomePage {
    * @memberof HomePage
    */
   showWalletList() {
-    console.log('\n\n AQUIIIII showWalletList');
     this.haptic.impact({ type: "heavy" });
     const page = "WalletListPage";
     this.utils.showInsetModal(page, { wallets: this.accounts }).subscribe(data => {
-      console.log("SIRIUS CHAIN WALLET: HomePage -> showWalletList -> data", data);
       const account = data.account;
       const index = data.index;
-      console.log('wallet', account);
-      console.log('index', index);
       if (account) {
         this.slides.slideTo(index);
         this.onWalletSelect(account);
@@ -366,39 +400,7 @@ export class HomePage {
     this.confirmedTransactions = null;
   }
 
-  getTransactionsUnconfirmed(publicAccount: PublicAccount) {
-    this.isLoading = true;
-    this.transactionsProvider.getAllTransactionsUnconfirmed(publicAccount).subscribe(transactions => {
-      if (transactions) {
-        const transferTransactionsUnconfirmed: Array<Transaction> = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
-        this.unconfirmedTransactions = transferTransactionsUnconfirmed;
-        // console.log(
-        //   "this.unconfirmedTransactions ",
-        //   this.unconfirmedTransactions
-        // );
-        this.showEmptyTransaction = false;
-      } else {
-        this.showEmptyTransaction = true;
-      }
-    });
-    this.isLoading = false;
-  }
-
-  getTransactionsAggregate(publicAccount: PublicAccount) {
-    this.isLoading = true;
-    this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
-      // console.log('TCL: HomePage -> getTransactionsAggregate -> aggregateTransactions', transactions);
-      if (transactions) {
-        const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
-        this.aggregateTransactions = transferTransactionsAggregate;
-        // console.log("this.aggregateTransactions ", this.aggregateTransactions);
-        this.showEmptyTransaction = false;
-      } else {
-        this.showEmptyTransaction = true;
-      }
-    });
-    this.isLoading = false;
-  }
+  
 
   getAbsoluteAmount(amount, divisibility) {
     return this.proximaxProvider.amountFormatter(amount, divisibility)
@@ -507,11 +509,18 @@ export class HomePage {
     });
   }
 
-  gotoTransactionDetail(tx) {
-    const page = "TransactionDetailPage";
+  /**
+   *
+   *
+   * @param {Transaction} tx
+   * @param {string} status
+   * @memberof HomePage
+   */
+  goToTransactionDetail(tx: Transaction, status: string) {
+    let page = "TransactionDetailPage";
     const transactions = tx;
     const mosaics = this.mosaics;
-    const payload = { transactions, mosaics };
+    const payload = { transactions, mosaics, status };
     this.showModal(page, payload);
   }
 

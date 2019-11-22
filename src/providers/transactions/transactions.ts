@@ -13,9 +13,7 @@ import { ProximaxProvider } from '../proximax/proximax';
 @Injectable()
 export class TransactionsProvider {
 
-  constructor(public http: HttpClient, private proximaxProvider: ProximaxProvider) {
-    console.log('Hello TransactionsProvider Provider');
-  }
+  constructor(public http: HttpClient, private proximaxProvider: ProximaxProvider) {}
 
   
   /**
