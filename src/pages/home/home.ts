@@ -344,24 +344,6 @@ export class HomePage {
     }
   }
 
-  /**
-   *
-   *
-   * @memberof HomePage
-   */
-  showWalletList() {
-    this.haptic.impact({ type: "heavy" });
-    const page = "WalletListPage";
-    this.utils.showInsetModal(page, { wallets: this.accounts }).subscribe(data => {
-      const account = data.account;
-      const index = data.index;
-      if (account) {
-        this.slides.slideTo(index);
-        this.onWalletSelect(account);
-      }
-    });
-  }
-
 
   // -----------------------------------------------------------------------------------
 
