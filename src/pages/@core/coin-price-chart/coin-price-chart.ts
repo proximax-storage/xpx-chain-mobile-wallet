@@ -58,7 +58,7 @@ export class CoinPriceChartPage {
 
   selectedAccount: any;
   fakeList: Array<any>;
-  confirmedTransactions: TransferTransaction[]=[];
+  confirmedTransactions: Transaction[] = [];
   showEmptyMessage: boolean;
   isLoading: boolean;
 
@@ -80,7 +80,7 @@ export class CoinPriceChartPage {
   accountInfo: MultisigAccountInfo;
   isMultisig: boolean;
   public mosaics: DefaultMosaic[] = [];
-  array: any[]=[];
+  array: any[] = [];
   account: any;
   divisibility: any;
 
@@ -100,7 +100,7 @@ export class CoinPriceChartPage {
     private haptic: HapticProvider,
     private browserTab: BrowserTab,
     private safariViewController: SafariViewController,
-  ) { 
+  ) {
     this.selectedSegment = 'transactions';
     this.durations = [
       { label: "24H", value: 1 },
@@ -118,36 +118,40 @@ export class CoinPriceChartPage {
     this.mosaicHex = payload.mosaicHex;
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
-     // will be used to filter transactions
+    // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
 
     console.log('selectedAccount', this.selectedAccount);
-    
+
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;
 
-    this.confirmed.forEach((confirmed:TransferTransaction) => {
-      confirmed.mosaics.forEach(async _mosaic => {
-        if(_mosaic.id.toHex().toLowerCase() == this.mosaicHex){
-          this.confirmedTransactions.push(confirmed);
-          this.showEmptyMessage = false;
-        }
-      });
-    });    
-    
-    if(this.confirmedTransactions.length < 1){
+    this.confirmed.forEach((confirmed: Transaction) => {
+      console.log('confirmed', confirmed);
+      if (confirmed.type === TransactionType.TRANSFER) {
+        confirmed['mosaics'].forEach(async _mosaic => {
+          if (_mosaic.id.toHex().toLowerCase() == this.mosaicHex) {
+            this.confirmedTransactions.push(confirmed);
+            this.showEmptyMessage = false;
+          }
+        });
+      }
+    });
+
+    if (this.confirmedTransactions.length < 1) {
       this.showEmptyMessage = true;
     }
+
     this.navParams.data.mosaics.forEach(element => {
-      if(element.hex === this.navParams.data.mosaicHex){
-        this.mosaicAmount = element.amountCompact; 
-        this.divisibility = element.divisibility; 
+      if (element.hex === this.navParams.data.mosaicHex) {
+        this.mosaicAmount = element.amountCompact;
+        this.divisibility = element.divisibility;
       }
     });
     this.totalBalance = this.navParams.data['totalBalance'];
-    
+
     if (this.mosaicId == 'xar') {
 
       this.selectedCoin = {
@@ -167,7 +171,7 @@ export class CoinPriceChartPage {
         }
       }
       this.showEmptyMosaic = true;
-    }  else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
+    } else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') {
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -183,7 +187,7 @@ export class CoinPriceChartPage {
         "description": {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
-      } 
+      }
       this.showEmptyMosaic = true;
     } else {
       if (this.coinId != "") {
@@ -204,28 +208,28 @@ export class CoinPriceChartPage {
   ionViewWillEnter() {
   }
 
-  getAbsoluteAmount(amount, divisibility){
-    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
-  
+
   getAccountInfo() {
     // console.info("Getting account information.", this.selectedAccount.address)
     try {
       this.proximaxProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
-          if (accountInfo) {
-            this.accountInfo = accountInfo;
-            console.log('this.accountInfo', this.accountInfo)
-            // Check if account is a cosignatory of multisig account(s)
-            if (this.accountInfo.cosignatories.length > 0) {
-              // console.log("This is a multisig account");
-              this.isMultisig = true;
-            }
+        if (accountInfo) {
+          this.accountInfo = accountInfo;
+          console.log('this.accountInfo', this.accountInfo)
+          // Check if account is a cosignatory of multisig account(s)
+          if (this.accountInfo.cosignatories.length > 0) {
+            // console.log("This is a multisig account");
+            this.isMultisig = true;
           }
+        }
 
-        }, (err: any) => {
-          console.log(err)
-          this.isMultisig = false;
-        });
+      }, (err: any) => {
+        console.log(err)
+        this.isMultisig = false;
+      });
     } catch (error) {
       console.log(error);
     }
@@ -320,8 +324,8 @@ export class CoinPriceChartPage {
   gotoTransactionDetail(tx) {
     const page = "TransactionDetailPage";
     const transactions = tx;
-    const mosaics = this.mosaics; 
-    const payload = {transactions, mosaics};
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics };
     this.showModal(page, payload);
   }
 

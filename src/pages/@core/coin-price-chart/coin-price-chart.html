@@ -91,9 +91,9 @@
         (click)="gotoTransactionDetail(transaction)">
 
         <!-- if transfer  -->
-        <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
+        <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
           [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
-        </transfer-transaction>
+        </transactions>
       </ion-card>
 
     </ion-list>

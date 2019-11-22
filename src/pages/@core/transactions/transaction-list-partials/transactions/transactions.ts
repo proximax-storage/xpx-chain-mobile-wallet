@@ -182,7 +182,7 @@ export class TransactionComponent {
               this.type = 'TRANSFER';
             } else {
               this.statusViewDetail = false;
-              const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
+              const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx['innerTransactions'][0].type);
               this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
             }
           }
@@ -196,7 +196,7 @@ export class TransactionComponent {
         }
         break;
       default:
-        const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
+        let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
         this.MESSAGE_ = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
         this.MOSAIC_INFO = null;
         this.AMOUNT = null;
