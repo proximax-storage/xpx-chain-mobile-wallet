@@ -191,7 +191,7 @@ export class SendPage {
         ]
       ],
       isMosaicTransfer: [false, Validators.required],
-      message: [""],
+      message: ["", [Validators.maxLength(this.configurationForm.message.maxLength)]],
       amount: [
         "",
         [
@@ -204,7 +204,7 @@ export class SendPage {
         [
           Validators.required,
           Validators.minLength(this.configurationForm.passwordWallet.minLength),
-          Validators.minLength(this.configurationForm.passwordWallet.minLength)
+          Validators.maxLength(this.configurationForm.passwordWallet.maxLength)
         ]
       ]
     });

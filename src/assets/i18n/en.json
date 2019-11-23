@@ -143,6 +143,8 @@
     "WALLETS.MULTISIGTRANSACTION.DETAIL.FROM": "From multisig account",
     "WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE": "No message",
     "WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE": "Encrypted",
+    "WALLETS.TRANSFER.INSUFFICIENT_BALANCE":"Sorry, you don't have enough balance to continue the transaction.",
+    "WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG":"Transaction is not allowed for multisignature enabled wallets.",
     "WALLETS.MULTISIGTRANSACTION.DETAIL.COSIGN": "Cosign transaction",
     "NOTIFICATIONS": "Notifications",
     "SERVICES": "Services",

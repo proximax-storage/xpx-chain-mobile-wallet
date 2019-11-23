@@ -181,20 +181,11 @@ export class SendMosaicConfirmationPage {
     this.haptic.notification({ type: 'warning' });
     console.log(error);
     if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-      this.alertProvider.showMessage('Sorry, you don\'t have enough balance to continue the transaction.');
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.INSUFFICIENT_BALANCE"));
     } else if (error.toString().indexOf('Failure_Core_Insufficient_Balance') >= 0) {
-      this.alertProvider.showMessage('Sorry, you don\'t have enough balance to continue the transaction.');
-    }
-    else if (error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0) {
-      this.alertProvider.showMessage('The note you entered is too long. Please try again.');
-    } else if (error.statusCode == 404) {
-      this.alertProvider.showMessage(
-        'This address does not belong to this network'
-      );
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.INSUFFICIENT_BALANCE"));
     } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
-      this.alertProvider.showMessage(
-        'Transaction is not allowed for multisignature enabled wallets.'
-      );
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG"));
     } else {
       this.alertProvider.showMessage(
         error
