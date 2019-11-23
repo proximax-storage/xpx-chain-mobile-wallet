@@ -65,7 +65,7 @@
     </ion-segment>
   </ion-grid>
 
-  <div *ngIf="menu=='mosaics'">
+  <div *ngIf="menu === 'mosaics'">
     <ion-list transparent-items *ngIf="!isLoading">
       <ion-card no-margin-bottom *ngFor="let mosaic of mosaics" (click)="gotoCoinPrice(mosaic)">
         <ion-card-header no-padding>
