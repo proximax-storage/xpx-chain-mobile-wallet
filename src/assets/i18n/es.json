@@ -144,6 +144,8 @@
     "WALLETS.MULTISIGTRANSACTION.DETAIL.FROM" : "De cuenta multisignatura",
     "WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" : "Vacío",
     "WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE" : "Cifrado",
+    "WALLETS.TRANSFER.INSUFFICIENT_BALANCE":"Lo sentimos, no tienes saldo suficiente para continuar con la transacción.",
+    "WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG":"La transacción no está permitida para billeteras habilitadas para múltiples firmas.",
     "WALLETS.MULTISIGTRANSACTION.DETAIL.COSIGN" : "Firmar",
     "NOTIFICATIONS" : "Notificaciones",
     "SERVICES" : "Servicios",
