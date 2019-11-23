@@ -144,11 +144,11 @@ export class HomePage {
           }
 
           // Slide to selected wallet
-          /*this.accounts.forEach((acc, index) => {
+          this.accounts.forEach((acc, index) => {
             if (this.selectedAccount.account.name === acc.account.name) {
               this.slides.slideTo(index);
             }
-          });*/
+          });
           
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
@@ -164,6 +164,8 @@ export class HomePage {
 
                 console.log('\n\n  ---- INGRESA UNO ---- \n \n ');
                 this.confirmedTransactions = [];
+                this.unconfirmedTransactions = [];
+                this.aggregateTransactions = [];
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
                 this.getTransactionsAggregate(this.selectedAccount.publicAccount);
