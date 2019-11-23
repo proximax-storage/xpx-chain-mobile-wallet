@@ -110,9 +110,7 @@ export class SendMosaicConfirmationPage {
     this.formGroup = this.formBuilder.group({});
 
     // Get NavParams data
-    console.log('navParams', this.navParams.data);
     this.data = this.navParams.data;
-    console.log("TCL: SendMosaicConfirmationPage -> init -> this.data", this.data)
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
     // Initialize private data
@@ -122,13 +120,11 @@ export class SendMosaicConfirmationPage {
         privateKey: ''
       };
     })
-
     // Prepare transfer Transaction
     this.prepareTransaction();
   }
 
   prepareTransaction() {
-
     const mosaicModel = new MosaicModel();
     mosaicModel.hexId = this.data.mosaic.hex;
     mosaicModel.amount = this.data.amount;
@@ -147,7 +143,7 @@ export class SendMosaicConfirmationPage {
 
   onSubmit() {
     this.block = true;
-    console.log('transactionType', this.data.transactionType);
+    // console.log('transactionType', this.data.transactionType);
     if (this.data.transactionType == 'multisig') {
       console.log("Multisig transfer");
     } else if (this.data.transactionType = 'normal') {
@@ -155,12 +151,8 @@ export class SendMosaicConfirmationPage {
 
       this.transferTransaction.send(this.data.privateKey, this.data.currentWallet.account.network).subscribe(response => {
         const signedTxn = this.transferTransaction.signedTxn;
-
-        console.log('signedTxn', signedTxn);
-
         this.transferTransaction.checkTransaction(signedTxn).subscribe(status => {
           this.block = false;
-          console.log('status en mi component', status);
           if (status.group === 'unconfirmed' || status.group === 'confirmed') {
             this.showSuccessMessage();
           } else {
@@ -168,15 +160,8 @@ export class SendMosaicConfirmationPage {
           }
         }, error => {
           this.block = false;
-          console.log('errro 2', error);
-
+          this.showErrorMessage(error);
         })
-
-        // this.showSuccessMessage();
-        // }, (err) => {
-        //     this.showErrorMessage(err);
-        // }, () => {
-        // console.log('Done transfer transaction.');
       });
     } else {
       this.showGenericError();
