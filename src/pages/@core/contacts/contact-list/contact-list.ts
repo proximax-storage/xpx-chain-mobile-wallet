@@ -11,10 +11,11 @@ import {
 } from 'ionic-angular';
 
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
-import { BarcodeScannerProvider } from './../../../../providers/barcode-scanner/barcode-scanner';
 import { App } from './../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { TranslateService } from '@ngx-translate/core';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Storage } from "@ionic/storage";
 
 /**
  * Generated class for the ContactListPage page.
@@ -51,13 +52,16 @@ export class ContactListPage {
     private contactsProvider: ContactsProvider,
     private actionSheetCtrl: ActionSheetController,
     private platform: Platform,
-    private barcodeScannerProvider: BarcodeScannerProvider,
+    private barcodeScanner: BarcodeScanner,
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private modalCtrl:ModalController,
+    private storage: Storage,
     private translateService: TranslateService
     
-  ) {}
+  ) {
+    this.storage.set("isQrActive", true);
+  }
 
   ionViewWillEnter() {
     this.init();
@@ -158,19 +162,14 @@ export class ContactListPage {
             telegram: ''
           });
         } else if (data === ContactCreationType.QR_SCAN.toString()) {
-          this.barcodeScannerProvider
-            .getData('ContactListPage')
-            .then(result => {
-              const ACCOUNT_INFO = {
-                name: result.data.name || '',
-                address: result.data.addr || '',
-                telegram: result.data.telegram || ''
-              };
-
-              if (data) {
-                let page = "ContactAddPage";
-                this.showModal(page, ACCOUNT_INFO);
-              } 
+          this.barcodeScanner.scan().then(barcodeData => {
+              barcodeData.format = "QR_CODE";
+              let page = "ContactAddPage";
+              this.showModal(page, {
+                name: '',
+                address: barcodeData.text,
+                telegram: ''
+              });
             });
         }
       }

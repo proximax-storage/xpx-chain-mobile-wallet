@@ -83,7 +83,7 @@
           (click)="goToTransactionDetail(transaction, 'unconfirmed')">
           <!-- if transfer  -->
           <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
-            [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
+            [owner]="selectedAccount.account.address.address" [status]="'Unconfirmed'">
           </transactions>
         </ion-card>
       </ng-container>

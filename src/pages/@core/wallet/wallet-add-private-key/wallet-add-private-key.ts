@@ -225,16 +225,27 @@ export class WalletAddPrivateKeyPage {
     this.storage.set('isQrActive', true);
   }
 
-
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-      console.info('Barcode data', barcodeData);
-      let privKey = JSON.parse(barcodeData.text);
-      if (privKey) {
-        this.formGroup.patchValue({ privateKey: privKey })
-      }
-    });
+        // console.log("Barcode data", JSON.stringify(barcodeData, null, 4));
+        this.alertProvider.show('scan send', JSON.stringify(barcodeData))
+        barcodeData.format = "QR_CODE";
+        this.formGroup.patchValue({ privateKey:  barcodeData.text })
+      })
+      .catch(err => {
+        console.log("Error", err);
+        if (
+          err
+            .toString()
+            .indexOf(
+              this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")
+            ) >= 0
+        ) {
+          let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2");
+          this.alertProvider.showMessage(message);
+        }
+      });
   }
 
   /**

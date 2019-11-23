@@ -95,10 +95,6 @@ export class SendPage {
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
     }
-    
-    
-
-
     this.createForm();
     this.subscribeValue();
     this.amount = 0;
@@ -231,8 +227,8 @@ export class SendPage {
 
   getAbsoluteAmount(amount, divisibility) {
     const amountFormatter = this.proximaxProvider.amountFormatter(amount, divisibility)
-  //   this.maxAmount = String(amountFormatter).length
-  //   console.log('this.maxAmount', this.maxAmount);
+    //   this.maxAmount = String(amountFormatter).length
+    //   console.log('this.maxAmount', this.maxAmount);
     return amountFormatter;
   }
 
@@ -291,9 +287,8 @@ export class SendPage {
   selectMosaic() {
     this.utils.showInsetModal("SendMosaicSelectPage", {
       selectedMosaic: this.selectMosaic,
-        walletAddress: this.address.plain()
-      })
-      .subscribe(data => {
+      walletAddress: this.address.plain()
+    }).subscribe(data => {
         console.log("TCL: SendPage -> selectMosaic -> data", data)
         if (data) {
           this.optionsXPX = {
@@ -309,9 +304,7 @@ export class SendPage {
   }
 
   selectContact(title) {
-    this.utils
-      .showInsetModal("SendContactSelectPage", { title: title })
-      .subscribe(data => {
+    this.utils.showInsetModal("SendContactSelectPage", { title: title }).subscribe(data => {
         if (data != undefined || data != null) {
           this.form.get("recipientName").setValue(data.name);
           this.form.get("recipientAddress").setValue(data.address);
@@ -351,12 +344,12 @@ export class SendPage {
     }
   }
 
-    /**
-   *
-   *
-   * @param {Event} e
-   * @memberof WalletInfoPage
-   */
+  /**
+ *
+ *
+ * @param {Event} e
+ * @memberof WalletInfoPage
+ */
   showHidePassword(e: Event) {
     e.preventDefault();
     this.passwordType = this.passwordType === "password" ? "text" : "password";
@@ -369,26 +362,15 @@ export class SendPage {
 
   scan() {
     this.storage.set("isQrActive", true);
-    this.barcodeScanner
-      .scan()
-      .then(barcodeData => {
-        // console.log("Barcode data", JSON.stringify(barcodeData, null, 4));
-        barcodeData.format = "QR_CODE";
-        this.form.patchValue({ recipientAddress: barcodeData.text });
-      })
-      .catch(err => {
-        // console.log("Error", err);
-        if (
-          err
-            .toString()
-            .indexOf(
-              this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")
-            ) >= 0
-        ) {
-          let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2");
-          this.alertProvider.showMessage(message);
-        }
-      });
+    this.barcodeScanner.scan().then(barcodeData => {
+      barcodeData.format = "QR_CODE";
+      this.form.patchValue({ recipientAddress: barcodeData.text });
+    }).catch(err => {
+      if (err.toString().indexOf(this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")) >= 0) {
+        let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2");
+        this.alertProvider.showMessage(message);
+      }
+    });
   }
 
 
@@ -400,9 +382,6 @@ export class SendPage {
 
   checkAllowedInput(e) {
     const AMOUNT = this.form.get("amount").value;
-    // console.log("LOG: SendPage -> checkAllowedInput -> AMOUNT", AMOUNT);
-
-    // Prevent "+" and "-"
     if (
       e.key === "-" ||
       e.key === "+" ||
@@ -429,26 +408,14 @@ export class SendPage {
       e.preventDefault();
     }
 
-    if (
-      (e.charCode >= 48 && e.charCode <= 57) ||
-      (e.key == "." ||
-        e.charCode == 46 ||
-        e.keyCode == 8 ||
-        e.key == "Backspace")
-    ) {
-      // Check for "." or char code "46"
+    if ((e.charCode >= 48 && e.charCode <= 57) || (e.key == "." || e.charCode == 46 || e.keyCode == 8 || e.key == "Backspace")) {
       if (e.key == "." || e.charCode == 46) {
         ++this.periodCount;
       }
-
       if (this.periodCount > 1) {
         e.preventDefault();
         --this.periodCount;
       }
-      // console.log(
-      //   "LOG: SendPage -> checkAllowedInput -> this.periodCount",
-      //   this.periodCount
-      // );
     }
   }
 }
