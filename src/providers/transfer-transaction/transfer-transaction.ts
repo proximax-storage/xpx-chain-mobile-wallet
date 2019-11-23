@@ -14,6 +14,7 @@ import { Storage } from '@ionic/storage';
 */
 @Injectable()
 export class TransferTransactionProvider {
+  signedTxn: SignedTransaction;
   getFee(): number {
     const tx = this.build();
     return this.helper.getRelativeAmount(tx.maxFee.compact());
@@ -88,11 +89,9 @@ export class TransferTransactionProvider {
       // 3. Sign and announce a transaction
       const signedTxn = account.sign(transferTransaction, AppConfig.sirius.networkGenerationHash);
       console.log('LOG: TransferTransactionProvider -> send -> signedTxn', signedTxn);
+      this.signedTxn = signedTxn;
 
-      // 4. Monitor transaction status
-      this.checkTransaction(signedTxn);
-
-      // 5. Announce transaction
+      // 4. Announce transaction
       const transactionHttp = new TransactionHttp(this.httpNodeUrl);
       transactionHttp.announce(signedTxn).subscribe(response => {
         observer.next(response);
@@ -104,27 +103,18 @@ export class TransferTransactionProvider {
     });
   }
 
-  private checkTransaction(txn: SignedTransaction): Promise<boolean> {
+  checkTransaction(txn: SignedTransaction): Observable<any> {
     const transactionHttp = new TransactionHttp(this.httpNodeUrl);
-
-    return new Promise((resolve) => {
+    return new Observable((resolve) => {
       setTimeout(async () => {
         try {
           const status = await transactionHttp.getTransactionStatus(txn.hash).toPromise();
-          // console.log('TCL: SimpleTransfer -> status, ' + JSON.stringify(status, null, 3));
-          if (status.group === 'confirmed') {
-            // TODO: notification
-            resolve(true);
-          } else if (status.group === 'unconfirmed') {
-            // TODO: notification
-          } else {
-            this.checkTransaction(txn);
-          }
+          resolve.next(status);
         } catch (error) {
-          console.log(JSON.stringify(error, null, 2));
-          this.checkTransaction(txn);
+          resolve.next(error);
+          // console.log(JSON.stringify(error, null, 2));
         }
-      }, 1000);
+      }, 5000);
     });
   }
 }

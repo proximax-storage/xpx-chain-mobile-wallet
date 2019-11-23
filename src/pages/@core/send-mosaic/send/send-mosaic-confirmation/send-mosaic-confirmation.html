@@ -97,8 +97,9 @@
 
       <ion-col buttons col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-          <button gradient-button color-5 type="submit" color="dark">
+          <button gradient-button ion-button color-5 type="submit" color="dark" [disabled]="block">
             {{"WALLETS.BUTTON.CONFIRM" | translate}}
+            <ion-spinner color="white" *ngIf="block" style="padding-right: 38px !important;"></ion-spinner>
           </button>
         </form>
       </ion-col>

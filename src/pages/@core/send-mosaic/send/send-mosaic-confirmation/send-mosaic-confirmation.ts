@@ -4,7 +4,7 @@ import { Component, trigger, transition, style, group, animate } from '@angular/
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet} from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
@@ -31,36 +31,36 @@ import { TransferTransactionProvider } from '../../../../../providers/transfer-t
 
     trigger('container', [
       transition(':enter', [
-          style({opacity: '0'}),
-          group([
-            animate('500ms ease-out', style({opacity: '1'})),
-          ])
-          
+        style({ opacity: '0' }),
+        group([
+          animate('500ms ease-out', style({ opacity: '1' })),
+        ])
+
       ]),
       transition(':leave', [
-          group([
-            animate('500ms ease-out', style({opacity: '0'})),
-          ])
+        group([
+          animate('500ms ease-out', style({ opacity: '0' })),
+        ])
       ])
     ]),
 
     trigger('badge', [
-        transition(':enter', [
-            style({transform: 'translateY(400%)'}),
-            animate('500ms ease-out', style({transform: 'translateY(0)'}))
-        ]),
-        transition(':leave', [
-            animate('500ms ease-in', style({transform: 'translateY(400%)'}))   
-        ])
+      transition(':enter', [
+        style({ transform: 'translateY(400%)' }),
+        animate('500ms ease-out', style({ transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('500ms ease-in', style({ transform: 'translateY(400%)' }))
+      ])
     ]),
 
     trigger('message', [
       transition(':enter', [
-          style({opacity: '0'}),
-          animate('500ms 1000ms ease-out', style({opacity: '1'}))
+        style({ opacity: '0' }),
+        animate('500ms 1000ms ease-out', style({ opacity: '1' }))
       ]),
       transition(':leave', [
-          animate('500ms ease-in', style({opacity: '0'}))   
+        animate('500ms ease-in', style({ opacity: '0' }))
       ])
     ])
 
@@ -79,6 +79,7 @@ export class SendMosaicConfirmationPage {
   fee: number = 0;
 
   displaySuccessMessage: boolean = false;
+  block: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -127,7 +128,7 @@ export class SendMosaicConfirmationPage {
   }
 
   prepareTransaction() {
-    
+
     const mosaicModel = new MosaicModel();
     mosaicModel.hexId = this.data.mosaic.hex;
     mosaicModel.amount = this.data.amount;
@@ -145,22 +146,41 @@ export class SendMosaicConfirmationPage {
   }
 
   onSubmit() {
+    this.block = true;
     console.log('transactionType', this.data.transactionType);
     if (this.data.transactionType == 'multisig') {
       console.log("Multisig transfer");
-    } else if (this.data.transactionType = 'normal'){
+    } else if (this.data.transactionType = 'normal') {
       console.log("Normal transfer");
- 
-        this.transferTransaction.send(this.data.privateKey, this.data.currentWallet.account.network).subscribe(response => {
-          this.showSuccessMessage();
-        }, (err) => {
-            this.showErrorMessage(err);
-        }, () => {
-          console.log('Done transfer transaction.');
-        });
-      } else {
-        this.showGenericError();
-      }
+
+      this.transferTransaction.send(this.data.privateKey, this.data.currentWallet.account.network).subscribe(response => {
+        const signedTxn = this.transferTransaction.signedTxn;
+
+        console.log('signedTxn', signedTxn);
+
+        this.transferTransaction.checkTransaction(signedTxn).subscribe(status => {
+          this.block = false;
+          console.log('status en mi component', status);
+          if (status.group === 'unconfirmed' || status.group === 'confirmed') {
+            this.showSuccessMessage();
+          } else {
+            this.showErrorMessage(status.status);
+          }
+        }, error => {
+          this.block = false;
+          console.log('errro 2', error);
+
+        })
+
+        // this.showSuccessMessage();
+        // }, (err) => {
+        //     this.showErrorMessage(err);
+        // }, () => {
+        // console.log('Done transfer transaction.');
+      });
+    } else {
+      this.showGenericError();
+    }
   }
 
   showGenericError() {
@@ -176,15 +196,12 @@ export class SendMosaicConfirmationPage {
     this.haptic.notification({ type: 'warning' });
     console.log(error);
     if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-      this.alertProvider.showMessage(
-        'Sorry, you don\'t have enough balance to continue the transaction.'
-      );
-    } else if (
-      error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
-    ) {
-      this.alertProvider.showMessage(
-        'The note you entered is too long. Please try again.'
-      );
+      this.alertProvider.showMessage('Sorry, you don\'t have enough balance to continue the transaction.');
+    } else if (error.toString().indexOf('Failure_Core_Insufficient_Balance') >= 0) {
+      this.alertProvider.showMessage('Sorry, you don\'t have enough balance to continue the transaction.');
+    }
+    else if (error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0) {
+      this.alertProvider.showMessage('The note you entered is too long. Please try again.');
     } else if (error.statusCode == 404) {
       this.alertProvider.showMessage(
         'This address does not belong to this network'
@@ -198,8 +215,8 @@ export class SendMosaicConfirmationPage {
         error
       );
     }
-              
-              
+
+
   }
 
   showSuccessMessage() {
@@ -219,7 +236,7 @@ export class SendMosaicConfirmationPage {
       // );
       this.utils.setTabIndex(2);
       this.navCtrl.setRoot(
-        'TabsPage',
+        'SendPage',
         {},
         {
           animate: true,
@@ -230,7 +247,7 @@ export class SendMosaicConfirmationPage {
     }, 3000);
 
 
-    
+
   }
 
   /**
@@ -238,7 +255,7 @@ export class SendMosaicConfirmationPage {
    */
   // private _allowedToSendTx() {
   //   // TODO: do some checking before send transaction
-    
+
   //   if (this.credentials.password) {
   //     const myPassword = new Password(this.credentials.password);
   //     console.log('myPassword', myPassword)
