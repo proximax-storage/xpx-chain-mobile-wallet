@@ -28,13 +28,13 @@ export class MockDataProvider {
       this.storage.get('selectedWallet'),
       this.storage.get('selectedAccount'),
     ]).then(results => {
-
+      console.log(results);
       const PIN = results[0];
-      const ACCOUNTS = results[1];
-      const WALLETS = results[2];
-      const SELECTED_ACCOUNT = results[3];
-      const SELECTED_WALLET = results[4];
-
+      const WALLETS = results[1];
+      const ACCOUNTS = results[2];
+      const SELECTED_WALLET = results[3];
+      const SELECTED_ACCOUNT = results[4];
+      
       // if (!PIN) this.storage.set('pin', this.pin); // TODO Enable during testing by ios
       if (!PIN) this.storage.set('pin', false); // TODO Disable during production
       if (!ACCOUNTS) this.storage.set('accounts', this.accounts);
