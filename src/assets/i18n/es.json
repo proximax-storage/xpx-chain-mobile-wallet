@@ -48,7 +48,7 @@
     "WALLETS.EXPORT.PRIVATE_KEY_TITLE" : "Exportar wallet y llave privada",
     "WALLETS.EXPORT.PRIVATE_KEY_DESC" : "Le recomendamos insistentemente que haga una copia de seguridad de su wallet y llave privada. Es su responsabilidad guardarlos en un lugar seguro. ProximaX no almacena ninguno de sus datos, por lo que no podemos ayudarlo a recuperar su wallet ni a obtener acceso a sus activos digitales en caso de un error humano o una falla del sistema.",
     "WALLETS.EXPORT.BACKUP_WALLET" : "Wallet de respaldo",
-    "WALLETS.EXPORT.BACKUP_WALLET.QRCODE" : "Exportación vía código QR",
+    "WALLETS.EXPORT.BACKUP_WALLET.QRCODE" : "Exportar vía código QR",
     "WALLETS.EXPORT.BACKUP_WALLET.QRCODE.BACKUP_WALLET" : "Copia de seguridad de su wallet",
     "WALLETS.EXPORT.BACKUP_WALLET.QRCODE.BACKUP_WALLET.CONTENT1" : "Tome una captura de pantalla de su código QR y llave privada.",
     "WALLETS.EXPORT.BACKUP_WALLET.QRCODE.BACKUP_WALLET.CONTENT2" : "Asegúrate de guardarla en un lugar seguro.",

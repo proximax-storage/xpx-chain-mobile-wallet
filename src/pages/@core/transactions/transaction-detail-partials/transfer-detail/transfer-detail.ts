@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TransactionType } from 'tsjs-xpx-chain-sdk';
+import { TransactionType, BlockInfo } from 'tsjs-xpx-chain-sdk';
 
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
@@ -34,26 +34,34 @@ export class TransferDetailComponent {
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
-  ) {}
-  
+  ) { }
+
   ngOnInit() {
-    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];   
+
+    // this.proximaxProvider.getBlockInfo().subscribe((blockInfo: BlockInfo) => {
+    //   console.log('blockInfo', blockInfo);
+
+    // });
+    console.log('this.tx', this.tx);
+    
+
+    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
     this._getMosaicInfo();
   }
 
-  getAbsoluteAmount(amount, divisibility){
-    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
 
   private async _getMosaicInfo() {
     // Get mosaic details
-    if (this.tx.mosaics.length > 0){
+    if (this.tx.mosaics.length > 0) {
       this.show = true;
       this.mosaics = this.mosaics.filter(m1 => {
         return this.tx.mosaics.filter(m2 => {
           return m2.id.id.toHex() === m1.hex
         })
-      }).map(m1=>{
+      }).map(m1 => {
         return this.tx.mosaics.map(m2 => {
           return new DefaultMosaic(
             {
@@ -70,20 +78,20 @@ export class TransferDetailComponent {
       this.show = false;
     }
 
-     const valid = this.IsJsonString(this.tx.message.payload);
-     if(valid){
+    const valid = this.IsJsonString(this.tx.message.payload);
+    if (valid) {
       this.data = JSON.parse(this.tx.message.payload);
-      if(this.data.message){
+      if (this.data.message) {
         this.messageShow = true
         return this.data;
-      } else if(this.data.nis1Hash){
+      } else if (this.data.nis1Hash) {
         this.messageShow = true
         return this.data;
       }
-     } else {
+    } else {
       this.messageShow = false
-     }
+    }
   }
-  
-  IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; } 
+
+  IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; }
 }

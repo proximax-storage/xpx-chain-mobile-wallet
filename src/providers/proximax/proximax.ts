@@ -28,6 +28,8 @@ import {
   TransactionType,
   AggregateTransaction,
   CosignatureTransaction,
+  BlockInfo,
+  BlockHttp,
 } from 'tsjs-xpx-chain-sdk';
 import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
@@ -58,6 +60,7 @@ export class ProximaxProvider {
   mosaicService: MosaicService;
   namespaceService: NamespaceService;
   transactionHttp: TransactionHttp;
+  blockHttp: BlockHttp;
 
 
   constructor(
@@ -178,6 +181,16 @@ export class ProximaxProvider {
     return this.accountHttp.getAccountInfo(address);
   }
 
+    /**
+     * Gets a BlockInfo for a given block height
+     *  @param height - Block height
+     * @returns {Observable<BlockInfo>}
+     * @memberof ProximaxProvider
+     */
+    getBlockInfo(height: number = 1): Observable<BlockInfo> {
+      return this.blockHttp.getBlockByHeight(height) //Update-sdk-dragon
+    }
+    
   /**
    *
    *
