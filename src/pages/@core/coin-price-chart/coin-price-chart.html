@@ -5,7 +5,6 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-
   <ion-navbar transparent no-border-bottom>
     <ion-title *ngIf="selectedCoin">
       {{selectedCoin.length}}
@@ -13,8 +12,8 @@
         {{ selectedCoin.name }} ({{ selectedCoin.symbol }})
       </span>
       <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.name === '' && selectedCoin.symbol === ''">
-          {{ mosaicHex }}
-        </span>
+        {{ mosaicHex }}
+      </span>
     </ion-title>
 
     <ion-buttons end>
@@ -38,39 +37,29 @@
     </ion-segment>
   </ion-toolbar>
 
-  <section *ngIf="selectedSegment=='transactions'">
-
-
+  <section *ngIf="selectedSegment === 'transactions'">
     <ion-card balance>
-        <ion-card-content>
-          <br>
-          
-          <h1 color="dark" text-center> {{getAbsoluteAmount(mosaicAmount? mosaicAmount:0, divisibility)}} <span
-              style="font-size: 18px;" text-uppercase>{{mosaicId}}</span></h1>
-          <h2 color="dark" text-center>UDS$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
+      <ion-card-content>
+        <br>
+        <h1 color="dark" text-center> {{getAbsoluteAmount(mosaicAmount? mosaicAmount:0, divisibility)}} <span
+            style="font-size: 18px;" text-uppercase>{{mosaicId}}</span></h1>
+        <h2 color="dark" text-center>UDS$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
 
-            <ion-list transparent-items>
-                <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
-                    <ion-icon name='custom-copy' item-end></ion-icon>
-                    <p text-justify  *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
-                </ion-item>
-              </ion-list>
-        </ion-card-content>
-      </ion-card>
+        <ion-list transparent-items>
+          <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
+            <ion-icon name='custom-copy' item-end></ion-icon>
+            <p text-justify *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </section>
   <br>
-
-
-
 </ion-header>
 
-<ion-content background [ngClass]="(selectedSegment=='transactions')?'big-margin-top':''">
-
- <br>
-
+<ion-content background [ngClass]="(selectedSegment === 'transactions') ? 'big-margin-top' : ''">
   <!-- Transactions -->
-  <div *ngIf="selectedSegment=='transactions'">
-
+  <div *ngIf="selectedSegment === 'transactions'">
     <!-- Skeleton loader -->
     <ion-list transparent-items *ngIf="isLoading">
       <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
@@ -86,19 +75,15 @@
 
     <!-- Transactions -->
     <ion-list transparent-items *ngIf="!isLoading">
-
       <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
         (click)="gotoTransactionDetail(transaction)">
-
         <!-- if transfer  -->
-        <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-          [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Confirmed'">
+        <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
+          [status]="'Confirmed'">
         </transactions>
       </ion-card>
-
     </ion-list>
     <!-- ./Transactions -->
-
 
     <ion-grid padding empty *ngIf="showEmptyMessage" reduce-margin-top>
       <ion-row padding>
@@ -109,12 +94,6 @@
           </ion-col>
         </ion-row>
         <br><br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
         <ion-col>
           <img quarter-width [src]="App.STICKERS.SORRY">
           <h6 ion-text color="grey" text-wrap>
@@ -231,8 +210,6 @@
         </ion-item>
       </ion-card>
 
-
-
       <ion-card>
         <ion-item tooltip="Total supply is the number of coins in existence." positionV="top" arrow>
           <p ion-text color="dark">{{"WALLETS.DETAIL.CIRCULATING" | translate}}</p>
@@ -256,13 +233,11 @@
           </h3>
         </ion-item>
       </ion-card>
-
     </ion-list>
   </div>
 
   <!-- Info -->
-  <div class="" *ngIf="selectedSegment=='info' && !showEmptyMosaic">
-
+  <div *ngIf="selectedSegment === 'info' && !showEmptyMosaic">
     <ion-list transparent-items>
       <h2 margin-left ion-text color="dark">{{"WALLETS.DETAIL.INFO" | translate}}</h2>
       <ion-card>
@@ -335,12 +310,7 @@
           {{ selectedCoin.description['en'] | ngXtruncate: descriptionLength : '...' }}</p>
       </ion-item>
     </ion-card>
-
   </div>
-
-
-
-
 </ion-content>
 
 <ion-footer *ngIf="selectedSegment=='transactions'" no-border>

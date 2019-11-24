@@ -162,7 +162,6 @@ export class HomePage {
                   this.totalWalletBalance = total as number;
                 });
 
-                console.log('\n\n  ---- INGRESA UNO ---- \n \n ');
                 this.confirmedTransactions = [];
                 this.unconfirmedTransactions = [];
                 this.aggregateTransactions = [];
@@ -175,7 +174,6 @@ export class HomePage {
                 loader.dismiss();
               }
             }, error => {
-              console.log('error ', error);
               this.showEmptyMessage();
               this.hideLoaders();
               loader.dismiss();

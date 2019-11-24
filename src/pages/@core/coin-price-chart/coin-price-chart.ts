@@ -26,6 +26,7 @@ import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { DefaultMosaic } from '../../../models/default-mosaic';
 import { ProximaxProvider } from '../../../providers/proximax/proximax';
+import { CatapultsAccountsInterface } from '../../../providers/wallet/wallet';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -55,7 +56,7 @@ export class CoinPriceChartPage {
   App = App;
   TransactionType = TransactionType;
 
-  selectedAccount: any;
+  selectedAccount: CatapultsAccountsInterface;
   fakeList: Array<any>;
   confirmedTransactions: Transaction[] = [];
   showEmptyMessage: boolean;
@@ -115,18 +116,18 @@ export class CoinPriceChartPage {
     console.log("TCL: CoinPriceChartPage -> payload", payload)
 
     this.mosaicHex = payload.mosaicHex;
+    
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
+    console.log(this.mosaicId);
+    console.log(this.mosaicHex);
     // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
-
     console.log('selectedAccount', this.selectedAccount);
-
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;
-
     this.confirmed.forEach((confirmed: Transaction) => {
       console.log('confirmed', confirmed);
       if (confirmed.type === TransactionType.TRANSFER) {
@@ -136,6 +137,8 @@ export class CoinPriceChartPage {
             this.showEmptyMessage = false;
           }
         });
+      } else if(this.mosaicId === 'xpx') {
+        this.confirmedTransactions.push(confirmed);
       }
     });
 
@@ -152,7 +155,6 @@ export class CoinPriceChartPage {
     this.totalBalance = this.navParams.data['totalBalance'];
 
     if (this.mosaicId == 'xar') {
-
       this.selectedCoin = {
         "name": "Xarcade",
         "symbol": "XAR",
@@ -170,7 +172,7 @@ export class CoinPriceChartPage {
         }
       }
       this.showEmptyMosaic = true;
-    } else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') {
+    } else if (this.mosaicId !== 'xpx' && this.mosaicId !== 'npxs' && this.mosaicId !== 'sft' && this.mosaicId !== 'xar') {
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -189,10 +191,10 @@ export class CoinPriceChartPage {
       }
       this.showEmptyMosaic = true;
     } else {
-      if (this.coinId != "") {
+      if (this.coinId !== "") {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
           this.selectedCoin = coin;
-          if (coin.id == 'proximax') {
+          if (coin.id === 'proximax') {
             this.selectedCoin.links.announcement_url = ["https://blog.proximax.com"]
             this.selectedCoin.links.blockchain_site = ["https://bctestnetexplorer.xpxsirius.io/#/"]
           }
@@ -204,6 +206,8 @@ export class CoinPriceChartPage {
 
     }
   }
+
+
   ionViewWillEnter() {
   }
 
@@ -214,7 +218,8 @@ export class CoinPriceChartPage {
   getAccountInfo() {
     // console.info("Getting account information.", this.selectedAccount.address)
     try {
-      this.proximaxProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
+      const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
+      this.proximaxProvider.getMultisigAccountInfo(address).subscribe(accountInfo => {
         if (accountInfo) {
           this.accountInfo = accountInfo;
           console.log('this.accountInfo', this.accountInfo)
@@ -236,7 +241,9 @@ export class CoinPriceChartPage {
   }
 
   copy() {
-    this.clipboard.copy(this.selectedAccount.address.plain()).then(_ => {
+    console.log(this.selectedAccount);
+    const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
+    this.clipboard.copy(address.plain()).then(_ => {
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
     });
   }
