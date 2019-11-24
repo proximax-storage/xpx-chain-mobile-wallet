@@ -34,26 +34,26 @@ export class TransferDetailComponent {
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
-  ) {}
-  
+  ) { }
+
   ngOnInit() {
-    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];   
+    this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
     this._getMosaicInfo();
+    console.log(this.tx);
+    
   }
 
-  getAbsoluteAmount(amount, divisibility){
-    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
 
   private async _getMosaicInfo() {
-    // Get mosaic details
-    if (this.tx.mosaics.length > 0){
-      this.show = true;
-      this.mosaics = this.mosaics.filter(m1 => {
+    if (this.tx.mosaics.length > 0) {
+      /*this.mosaics = this.mosaics.filter(m1 => {
         return this.tx.mosaics.filter(m2 => {
           return m2.id.id.toHex() === m1.hex
         })
-      }).map(m1=>{
+      }).map(m1 => {
         return this.tx.mosaics.map(m2 => {
           return new DefaultMosaic(
             {
@@ -65,25 +65,25 @@ export class TransferDetailComponent {
               divisibility: m1.divisibility
             });
         });
-      })[0]
-    } else {
-      this.show = false;
+      })[0];*/
+
+      console.log('this.mosaics', this.mosaics);
     }
 
-     const valid = this.IsJsonString(this.tx.message.payload);
-     if(valid){
+    const valid = this.IsJsonString(this.tx.message.payload);
+    if (valid) {
       this.data = JSON.parse(this.tx.message.payload);
-      if(this.data.message){
+      if (this.data.message) {
         this.messageShow = true
         return this.data;
-      } else if(this.data.nis1Hash){
+      } else if (this.data.nis1Hash) {
         this.messageShow = true
         return this.data;
       }
-     } else {
+    } else {
       this.messageShow = false
-     }
+    }
   }
-  
-  IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; } 
+
+  IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; }
 }

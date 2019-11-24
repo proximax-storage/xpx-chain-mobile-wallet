@@ -10,43 +10,44 @@
 </ion-item>
 
 <!-- Mosaic/s -->
-<ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
+<ng-container *ngIf="mosaics.length > 0">
+  <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
+    <ion-item>
+      <img logo-small item-left [src]="utils.getLogo(mosaic)">
 
-  <ion-item *ngIf="show">
-    <img logo-small item-left [src]="utils.getLogo(mosaic)">
+      <!-- Show MosaicInfo -->
+      <ng-container>
+        <h2 ion-text color="dark" style="display: flex;">
+          <ng-container text-uppercase *ngIf="(mosaic.mosaicId &&  mosaic.namespaceId)">
+            <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }}
+            </h2>
+          </ng-container>
 
-    <!-- Show MosaicInfo -->
-    <ng-container>
-      <h2 ion-text color="dark" style="display: flex;">
-        <ng-container text-uppercase *ngIf="(mosaic.mosaicId &&  mosaic.namespaceId)">
-          <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }}
-          </h2>
-        </ng-container>
+          <ng-container *ngIf="tx && tx.recipient">
+            <img logo-small style="height: 2rem; margin-left: .5rem;"
+              src="assets/imgs/arrow-transaction-receive-green-proximax-sirius-explorer.svg"
+              *ngIf="owner == tx?.recipient.plain()">
+            <img logo-small style="height: 2rem; margin-left: .5rem;"
+              src="assets/imgs/arrow-transaction-sender-orange-proximax-sirius-explorer.svg"
+              *ngIf="owner != tx?.recipient.plain()">
+          </ng-container>
+        </h2>
+      </ng-container>
 
-        <ng-container *ngIf="tx && tx.recipient">
-          <img logo-small style="height: 2rem; margin-left: .5rem;"
-            src="assets/imgs/arrow-transaction-receive-green-proximax-sirius-explorer.svg"
-            *ngIf="owner == tx?.recipient.plain()">
-          <img logo-small style="height: 2rem; margin-left: .5rem;"
-            src="assets/imgs/arrow-transaction-sender-orange-proximax-sirius-explorer.svg"
-            *ngIf="owner != tx?.recipient.plain()">
-        </ng-container>
-      </h2>
-    </ng-container>
+      <section item-right>
+        <h2 text-right ion-text color="dark">
+          {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
+        </h2>
 
-    <section item-right>
-      <h2 text-right ion-text color="dark">
-        {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
-      </h2>
-
-      <p text-right ion-text color="dark">
-        <small>
-          {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
-        </small>
-      </p>
-    </section>
-  </ion-item>
-</ion-card>
+        <p text-right ion-text color="dark">
+          <small>
+            {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
+          </small>
+        </p>
+      </section>
+    </ion-item>
+  </ion-card>
+</ng-container>
 <!-- ./Mosaic/s -->
 
 <!-- Date -->
