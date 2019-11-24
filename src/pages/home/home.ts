@@ -166,6 +166,8 @@ export class HomePage {
                 this.unconfirmedTransactions = [];
                 this.aggregateTransactions = [];
                 this.mosaics = mosaics;
+                console.log('\n\n this.mosaics \n\n', this.mosaics, '\n\n');
+                
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
                 this.getTransactionsAggregate(this.selectedAccount.publicAccount);

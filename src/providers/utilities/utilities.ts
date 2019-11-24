@@ -194,7 +194,7 @@ export class UtilitiesProvider {
    */
   getLogo(mosaic: DefaultMosaic) {
     if (!mosaic) {
-      return AppProvider.LOGO.DEFAULT;
+      return AppProvider.LOGO.SIRIUS;
     } else if (
       (
         mosaic.namespaceId.toLowerCase() === 'prx' ||
@@ -225,7 +225,7 @@ export class UtilitiesProvider {
     ) {
       return AppProvider.LOGO.XAR;
     } else {
-      return AppProvider.LOGO.DEFAULT;
+      return AppProvider.LOGO.SIRIUS;
     }
   }
 

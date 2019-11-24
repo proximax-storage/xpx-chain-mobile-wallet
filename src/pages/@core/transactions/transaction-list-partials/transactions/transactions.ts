@@ -117,30 +117,34 @@ export class TransactionComponent {
               this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
               this.showTx = true;
               this.statusViewDetail = true;
-              this.type = 'TRANSFER';
+              this.type = 'Transfer';
             } else {
               console.log('THIS OTHER MOSAICS', this.mosaics);
-              this.MESSAGE_ = 'TRANSFER';
+              this.MESSAGE_ = 'Sirius Mosaics';
               this.MOSAIC_INFO = null
               this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), 6);
-              this.LOGO = App.LOGO.DEFAULT;
+              this.LOGO = App.LOGO.SIRIUS;
               this.showTx = true;
+              this.type = this.tx.mosaics[0].id.toHex()
               this.statusViewDetail = true;
             }
           } else {
-            this.MESSAGE_ = 'TRANSFER';
+            this.MESSAGE_ = 'Other transactions';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
-            this.LOGO = App.LOGO.DEFAULT;
+            this.LOGO = App.LOGO.OTHER;
             this.showTx = true;
+            this.type = 'Transfer';
             this.statusViewDetail = true;
           }
         } else {
-          this.MESSAGE_ = 'TRANSFER';
+          this.MESSAGE_ = 'Other transactions';
           this.MOSAIC_INFO = null;
           this.AMOUNT = null;
-          this.LOGO = App.LOGO.DEFAULT;
+          this.LOGO = App.LOGO.OTHER;
           this.showTx = true;
+          this.type = 'Transfer';
+
           this.statusViewDetail = true;
         }
         break;
@@ -159,18 +163,19 @@ export class TransactionComponent {
                   this.AMOUNT = null;
                   this.LOGO = App.LOGO.SWAP;
                   this.showTx = true;
+                  this.type = 'PRX.XPX';
                   this.statusViewDetail = true;
                 }
               }
             } catch (error) {
-              this.MESSAGE_ = 'Aggregate Bonded';
+              this.MESSAGE_ = 'Aggregate bonded';
               this.MOSAIC_INFO = null;
               this.AMOUNT = null;
-              this.LOGO = App.LOGO.DEFAULT;
+              this.LOGO = App.LOGO.BONDED;
               this.showTx = true;
               if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
                 this.statusViewDetail = true;
-                this.type = 'TRANSFER';
+                this.type = 'Transfer';
               } else {
                 this.statusViewDetail = false;
                 const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
@@ -178,14 +183,14 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Aggregate Bonded';
+            this.MESSAGE_ = 'Aggregate bonded';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
-            this.LOGO = App.LOGO.DEFAULT;
+            this.LOGO = App.LOGO.BONDED;
             this.showTx = true;
             if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
               this.statusViewDetail = true;
-              this.type = 'TRANSFER';
+              this.type = 'Transfer';
             } else {
               this.statusViewDetail = false;
               const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx['innerTransactions'][0].type);
@@ -196,23 +201,24 @@ export class TransactionComponent {
           this.MESSAGE_ = 'Aggregate Bonded';
           this.MOSAIC_INFO = null;
           this.AMOUNT = null;
-          this.LOGO = App.LOGO.DEFAULT;
+          this.LOGO = App.LOGO.BONDED;
           this.statusViewDetail = false;
           this.showTx = true;
         }
         break;
       default:
         let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
-        this.MESSAGE_ = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
+        this.MESSAGE_ = 'Other transactions';
         this.MOSAIC_INFO = null;
         this.AMOUNT = null;
-        this.LOGO = App.LOGO.DEFAULT;
+        this.LOGO = App.LOGO.OTHER;
+        this.type =  (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
         this.statusViewDetail = false;
+        
         this.showTx = true;
         break;
     }
   }
-
   /**
    *
    *

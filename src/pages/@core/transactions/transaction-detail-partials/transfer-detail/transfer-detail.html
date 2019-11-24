@@ -10,26 +10,29 @@
 </ion-item>
 
 <!-- Mosaic/s -->
-<ng-container *ngIf="mosaics.length > 0">
-  <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
+<ng-container *ngIf="tx.mosaics.length > 0 && mosaicFound.length > 0">
+  <ion-card no-margin-bottom *ngFor="let mosaic of mosaicFound">
     <ion-item>
       <img logo-small item-left [src]="utils.getLogo(mosaic)">
 
       <!-- Show MosaicInfo -->
       <ng-container>
         <h2 ion-text color="dark" style="display: flex;">
-          <ng-container text-uppercase *ngIf="(mosaic.mosaicId &&  mosaic.namespaceId)">
-            <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }}
-            </h2>
+          <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
+            <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
           </ng-container>
 
+          <ng-template text-uppercase #viewHex>
+            <ng-container text-uppercase *ngIf="mosaic.hex">
+              <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
+            </ng-container>
+          </ng-template>
+
           <ng-container *ngIf="tx && tx.recipient">
-            <img logo-small style="height: 2rem; margin-left: .5rem;"
-              src="assets/imgs/arrow-transaction-receive-green-proximax-sirius-explorer.svg"
-              *ngIf="owner == tx?.recipient.plain()">
-            <img logo-small style="height: 2rem; margin-left: .5rem;"
-              src="assets/imgs/arrow-transaction-sender-orange-proximax-sirius-explorer.svg"
-              *ngIf="owner != tx?.recipient.plain()">
+            <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-receive-transactions.svg"
+              *ngIf="owner === tx?.recipient.plain()">
+            <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-send-transactions.svg"
+              *ngIf="owner !== tx?.recipient.plain()">
           </ng-container>
         </h2>
       </ng-container>

@@ -57,47 +57,58 @@ export class MosaicsProvider {
     });
   }
 
+  /**
+   *
+   *
+   * @param {Address} address
+   * @returns {Observable<MosaicAmountView[]>}
+   * @memberof MosaicsProvider
+   */
   mosaicsAmountViewFromAddress(address: Address): Observable<MosaicAmountView[]> {
     return this.proximaxProvider.mosaicsAmountViewFromAddress(address);
   }
 
+  /**
+   *
+   *
+   * @param {Address} address
+   * @returns {Observable<DefaultMosaic[]>}
+   * @memberof MosaicsProvider
+   */
   getMosaics(address: Address): Observable<DefaultMosaic[]> {
     return new Observable(observer => {
-      this.mosaicsAmountViewFromAddress(address)
-        .pipe(
-          flatMap(_ => from(_)),
-          scan((acc, v) => acc.concat(v), []),
-          last()
-        )
-        .subscribe(async mosaicAmountViewArray => {
-
-          // Filter out expired mosaics (5760)
-          const activeMosaics = await mosaicAmountViewArray.filter((_: MosaicAmountView) => _.mosaicInfo.duration.compact() != 5760 && _.mosaicInfo.duration.compact() != 11520)
-
-          activeMosaics.forEach((_: MosaicAmountView) => {
-            // console.log("TCL: MosaicsProvider -> _.mosaicInfo.duration.compact();", _.mosaicInfo.mosaicId.toHex(),_.mosaicInfo.duration.compact(), _.mosaicInfo );
-          })
-
-          observer.next(this.getMosaicMetaData(activeMosaics));
-        }, error => {
-          observer.next(null)
-        })
-    })
+      this.mosaicsAmountViewFromAddress(address).pipe(
+        flatMap(_ => from(_)), scan((acc, v) => acc.concat(v), []), last()
+      ).subscribe(async mosaicAmountViewArray => {
+        /*const activeMosaics = mosaicAmountViewArray.filter(
+          (_: MosaicAmountView) => _.mosaicInfo.duration.compact() != 5760 && _.mosaicInfo.duration.compact() != 11520
+        );*/
+        observer.next(this.getMosaicMetaData(mosaicAmountViewArray));
+      }, error => {
+        observer.next(null)
+      });
+    });
   }
 
+  /**
+   *
+   *
+   * @param {MosaicAmountView[]} mosaicAmountView
+   * @returns
+   * @memberof MosaicsProvider
+   */
   getMosaicMetaData(mosaicAmountView: MosaicAmountView[]) {
-
     let _mosaicAmountViewArray = mosaicAmountView.map(mosaicAmountView => {
       const _mosaicAmountView = new DefaultMosaic({
         namespaceId: '', // namespaceId
-        mosaicId: '', // mosaicId
+        mosaicId: mosaicAmountView.mosaicInfo.mosaicId.toHex(), // mosaicId
         hex: mosaicAmountView.fullName(), // mosaic hex id
         amount: mosaicAmountView.relativeAmount(),
         amountCompact: mosaicAmountView.amount.compact(),
         divisibility: mosaicAmountView.mosaicInfo.divisibility,
       });
-      let XPX = this.getDefaultMosaics().filter(m => m.hex === _mosaicAmountView.hex);
 
+      const XPX = this.getDefaultMosaics().filter(m => m.hex === _mosaicAmountView.hex);
       if (XPX.length == 0 || XPX === undefined) {
         return _mosaicAmountView;
       } else {
@@ -108,11 +119,8 @@ export class MosaicsProvider {
         _mosaicAmountView.divisibility = _mosaicAmountView.divisibility;
         return _mosaicAmountView;
       }
+    });
 
-
-    })
-
-    // console.log("TCL: MosaicsProvider -> getMosaicMetaData -> _mosaicAmountViewArray", _mosaicAmountViewArray)
     return _mosaicAmountViewArray;
   }
 
