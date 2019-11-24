@@ -10,6 +10,12 @@
 </ion-item>
 
 <!-- Mosaic/s -->
+<<<<<<< HEAD
+<ng-container *ngIf="tx.mosaics.length > 0 && mosaicFound.length > 0">
+  <ion-card no-margin-bottom *ngFor="let mosaic of mosaicFound">
+    <ion-item>
+      <img logo-small item-left [src]="utils.getLogo(mosaic)">
+=======
 <ion-card no-margin-bottom *ngFor="let mosaic of mosaics">
 
   <ion-item *ngIf="show">
@@ -31,20 +37,44 @@
         </ng-container>
       </h2>
     </ng-container>
+>>>>>>> 8908dc766eb9cc9093f7b02ae63e6037c7946003
 
-    <section item-right>
-      <h2 text-right ion-text color="dark">
-        {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
-      </h2>
+      <!-- Show MosaicInfo -->
+      <ng-container>
+        <h2 ion-text color="dark" style="display: flex;">
+          <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
+            <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
+          </ng-container>
 
-      <p text-right ion-text color="dark">
-        <small>
-          {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
-        </small>
-      </p>
-    </section>
-  </ion-item>
-</ion-card>
+          <ng-template text-uppercase #viewHex>
+            <ng-container text-uppercase *ngIf="mosaic.hex">
+              <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
+            </ng-container>
+          </ng-template>
+
+          <ng-container *ngIf="tx && tx.recipient">
+            <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-receive-transactions.svg"
+              *ngIf="owner === tx?.recipient.plain()">
+            <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-send-transactions.svg"
+              *ngIf="owner !== tx?.recipient.plain()">
+          </ng-container>
+        </h2>
+      </ng-container>
+
+      <section item-right>
+        <h2 text-right ion-text color="dark">
+          {{getAbsoluteAmount(mosaic.amount?.toString(), mosaic.divisibility)}}
+        </h2>
+
+        <p text-right ion-text color="dark">
+          <small>
+            {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
+          </small>
+        </p>
+      </section>
+    </ion-item>
+  </ion-card>
+</ng-container>
 <!-- ./Mosaic/s -->
 
 <!-- Date -->

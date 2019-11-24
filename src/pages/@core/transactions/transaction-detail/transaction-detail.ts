@@ -70,17 +70,20 @@ export class TransactionDetailPage {
     }
   }
 
+  /**
+   *
+   *
+   * @param {AggregateTransaction} tx
+   * @memberof TransactionDetailPage
+   */
   cosign(tx: AggregateTransaction) {
     const password = new Password(this.form.get("password").value);
     const iv = this.currentAccount.account.encryptedPrivateKey.iv;
     const encryptedKey = this.currentAccount.account.encryptedPrivateKey.encryptedKey;
     const privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
     const network = this.currentAccount.account.network;
-
     if (privateKey && privateKey !== '' && (privateKey.length === 64 || privateKey.length === 66)) {
-
       const account = Account.createFromPrivateKey(privateKey, network);
-
       this.proximaxProvider.cosignAggregateBondedTransaction(tx, account).subscribe(() => {
         this.alertProvider.showTranslated('TRANSACTION_DETAIL.COSIGN_DONE', 'TRANSACTION_DETAIL.COSIGN_MESSAGE').then(() => {
           this.viewCtrl.dismiss();
@@ -91,6 +94,11 @@ export class TransactionDetailPage {
     }
   }
 
+  /**
+   *
+   *
+   * @memberof TransactionDetailPage
+   */
   createForm() {
     // Initialize form
     this.form = this.formBuilder.group({
@@ -105,10 +113,20 @@ export class TransactionDetailPage {
     });
   }
 
+  /**
+   *
+   *
+   * @memberof TransactionDetailPage
+   */
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
   }
 
+  /**
+   *
+   *
+   * @memberof TransactionDetailPage
+   */
   dismiss() {
     this.viewCtrl.dismiss();
   }

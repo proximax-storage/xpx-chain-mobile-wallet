@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TransactionType } from 'tsjs-xpx-chain-sdk';
-
+import { TransactionType, Mosaic } from 'tsjs-xpx-chain-sdk';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
@@ -32,6 +31,7 @@ export class TransferDetailComponent {
   effectiveFee: string = '0';
   timestamp: string;
   deadline: string;
+  mosaicFound = [];
 
   constructor(
     public utils: UtilitiesProvider,
@@ -63,27 +63,33 @@ export class TransferDetailComponent {
 
   private async _getMosaicInfo() {
     // Get mosaic details
+    console.log('\n\n this.tx.mosaics', this.tx.mosaics);
     if (this.tx.mosaics.length > 0) {
       this.show = true;
-      this.mosaics = this.mosaics.filter(m1 => {
-        return this.tx.mosaics.filter(m2 => {
-          return m2.id.id.toHex() === m1.hex
-        })
-      }).map(m1 => {
-        return this.tx.mosaics.map(m2 => {
-          return new DefaultMosaic(
-            {
-              namespaceId: m1.namespaceId,
-              hex: m1.hex,
-              mosaicId: m1.mosaicId,
-              amount: m2.amount.compact(),
-              amountCompact: m2.amount.compact(),
-              divisibility: m1.divisibility
-            });
-        });
-      })[0]
-    } else {
-      this.show = false;
+      this.tx.mosaics.forEach((element: Mosaic) => {
+        const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === element.id.toHex()) : null;
+        console.log('MOSAIC FOUND --->', mosaic);
+        if (mosaic) {
+          this.mosaicFound.push(new DefaultMosaic({
+            namespaceId: mosaic.namespaceId,
+            hex: mosaic.hex,
+            mosaicId: mosaic.mosaicId,
+            amount: element.amount.compact(),
+            amountCompact: element.amount.compact(),
+            divisibility: mosaic.divisibility
+          }));
+        } else {
+          console.log('MOSAIC NOT FOUND ---->');
+          this.mosaicFound.push(new DefaultMosaic({
+            namespaceId: '',
+            hex: element.id.toHex(),
+            mosaicId: '',
+            amount: element.amount.compact(),
+            amountCompact: element.amount.compact(),
+            divisibility: 6
+          }));
+        }
+      });
     }
 
     const valid = this.IsJsonString(this.tx.message.payload);
