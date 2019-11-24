@@ -42,12 +42,12 @@ export class TransferDetailComponent {
 
   ngOnInit() {
     this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
-    this._getMosaicInfo();
     if (this.status != 'partials') {
       this.getBolck();
     } else {
       this.deadline = this.proximaxProvider.dateFormat(this.tx.deadline);
     }
+    this._getMosaicInfo();
   }
 
   getBolck() {

@@ -93,13 +93,22 @@
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
-            <ion-input formControlName="name" type="text" autocapitalize="none" placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()">
+            <ion-input formControlName="name" type="text" autocapitalize="none"
+              placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()"
+              (ionChange)="minName()">
             </ion-input>
           </ion-item>
-
+          <div>
+            <p error padding-left text-left style="color: #e06e36 !important; margin-top: -4px!important;">
+              <strong
+                *ngIf='nameMin'>{{('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: configurationForm.nameWallet.minLength })}}</strong>
+              <strong
+                *ngIf='nameMax'>{{('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: configurationForm.nameWallet.maxLength })}}</strong>
+            </p>
+          </div>
 
           <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
-              {{"WALLETS.BUTTON.SAVE" | translate}}
+            {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>
       </ion-col>

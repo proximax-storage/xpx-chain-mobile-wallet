@@ -36,6 +36,8 @@ export class WalletAddPage {
   catapultWallet: any;
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
+  nameMin: boolean;
+  nameMax: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -53,6 +55,7 @@ export class WalletAddPage {
     this.walletColor = "wallet-1";
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.init();
+    this.subcribe();
   }
 
   changeWalletColor(color) {
@@ -85,6 +88,9 @@ export class WalletAddPage {
     // console.log('ionViewDidLoad WalletAddPage');
   }
 
+  subcribe() {
+
+  }
   init() {
 
     if (window.screen.width >= 768) { // 768px portrait
@@ -128,7 +134,7 @@ export class WalletAddPage {
     );
   }
 
-  async onSubmit(form: { name: any; password: any;}) {
+  async onSubmit(form: { name: any; password: any; }) {
     try {
       const decrypted = await this.authProvider.decryptAccountUser(form.password);
       if (decrypted) {
@@ -150,19 +156,30 @@ export class WalletAddPage {
     }
   }
 
-    /**
-   *
-   *
-   * @param {Event} e
-   * @memberof WalletAddPrivateKeyPage
-   */
+  /**
+ *
+ *
+ * @param {Event} e
+ * @memberof WalletAddPrivateKeyPage
+ */
   showHidePassword(e: Event) {
     e.preventDefault();
     this.passwordType = this.passwordType === "password" ? "text" : "password";
     this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
   }
 
-  
+  minName() {
+    let name = this.formGroup.controls.name.value;
+    if (name.length < this.configurationForm.nameWallet.minLength) {
+      this.nameMin = true;
+    } else if (name.length > this.configurationForm.nameWallet.maxLength) {
+      this.nameMax = true;
+    } else {
+      this.nameMin = false
+      this.nameMax = false;
+    }
+  }
+
   updateName() {
     let name = this.formGroup.value.name
     // console.log("LOG: WalletAddPage -> updateName -> name", name);

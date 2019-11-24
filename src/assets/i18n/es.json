@@ -22,6 +22,7 @@
     "APP.SIGNUP.CONFIRM_PASSWORD.PLACEHOLDER" : "Confirmar la contraseña",
     "APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE" : "Contraseña no coincide",
     "APP.SIGNUP.PASSWORD_MIN.MESSAGE" : "Mínimo ({{Min}}) caracteres",
+    "APP.SIGNUP.PASSWORD_MAX.MESSAGE" : "Máximo ({{Max}}) caracteres",
     "APP.PIN.SETUP.TITLE" : "Configuración de pin de 6 dígitos",
     "APP.PIN.SETUP.DESC" : "Seleccione un pin de 6 dígitos para acceder a su wallet. IMPORTANTE: No olvides este pin porque no podremos recuperarlo por ti.",
     "APP.PIN.VERIFY.TITLE" : "Vuelva a ingresar el PIN",

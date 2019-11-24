@@ -9,6 +9,7 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 
 /**
  * Generated class for the WalletUpdatePage page.
@@ -34,6 +35,9 @@ export class WalletUpdatePage {
   walletAddress: string = "TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH";
   walletTotal: number = 0;
   previousWalletName: any;
+  nameMin: boolean;
+  nameMax: boolean;
+  configurationForm: ConfigurationForm = {};
 
   constructor(
     public navCtrl: NavController,
@@ -44,8 +48,10 @@ export class WalletUpdatePage {
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sharedService: SharedService,
   ) {
+    this.configurationForm = this.sharedService.configurationForm;
     this.init();
   }
 
@@ -84,11 +90,24 @@ export class WalletUpdatePage {
     this.walletTotal = this.navParams.get('totalBalance');
 
     this.formGroup = this.formBuilder.group({
-      name: [
-        this.selectedWallet.name || '',
-        [Validators.minLength(3)]
-      ]
+      name: ['', [
+        Validators.required,
+        Validators.minLength(this.configurationForm.nameWallet.minLength),
+        Validators.maxLength(this.configurationForm.nameWallet.maxLength)
+      ]]
     });
+  }
+
+  minName() {
+    let name = this.formGroup.controls.name.value;
+    if (name.length < this.configurationForm.nameWallet.minLength) {
+      this.nameMin = true;
+    } else if (name.length > this.configurationForm.nameWallet.maxLength) {
+      this.nameMax = true;
+    } else {
+      this.nameMin = false
+      this.nameMax = false;
+    }
   }
 
   onSubmit(form) {
