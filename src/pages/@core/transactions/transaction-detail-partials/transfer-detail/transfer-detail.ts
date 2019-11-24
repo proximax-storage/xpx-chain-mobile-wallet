@@ -21,6 +21,7 @@ export class TransferDetailComponent {
   @Input() tx: any;
   @Input() mosaics: DefaultMosaic[] = [];
   @Input() owner: string;
+  @Input() status: string;
   public App = App;
   public ownerAddress: any;
   public data: any;

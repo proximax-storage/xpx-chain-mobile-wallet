@@ -1,14 +1,12 @@
-<ion-item *ngIf="messageShow" >
+<ion-item *ngIf="messageShow">
   <img logo-small item-left src="assets/imgs/xpx-swap.png">
-
-  <ng-container >
-    <h2 ion-text color="dark" style="display: flex;" >
+  <ng-container>
+    <h2 ion-text color="dark" style="display: flex;">
       <ng-container>
         <h2 ion-text color="dark">ProximaX Swap</h2>
       </ng-container>
     </h2>
   </ng-container>
-
 </ion-item>
 
 <!-- Mosaic/s -->
@@ -77,8 +75,6 @@
         {{"WALLETS.TRANSACTION.DETAIL.SENDER" | translate}}
       </h2>
       <p text-wrap> {{ tx?.signer.address.plain() }}</p>
-
-      <!-- <p text-wrap> {{ tx?.signer.address.address | nemAddressPretty | searchContact: tx?.signer.address.address | async }}</p> -->
     </ion-item>
   </ion-card-content>
 </ion-card>
@@ -92,15 +88,13 @@
         {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
       </h2>
       <p text-wrap> {{ tx?.recipient?.address }}</p>
-
-      <!-- <p text-wrap> {{ tx?.recipient.value | nemAddressPretty | searchContact: tx?.recipient.value | async }}</p> -->
     </ion-item>
   </ion-card-content>
 </ion-card>
 <!-- ./Receiver -->
 
 <!-- Fee -->
-<ion-card no-margin-bottom>
+<ion-card no-margin-bottom *ngIf="status !='partials'">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
@@ -114,7 +108,8 @@
 <!-- ./Fee -->
 
 <!-- Block -->
-<ion-card no-margin-bottom>
+
+<ion-card no-margin-bottom *ngIf="status !='partials'">
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.BLOCK" | translate}}</h2>
@@ -146,7 +141,7 @@
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.HASH.NIS" | translate}}</h2>
-      <p text-wrap ion-text  text-uppercase color="dark">
+      <p text-wrap ion-text text-uppercase color="dark">
         {{ data.nis1Hash }}
       </p>
     </ion-item>
@@ -159,15 +154,12 @@
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
-
       <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0 && !messageShow">
         {{ tx?.message?.payload }}
       </p>
-
       <p text-wrap ion-text color="dark" color="dark" *ngIf="tx.message.type == 1">
         {{"WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE" | translate}}
       </p>
-
       <p ion-text color="dark" *ngIf="!tx.message.payload">
         {{"WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE" | translate}}
       </p>
