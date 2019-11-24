@@ -36,8 +36,8 @@
               </ion-icon>
             </button>
           </ion-item>
-          <div *ngIf="formRegisterUser.invalid" color="danger">
-            <p error padding-left text-left color="danger" *ngFor="let error of formRegisterUser.errors">
+          <div *ngIf="formRegisterUser.invalid" >
+            <p error padding-left text-left  style="color: #e06e36 !important; margin-top: -4px!important;"  *ngFor="let error of formRegisterUser.errors">
               <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
             </p>
           </div>
@@ -54,8 +54,8 @@
             </button>
           </ion-item>
 
-          <div *ngIf="formRegisterUser.invalid" color="danger">
-            <p error padding-left text-left color="danger" *ngFor="let error of formRegisterUser.errors">
+          <div *ngIf="formRegisterUser.invalid">
+            <p error padding-left text-left  style="color: #e06e36 !important; margin-top: -4px!important;"  *ngFor="let error of formRegisterUser.errors">
               <strong>{{ (error.passwordMismatch ? ('APP.SIGNUP.CONFIRM_PASSWORD.MESSAGE' | translate) :'') }}</strong>
             </p>
           </div>

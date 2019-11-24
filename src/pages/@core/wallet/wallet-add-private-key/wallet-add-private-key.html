@@ -102,12 +102,19 @@
         <form [formGroup]="formGroup" (ngSubmit)="createAccount(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
-            <ion-input [maxlength]="configurationForm.nameWallet.maxLength"
-              [minlength]="configurationForm.nameWallet.minLength" formControlName="name" type="text"
+            <ion-input [minlength]="configurationForm.nameWallet.minLength" formControlName="name" type="text"
               autocapitalize="none" placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}"
-              (input)="updateName()">
+              (input)="updateName()" (ionChange)="minName()">
             </ion-input>
           </ion-item>
+          <div>
+            <p error padding-left text-left style="color: #e06e36 !important; margin-top: -4px!important;">
+              <strong
+                *ngIf='nameMin'>{{('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: configurationForm.nameWallet.minLength })}}</strong>
+              <strong
+                *ngIf='nameMax'>{{('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: configurationForm.nameWallet.maxLength })}}</strong>
+            </p>
+          </div>
 
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.CREATE.IMPORT.PRIVATE_KEY.LABEL" | translate}}</ion-label>

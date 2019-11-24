@@ -45,6 +45,8 @@ export class WalletAddPrivateKeyPage {
   passwordIcon: string = "ios-eye-outline";
   privateKey: any;
   prefix: any;
+  nameMin: boolean;
+  nameMax: boolean;
 
 
   constructor(
@@ -223,6 +225,18 @@ export class WalletAddPrivateKeyPage {
    */
   ionViewDidLoad() {
     this.storage.set('isQrActive', true);
+  }
+
+  minName() {
+    let name = this.formGroup.controls.name.value;
+    if (name.length < this.configurationForm.nameWallet.minLength) {
+      this.nameMin = true;
+    } else if (name.length > this.configurationForm.nameWallet.maxLength) {
+      this.nameMax = true;
+    } else {
+      this.nameMin = false
+      this.nameMax = false;
+    }
   }
 
   scan() {
