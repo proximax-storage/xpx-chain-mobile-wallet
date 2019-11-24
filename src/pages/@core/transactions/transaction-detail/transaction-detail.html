@@ -49,23 +49,24 @@
 
   </ion-list>
 
-</ion-content>
-<ng-container *ngIf="(tx.type === TransactionType.AGGREGATE_BONDED) && (currentAccount && !toShowCosign(tx))">
-  <ion-footer no-border>
-    <form [formGroup]="form">
-      <ion-item transparent padding>
-        <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
-        <ion-input formControlName="password" [type]="passwordType"
-          placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+  <ng-container
+    *ngIf="(tx.type === TransactionType.AGGREGATE_BONDED) && isSelectedAccountMultisig && (currentAccount && !toShowCosign(tx))">
+    <!-- <ion-footer no-border> -->
+      <form [formGroup]="form">
+        <ion-item transparent padding>
+          <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
 
-        <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
-          <ion-icon item-right color="dark" [name]="passwordIcon">
-          </ion-icon>
-        </button>
-      </ion-item>
-    </form>
-    <button gradient-button quarter-width color-5 medium [disabled]="form.invalid" (click)="cosign(tx)">
-      {{"TRANSACTION_DETAIL.COSIGN" | translate}}
-    </button>
-  </ion-footer>
-</ng-container>
+          <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+            <ion-icon item-right color="dark" [name]="passwordIcon">
+            </ion-icon>
+          </button>
+        </ion-item>
+      </form>
+      <button gradient-button quarter-width color-5 medium [disabled]="form.invalid" (click)="cosign(tx)">
+        {{"TRANSACTION_DETAIL.COSIGN" | translate}}
+      </button>
+    <!-- </ion-footer> -->
+  </ng-container>
+</ion-content>
