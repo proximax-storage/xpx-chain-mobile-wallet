@@ -21,6 +21,7 @@ export class TransferDetailComponent {
   @Input() tx: any;
   @Input() mosaics: DefaultMosaic[] = [];
   @Input() owner: string;
+  @Input() status: string;
   public App = App;
   public ownerAddress: any;
   public data: any;
@@ -33,31 +34,12 @@ export class TransferDetailComponent {
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
-  ) {
-
-    console.log('this.owner', this.owner);
-    
-  }
+  ) {}
   
   ngOnInit() {
     this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];   
-    // this._setOwner();
-
-
-    console.log('########################', this.tx);
-    
     this._getMosaicInfo();
   }
-
-  // private _setOwner() {
-  //   this.wallet.getSelectedWallet().then(wallet => {
-  //     console.log('wallet',wallet['account'].address.address);
-      
-  //     this.ownerAddress = wallet['account'].address.address;
-
-  //     console.log('ownerAddress',this.ownerAddress);
-  //   });
-  // }
 
   getAbsoluteAmount(amount, divisibility){
     return  this.proximaxProvider.amountFormatter(amount, divisibility)
@@ -81,17 +63,14 @@ export class TransferDetailComponent {
               amount: m2.amount.compact(),
               amountCompact: m2.amount.compact(),
               divisibility: m1.divisibility
-            }
-            )
-        })
+            });
+        });
       })[0]
     } else {
       this.show = false;
     }
-   
 
      const valid = this.IsJsonString(this.tx.message.payload);
-
      if(valid){
       this.data = JSON.parse(this.tx.message.payload);
       if(this.data.message){

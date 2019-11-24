@@ -35,6 +35,7 @@ export class TransactionDetailPage {
   passwordIcon: string = "ios-eye-outline";
   currentAccount: any;
   status: any;
+  cosignatories: any;
 
   constructor(
     private navParams: NavParams,
@@ -53,18 +54,23 @@ export class TransactionDetailPage {
     const payload = this.navParams.data;
     this.tx = payload.transactions;
     this.status = payload.status;
-
     this.mosaics = payload.mosaics;
     this.createForm()
     this.walletProvider.getAccountSelected().then(selectedAccount => {
       this.currentAccount = selectedAccount;
-      console.log('this.currentAccount....', this.currentAccount.account.address.address);
-      
     });
+    if (this.tx.innerTransactions && this.status === 'partials') {
+      let address = this.tx.innerTransactions[0].signer.address;
+      this.proximaxProvider.getMultisigAccountInfo(address).subscribe(result => {
+        this.cosignatories = result.cosignatories;
+        if (!!this.cosignatories.find(cosigneries => cosigneries.publicKey === this.currentAccount.publicAccount.publicKey)) {
+          this.isSelectedAccountMultisig = true;
+        }
+      })
+    }
   }
 
   cosign(tx: AggregateTransaction) {
-
     const password = new Password(this.form.get("password").value);
     const iv = this.currentAccount.account.encryptedPrivateKey.iv;
     const encryptedKey = this.currentAccount.account.encryptedPrivateKey.encryptedKey;
@@ -72,18 +78,18 @@ export class TransactionDetailPage {
     const network = this.currentAccount.account.network;
 
     if (privateKey && privateKey !== '' && (privateKey.length === 64 || privateKey.length === 66)) {
-      
+
       const account = Account.createFromPrivateKey(privateKey, network);
-      
-    this.proximaxProvider.cosignAggregateBondedTransaction(tx, account).subscribe(() => {
-      this.alertProvider.showTranslated('TRANSACTION_DETAIL.COSIGN_DONE', 'TRANSACTION_DETAIL.COSIGN_MESSAGE').then(() => {
-        this.viewCtrl.dismiss();
+
+      this.proximaxProvider.cosignAggregateBondedTransaction(tx, account).subscribe(() => {
+        this.alertProvider.showTranslated('TRANSACTION_DETAIL.COSIGN_DONE', 'TRANSACTION_DETAIL.COSIGN_MESSAGE').then(() => {
+          this.viewCtrl.dismiss();
+        });
       });
-    });
-  } else{
-    this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
+    } else {
+      this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
+    }
   }
-}
 
   createForm() {
     // Initialize form
@@ -124,9 +130,6 @@ export class TransactionDetailPage {
    * @param tx 
    */
   toShowCosign(tx: AggregateTransaction): boolean {
-    console.log('------', tx);
-    console.log('------', tx.deadline.value.minusMinutes(1439).toString()); 
-    
-    return tx.signer.publicKey === this.currentAccount.publicAccount.publicKey ||  this.status == 'confirmed' || !!tx.cosignatures.find(cosigner => cosigner.signer.publicKey === this.currentAccount.publicAccount.publicKey);
+    return tx.signer.publicKey === this.currentAccount.publicAccount.publicKey || this.status == 'confirmed' || !!tx.cosignatures.find(cosigner => cosigner.signer.publicKey === this.currentAccount.publicAccount.publicKey);
   }
 }

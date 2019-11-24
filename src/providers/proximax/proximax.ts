@@ -231,6 +231,17 @@ export class ProximaxProvider {
       );
   }
 
+
+  /**
+   *
+   *
+   * @param {Address} address
+   * @returns {Observable<MultisigAccountInfo>}
+   * @memberof ProximaxProvider
+   */
+  getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
+    return this.accountHttp.getMultisigAccountInfo(address);
+  }
   /**
    * 
    * @param address 
@@ -289,14 +300,6 @@ export class ProximaxProvider {
    */
   getLinkedMosaicId(NamespaceId: NamespaceId): Observable<MosaicId> {
     return this.namespaceHttp.getLinkedMosaicId(NamespaceId)
-  }
-
-  /**
-   * 
-   * @param address 
-   */
-  getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
-    return this.accountHttp.getMultisigAccountInfo(address);
   }
 
   /**
