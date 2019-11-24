@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TransactionType, BlockInfo, Mosaic } from 'tsjs-xpx-chain-sdk';
-
+import { TransactionType, Mosaic } from 'tsjs-xpx-chain-sdk';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
@@ -29,18 +28,33 @@ export class TransferDetailComponent {
   show: boolean;
   MESSAGE_: string;
   LOGO: string;
+  effectiveFee: string = '0';
+  timestamp: string;
+  deadline: string;
   mosaicFound = [];
 
   constructor(
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
     this._getMosaicInfo();
-    console.log(this.tx);
+    if (this.status != 'partials') {
+      this.getBolck();
+    } else {
+      this.deadline = this.proximaxProvider.dateFormat(this.tx.deadline);
+    }
+  }
+
+  getBolck() {
+    this.proximaxProvider.getBlockInfo(this.tx.transactionInfo.height.compact()).subscribe((blockInfo) => {
+      this.timestamp = this.proximaxProvider.dateFormatUTC(blockInfo.timestamp);
+      this.effectiveFee = this.proximaxProvider.amountFormatterSimple(blockInfo.feeMultiplier * this.tx.size);
+    });
   }
 
   getAbsoluteAmount(amount, divisibility) {

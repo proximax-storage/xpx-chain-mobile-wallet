@@ -228,8 +228,6 @@ export class WalletAddPrivateKeyPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-        // console.log("Barcode data", JSON.stringify(barcodeData, null, 4));
-        this.alertProvider.show('scan send', JSON.stringify(barcodeData))
         barcodeData.format = "QR_CODE";
         this.formGroup.patchValue({ privateKey:  barcodeData.text })
       })
