@@ -32,6 +32,7 @@ import {
   BlockHttp,
   UInt64,
   Deadline,
+  Mosaic,
 } from 'tsjs-xpx-chain-sdk';
 import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
@@ -298,6 +299,17 @@ export class ProximaxProvider {
    */
   mosaicsAmountViewFromAddress(address: Address): Observable<MosaicAmountView[]> {
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
+  }
+
+  /**
+   *
+   *
+   * @param {Mosaic[]} mosaics
+   * @returns {Observable<MosaicAmountView[]>}
+   * @memberof ProximaxProvider
+   */
+  mosaicsAmountViewFromMosaics(mosaics: Mosaic[]): Observable<MosaicAmountView[]> {
+    return this.mosaicService.mosaicsAmountView(mosaics);
   }
 
   /**

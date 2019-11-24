@@ -8,6 +8,7 @@ import { UtilitiesProvider } from '../../../../../providers/utilities/utilities'
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 import { AppConfig } from '../../../../../app/app.config';
 import { AlertProvider } from '../../../../../providers/alert/alert';
+import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 
 @Component({
   selector: 'transactions',
@@ -74,7 +75,7 @@ export class TransactionComponent {
   };
   App = App;
   LOGO: string = App.LOGO.DEFAULT;
-  AMOUNT: any = 0;
+  AMOUNT: any = 0.000000;
   MOSAIC_INFO: any = { namespaceId: '', mosaicId: '', hex: '', amount: 0, amountCompact: 0, divisibility: 0 };
   array: any[] = [];
   showTx = false;
@@ -85,6 +86,7 @@ export class TransactionComponent {
   constructor(
     private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
+    private mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService
   ) {
@@ -100,6 +102,8 @@ export class TransactionComponent {
    * @memberof TransactionComponent
    */
   async validateTransaction() {
+    console.log('his.tx', this.tx);
+
     switch (this.tx.type) {
       case TransactionType.TRANSFER:
         if (this.tx.mosaics.length > 0) {
@@ -119,23 +123,51 @@ export class TransactionComponent {
               this.statusViewDetail = true;
               this.type = 'Transfer';
             } else {
-              console.log('THIS OTHER MOSAICS', this.mosaics);
-              this.MESSAGE_ = 'Sirius Mosaics';
-              this.MOSAIC_INFO = null
-              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), 6);
-              this.LOGO = App.LOGO.SIRIUS;
-              this.showTx = true;
-              this.type = this.tx.mosaics[0].id.toHex()
-              this.statusViewDetail = true;
+              console.log('\nTHIS OTHER MOSAICS', this.mosaics);
+              const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === this.tx.mosaics[0].id.toHex()) : null;
+              console.log('\nhereeeeeeeeee --->', mosaic);
+              if (mosaic) {
+                this.MESSAGE_ = 'Sirius Mosaics';
+                this.MOSAIC_INFO = null
+                this.LOGO = App.LOGO.SIRIUS;
+                this.showTx = true;
+                this.type = this.tx.mosaics[0].id.toHex()
+                this.statusViewDetail = true;
+                this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), mosaic.divisibility);
+              } else {
+                console.log('\nhereeeeeeeeee2222 --->');
+                this.MESSAGE_ = 'Sirius Mosaics';
+                this.MOSAIC_INFO = null
+                this.LOGO = App.LOGO.SIRIUS;
+                this.showTx = true;
+                this.type = this.tx.mosaics[0].id.toHex()
+                this.statusViewDetail = true;
+                this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {
+                  console.log('dataMosaic', dataMosaic);
+                  if (dataMosaic) {
+                    this.mosaics.push(dataMosaic[0]);
+                    this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), dataMosaic[0].divisibility);
+                  } else {
+                    this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), 6);
+                  }
+                });
+              }
             }
           } else {
             this.MESSAGE_ = 'Other transactions';
             this.MOSAIC_INFO = null;
-            this.AMOUNT = null;
             this.LOGO = App.LOGO.OTHER;
             this.showTx = true;
             this.type = 'Transfer';
             this.statusViewDetail = true;
+            this.AMOUNT = null;
+            this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {
+              if (dataMosaic) {
+                dataMosaic.forEach(element => {
+                  this.mosaics.push(element);
+                });
+              }
+            });
           }
         } else {
           this.MESSAGE_ = 'Other transactions';
@@ -144,7 +176,6 @@ export class TransactionComponent {
           this.LOGO = App.LOGO.OTHER;
           this.showTx = true;
           this.type = 'Transfer';
-
           this.statusViewDetail = true;
         }
         break;
@@ -212,9 +243,9 @@ export class TransactionComponent {
         this.MOSAIC_INFO = null;
         this.AMOUNT = null;
         this.LOGO = App.LOGO.OTHER;
-        this.type =  (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
+        this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
         this.statusViewDetail = false;
-        
+
         this.showTx = true;
         break;
     }
