@@ -299,8 +299,7 @@ export class HomePage {
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsUnconfirmed(publicAccount).subscribe(transactions => {
       if (transactions) {
-        const transferTransactionsUnconfirmed: Array<Transaction> = transactions.filter(tx => tx.type == TransactionType.TRANSFER);
-        this.unconfirmedTransactions = transferTransactionsUnconfirmed;
+        this.unconfirmedTransactions = transactions;
         this.showEmptyTransaction = false;
       } else {
         this.showEmptyTransaction = true;

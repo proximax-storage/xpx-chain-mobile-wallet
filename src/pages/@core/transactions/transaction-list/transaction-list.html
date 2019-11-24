@@ -79,11 +79,10 @@
     <!-- Unconfirmed Transactions -->
     <ng-container *ngIf="menu === 'unconfirmed'">
       <ng-container *ngIf="unconfirmedTransactions?.length > 0; else showEmptyMessage">
-        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions;"
-          (click)="goToTransactionDetail(transaction, 'unconfirmed')">
+        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions;">
           <!-- if transfer  -->
-          <transactions *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics"
-            [owner]="selectedAccount.account.address.address" [status]="'Unconfirmed'">
+          <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
+            [status]="'Unconfirmed'" (viewTxDetail)="goToTransactionDetail($event, 'unconfirmed')">
           </transactions>
         </ion-card>
       </ng-container>
@@ -108,11 +107,11 @@
     <!-- Partials Transactions -->
     <ng-container *ngIf="menu === 'partials'">
       <ng-container *ngIf="aggregateTransactions?.length > 0; else showEmptyMessage">
-        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions;"
-          (click)="goToTransactionDetail(transaction, 'partials')">
+        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions;">
           <!-- if transfer  -->
           <transactions *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
-            [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'">
+            [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'"
+            (click)="goToTransactionDetail(transaction, 'partials')">
           </transactions>
         </ion-card>
       </ng-container>

@@ -112,11 +112,20 @@ export class TransactionComponent {
                 hex: '',
                 fullName: 'PRX.XPX'
               };
-              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility)
+
+              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), this.MOSAIC_INFO.divisibility);
               this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
               this.showTx = true;
               this.statusViewDetail = true;
               this.type = 'TRANSFER';
+            } else {
+              console.log('THIS OTHER MOSAICS', this.mosaics);
+              this.MESSAGE_ = 'TRANSFER';
+              this.MOSAIC_INFO = null
+              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), 6);
+              this.LOGO = App.LOGO.DEFAULT;
+              this.showTx = true;
+              this.statusViewDetail = true;
             }
           } else {
             this.MESSAGE_ = 'TRANSFER';

@@ -77,6 +77,8 @@ export class TransactionListPage {
     this.totalBalance = payload.total;
     this.confirmedTransactions = payload.transactions;
     this.unconfirmedTransactions = payload.unconfirmedTransactions;
+    console.log('this.unconfirmedTransactions', this.unconfirmedTransactions);
+    
     this.aggregateTransactions = payload.aggregateTransactions;
     this.selectedAccount = payload.selectedAccount;
     this.mosaics = payload.mosaics;
