@@ -149,15 +149,15 @@ export class HomePage {
               this.slides.slideTo(index);
             }
           });
-          
+
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
             this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
               if (mosaics === null) {
                 this.showEmptyMessage();
+                this.hideLoaders();
+                loader.dismiss();
               } else {
-
-                this.mosaics = mosaics;
                 this.mosaicsProvider.computeTotalBalance(mosaics).then(total => {
                   this.totalWalletBalance = total as number;
                 });
@@ -166,27 +166,32 @@ export class HomePage {
                 this.confirmedTransactions = [];
                 this.unconfirmedTransactions = [];
                 this.aggregateTransactions = [];
+                this.mosaics = mosaics;
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
                 this.getTransactionsAggregate(this.selectedAccount.publicAccount);
+                this.hideEmptyMessage();
+                this.hideLoaders();
+                loader.dismiss();
               }
-
             }, error => {
               console.log('error ', error);
-            }
-            );
+              this.showEmptyMessage();
+              this.hideLoaders();
+              loader.dismiss();
+            });
           } catch (error) {
             console.log('error ', error);
-            this.hideEmptyMessage();
             this.showEmptyMessage();
+            this.hideLoaders();
+            loader.dismiss();
           }
         });
-        this.hideEmptyMessage();
       } else {
         this.showEmptyMessage();
+        this.hideLoaders();
+        loader.dismiss();
       }
-      this.hideLoaders();
-      loader.dismiss();
     });
   }
 
@@ -331,9 +336,33 @@ export class HomePage {
    *
    * @memberof HomePage
    */
+  hideEmptyMessage() {
+    this.showEmptyMosaic = false;
+    this.showEmptyTransaction = false;
+  }
+
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
+  hideLoaders() {
+    this.isLoading = false;
+  }
+
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
   slideChanged() {
+    this.mosaics = null;
+    this.unconfirmedTransactions = null;
+    this.confirmedTransactions = null;
+    this.showEmptyTransaction = true;
+    this.showEmptyMosaic = true;
     let currentIndex = this.slides.getActiveIndex();
-    if (this.accounts.length != currentIndex) {
+    if (this.accounts.length !== currentIndex) {
       this.onWalletSelect(this.accounts[currentIndex]);
       this.haptic.selection();
     } else {
@@ -346,13 +375,11 @@ export class HomePage {
     }
   }
 
-
-  // -----------------------------------------------------------------------------------
-
-
-
-
-
+  /**
+  *
+  *
+  * @memberof HomePage
+  */
   showEmptyMessage() {
     this.mosaics = null;
     this.confirmedTransactions = null;
@@ -361,18 +388,11 @@ export class HomePage {
     this.showEmptyTransaction = true;
   }
 
-
-  hideEmptyMessage() {
-    this.showEmptyMosaic = false;
-    this.showEmptyTransaction = false;
-  }
-
-
-  hideLoaders() {
-    this.isLoading = false;
-  }
-
-
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
   showLoaders() {
     this.isLoading = true;
     this.showEmptyTransaction = true;
@@ -382,50 +402,16 @@ export class HomePage {
     this.confirmedTransactions = null;
   }
 
-  
+
+  // -----------------------------------------------------------------------------------
+
+
+
 
   getAbsoluteAmount(amount, divisibility) {
     return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
 
-  onWalletPress(wallet) {
-    this.haptic.impact({ style: "heavy" });
-    this.selectedWallet = wallet;
-    let editButton = this.translateService.instant("WALLETS.EDIT");
-    let deleteButton = this.translateService.instant("WALLETS.DELETE");
-    let cancelButton = this.translateService.instant("WALLETS.BUTTON.CANCEL");
-
-    const actionSheet = this.actionSheetCtrl.create({
-      title: ``,
-      cssClass: "wallet-on-press",
-      buttons: [
-        {
-          text: editButton,
-          icon: this.platform.is("ios") ? null : "create",
-          handler: () => {
-            this.navCtrl.push("WalletUpdatePage", { wallet: wallet });
-          }
-        },
-        {
-          text: deleteButton,
-          role: "destructive",
-          icon: this.platform.is("ios") ? null : "trash",
-          handler: () => {
-            let page = "WalletDeletePage";
-            this.showModal(page, { wallet: wallet });
-          }
-        },
-        {
-          text: cancelButton,
-          role: "cancel",
-          icon: this.platform.is("ios") ? null : "close",
-          handler: () => {
-          }
-        }
-      ]
-    });
-    actionSheet.present();
-  }
 
   async showAddWalletPrompt() {
     await this.alertProvider.showAddWalletPrompt().then(option => {
@@ -441,13 +427,23 @@ export class HomePage {
     });
   }
 
-  public gotoWalletList() {
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
+  gotoWalletList() {
     this.utils.setRoot("TabsPage");
   }
 
-  public gotoCoinPrice(mosaic) {
-    let coinName: string;
-
+  /**
+   *
+   *
+   * @param {*} mosaic
+   * @memberof HomePage
+   */
+  gotoCoinPrice(mosaic) {
+    let coinName = "";
     if (mosaic.mosaicId === "xem") {
       coinName = "nem";
     } else if (mosaic.mosaicId === "xpx") {
@@ -456,8 +452,6 @@ export class HomePage {
       coinName = "pundi-x";
     } else if (mosaic.mosaicId === "sft") {
       coinName = "sportsfix";
-    } else {
-      coinName = "";
     }
 
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
@@ -506,11 +500,23 @@ export class HomePage {
     this.showModal(page, payload);
   }
 
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
   showReceiveModal() {
     const page = "ReceivePage";
     this.showModal(page, {});
   }
 
+  /**
+   *
+   *
+   * @param {*} page
+   * @param {*} params
+   * @memberof HomePage
+   */
   showModal(page, params) {
     const modal = this.modalCtrl.create(page, params, {
       enableBackdropDismiss: false,
