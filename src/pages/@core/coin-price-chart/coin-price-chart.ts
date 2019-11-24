@@ -327,7 +327,7 @@ export class CoinPriceChartPage {
     modal.present();
   }
 
-  gotoTransactionDetail(tx) {
+  goToTransactionDetail(tx) {
     const page = "TransactionDetailPage";
     const transactions = tx;
     const mosaics = this.mosaics;

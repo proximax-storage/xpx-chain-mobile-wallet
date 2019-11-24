@@ -75,11 +75,10 @@
 
     <!-- Transactions -->
     <ion-list transparent-items *ngIf="!isLoading">
-      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash"
-        (click)="gotoTransactionDetail(transaction)">
+      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy: trackByHash">
         <!-- if transfer  -->
         <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.account.address.address"
-          [status]="'Confirmed'">
+          [status]="'Confirmed'" (viewTxDetail)="goToTransactionDetail($event, 'confirmed')">
         </transactions>
       </ion-card>
     </ion-list>
