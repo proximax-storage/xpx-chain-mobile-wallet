@@ -97,7 +97,6 @@ export class ImportWalletPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-      console.info('Barcode data', barcodeData);
       let privKey = JSON.parse(barcodeData.text);
 
       if (privKey) {

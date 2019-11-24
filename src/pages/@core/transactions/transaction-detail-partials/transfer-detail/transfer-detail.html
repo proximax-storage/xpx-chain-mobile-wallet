@@ -24,11 +24,9 @@
         </ng-container>
 
         <ng-container *ngIf="tx && tx.recipient">
-          <img logo-small style="height: 2rem; margin-left: .5rem;"
-            src="assets/imgs/icon-receive-transactions.svg"
+          <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-receive-transactions.svg"
             *ngIf="owner == tx?.recipient.plain()">
-          <img logo-small style="height: 2rem; margin-left: .5rem;"
-            src="assets/imgs/icon-send-transactions.svg"
+          <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-send-transactions.svg"
             *ngIf="owner != tx?.recipient.plain()">
         </ng-container>
       </h2>
@@ -53,10 +51,16 @@
 <ion-card no-margin-bottom>
   <ion-card-content no-padding>
     <ion-item>
-      <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
+      <h2 ion-text color="dark" *ngIf="status !=='partials'">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
+      
+      <h2 ion-text color="dark" *ngIf="status ==='partials'">{{"WALLETS.TRANSACTION.DETAIL.DEADLINE" | translate}}</h2>
 
-      <p text-wrap ion-text color="dark">
-        {{ tx?.deadline.value.minusMinutes(1439).toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
+      <p text-wrap ion-text color="dark" *ngIf="status !=='partials'">
+        {{ timestamp}}
+      </p>
+
+      <p text-wrap ion-text color="dark" *ngIf="status ==='partials'">
+        {{ deadline }}
       </p>
 
       <p item-right>
@@ -100,7 +104,7 @@
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.FEE" | translate}}</h2>
 
       <p text-wrap ion-text color="dark">
-        {{ getAbsoluteAmount(tx?.maxFee.compact(), 6) }} XPX
+        {{ effectiveFee }} XPX
       </p>
     </ion-item>
   </ion-card-content>

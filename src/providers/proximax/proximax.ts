@@ -30,6 +30,8 @@ import {
   CosignatureTransaction,
   BlockInfo,
   BlockHttp,
+  UInt64,
+  Deadline,
 } from 'tsjs-xpx-chain-sdk';
 import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
@@ -88,26 +90,31 @@ export class ProximaxProvider {
       this.mosaicService = new MosaicService(this.accountHttp, this.mosaicHttp);
       this.namespaceService = new NamespaceService(this.namespaceHttp);
       this.transactionHttp = new TransactionHttp(this.httpUrl);
+      this.blockHttp = new BlockHttp(this.httpUrl);
 
     })
   }
 
   /**
-   * 
-   * @param nameWallet 
-   * @param password 
-   * @param privateKey 
+   *
+   *
+   * @param {string} nameWallet
+   * @param {Password} password
+   * @param {string} privateKey
+   * @returns {SimpleWallet}
+   * @memberof ProximaxProvider
    */
-
   createAccountFromPrivateKey(nameWallet: string, password: Password, privateKey: string): SimpleWallet {
     return SimpleWallet.createFromPrivateKey(nameWallet, password, privateKey, this.networkType);
   }
 
   /**
-   * 
-   * @param value 
+   *
+   *
+   * @param {*} value
+   * @returns
+   * @memberof ProximaxProvider
    */
-
   createPassword(value) {
     const password = new Password(value)
     return password;
@@ -124,20 +131,25 @@ export class ProximaxProvider {
   }
 
   /**
-   * 
-   * @param name 
-   * @param password 
+   *
+   *
+   * @param {string} name
+   * @param {Password} password
+   * @returns
+   * @memberof ProximaxProvider
    */
-
   createSimpleWallet(name: string, password: Password) {
     return SimpleWallet.create(name, password, this.networkType);
   }
 
-   /**
-   * 
-   * @param password 
-   * @param encryptedKey 
-   * @param iv 
+  /**
+   *
+   *
+   * @param {Password} password
+   * @param {string} encryptedKey
+   * @param {string} iv
+   * @returns {string}
+   * @memberof ProximaxProvider
    */
   decryptPrivateKey(password: Password, encryptedKey: string, iv: string): string {
     try {
@@ -172,25 +184,27 @@ export class ProximaxProvider {
   }
 
   /**
-   * 
-   * @param address 
+   *
+   *
+   * @param {Address} address
+   * @returns {Observable<AccountInfo>}
+   * @memberof ProximaxProvider
    */
-
   getAccountInfo(address: Address): Observable<AccountInfo> {
     // return null;
     return this.accountHttp.getAccountInfo(address);
   }
+  
+  /**
+   * Gets a BlockInfo for a given block height
+   *  @param height - Block height
+   * @returns {Observable<BlockInfo>}
+   * @memberof ProximaxProvider
+   */
+  getBlockInfo(height): Observable<BlockInfo> {
+    return this.blockHttp.getBlockByHeight(height);
+  }
 
-    /**
-     * Gets a BlockInfo for a given block height
-     *  @param height - Block height
-     * @returns {Observable<BlockInfo>}
-     * @memberof ProximaxProvider
-     */
-    getBlockInfo(height: number = 1): Observable<BlockInfo> {
-      return this.blockHttp.getBlockByHeight(height) //Update-sdk-dragon
-    }
-    
   /**
    *
    *
@@ -206,33 +220,40 @@ export class ProximaxProvider {
   }
 
   /**
-   * 
-   * @param publicAccount 
-   * @param queryParams 
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @param {*} [id=null]
+   * @param {number} [queryParams=100]
+   * @returns {Observable<Transaction[]>}
+   * @memberof ProximaxProvider
    */
-
   getAllTransactionsFromAccount(publicAccount: PublicAccount, id = null, queryParams = 100): Observable<Transaction[]> {
     const query = (id) ? new QueryParams(queryParams, id) : new QueryParams(queryParams);
     return this.accountHttp.transactions(publicAccount, query);
   }
 
   /**
-   * 
-   * @param publicAccount 
-   * @param queryParams 
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @param {*} [queryParams]
+   * @returns {Observable<Transaction[]>}
+   * @memberof ProximaxProvider
    */
-
   getAllTransactionsUnconfirmed(publicAccount: PublicAccount, queryParams?): Observable<Transaction[]> {
     // return null;
     return this.accountHttp.unconfirmedTransactions(publicAccount, new QueryParams(queryParams));
   }
 
   /**
-   * 
-   * @param publicAccount 
-   * @param queryParams 
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @param {*} [queryParams]
+   * @returns {Observable<AggregateTransaction[]>}
+   * @memberof ProximaxProvider
    */
-
   getAllTransactionsAggregate(publicAccount: PublicAccount, queryParams?): Observable<AggregateTransaction[]> {
     // return null;
     return this.accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(queryParams))
@@ -255,88 +276,117 @@ export class ProximaxProvider {
   getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
     return this.accountHttp.getMultisigAccountInfo(address);
   }
-  /**
-   * 
-   * @param address 
-   */
 
+  /**
+   *
+   *
+   * @param {Address} address
+   * @returns {Observable<MosaicAmountView[]>}
+   * @memberof ProximaxProvider
+   */
   getBalance(address: Address): Observable<MosaicAmountView[]> {
     // return null;
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
   }
-  /**
-   * 
-   * @param address 
-   */
 
+  /**
+   *
+   *
+   * @param {Address} address
+   * @returns {Observable<MosaicAmountView[]>}
+   * @memberof ProximaxProvider
+   */
   mosaicsAmountViewFromAddress(address: Address): Observable<MosaicAmountView[]> {
     return this.mosaicService.mosaicsAmountViewFromAddress(address);
   }
 
   /**
-   * 
-   * @param address 
+   *
+   *
+   * @param {string} address
+   * @returns {Address}
+   * @memberof ProximaxProvider
    */
-
   createFromRawAddress(address: string): Address {
     return Address.createFromRawAddress(address);
   }
 
   /**
-   * 
-   * @param privateKey 
-   * @param networkType 
+   *
+   *
+   * @param {string} privateKey
+   * @param {NetworkType} networkType
+   * @returns {PublicAccount}
+   * @memberof ProximaxProvider
    */
   getPublicAccountFromPrivateKey(privateKey: string, networkType: NetworkType): PublicAccount {
     return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
 
   /**
-   * 
-   * @param mosaicIsd 
+   *
+   *
+   * @param {MosaicId[]} mosaicIsd
+   * @returns {Observable<MosaicInfo[]>}
+   * @memberof ProximaxProvider
    */
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
 
   /**
-   * 
-   * @param NamespaceId 
+   *
+   *
+   * @param {NamespaceId[]} NamespaceId
+   * @returns {Observable<NamespaceName[]>}
+   * @memberof ProximaxProvider
    */
   getNamespace(NamespaceId: NamespaceId[]): Observable<NamespaceName[]> {
     return this.namespaceHttp.getNamespacesName(NamespaceId)
   }
 
   /**
-   * 
-   * @param NamespaceId 
+   *
+   *
+   * @param {NamespaceId} NamespaceId
+   * @returns {Observable<MosaicId>}
+   * @memberof ProximaxProvider
    */
   getLinkedMosaicId(NamespaceId: NamespaceId): Observable<MosaicId> {
     return this.namespaceHttp.getLinkedMosaicId(NamespaceId)
   }
 
   /**
-   * 
-   * @param mosaicIds 
+   *
+   *
+   * @param {MosaicId[]} mosaicIds
+   * @returns {Observable<MosaicNames[]>}
+   * @memberof ProximaxProvider
    */
   getMosaicNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]> {
     return this.mosaicHttp.getMosaicsNames(mosaicIds);
   }
 
   /**
-   * 
-   * @param privateKey 
-   * @param net 
-   * @param address 
+   *
+   *
+   * @param {string} privateKey
+   * @param {NetworkType} net
+   * @param {string} address
+   * @returns {boolean}
+   * @memberof ProximaxProvider
    */
   checkAddress(privateKey: string, net: NetworkType, address: string): boolean {
     return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
   }
 
   /**
-   * 
-   * @param val 
-   * @param val2 
+   *
+   *
+   * @param {string} val
+   * @param {string} val2
+   * @returns
+   * @memberof ProximaxProvider
    */
   verifyNetworkAddressEqualsNetwork(val: string, val2: string) {
     let value = val.toUpperCase()
@@ -368,9 +418,11 @@ export class ProximaxProvider {
   }
 
   /**
-   * Check if acount belongs it is valid, has 40 characters and belongs to network
-   * @param address address to check
-   * @return Return prepared transaction
+   *
+   *
+   * @param {string} address
+   * @returns {boolean}
+   * @memberof ProximaxProvider
    */
   public isValidAddress(address: string): boolean {
     const addr = Address.createFromRawAddress(address);
@@ -386,9 +438,12 @@ export class ProximaxProvider {
   }
 
   /**
-   * 
-   * @param amount 
-   * @param divisibility 
+   *
+   *
+   * @param {Number} amount
+   * @param {*} divisibility
+   * @returns
+   * @memberof ProximaxProvider
    */
   amountFormatter(amount: Number, divisibility: any) {
     const amountDivisibility = Number(amount) / Math.pow(10, divisibility);
@@ -398,9 +453,12 @@ export class ProximaxProvider {
   }
 
   /**
-   * 
-   * @param amount 
-   * @param divisibility 
+   *
+   *
+   * @param {*} amount
+   * @param {*} divisibility
+   * @returns
+   * @memberof ProximaxProvider
    */
   getAbsoluteAmount(amount, divisibility) {
     const amountDivisibility = amount * Math.pow(10, divisibility);
@@ -409,11 +467,45 @@ export class ProximaxProvider {
   }
 
   /**
-   * Generate Address QR Text
-   * @param address address
-   * @return Address QR Text
+   *
+   *
+   * @param {Number} amount
+   * @returns
+   * @memberof ProximaxProvider
    */
-  public generateInvoiceQRText(
+  amountFormatterSimple(amount: Number) {
+    const amountDivisibility = Number(amount) / Math.pow(10, 6);
+    return amountDivisibility.toLocaleString("en-us", {
+      minimumFractionDigits: 6
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {Deadline} deadline
+   * @returns
+   * @memberof ProximaxProvider
+   */
+  dateFormat(deadline: Deadline) {
+    return new Date(
+      deadline.value.toString() + Deadline.timestampNemesisBlock * 1000
+    ).toLocaleString();
+    // toUTCString();
+  }
+
+  /**
+   *
+   *
+   * @param {UInt64} date
+   * @returns
+   * @memberof ProximaxProvider
+   */
+  dateFormatUTC(date: UInt64) {
+    return new Date(date.compact() + 1459468800 * 1000).toLocaleString();
+  }
+
+  generateInvoiceQRText(
     address: Address,
     amount: number,
     message: string

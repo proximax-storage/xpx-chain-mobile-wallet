@@ -19,7 +19,6 @@ import {
   AggregateTransaction,
   PublicAccount,
 } from "tsjs-xpx-chain-sdk";
-import { TranslateService } from "@ngx-translate/core";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { App as AppConfig } from "../../providers/app/app";
 import { WalletProvider, CatapultsAccountsInterface } from "../../providers/wallet/wallet";
@@ -97,7 +96,6 @@ export class HomePage {
     private modalCtrl: ModalController,
     private haptic: HapticProvider,
     private marketPrice: GetMarketPricePipe,
-    private translateService: TranslateService,
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
