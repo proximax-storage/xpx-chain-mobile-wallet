@@ -154,11 +154,11 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Other transactions';
+            this.MESSAGE_ = 'Sirius Mosaics';
             this.MOSAIC_INFO = null;
-            this.LOGO = App.LOGO.OTHER;
+            this.LOGO = App.LOGO.SIRIUS;
             this.showTx = true;
-            this.type = 'Transfer';
+            this.type = `Mosaics (${this.tx.mosaics.length})`;
             this.statusViewDetail = true;
             this.AMOUNT = null;
             this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {
@@ -206,7 +206,7 @@ export class TransactionComponent {
               this.showTx = true;
               if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
                 this.statusViewDetail = true;
-                this.type = 'Transfer';
+                this.type = '';
               } else {
                 this.statusViewDetail = false;
                 const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
@@ -221,7 +221,7 @@ export class TransactionComponent {
             this.showTx = true;
             if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
               this.statusViewDetail = true;
-              this.type = 'Transfer';
+              this.type = '';
             } else {
               this.statusViewDetail = false;
               const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx['innerTransactions'][0].type);
@@ -245,7 +245,6 @@ export class TransactionComponent {
         this.LOGO = App.LOGO.OTHER;
         this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
         this.statusViewDetail = false;
-
         this.showTx = true;
         break;
     }
