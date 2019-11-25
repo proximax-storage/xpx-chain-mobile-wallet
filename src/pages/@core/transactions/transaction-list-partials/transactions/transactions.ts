@@ -154,11 +154,11 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Other transactions';
+            this.MESSAGE_ = 'Sirius Mosaics';
             this.MOSAIC_INFO = null;
-            this.LOGO = App.LOGO.OTHER;
+            this.LOGO = App.LOGO.SIRIUS;
             this.showTx = true;
-            this.type = 'Transfer';
+            this.type = `Mosaics (${this.tx.mosaics.length})`;
             this.statusViewDetail = true;
             this.AMOUNT = null;
             this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {
