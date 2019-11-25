@@ -38,7 +38,7 @@
     "WALLETS.MOSAICS" : "Activos",
     "WALLETS.TRANSACTIONS" : "Transacciones",
     "WALLETS.ADDRESS" : "Dirección",
-    "WALLETS.PUBLIC_KEY" : "Llave pública",
+    "WALLETS.PUBLIC_KEY" : "Llave pública Sirius",
     "WALLETS.VESTED_BALANCE" : "Balance adquirido",
     "WALLETS.MORE_DETAILS" : "Más detalles",
     "WALLETS.IMPORT.NAME_EXISTS" : "Esta cuenta ya existe.",

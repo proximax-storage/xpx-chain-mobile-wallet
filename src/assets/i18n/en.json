@@ -39,7 +39,7 @@
     "WALLETS.MOSAICS": "Assets",
     "WALLETS.TRANSACTIONS": "Transactions",
     "WALLETS.ADDRESS": "Address",
-    "WALLETS.PUBLIC_KEY": "Public Key",
+    "WALLETS.PUBLIC_KEY": "Public Key Sirius",
     "WALLETS.VESTED_BALANCE": "Vested Balance",
     "WALLETS.MORE_DETAILS": "More Details",
     "WALLETS.IMPORT.NAME_EXISTS": "This account already exists. Please choose a new one.",
