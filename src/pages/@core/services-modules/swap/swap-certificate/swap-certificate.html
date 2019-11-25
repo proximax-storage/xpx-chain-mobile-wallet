@@ -25,7 +25,7 @@
 
     <div text-center>
         <p ion-text color="dark">
-            Important! Take a screenshot of this certificate for your records. It will be needed to follow up on your swap in the event of an error.
+          {{ "WALLETS.IMPORT.SWAP_SUBTITLE" | translate}} 
         </p>
       </div>
   <section wallets>
@@ -80,7 +80,7 @@
           <ion-item no-lines>
               <ion-label>
                 <p>
-                    I confirm that I have taken a screenshot of this certificate.
+                  {{ "WALLETS.IMPORT.SWAP_CHEK" | translate}}
                 </p>
               </ion-label>
               <ion-checkbox [(ngModel)]="screenshotDone"></ion-checkbox>

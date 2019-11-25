@@ -65,7 +65,7 @@ export class SwapCertificatePage {
     .share(
       `${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.DATE")}:\n${this.timestamp}\n
       ${this.translateService.instant("SERVICES.SWAP_PROCESS.SIRIUS_WALLET")}:\n${this.address}\n
-      ${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.HASH.NIS")}:\n${this.transactionHash}\n`,
+      ${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.HASH.NIS")}:\n${this.transactionHash}\n\n`,
       null,
       null,
       this.url).then(_ => {
