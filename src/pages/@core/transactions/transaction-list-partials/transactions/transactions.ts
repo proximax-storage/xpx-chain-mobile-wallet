@@ -206,7 +206,7 @@ export class TransactionComponent {
               this.showTx = true;
               if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
                 this.statusViewDetail = true;
-                this.type = 'Transfer';
+                this.type = '';
               } else {
                 this.statusViewDetail = false;
                 const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
@@ -221,7 +221,7 @@ export class TransactionComponent {
             this.showTx = true;
             if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER) {
               this.statusViewDetail = true;
-              this.type = 'Transfer';
+              this.type = '';
             } else {
               this.statusViewDetail = false;
               const type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx['innerTransactions'][0].type);
@@ -245,7 +245,6 @@ export class TransactionComponent {
         this.LOGO = App.LOGO.OTHER;
         this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
         this.statusViewDetail = false;
-
         this.showTx = true;
         break;
     }
