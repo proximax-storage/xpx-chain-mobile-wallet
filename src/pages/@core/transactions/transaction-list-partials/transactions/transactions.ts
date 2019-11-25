@@ -102,8 +102,6 @@ export class TransactionComponent {
    * @memberof TransactionComponent
    */
   async validateTransaction() {
-    console.log('his.tx', this.tx);
-
     switch (this.tx.type) {
       case TransactionType.TRANSFER:
         if (this.tx.mosaics.length > 0) {
@@ -123,9 +121,7 @@ export class TransactionComponent {
               this.statusViewDetail = true;
               this.type = 'Transfer';
             } else {
-              console.log('\nTHIS OTHER MOSAICS', this.mosaics);
               const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === this.tx.mosaics[0].id.toHex()) : null;
-              console.log('\nhereeeeeeeeee --->', mosaic);
               if (mosaic) {
                 this.MESSAGE_ = 'Proximax Digital Asset ';
                 this.MOSAIC_INFO = null
@@ -135,7 +131,6 @@ export class TransactionComponent {
                 this.statusViewDetail = true;
                 this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), mosaic.divisibility);
               } else {
-                console.log('\nhereeeeeeeeee2222 --->');
                 this.MESSAGE_ = 'Proximax Digital Assets';
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
@@ -143,7 +138,6 @@ export class TransactionComponent {
                 this.type = this.tx.mosaics[0].id.toHex()
                 this.statusViewDetail = true;
                 this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {
-                  console.log('dataMosaic', dataMosaic);
                   if (dataMosaic) {
                     this.mosaics.push(dataMosaic[0]);
                     this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), dataMosaic[0].divisibility);

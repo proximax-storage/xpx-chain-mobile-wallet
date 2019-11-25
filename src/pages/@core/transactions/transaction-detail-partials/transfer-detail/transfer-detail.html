@@ -13,10 +13,9 @@
 <ng-container *ngIf="tx.mosaics.length > 0 && mosaicFound.length > 0">
   <ion-card no-margin-bottom *ngFor="let mosaic of mosaicFound">
     <ion-item>
-      <img logo-small item-left [src]="utils.getLogo(mosaic)">
-
+      <!-- <img logo-small item-left [src]="utils.getLogo(mosaic)"> -->
       <!-- Show MosaicInfo -->
-      <ng-container>
+      <!-- <ng-container>
         <h2 ion-text color="dark" style="display: flex;">
           <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
             <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
@@ -27,14 +26,30 @@
               <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
             </ng-container>
           </ng-template>
-<!-- 
-          <ng-container *ngIf="tx && tx.recipient">
-            <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-receive-transactions.svg"
-              *ngIf="owner === tx?.recipient.plain()">
-            <img logo-small style="height: 2rem; margin-left: .5rem;" src="assets/imgs/icon-send-transactions.svg"
-              *ngIf="owner !== tx?.recipient.plain()">
-          </ng-container> -->
         </h2>
+      </ng-container> -->
+
+      <img logo-small item-left [src]="getLogo(messageShow, mosaic)">
+      <ng-container *ngIf="messageShow;">
+        <h2 ion-text color="dark" style="display: flex;">
+          <h2 ion-text text-uppercase color="dark">PRX.XPX</h2>
+        </h2>
+      </ng-container>
+
+      <ng-container *ngIf="!messageShow;">
+        <ng-container>
+          <h2 ion-text color="dark" style="display: flex;">
+            <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
+              <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
+            </ng-container>
+
+            <ng-template text-uppercase #viewHex>
+              <ng-container text-uppercase *ngIf="mosaic.hex">
+                <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
+              </ng-container>
+            </ng-template>
+          </h2>
+        </ng-container>
       </ng-container>
 
       <section item-right>
@@ -58,7 +73,7 @@
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark" *ngIf="status !=='partials'">{{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}</h2>
-      
+
       <h2 ion-text color="dark" *ngIf="status ==='partials'">{{"WALLETS.TRANSACTION.DETAIL.DEADLINE" | translate}}</h2>
 
       <p text-wrap ion-text color="dark" *ngIf="status !=='partials'">

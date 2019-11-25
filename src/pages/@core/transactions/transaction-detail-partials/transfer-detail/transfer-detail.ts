@@ -107,5 +107,16 @@ export class TransferDetailComponent {
     }
   }
 
+  /**
+   *
+   *
+   * @param {boolean} isSwap
+   * @param {DefaultMosaic} mosaic
+   * @memberof TransferDetailComponent
+   */
+  getLogo(isSwap: boolean, mosaic: DefaultMosaic) {
+    return (isSwap) ? App.LOGO.XPX : this.utils.getLogo(mosaic);
+  }
+
   IsJsonString(str) { try { JSON.parse(str); } catch (e) { return false; } return true; }
 }
