@@ -62,10 +62,13 @@ export class NodeListPage {
         this.blockHeight = height;
       });
 
-      const url1 = node + "/node/info";
-      this.http.get(url1).subscribe(response => {
-        this.currentNode = response['host']
-      });
+      this.storage.get('node').then(node => {
+        this.currentNode = node;
+      })
+      // const url1 = node + "/node/info";
+      // this.http.get(url1).subscribe(response => {
+      //   this.currentNode = response['host']
+      // });
     });
   }
 

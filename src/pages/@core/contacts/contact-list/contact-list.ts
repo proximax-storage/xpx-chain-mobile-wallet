@@ -16,6 +16,9 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { TranslateService } from '@ngx-translate/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from "@ionic/storage";
+import { WalletProvider } from '../../../../providers/wallet/wallet';
+import { AlertProvider } from '../../../../providers/alert/alert';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the ContactListPage page.
@@ -44,23 +47,28 @@ export class ContactListPage {
     address: string;
     telegram: string;
   }> = [];
+  address: any;
 
   constructor(
+    private alertProvider: AlertProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     private alertCtrl: AlertController,
     private contactsProvider: ContactsProvider,
     private actionSheetCtrl: ActionSheetController,
     private platform: Platform,
+    private proximaxProvider: ProximaxProvider,
     private barcodeScanner: BarcodeScanner,
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
-    private modalCtrl:ModalController,
+    private modalCtrl: ModalController,
     private storage: Storage,
-    private translateService: TranslateService
-    
+    private translateService: TranslateService,
+    private walletProvider: WalletProvider,
+
   ) {
     this.storage.set("isQrActive", true);
+    this.address = this.walletProvider.selectesAccount.account.address.address;
   }
 
   ionViewWillEnter() {
@@ -163,14 +171,21 @@ export class ContactListPage {
           });
         } else if (data === ContactCreationType.QR_SCAN.toString()) {
           this.barcodeScanner.scan().then(barcodeData => {
-              barcodeData.format = "QR_CODE";
+            barcodeData.format = "QR_CODE";
+            let address = barcodeData.text.split("-").join("")
+            if (address.length != 40) {
+              this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
+            } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.address, address)) {
+              this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
+            } else {
               let page = "ContactAddPage";
               this.showModal(page, {
                 name: '',
                 address: barcodeData.text,
                 telegram: ''
               });
-            });
+            }
+          });
         }
       }
     });
@@ -189,14 +204,14 @@ export class ContactListPage {
 
 
   showModal(page, params) {
-    const modal = this.modalCtrl.create(page, {data:params}, {
+    const modal = this.modalCtrl.create(page, { data: params }, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
     modal.present();
   }
 
-  
 
-  
+
+
 }

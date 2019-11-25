@@ -14,6 +14,7 @@ import { NemProvider, AccountsInfoNis1Interface } from '../../../../providers/ne
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -64,6 +65,7 @@ export class WalletAddPrivateKeyPage {
     private modalCtrl: ModalController,
     private sharedService: SharedService,
     private barcodeScanner: BarcodeScanner,
+    private proximaxProvider: ProximaxProvider,
   ) {
     this.accountColor = 'wallet-1';
     this.configurationForm = this.sharedService.configurationForm;
@@ -242,9 +244,13 @@ export class WalletAddPrivateKeyPage {
   scan() {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
-        barcodeData.format = "QR_CODE";
-        this.formGroup.patchValue({ privateKey:  barcodeData.text })
-      })
+      barcodeData.format = "QR_CODE";
+      if (barcodeData.text.length === 64 || barcodeData.text.length === 66 && this.proximaxProvider.isHexString(barcodeData.text)) {
+        this.formGroup.patchValue({ privateKey: barcodeData.text })
+      } else {
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"))
+      }
+    })
       .catch(err => {
         console.log("Error", err);
         if (

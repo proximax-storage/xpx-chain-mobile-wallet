@@ -127,7 +127,7 @@ export class TransactionComponent {
               const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === this.tx.mosaics[0].id.toHex()) : null;
               console.log('\nhereeeeeeeeee --->', mosaic);
               if (mosaic) {
-                this.MESSAGE_ = 'Sirius Mosaics';
+                this.MESSAGE_ = 'Proximax Digital Asset ';
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
                 this.showTx = true;
@@ -136,7 +136,7 @@ export class TransactionComponent {
                 this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), mosaic.divisibility);
               } else {
                 console.log('\nhereeeeeeeeee2222 --->');
-                this.MESSAGE_ = 'Sirius Mosaics';
+                this.MESSAGE_ = 'Proximax Digital Assets';
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
                 this.showTx = true;
@@ -154,11 +154,11 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Sirius Mosaics';
+            this.MESSAGE_ = 'Proximax Digital Asset ';
             this.MOSAIC_INFO = null;
             this.LOGO = App.LOGO.SIRIUS;
             this.showTx = true;
-            this.type = `Mosaics (${this.tx.mosaics.length})`;
+            this.type = `Digital Assets (${this.tx.mosaics.length})`;
             this.statusViewDetail = true;
             this.AMOUNT = null;
             this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {

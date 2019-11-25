@@ -24,7 +24,7 @@
   <ion-list transparent-items>
     <ion-card>
       <ion-card-content no-padding>
-        <ion-list transparent-items>
+        <ion-list transparent-items >
           <!-- <h6 padding dark>
                 Nodes are distributed across a widespread network and carry out a variety of tasks such as maintaining the a copy of a blockchain records and to process transactions.
             </h6> -->
@@ -33,19 +33,19 @@
                <strong> Please be aware that switching to an invalid custom node will cause instability to the app.</strong>
              </h6> -->
 
-          <ion-item>
+          <ion-item style="font-size: 13px !important;">
             <!-- <ion-icon name='ios-cash-outline' item-start></ion-icon> -->
             <strong>{{"SETTINGS.NODES.BLOCKHEIGHT" | translate}}:</strong>
             <span>{{ blockHeight }}</span>
           </ion-item>
 
-          <ion-item>
+          <ion-item style="font-size: 13px !important;">
             <!-- <ion-icon name='ios-paper-outline' item-start></ion-icon> -->
             <strong>{{"SETTINGS.NODES.ACTIVE" | translate}}:</strong>
             <span>{{ currentNode }}</span>
           </ion-item>
 
-          <ion-item select-node no-lines>
+          <ion-item select-node no-lines style="font-size: 13px !important;">
             <ion-label ion-text color="dark"><strong>{{"SETTINGS.NODES" | translate}}:</strong></ion-label>
             <ion-select (ionChange)="onChange()" [(ngModel)]="selectedNode" [selectOptions]="{
                   title: 'SETTINGS.NODES.SELECT' | translate,
