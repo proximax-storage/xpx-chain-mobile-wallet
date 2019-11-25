@@ -93,6 +93,32 @@ export class MosaicsProvider {
   /**
    *
    *
+   * @param {Mosaic[]} mosaics
+   * @returns {Observable<DefaultMosaic[]>}
+   * @memberof MosaicsProvider
+   */
+  getMosaicsFromMosaics(mosaics: Mosaic[]): Observable<DefaultMosaic[]> {
+    return new Observable(observer => {
+      this.proximaxProvider.mosaicsAmountViewFromMosaics(mosaics).pipe(
+        flatMap(_ => from(_)), scan((acc, v) => acc.concat(v), []), last()
+      ).subscribe(async mosaicAmountViewArray => {
+        /*const activeMosaics = mosaicAmountViewArray.filter(
+          (_: MosaicAmountView) => _.mosaicInfo.duration.compact() != 5760 && _.mosaicInfo.duration.compact() != 11520
+        );*/
+        observer.next(this.getMosaicMetaData(mosaicAmountViewArray));
+      }, error => {
+        observer.next(null)
+      });
+    });
+  }
+
+
+  
+
+
+  /**
+   *
+   *
    * @param {MosaicAmountView[]} mosaicAmountView
    * @returns
    * @memberof MosaicsProvider
