@@ -33,6 +33,7 @@ import {
   UInt64,
   Deadline,
   Mosaic,
+  Convert,
 } from 'tsjs-xpx-chain-sdk';
 import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
@@ -392,6 +393,9 @@ export class ProximaxProvider {
     return (Account.createFromPrivateKey(privateKey, net).address.plain() === address) ? true : false;
   }
 
+  isHexString(data: string): boolean {
+    return Convert.isHexString(data);
+  }
   /**
    *
    *

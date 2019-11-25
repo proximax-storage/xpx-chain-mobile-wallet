@@ -34,7 +34,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
-
+      this.storage.set('isQrActive', true);
       // Handle Deeplinks
 
       this.initTranslate();
@@ -165,6 +165,7 @@ export class MyApp {
       console.log("isModalShown:", !isModalShown);
       console.log("isAppPaused:", !isAppPaused);
       console.log("isLoggedIn:", isLoggedIn);
+      console.log("isQrActive:", isQrActive);
       console.log("pin:", pin);
 
       console.log(
@@ -209,7 +210,7 @@ export class MyApp {
       // } else 
 
       if(isQrActive) {
-         return this.storage.set('isQrActive', false);
+         return this.storage.set('isQrActive', true);
 
       } else if (
         // this.rootPage !== "OnboardingPage" &&

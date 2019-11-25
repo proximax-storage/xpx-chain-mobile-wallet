@@ -236,10 +236,7 @@ export class SendPage {
     // Account recipient
     this.form.get("recipientAddress").valueChanges.subscribe(value => {
       console.log("value", value);
-      const accountRecipient =
-        value !== undefined && value !== null && value !== ""
-          ? value.split("-").join("")
-          : "";
+      const accountRecipient = value !== undefined && value !== null && value !== "" ? value.split("-").join("") : "";
 
       if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
         if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, accountRecipient)) {
@@ -289,27 +286,27 @@ export class SendPage {
       selectedMosaic: this.selectMosaic,
       walletAddress: this.address.plain()
     }).subscribe(data => {
-        console.log("TCL: SendPage -> selectMosaic -> data", data)
-        if (data) {
-          this.optionsXPX = {
-            prefix: "",
-            thousands: ",",
-            decimal: ".",
-            precision: data.divisibility
-          };
-          this.selectedMosaic = data;
-          // this.mosaics = data;
-        }
-      });
+      console.log("TCL: SendPage -> selectMosaic -> data", data)
+      if (data) {
+        this.optionsXPX = {
+          prefix: "",
+          thousands: ",",
+          decimal: ".",
+          precision: data.divisibility
+        };
+        this.selectedMosaic = data;
+        // this.mosaics = data;
+      }
+    });
   }
 
   selectContact(title) {
     this.utils.showInsetModal("SendContactSelectPage", { title: title }).subscribe(data => {
-        if (data != undefined || data != null) {
-          this.form.get("recipientName").setValue(data.name);
-          this.form.get("recipientAddress").setValue(data.address);
-        }
-      });
+      if (data != undefined || data != null) {
+        this.form.get("recipientName").setValue(data.name);
+        this.form.get("recipientAddress").setValue(data.address);
+      }
+    });
   }
 
   send() {
@@ -364,7 +361,15 @@ export class SendPage {
     this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";
-      this.form.patchValue({ recipientAddress: barcodeData.text });
+      let address = barcodeData.text.split("-").join("")
+      if (address.length != 40) {
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
+        
+      } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, address)) {
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
+      } else {
+        this.form.patchValue({ recipientAddress: barcodeData.text });
+      }
     }).catch(err => {
       if (err.toString().indexOf(this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")) >= 0) {
         let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2");

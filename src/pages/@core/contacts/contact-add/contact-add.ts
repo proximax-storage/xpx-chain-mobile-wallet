@@ -28,6 +28,7 @@ export class ContactAddPage {
   userTelegram = '^[a-zA-Z0-9@]+$';
   formGroup: FormGroup;
   data: any;
+  address: any;
 
   constructor(
     public navCtrl: NavController,
@@ -43,6 +44,7 @@ export class ContactAddPage {
     private barcodeScanner: BarcodeScanner,
     
   ) {
+    this.address = this.walletProvider.selectesAccount.account.address.address;
     this.init();
     this.subscribeValue();
   }
@@ -116,7 +118,14 @@ export class ContactAddPage {
       .scan()
       .then(barcodeData => {
         barcodeData.format = "QR_CODE";
-        this.formGroup.patchValue({ address: barcodeData.text });
+        let address = barcodeData.text.split("-").join("")
+        if (address.length != 40) {
+          this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID")
+        } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.address, address)) {
+          this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
+        } else {
+          this.formGroup.patchValue({ recipientAddress: barcodeData.text });
+        }
       })
       .catch(err => {
         // console.log("Error", err);
