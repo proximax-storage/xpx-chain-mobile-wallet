@@ -44,6 +44,8 @@
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID": "Llave privada inválida.",
     "WALLETS.IMPORT.SWAP_TITLE": "Proceso de intercambio",
     "WALLETS.IMPORT.SWAP_MESSAGE": "Su llave privada recientemente importada tiene algunos activos en la blockchain NIS1 (NEM). ¿Desea transferir estos activos a Sirius Chain y ponerlos a disposición en la wallet Sirius?",
+    "WALLETS.IMPORT.SWAP_SUBTITLE": "¡Importante! Guarde este certificado para sus registros. Será necesario realizar un seguimiento de su intercambio en caso de error",
+    "WALLETS.IMPORT.SWAP_CHEK": "Confirmo que quiero guardar este certificado",
     "WALLETS.EXPORT": "Exportar/Respaldar",
     "WALLETS.EXPORT.PRIVATE_KEY_TITLE": "Exportar wallet y llave privada",
     "WALLETS.EXPORT.PRIVATE_KEY_DESC": "Le recomendamos insistentemente que haga una copia de seguridad de su wallet y llave privada. Es su responsabilidad guardarlos en un lugar seguro. ProximaX no almacena ninguno de sus datos, por lo que no podemos ayudarlo a recuperar su wallet ni dar acceso a sus activos digitales en caso de un error humano o una falla del sistema.",
