@@ -44,6 +44,8 @@
     "WALLETS.IMPORT.NAME_EXISTS" : "Esta cuenta ya existe.",
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID" : "Llave privada inválida.",
     "WALLETS.IMPORT.SWAP_TITLE" : "Proceso de intercambio",
+    "WALLETS.IMPORT.SWAP_SUBTITLE" : "¡Importante! guarde este certificado para sus registros. Será necesario realizar un seguimiento de su intercambio en caso de error.",
+    "WALLETS.IMPORT.SWAP_CHEK" : "Confirmo que quiero guardar este certificado.",
     "WALLETS.IMPORT.SWAP_MESSAGE" : "Su llave privada recientemente importada tiene algunos activos en la cadena de bloques NIS1 (NEM). ¿Desea transferir estos activos a Sirius Chain y ponerlos a disposición en la billetera Sirius?",
     "WALLETS.EXPORT" : "Exportar/respaldar",
     "WALLETS.EXPORT.PRIVATE_KEY_TITLE" : "Exportar wallet y llave privada",

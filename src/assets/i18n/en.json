@@ -46,6 +46,8 @@
     "WALLETS.IMPORT.PRIVATE_KEY_INVALID": "Invalid private key.",
     "WALLETS.IMPORT.SWAP_TITLE": "Swap Process",
     "WALLETS.IMPORT.SWAP_MESSAGE": "Your recently imported private key has some assets on the NIS1 (NEM) blockchain.  Would you like to transfer these assets to Sirius Chain and make them available in the Sirius wallet?",
+    "WALLETS.IMPORT.SWAP_SUBTITLE" : "Important! Save this certificate for your records. It will be necessary to track your exchange in case of error.",
+    "WALLETS.IMPORT.SWAP_CHEK" : "I confirm that I want to save this certificate.",
     "WALLETS.EXPORT": "Export/Backup",
     "WALLETS.EXPORT.PRIVATE_KEY_TITLE": "Export Account & Private Key",
     "WALLETS.EXPORT.PRIVATE_KEY_DESC": " We strongly recommend that you back up your account and private key. It is your responsibility to save these in a secure place. ProximaX does not store any of your data, so we cannot help you recover your account or gain access to your digital assets in the event of human error or a system failure.",
