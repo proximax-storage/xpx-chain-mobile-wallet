@@ -165,7 +165,7 @@
     "SERVICES.TESTNET_FAUCET.SUBTITLE": "Вы можете запросить только 10 XPX для каждой учетной записи.",
     "SERVICES.TESTNET_FAUCET.DESC": "Этот кран использует общедоступную тестовую сеть, где вы можете отправлять транзакции, не тратя реальные деньги.",
     "SERVICES.SWAP_PROCESS.TITLE": "Обмен из NIS1 в Sirius",
-    "SERVICES.SWAP_PROCESS.DESC": "Миграция XPX с NIS1 на блокчейн Sirius.",
+    "SERVICES.SWAP_PROCESS.DESC": "Если приведенное выше является закрытым ключом NIS1, выберите, чтобы включить обмен.",
     "SERVICES.SWAP_PROCESS.LIST.TITLE": "Учетные записи NIS1",
     "SERVICES.SWAP_PROCESS.LIST.SUBTITLE": "Импорт NIS1 кошелька",
     "SERVICES.SWAP_PROCESS.STEP1.TITLE": "Шаг 1: Импорт NIS1 кошелька",

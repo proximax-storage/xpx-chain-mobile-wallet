@@ -165,7 +165,7 @@
     "SERVICES.TESTNET_FAUCET.SUBTITLE": "Vous ne pouvez demander que 10 XPX pour chaque compte.",
     "SERVICES.TESTNET_FAUCET.DESC": "Ce faucet utilise un réseau de test public où vous pouvez envoyer des transactions sans dépenser d'argent réel.",
     "SERVICES.SWAP_PROCESS.TITLE": "NIS1 à Sirius Swap",
-    "SERVICES.SWAP_PROCESS.DESC": "Migrer XPX de NIS1 vers la Blockchain de Sirius.",
+    "SERVICES.SWAP_PROCESS.DESC": " Si ce qui précède est une clé privée NIS1, sélectionnez pour activer le swap.",
     "SERVICES.SWAP_PROCESS.LIST.TITLE": "Compte NIS1",
     "SERVICES.SWAP_PROCESS.LIST.SUBTITLE": "Importer le Wallet NIS1",
     "SERVICES.SWAP_PROCESS.STEP1.TITLE": "Etape 1 : Importer le Wallet NIS1",

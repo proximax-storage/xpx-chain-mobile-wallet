@@ -167,7 +167,7 @@
     "SERVICES.TESTNET_FAUCET.SUBTITLE":"Bạn chỉ có thể yêu cầu 10 XPX cho mỗi tài khoản",
     "SERVICES.TESTNET_FAUCET.DESC" : "Đây là hệ thống sử dụng mạng lưới dùng thử công khai nơi mà bạn có thể gửi những giao dịch mà không cần trả bằng tiền thật",
     "SERVICES.SWAP_PROCESS.TITLE" : "Chuyển đổi từ NIS1 qua Sirius",
-    "SERVICES.SWAP_PROCESS.DESC" : "Chuyển XPX từ NIS1 qua Sirius blockchain",
+    "SERVICES.SWAP_PROCESS.DESC" : "Nếu ở trên là khóa riêng NIS1, chọn để bật trao đổi.",
     "SERVICES.SWAP_PROCESS.LIST.TITLE" : "Tài khoản NIS1",
     "SERVICES.SWAP_PROCESS.LIST.SUBTITLE" : "Sử dụng ví NIS1 có sẵn",
     "SERVICES.SWAP_PROCESS.STEP1.TITLE" : "Bước 1: Nhập ví NIS1",

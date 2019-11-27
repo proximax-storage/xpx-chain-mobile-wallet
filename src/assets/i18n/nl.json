@@ -168,7 +168,7 @@
     "SERVICES.TESTNET_FAUCET.SUBTITLE" : "Je kan slechts 10 XPX voor elke account aanvragen.",
     "SERVICES.TESTNET_FAUCET.DESC" : "Deze Faucet maakt gebruik van het openbare testnetwerk en kun je gebruiken zonder geld uit te geven.",
     "SERVICES.SWAP_PROCESS.TITLE" : "NIS1 naar Sirius Swap",
-    "SERVICES.SWAP_PROCESS.DESC" : "Migreer XPX van NIS1 naar Sirius Chain",
+    "SERVICES.SWAP_PROCESS.DESC" : "Als het bovenstaande een NIS1 persoonlijke sleutel is, vink aan om te kunnen swappen.",
     "SERVICES.SWAP_PROCESS.LIST.TITLE" : "NIS1 accounts",
     "SERVICES.SWAP_PROCESS.LIST.SUBTITLE" : "Importeer NIS1 account",
     "SERVICES.SWAP_PROCESS.STEP1.TITLE" : "Step 1: Importeer NIS1 account",
