@@ -172,12 +172,12 @@ export class HomePage {
                 let mosaicXpx = mosaics.filter(other =>  other.hex === AppConfig.xpxHexId);
 
                 this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
-                console.log('this.mosaicXpx', mosaicXpx);
-                console.log('amountXpx', this.amountXpx);
+                // console.log('this.mosaicXpx', mosaicXpx);
+                // console.log('amountXpx', this.amountXpx);
                 
-                
-                this.mosaics = mosaics.filter(other =>  other.hex != AppConfig.xpxHexId);
-                console.log('\n\n this.mosaics \n\n', this.mosaics, '\n\n');
+                this.mosaics= mosaics;
+                // this.mosaics = mosaics.filter(other =>  other.hex != AppConfig.xpxHexId);
+                // console.log('\n\n this.mosaics \n\n', this.mosaics, '\n\n');
                 
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
@@ -240,8 +240,9 @@ export class HomePage {
     const unconfirmedTransactions = this.unconfirmedTransactions;
     const aggregateTransactions = this.aggregateTransactions;
     const total = this.totalWalletBalance;
+    const amountXpx = this.amountXpx;
     const mosaics = this.mosaics;
-    const payload = { selectedAccount, transactions, aggregateTransactions, unconfirmedTransactions, total, mosaics };
+    const payload = { selectedAccount, transactions, aggregateTransactions, unconfirmedTransactions, total,amountXpx, mosaics };
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,
       showBackdrop: true

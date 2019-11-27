@@ -55,6 +55,7 @@ export class TransactionListPage {
   selectedAccount: CatapultsAccountsInterface;
   mosaics: any[] = [];
   searchMore = true;
+  amountXpx: any;
 
   constructor(
     public navCtrl: NavController,
@@ -82,6 +83,7 @@ export class TransactionListPage {
     this.aggregateTransactions = payload.aggregateTransactions;
     this.selectedAccount = payload.selectedAccount;
     this.mosaics = payload.mosaics;
+    this.amountXpx = payload.amountXpx;
 
     if (this.confirmedTransactions === null) {
       this.showEmptyMessage = true;
@@ -162,7 +164,7 @@ export class TransactionListPage {
    */
   moreDetails() {
     let page = "WalletDetailsPage";
-    this.showModal(page, { totalBalance: this.totalBalance, selectedAccount: this.selectedAccount });
+    this.showModal(page, { totalBalance: this.totalBalance, amountXpx: this.amountXpx, selectedAccount: this.selectedAccount });
   }
 
   /**
