@@ -44,7 +44,8 @@
       <ion-item *ngIf="selectedAccount">
         <ion-icon name='custom-balance' item-start></ion-icon>
         {{"WALLETS.BALANCE" | translate}}:
-        <span item-end *ngIf="selectedAccount">USD$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</span>
+        <!-- <span item-end *ngIf="selectedAccount">USD$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</span> -->
+        <span item-end *ngIf="selectedAccount">XPX {{ amountXpx}} </span>
       </ion-item>
 
       <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
@@ -84,7 +85,7 @@
       </ion-col>
       <ion-col>
         <button (click)="aceptar(1)" [disabled]="form.invalid" gradient-button full color-5 no-margin>
-          {{"WALLETS.SEND" | translate}}
+          {{"WALLETS.BUTTON.CONFIRM" | translate}}
         </button>
       </ion-col>
     </ion-row>
@@ -126,7 +127,7 @@
       </ion-col>
       <ion-col>
         <button (click)="aceptar(2)" [disabled]="form.invalid" gradient-button full color-5 no-margin>
-          {{"WALLETS.SEND" | translate}}
+          {{"WALLETS.BUTTON.CONFIRM" | translate}}
         </button>
       </ion-col>
     </ion-row>

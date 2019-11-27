@@ -43,7 +43,7 @@
       <ion-card-content>
         <br>
         <h1 color="dark" text-center> {{getAbsoluteAmount(mosaicAmount? mosaicAmount:0, divisibility)}} </h1>
-        <h2 color="dark" text-center>UDS$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
+        <h2 color="dark" text-center>UD$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
 
         <ion-list transparent-items>
           <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">

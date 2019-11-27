@@ -18,7 +18,7 @@
   </ion-list>
 
   <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
-    <ion-slide *ngFor="let account of accounts" style="    width: 306.182px !important;"
+    <ion-slide *ngFor="let account of accounts"
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
@@ -35,7 +35,7 @@
             <!-- <p class="wallet-info">{{ account.account?.name }}</p> -->
           </div>
           <div class="wallet-label">
-            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span> {{ amountXpx }}
+            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span> <span class="wallet-space-25">{{ amountXpx }}</span>
             <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
           <div class="wallet-space-25 wallet-label">
@@ -61,7 +61,7 @@
   <ion-grid normal>
     <ion-segment mode='md' [(ngModel)]="menu" color="dark">
       <ion-segment-button value="mosaics" checked>
-        {{"WALLETS.OTHER_MOSAICS" | translate}}
+        {{"WALLETS.MOSAICS" | translate}}
       </ion-segment-button>
       <ion-segment-button value="transactions">
         {{"WALLETS.TRANSACTIONS" | translate}}

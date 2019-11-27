@@ -38,6 +38,7 @@ export class WalletUpdatePage {
   nameMin: boolean;
   nameMax: boolean;
   configurationForm: ConfigurationForm = {};
+  amountXpx: any;
 
   constructor(
     public navCtrl: NavController,
@@ -88,6 +89,10 @@ export class WalletUpdatePage {
     this.previousWalletName = this.selectedWallet['account'].name;
     this.walletAddress = this.selectedWallet['account'].address.address
     this.walletTotal = this.navParams.get('totalBalance');
+    this.amountXpx = this.navParams.get('amountXpx');
+
+    console.log('this.navParams', this.navParams);
+    
 
     this.formGroup = this.formBuilder.group({
       name: ['', [

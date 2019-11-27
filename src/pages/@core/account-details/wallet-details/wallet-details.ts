@@ -39,6 +39,7 @@ export class WalletDetailsPage {
   delete: boolean = true;
   configurationForm: ConfigurationForm = {};
   privateKey: string = '';
+  amountXpx: any;
 
 
   constructor(
@@ -59,6 +60,7 @@ export class WalletDetailsPage {
     console.log("SIRIUS CHAIN WALLET: WalletDetailsPage -> this.navParams.data", this.navParams.data)
     this.configurationForm = this.sharedService.configurationForm;
     this.totalBalance = this.navParams.get('totalBalance');
+    this.amountXpx = this.navParams.get('amountXpx');
     this.selectedAccount = this.navParams.get('selectedAccount');
     this.createForm();
   }
@@ -157,7 +159,7 @@ export class WalletDetailsPage {
 
   showWalletUpdate() {
     let page = "WalletUpdatePage";
-    this.showModal(page, { wallet: this.selectedAccount,  totalBalance: this.totalBalance});
+    this.showModal(page, { wallet: this.selectedAccount, amountXpx:this.amountXpx,  totalBalance: this.totalBalance});
   }
 
   showWalletDelete() {

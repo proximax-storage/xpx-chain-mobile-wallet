@@ -36,14 +36,27 @@
           <div class="wallet-content" [ngClass]="accountColor">
             <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
             <p class="wallet-number">TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH</p>
-            <div class="wallet-space-75">
+
+            <div class="wallet-label" style="text-align: start !important;">
+                <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+                {{ walletName}}
+              </div>
+              <div class="wallet-label" style="text-align: start !important;">
+                <span class="wallet-label"><strong style="text-align: start !important;">XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>  <span class="wallet-space-25 wallet-label">0.000000</span>
+              </div>
+              <div class="wallet-space-25 wallet-label">
+                <span class="wallet-label"><strong>US$ </strong></span>0.00
+              </div>
+
+
+            <!-- <div class="wallet-space-75">
               <span class="wallet-label">{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</span>
               <p class="wallet-info">{{walletName}}</p>
             </div>
             <div class="wallet-space-25">
               <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
               <p class="wallet-info">USD$ 0.00</p>
-            </div>
+            </div> -->
           </div>
         </div>
       </ion-col>

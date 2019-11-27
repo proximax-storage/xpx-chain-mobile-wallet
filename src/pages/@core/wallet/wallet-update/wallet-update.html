@@ -36,14 +36,25 @@
           <div class="wallet-content" [ngClass]="walletColor" text-center>
             <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-wallet-white.png">
             <p class="wallet-number">{{walletAddress}}</p>
-            <div class="wallet-space-75">
+            <div class="wallet-label" style="text-align: start !important;">
+                <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+                {{ walletName}}
+              </div>
+              <div class="wallet-label" style="text-align: start !important;">
+                <span class="wallet-label"><strong style="text-align: start !important;">XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>  <span class="wallet-space-25 wallet-label"> {{ amountXpx }}</span>
+              </div>
+              <div class="wallet-space-25 wallet-label">
+                <span class="wallet-label"><strong>US$ </strong></span>{{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}}
+              </div>
+
+            <!-- <div class="wallet-space-75">
               <span class="wallet-label">{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</span>
               <p class="wallet-info">{{ walletName }}</p>
             </div>
             <div class="wallet-space-25">
               <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
               <p class="wallet-info">${{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}} USD</p>
-            </div>
+            </div> -->
           </div>
         </div>
       </ion-col>
