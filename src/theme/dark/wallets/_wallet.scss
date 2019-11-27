@@ -25,7 +25,8 @@ ion-slide {
   top: 0;
   position: absolute;
   z-index: 1000;
-  left: 0;
+  // left: 0;
+  left: 25px;
   display: inline-block;
   width: 96%;
   height: 190px;
@@ -269,7 +270,8 @@ ion-slide {
     top: 0;
     position: absolute;
     z-index: 1000;
-    left: 0;
+    // left: 0;
+    left: 25px;
     display: inline-block;
     width: 96%;
     height: 300px;

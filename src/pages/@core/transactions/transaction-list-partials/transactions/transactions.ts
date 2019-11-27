@@ -193,7 +193,7 @@ export class TransactionComponent {
                 }
               }
             } catch (error) {
-              this.MESSAGE_ = 'Aggregate bonded';
+              this.MESSAGE_ = 'Aggregate Bonded';
               this.MOSAIC_INFO = null;
               this.AMOUNT = null;
               this.LOGO = App.LOGO.BONDED;
@@ -208,7 +208,7 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Aggregate bonded';
+            this.MESSAGE_ = 'Aggregate Bonded';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
             this.LOGO = App.LOGO.BONDED;
