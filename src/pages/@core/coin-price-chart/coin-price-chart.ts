@@ -269,7 +269,7 @@ export class CoinPriceChartPage {
 
   showReceiveModal() {
     let page = "ReceivePage";
-    const modal = this.modalCtrl.create(page, this.account, {
+    const modal = this.modalCtrl.create(page, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });

@@ -20,7 +20,7 @@ import {
   PublicAccount,
 } from "tsjs-xpx-chain-sdk";
 import { animate, style, transition, trigger } from "@angular/animations";
-import { App as AppConfig } from "../../providers/app/app";
+import { App as AppConfi } from "../../providers/app/app";
 import { WalletProvider, CatapultsAccountsInterface } from "../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../providers/utilities/utilities";
 import { AlertProvider } from "../../providers/alert/alert";
@@ -30,6 +30,7 @@ import { MosaicsProvider } from "../../providers/mosaics/mosaics";
 import { TransactionsProvider } from "../../providers/transactions/transactions";
 import { DefaultMosaic } from "../../models/default-mosaic";
 import { ProximaxProvider } from '../../providers/proximax/proximax';
+import { AppConfig } from './../../app/app.config';
 
 @Component({
   selector: "page-home",
@@ -37,11 +38,11 @@ import { ProximaxProvider } from '../../providers/proximax/proximax';
   animations: [
     trigger("itemState", [
       transition("void => *", [
-        style({ transform: "translateX(-100%)" }),
+        style({ transform: "translateX(-70%)" }),
         animate("250ms ease-out")
       ]),
       transition("* => void", [
-        animate("250ms ease-in", style({ transform: "translateX(100%)" }))
+        animate("250ms ease-in", style({ transform: "translateX(70%)" }))
       ])
     ])
   ],
@@ -56,7 +57,7 @@ export class HomePage {
   @ViewChild(Slides) slides: Slides;
 
   menu = "mosaics";
-  AppConfig = AppConfig;
+  AppConfi = AppConfi;
 
   mosaics: Array<DefaultMosaic> = [];
   accounts: Array<CatapultsAccountsInterface> = [];
@@ -82,6 +83,7 @@ export class HomePage {
 
   @ViewChild(Nav) navChild: Nav;
   address: any;
+  amountXpx: string;
 
   constructor(
     public app: App,
@@ -115,6 +117,7 @@ export class HomePage {
    * @memberof HomePage
    */
   async init() {
+    this.amountXpx = '0.000000';
     this.totalWalletBalance = 0;
     this.menu = "mosaics";
 
@@ -163,7 +166,17 @@ export class HomePage {
                 this.confirmedTransactions = [];
                 this.unconfirmedTransactions = [];
                 this.aggregateTransactions = [];
-                this.mosaics = mosaics;
+
+                
+               
+                let mosaicXpx = mosaics.filter(other =>  other.hex === AppConfig.xpxHexId);
+
+                this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
+                console.log('this.mosaicXpx', mosaicXpx);
+                console.log('amountXpx', this.amountXpx);
+                
+                
+                this.mosaics = mosaics.filter(other =>  other.hex != AppConfig.xpxHexId);
                 console.log('\n\n this.mosaics \n\n', this.mosaics, '\n\n');
                 
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);

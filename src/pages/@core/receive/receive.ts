@@ -4,6 +4,7 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { HapticProvider } from '../../../providers/haptic/haptic';
+import { WalletProvider } from '../../../providers/wallet/wallet';
 /*
 * See https://ionicframework.com/docs/components/#navigation for more info on
 * Ionic pages and navigation.
@@ -25,12 +26,14 @@ export class ReceivePage {
     private socialSharing: SocialSharing,
     private toastProvider: ToastProvider,
     private haptic: HapticProvider,
-    private platform: Platform
+    private platform: Platform,
+    private walletProvider: WalletProvider
   ) {
     const wallet = this.navParams.data;
     console.log('account', wallet);
     
-    this.address = wallet.account.address.address
+    
+    this.address = this.walletProvider.selectesAccount.account.address.address;
     // this.address = (account as Account).address.plain()
 
     this.platform.ready().then((readySource) => {

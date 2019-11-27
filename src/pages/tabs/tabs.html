@@ -1,12 +1,23 @@
 <ion-tabs no-border [selectedIndex]="selectedIndex">
-  <!-- <ion-fab edge fab-button-center bottom center>
-    <button ion-fab gradient-button circle color-5 (click)="gotoSend()">
-      <ion-icon name="fi-send"></ion-icon>
+  <ion-fab bottom center edge fab-button-center #fab>
+    <button ion-fab mini gradient-button>
+      <ion-icon style="margin-left: 7px;" name="custom-send-receive"></ion-icon>
     </button>
-  </ion-fab> -->
+    <ion-fab-list side="left">
+      <button ion-fab (click)="gotoSend()" style="background-image: linear-gradient(to right, #1F6B86, #008C9B, #00AD9F, #56CB93);">
+        <ion-icon name="custom-send"></ion-icon>
+      </button>
+    </ion-fab-list>
+    <ion-fab-list side="right">
+      <button ion-fab (click)="gotoReceive()" style="background-image: linear-gradient(to right, #1F6B86, #008C9B, #00AD9F, #56CB93);">
+        <ion-icon name="custom-receive"></ion-icon>
+      </button>
+    </ion-fab-list>
+  </ion-fab>
 
-  <ion-tab [root]="tab1Root" tabTitle="{{'WALLETS.TITLE' | translate}}" tabIcon="custom-account"></ion-tab>
-  <ion-tab [root]="tab2Root" (ionSelect)="clearNotification()" tabTitle="{{'NOTIFICATIONS' | translate}}" tabIcon="custom-notifications"  [tabBadge]='notificationCount' tabBadgeStyle="danger"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="{{'SERVICES' | translate}}" tabIcon="custom-services"></ion-tab>
-    <ion-tab [root]="tab4Root" tabTitle="{{'SETTINGS' | translate}}" tabIcon="custom-settings"></ion-tab>
+  <ion-tab [root]="tab1Root"  tabIcon="custom-account"></ion-tab>
+  <ion-tab [root]="tab2Root" (ionSelect)="clearNotification()"  tabIcon="custom-notifications"  [tabBadge]='notificationCount' tabBadgeStyle="danger"></ion-tab>
+  <ion-tab [root]="tab5Root"  tabIcon=""></ion-tab>
+  <ion-tab [root]="tab3Root"  tabIcon="custom-services"></ion-tab>
+    <ion-tab [root]="tab4Root" tabIcon="custom-settings"></ion-tab>
 </ion-tabs>

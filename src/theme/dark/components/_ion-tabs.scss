@@ -31,23 +31,35 @@ ion-tabs {
         color: color($colors, gothic);
       }
     }
-
-
-
-
   }
+}
+
+.fab-md-in-list {
+  color: #ffffff;
 }
 
 ion-fab[fab-button-center] {
   button[gradient-button] {
-    height: 64px;
-    width: 64px;
-    margin: 0;
+    height:48px;
+    width: 48px;
+    margin: -2px;
+    margin-left: 5px;
+  
   }
 
   z-index: 999 !important;
 }
 
+.ion-md-close:before {
+  content: "\f2c0";
+  margin-top: 12px !important;
+}
+
 .ion-page {
   z-index: 1000 !important;
+}
+
+ion-fab-list[side=left] .fab-in-list, ion-fab-list[side=right] .fab-in-list {
+  margin: 0px 0px;
+  margin-top: -190px;
 }

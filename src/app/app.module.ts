@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { IonicApp, IonicModule, IonicErrorHandler, FabContainer } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 
@@ -112,6 +112,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     Device,
     Clipboard,
     SocialSharing,
+    FabContainer,
     BarcodeScanner,
     FileChooser,
     FilePath,

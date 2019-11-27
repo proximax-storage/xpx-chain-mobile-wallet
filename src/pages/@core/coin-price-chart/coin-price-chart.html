@@ -11,10 +11,11 @@
       <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.name != '' && selectedCoin.symbol != ''">
         {{ selectedCoin.name }} ({{ selectedCoin.symbol }})
       </span>
-      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.name === '' && selectedCoin.symbol === ''">
-        {{ mosaicHex }}
+
+      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.symbol === ''">
+        {{ mosaicId }}
       </span>
-    </ion-title>
+    </ion-title>   <!-- <span style="font-size: 18px;" text-uppercase>{{mosaicId}}</span> -->
 
     <ion-buttons end>
       <button ion-button icon-only (click)="dismiss()" color="dark">
@@ -41,8 +42,7 @@
     <ion-card balance>
       <ion-card-content>
         <br>
-        <h1 color="dark" text-center> {{getAbsoluteAmount(mosaicAmount? mosaicAmount:0, divisibility)}} <span
-            style="font-size: 18px;" text-uppercase>{{mosaicId}}</span></h1>
+        <h1 color="dark" text-center> {{getAbsoluteAmount(mosaicAmount? mosaicAmount:0, divisibility)}} </h1>
         <h2 color="dark" text-center>UDS$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</h2>
 
         <ion-list transparent-items>
