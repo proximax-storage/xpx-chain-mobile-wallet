@@ -21,8 +21,12 @@
     <ion-card balance>
       <ion-card-content>
         <br>
-        <h1 wallet-name text-center> {{selectedAccount.account?.name}}</h1>
-        <h1 color="dark" text-center>XPX {{ amountXpx}} </h1>
+        <h2 wallet-name text-center style="font-weight: 600; font-size: 2.2rem; color: #15485f;">
+          {{selectedAccount.account?.name}}
+        </h2>
+        <h2 color="dark" text-center style="display: flex; justify-content: center; align-items: center;">
+          <img logo-small src="assets/imgs/mosaics/xpx.png"> &nbsp; {{ amountXpx}} PRX.XPX
+        </h2>
         <ion-list transparent-items>
           <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
             <ion-icon name='custom-copy' item-end></ion-icon>

@@ -165,7 +165,7 @@
     "SERVICES.TESTNET_FAUCET.SUBTITLE": "各アカウントで要求できるのは10XPXだけです",
     "SERVICES.TESTNET_FAUCET.DESC": "このフォーセットはパブリックテストネットを利用しており実際のお金を支払わずにトランザクションを送ることができます",
     "SERVICES.SWAP_PROCESS.TITLE": "NIS1からSiriusへのスワップ",
-    "SERVICES.SWAP_PROCESS.DESC": "XPXをNIS1からSiriusブロックチェーンへ移行する",
+    "SERVICES.SWAP_PROCESS.DESC": "上記がNIS1秘密鍵である場合、スワップを有効にすることを選択します。",
     "SERVICES.SWAP_PROCESS.LIST.TITLE": "NIS1アカウント",
     "SERVICES.SWAP_PROCESS.LIST.SUBTITLE": "NIS1ウォレットのインポート",
     "SERVICES.SWAP_PROCESS.STEP1.TITLE": "ステップ1：NIS1ウォレットのインポート",
