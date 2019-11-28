@@ -165,11 +165,15 @@ export class WalletInfoPage {
    */
   amountChange() {
     this.form.get('amount').valueChanges.subscribe(value => {
+      console.log(value);
       if (value !== null && value !== undefined) {
         if (value > parseFloat(this.accountInfoNis1.balance.split(',').join(''))) {
           this.blockButton = true;
           this.insufficientBalance = true;
         } else if (value === 0) {
+          this.blockButton = true;
+          this.insufficientBalance = false;
+        } else if (value === '0.000000' || value === '0') {
           this.blockButton = true;
           this.insufficientBalance = false;
         } else {
@@ -271,6 +275,15 @@ export class WalletInfoPage {
     modal.present().then(_ => {
       this.dismiss();
     })
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  selectMaxAmount() {
+    this.form.get('amount').setValue(this.accountInfoNis1.balance.split(',').join(''));
   }
 
   /**
