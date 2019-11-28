@@ -4,7 +4,7 @@ import { Component, trigger, transition, style, group, animate } from '@angular/
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, PlainMessage } from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
@@ -15,6 +15,7 @@ import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { TransferTransactionProvider } from '../../../../../providers/transfer-transaction/transfer-transaction';
+import { AppConfig } from '../../../../../app/app.config';
 
 /**
  * Generated class for the SendMosaicConfirmationPage page.
@@ -80,6 +81,8 @@ export class SendMosaicConfirmationPage {
 
   displaySuccessMessage: boolean = false;
   block: boolean = false;
+  transferBuilder: any;
+  namexPX: string;
 
   constructor(
     public navCtrl: NavController,
@@ -113,29 +116,29 @@ export class SendMosaicConfirmationPage {
     this.data = this.navParams.data;
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
-    // Initialize private data
-    this.authProvider.getPassword().then(password => {
-      this.credentials = {
-        password: password,
-        privateKey: ''
-      };
-    })
-    // Prepare transfer Transaction
-    this.prepareTransaction();
+
+    console.log('data', this.data);
+    if (this.data.mosaic.length > 0) {
+      if (this.data.mosaic[0].id.toHex() === AppConfig.xpxHexId) {
+        this.namexPX = 'PRX.XPX';
+      } else {
+        this.namexPX = this.data.mosaic[0].id.toHex();
+      }
+    }
+
+    const params = {
+      common: this.data.privateKey,
+      recipient: this.data.recipientAddress,
+      message: PlainMessage.create(this.data.message),
+      network: this.data.currentWallet.account.network,
+      mosaic: this.data.mosaic
+    };
+    this.transferBuilder = this.transferTransaction.buildTransferTransaction(params);
+
+    console.log('transferBuilder', this.transferBuilder);
+
   }
 
-  prepareTransaction() {
-    const mosaicModel = new MosaicModel();
-    mosaicModel.hexId = this.data.mosaic.hex;
-    mosaicModel.amount = this.data.amount;
-
-    //1. Build a transfer transaction
-    this.transferTransaction.setRecipient(this.data.recipientAddress);
-    this.transferTransaction.setMosaics([mosaicModel]);
-    this.transferTransaction.setMessage(this.data.message);
-    this.fee = this.transferTransaction.getFee();
-    console.log("TCL: SendMosaicConfirmationPage -> onSubmit -> fee", this.fee)
-  }
 
   goBack() {
     return this.navCtrl.pop();
@@ -149,7 +152,7 @@ export class SendMosaicConfirmationPage {
     } else if (this.data.transactionType = 'normal') {
       console.log("Normal transfer");
 
-      this.transferTransaction.send(this.data.privateKey, this.data.currentWallet.account.network).subscribe(response => {
+      this.transferTransaction.send(this.data.privateKey, this.transferBuilder.transferTransaction, this.data.currentWallet.account.network).subscribe(response => {
         const signedTxn = this.transferTransaction.signedTxn;
         this.transferTransaction.checkTransaction(signedTxn).subscribe(status => {
           this.block = false;
@@ -184,7 +187,7 @@ export class SendMosaicConfirmationPage {
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.INSUFFICIENT_BALANCE"));
     } else if (error.toString().indexOf('Failure_Core_Insufficient_Balance') >= 0) {
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.INSUFFICIENT_BALANCE"));
-    } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
+    } else if (error.toString().indexOf('Failure_Multisig_Operation_Not_Permitted_By_Account') >= 0) {
       this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG"));
     } else {
       this.alertProvider.showMessage(

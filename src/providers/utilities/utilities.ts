@@ -192,39 +192,61 @@ export class UtilitiesProvider {
    * Get the logo of the mosaics
    * @param mosaic The mosaic object for querying the logo
    */
-  getLogo(mosaic: DefaultMosaic) {
-    if (!mosaic) {
-      return AppProvider.LOGO.SIRIUS;
-    } else if (
-      (
-        mosaic.namespaceId.toLowerCase() === 'prx' ||
-        mosaic.namespaceId.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
-      ) &&
-      (
-        mosaic.mosaicId.toLowerCase() === 'xpx' ||
-        mosaic.mosaicId.toLowerCase() === AppConfig.mosaicXpxInfo.id.toLowerCase()
-      ) || mosaic.hex.toLowerCase() === AppConfig.xpxHexId
-    ) {
-      return AppProvider.LOGO.XPX;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'pundix' &&
-      mosaic.mosaicId.toLowerCase() === 'npxs' ||
-      mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
-    ) {
-      return AppProvider.LOGO.NPXS;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'sportsfix' &&
-      mosaic.mosaicId.toLowerCase() === 'sft' ||
-      mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
-    ) {
-      return AppProvider.LOGO.SFT;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'xarcade' &&
-      mosaic.mosaicId.toLowerCase() === 'xar' ||
-      mosaic.hex.toLowerCase() === '59096674da68a7e5'
-    ) {
-      return AppProvider.LOGO.XAR;
-    } else {
+  getLogo(mosaic: DefaultMosaic | string) {
+    try {
+      if (!mosaic) {
+        return AppProvider.LOGO.SIRIUS;
+      } else if (typeof(mosaic) === 'string') {
+        if (mosaic  === AppConfig.xpxHexId) {
+          return AppProvider.LOGO.XPX;
+        }
+
+        return AppProvider.LOGO.SIRIUS;
+      } else {
+        if (
+          (
+            mosaic.namespaceId &&
+            mosaic.namespaceId !== '' &&
+            mosaic.namespaceId.toLowerCase() === 'prx' ||
+            mosaic.namespaceId.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
+          ) &&
+          (
+            mosaic.mosaicId &&
+            mosaic.mosaicId !== '' &&
+            mosaic.mosaicId.toLowerCase() === 'xpx' ||
+            mosaic.mosaicId.toLowerCase() === AppConfig.mosaicXpxInfo.id.toLowerCase()
+          ) || mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.xpxHexId
+        ) {
+          return AppProvider.LOGO.XPX;
+        } else if (
+          mosaic.namespaceId &&
+          mosaic.namespaceId !== '' &&
+          mosaic.namespaceId.toLowerCase() === 'pundix' &&
+          mosaic.mosaicId.toLowerCase() === 'npxs' ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
+        ) {
+          return AppProvider.LOGO.NPXS;
+        } else if (
+          mosaic.namespaceId &&
+          mosaic.namespaceId !== '' &&
+          mosaic.namespaceId.toLowerCase() === 'sportsfix' &&
+          mosaic.mosaicId.toLowerCase() === 'sft' ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
+        ) {
+          return AppProvider.LOGO.SFT;
+        } else if (
+          mosaic.namespaceId &&
+          mosaic.namespaceId &&
+          mosaic.namespaceId.toLowerCase() === 'xarcade' &&
+          mosaic.mosaicId.toLowerCase() === 'xar' ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === '59096674da68a7e5'
+        ) {
+          return AppProvider.LOGO.XAR;
+        } else {
+          return AppProvider.LOGO.SIRIUS;
+        }
+      }
+    } catch (error) {
       return AppProvider.LOGO.SIRIUS;
     }
   }

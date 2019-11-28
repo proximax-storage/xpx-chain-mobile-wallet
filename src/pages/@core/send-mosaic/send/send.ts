@@ -25,7 +25,7 @@ import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
-import { Password } from 'tsjs-xpx-chain-sdk';
+import { Password, MosaicId } from 'tsjs-xpx-chain-sdk';
 
 /**
  * Generated class for the SendPage page.
@@ -315,6 +315,10 @@ export class SendPage {
     const encryptedKey = this.currentWallet.account.encryptedPrivateKey.encryptedKey;
     const privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
 
+    const mosaicsToSend = this.validateMosaicsToSend();
+
+    console.log('mosaicsmosaics', mosaicsToSend);
+    
     if (privateKey) {
       let message = this.form.get("message").value;
       let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
@@ -323,10 +327,10 @@ export class SendPage {
         page,
         {
           ...this.form.value,
-          mosaic: this.selectedMosaic,
+          mosaic: mosaicsToSend,
           currentWallet: this.currentWallet,
           transactionType: "normal",
-          total: total,
+          // total: total,
           message: message,
           privateKey: privateKey
         },
@@ -340,6 +344,50 @@ export class SendPage {
       this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
     }
   }
+
+
+  validateMosaicsToSend(){
+    const mosaics = [];
+    const amountXpx = this.form.get('amount').value;
+
+    console.log('amountXpx', amountXpx);
+    
+    if (amountXpx !== '' && amountXpx !== null && Number(amountXpx) !== 0) {
+      // console.log(amountXpx);
+      const arrAmount = amountXpx.toString().replace(/,/g, '').split('.');
+      let decimal;
+      let realAmount;
+
+      if (arrAmount.length < 2) {
+        decimal = this.addZeros(6);
+      } else {
+        const arrDecimals = arrAmount[1].split('');
+        decimal = this.addZeros(6 - arrDecimals.length, arrAmount[1]);
+      }
+      realAmount = `${arrAmount[0]}${decimal}`;
+      mosaics.push({
+        id: new MosaicId(this.selectedMosaic.hex),
+        amount: realAmount
+      });
+    }
+
+      return mosaics
+    }
+  
+
+    addZeros(cant: any, amount: string = '0') {
+      const x = '0';
+      if (amount === '0') {
+        for (let index = 0; index < cant - 1; index++) {
+          amount += x;
+        }
+      } else {
+        for (let index = 0; index < cant; index++) {
+          amount += x;
+        }
+      }
+      return amount;
+    }
 
   /**
  *
