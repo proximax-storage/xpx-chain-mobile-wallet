@@ -52,7 +52,7 @@ ion-fab[fab-button-center] {
 
 .ion-md-close:before {
   content: "\f2c0";
-  margin-top: 9px !important;
+  margin-top: 8px !important;
 }
 
 .ion-page {
@@ -60,7 +60,7 @@ ion-fab[fab-button-center] {
 }
 
 ion-fab-list[side=left] .fab-in-list, ion-fab-list[side=right] .fab-in-list {
-  margin: 0px 0px;
+  margin: 1px 1px 1px 1px;
   margin-right: -5px;
   margin-left: 7px;
   margin-top: -190px;

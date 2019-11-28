@@ -1,6 +1,6 @@
 
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Events, Tabs, ModalController } from 'ionic-angular';
+import { IonicPage, Events, Tabs, ModalController, FabContainer } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
 import { UtilitiesProvider } from '../../providers/utilities/utilities';
@@ -35,6 +35,9 @@ export class TabsPage {
     })
   }
 
+  closeFab(fab: FabContainer){
+    fab.close();
+}
   ionViewWillEnter() {
     this.utils.setHardwareBack();
 

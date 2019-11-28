@@ -40,7 +40,7 @@ export class SwapCertificatePage {
     this.transactionHash = this.navParams.data.transactionHash;
     let address = Address.createFromRawAddress(this.navParams.data.address.address);
     this.address = address.pretty();
-    this.timestamp =  new Date(this.navParams.data.timestamp);
+    this.timestamp = new Date(this.navParams.data.timestamp);
     this.url = `http://testnet-explorer.nemtool.com/#/s_tx?hash=${this.transactionHash}`;
   }
 
@@ -60,17 +60,17 @@ export class SwapCertificatePage {
     });
   }
 
-  shared(){
+  shared() {
     this.socialSharing
-    .share(
-      `${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.DATE")}:\n${this.timestamp}\n
-      ${this.translateService.instant("SERVICES.SWAP_PROCESS.SIRIUS_WALLET")}:\n${this.address}\n
-      ${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.HASH.NIS")}:\n${this.transactionHash}\n\n`,
-      null,
-      null,
-      this.url).then(_ => {
-      this.dismiss();
-    });
+      .share(
+        `${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.DATE")}:\n${this.timestamp}
+      ${this.translateService.instant("SERVICES.SWAP_PROCESS.SIRIUS_WALLET")}:\n${this.address}
+      ${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.HASH.NIS")}:\n${this.transactionHash}`,
+        null,
+        null,
+        this.url).then(_ => {
+          this.dismiss();
+        });
   }
   dismiss() {
     this.viewCtrl.dismiss();

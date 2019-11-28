@@ -4,17 +4,19 @@
       <ion-icon style="margin-left: 2px;" name="custom-send-receive"></ion-icon>
     </button>
     <ion-fab-list side="left">
-      <button ion-fab (click)="gotoSend()" style="background-image: linear-gradient(to right, #1F6B86, #008C9B, #00AD9F, #56CB93);">
-        <ion-icon name="custom-send"></ion-icon>
+      <button ion-fab (click)="gotoSend(); closeFab(fab)" style="background-image: linear-gradient(to right, #1F6B86, #008C9B, #00AD9F, #56CB93);">
+        <ion-icon style="margin-left: 1px;" name="custom-send"></ion-icon>
       </button>
     </ion-fab-list>
     <ion-fab-list side="right">
-      <button ion-fab (click)="gotoReceive()" style="background-image: linear-gradient(to right, #1F6B86, #008C9B, #00AD9F, #56CB93);">
+      <button ion-fab (click)="gotoReceive(); closeFab(fab)" style="background-image: linear-gradient(to right, #1F6B86, #008C9B, #00AD9F, #56CB93);">
         <ion-icon name="custom-receive"></ion-icon>
       </button>
     </ion-fab-list>
   </ion-fab>
 
+
+  
   <ion-tab [root]="tab1Root"  tabIcon="custom-account"></ion-tab>
   <ion-tab [root]="tab2Root" (ionSelect)="clearNotification()"  tabIcon="custom-notifications"  [tabBadge]='notificationCount' tabBadgeStyle="danger"></ion-tab>
   <ion-tab [root]="tab5Root"  tabIcon=""></ion-tab>
