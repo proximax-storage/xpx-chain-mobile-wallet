@@ -31,17 +31,19 @@
             <p class="wallet-number">{{ account.account?.address.address }}</p>
           </div>
           <div class="wallet-label">
-            <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span> {{ account.account?.name }}
+            <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+            {{ account.account?.name }}
             <!-- <p class="wallet-info">{{ account.account?.name }}</p> -->
           </div>
           <div class="wallet-label">
-            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span> <span class="wallet-space-25">{{ amountXpx }}</span>
+            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span> <span
+              class="wallet-space-25">{{ amountXpx }}</span>
             <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
           <div class="wallet-space-25 wallet-label">
-              <span class="wallet-label"><strong>US$ </strong></span>{{ totalWalletBalance | number : '1.2-2'}}
-              <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
-            </div>
+            <span class="wallet-label"><strong>US$ </strong></span>{{ totalWalletBalance | number : '1.2-2'}}
+            <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
+          </div>
         </div>
       </div>
     </ion-slide>
@@ -114,6 +116,15 @@
         <!-- if transfer  -->
         <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Confirmed'"
           (viewTxDetail)="goToTransactionDetail($event, 'confirmed')">
+        </transactions>
+      </ion-card>
+    </ion-list>
+
+    <ion-list transparent-items *ngIf="unconfirmedTransactions?.length > 0">
+      <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy">
+        <!-- if transfer  -->
+        <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Unconfirmed'"
+          (viewTxDetail)="goToTransactionDetail($event, 'unconfirmed')">
         </transactions>
       </ion-card>
     </ion-list>
