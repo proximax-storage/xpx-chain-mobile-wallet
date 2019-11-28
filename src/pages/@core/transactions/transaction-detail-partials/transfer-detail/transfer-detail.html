@@ -10,7 +10,7 @@
 </ion-item>
 
 <!-- Mosaic/s -->
-<ng-container *ngIf="tx.mosaics.length > 0 && mosaicFound.length > 0">
+<ng-container *ngIf="tx.mosaics && tx.mosaics.length > 0 && mosaicFound.length > 0">
   <ion-card no-margin-bottom *ngFor="let mosaic of mosaicFound">
     <ion-item>
       <!-- <img logo-small item-left [src]="utils.getLogo(mosaic)"> -->

@@ -119,9 +119,9 @@
       <ng-container *ngIf="aggregateTransactions?.length > 0; else showEmptyMessage">
         <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions;">
           <!-- if transfer  -->
-          <transactions *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction"
+          <transactions [tx]="transaction"
             [mosaics]="mosaics" [owner]="selectedAccount.account.address.address" [status]="'Partial'"
-            (click)="goToTransactionDetail(transaction, 'partials')">
+            (viewTxDetail)="goToTransactionDetail($event, 'partials')">
           </transactions>
         </ion-card>
       </ng-container>

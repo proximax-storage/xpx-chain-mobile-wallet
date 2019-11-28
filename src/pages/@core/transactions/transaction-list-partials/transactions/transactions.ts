@@ -175,7 +175,7 @@ export class TransactionComponent {
         break;
       case TransactionType.AGGREGATE_BONDED:
         if (this.tx['innerTransactions'].length === 1) {
-          if (this.tx['innerTransactions'][0]["message"] && this.tx['innerTransactions'][0]["message"].payload !== "") {
+          if (this.tx['innerTransactions'][0].type === TransactionType.TRANSFER && this.tx['innerTransactions'][0]["message"] && this.tx['innerTransactions'][0]["message"].payload !== "") {
             try {
               const msg = JSON.parse(this.tx['innerTransactions'][0]["message"].payload);
               const addressAccountMultisig = AppConfig.swap.addressAccountMultisig;
@@ -233,7 +233,7 @@ export class TransactionComponent {
         break;
       default:
         let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
-        this.MESSAGE_ = 'Other transactions';
+        this.MESSAGE_ = 'Other Transactions';
         this.MOSAIC_INFO = null;
         this.AMOUNT = null;
         this.LOGO = App.LOGO.OTHER;
