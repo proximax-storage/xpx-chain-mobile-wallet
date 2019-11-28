@@ -50,7 +50,7 @@
               <ion-label stacked>{{"WALLETS.SEND.AMOUNT" | translate}}</ion-label>
               <ion-label amount>
                 <input pattern="^[+]?([0-9]*[.])?[0-9]+$" formControlName="amount" [(ngModel)]="amount" currencyMask
-                  [options]="optionsXPX" [maxlength]="maxAmount" />
+                  [options]="optionsXPX" [max]="maxAmount"/>
               </ion-label>
             </ion-item>
           </ion-card>

@@ -239,6 +239,8 @@ export class HomePage {
     const transactions = this.confirmedTransactions;
     const unconfirmedTransactions = this.unconfirmedTransactions;
     const aggregateTransactions = this.aggregateTransactions;
+    console.log(this.aggregateTransactions);
+    
     const total = this.totalWalletBalance;
     const amountXpx = this.amountXpx;
     const mosaics = this.mosaics;
@@ -332,8 +334,9 @@ export class HomePage {
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
       if (transactions) {
-        const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
-        this.aggregateTransactions = transferTransactionsAggregate;
+        // const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
+        // this.aggregateTransactions = transferTransactionsAggregate;
+        this.aggregateTransactions = transactions;
         this.showEmptyTransaction = false;
       } else {
         this.showEmptyTransaction = true;

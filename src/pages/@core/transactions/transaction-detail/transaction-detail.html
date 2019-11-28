@@ -23,9 +23,7 @@
   <ion-list transparent-items *ngIf="tx">
 
     <!-- if transfer  -->
-    <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER" [tx]="tx" [mosaics]="mosaics"
-      [owner]="currentAccount?.account.address.address"></transfer-detail>
-    <transfer-detail *ngIf="tx?.type === TransactionType.AGGREGATE_BONDED" [tx]="tx" [status]="status" [mosaics]="mosaics"
+    <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER || tx?.type === TransactionType.AGGREGATE_BONDED" [tx]="tx" [mosaics]="mosaics"
       [owner]="currentAccount?.account.address.address"></transfer-detail>
 
     <!-- if importance transfer -->

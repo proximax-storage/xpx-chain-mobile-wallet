@@ -21,10 +21,10 @@ export class TransferDetailComponent {
   @Input() mosaics: DefaultMosaic[] = [];
   @Input() owner: string;
   @Input() status: string;
-  public App = App;
-  public ownerAddress: any;
-  public data: any;
-  public messageShow = false;
+  App = App;
+  ownerAddress: any;
+  data: any;
+  messageShow = false;
   show: boolean;
   MESSAGE_: string;
   LOGO: string;
@@ -62,9 +62,10 @@ export class TransferDetailComponent {
   }
 
   private async _getMosaicInfo() {
-    // Get mosaic details
+    try {
+      // Get mosaic details
     console.log('\n\n this.tx.mosaics', this.tx.mosaics);
-    if (this.tx.mosaics.length > 0) {
+    if (this.tx.mosaics && this.tx.mosaics.length > 0) {
       this.show = true;
       this.tx.mosaics.forEach((element: Mosaic) => {
         const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === element.id.toHex()) : null;
@@ -104,6 +105,9 @@ export class TransferDetailComponent {
       }
     } else {
       this.messageShow = false
+    }
+    } catch (error) {
+      
     }
   }
 
