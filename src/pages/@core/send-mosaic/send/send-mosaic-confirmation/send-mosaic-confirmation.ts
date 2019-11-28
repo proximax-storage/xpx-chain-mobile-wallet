@@ -4,7 +4,7 @@ import { Component, trigger, transition, style, group, animate } from '@angular/
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet, PlainMessage } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, PlainMessage, TransferTransaction } from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
@@ -16,6 +16,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { TransferTransactionProvider } from '../../../../../providers/transfer-transaction/transfer-transaction';
 import { AppConfig } from '../../../../../app/app.config';
+import * as FeeCalculationStrategy from 'tsjs-xpx-chain-sdk/dist/src/model/transaction/FeeCalculationStrategy';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the SendMosaicConfirmationPage page.
@@ -77,12 +79,12 @@ export class SendMosaicConfirmationPage {
 
   data: any;
 
-  fee: number = 0;
 
   displaySuccessMessage: boolean = false;
   block: boolean = false;
   transferBuilder: any;
   namexPX: string;
+  fee: string;
 
   constructor(
     public navCtrl: NavController,
@@ -95,7 +97,8 @@ export class SendMosaicConfirmationPage {
     private haptic: HapticProvider,
     private translateService: TranslateService,
     private walletProvider: WalletProvider,
-    private transferTransaction: TransferTransactionProvider
+    private transferTransaction: TransferTransactionProvider,
+    private proximaxProvider: ProximaxProvider
   ) {
     this.init();
     this.generationHash = this.walletProvider.generationHash
@@ -136,9 +139,22 @@ export class SendMosaicConfirmationPage {
     this.transferBuilder = this.transferTransaction.buildTransferTransaction(params);
 
     console.log('transferBuilder', this.transferBuilder);
+    this.calculateFee()
 
   }
 
+
+  calculateFee() {
+    const x = TransferTransaction.calculateSize(PlainMessage.create(this.data.message).size(), this.data.mosaic.length);
+    const b = FeeCalculationStrategy.calculateFee(x);
+    if (this.data.message.length > 0) {
+      this.fee = this.proximaxProvider.amountFormatterSimple(b.compact());
+    } else if (this.data.message.length === 0 && this.data.mosaic.length === 0) {
+      this.fee = '0.037250';
+    } else {
+      this.fee = this.proximaxProvider.amountFormatterSimple(b.compact());
+    }
+  }
 
   goBack() {
     return this.navCtrl.pop();
