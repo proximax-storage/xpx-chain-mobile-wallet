@@ -123,7 +123,7 @@ export class TransactionComponent {
             } else {
               const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === this.tx.mosaics[0].id.toHex()) : null;
               if (mosaic) {
-                this.MESSAGE_ = 'Proximax Digital Asset ';
+                this.MESSAGE_ = 'ProximaX Digital Asset 1';
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
                 this.showTx = true;
@@ -131,7 +131,7 @@ export class TransactionComponent {
                 this.statusViewDetail = true;
                 this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), mosaic.divisibility);
               } else {
-                this.MESSAGE_ = 'Proximax Digital Assets';
+                this.MESSAGE_ = 'ProximaX Digital Assets 2';
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
                 this.showTx = true;
@@ -148,20 +148,23 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Proximax Digital Asset ';
+            this.MESSAGE_ = 'ProximaX Digital Asset 3';
             this.MOSAIC_INFO = null;
             this.LOGO = App.LOGO.SIRIUS;
             this.showTx = true;
             this.type = `Digital Assets (${this.tx.mosaics.length})`;
             this.statusViewDetail = true;
             this.AMOUNT = null;
+            const mosaics = [].slice(0);
             this.mosaicsProvider.getMosaicsFromMosaics(this.tx.mosaics).subscribe(dataMosaic => {
               if (dataMosaic) {
                 dataMosaic.forEach(element => {
-                  this.mosaics.push(element);
+                  mosaics.push(element);
                 });
               }
             });
+
+            this.mosaics = mosaics.slice(0);
           }
         } else {
           this.MESSAGE_ = 'Other transactions';
