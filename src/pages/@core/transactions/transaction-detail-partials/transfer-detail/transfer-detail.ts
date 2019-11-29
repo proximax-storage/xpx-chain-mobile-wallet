@@ -111,15 +111,11 @@ export class TransferDetailComponent {
             }));
           } else {
             console.log('1.......... MOSAIC NOT FOUND ---->');
-            console.log('entro aqui');
             const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
-            console.log('namespaceIds', namespaceIds);
             const namespaceNames = await this.getNamespacesName(namespaceIds);
-            console.log('namespaceNames', namespaceNames);
             let name = '';
             if (namespaceNames.length > 0) {
               const exist = namespaceNames.find(name => name.namespaceId.toHex() === new NamespaceId([element.id.id.lower, element.id.id.higher]).toHex());
-              console.log('\n exist', exist);
               if (exist && exist.name) {
                 name = exist.name;
               }
