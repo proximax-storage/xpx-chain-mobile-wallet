@@ -7,6 +7,7 @@ import { UtilitiesProvider } from '../../providers/utilities/utilities';
 import { PostsProvider } from '../../providers/posts/posts';
 import { AlertProvider } from '../../providers/alert/alert';
 import { WalletProvider } from '../../providers/wallet/wallet';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -32,7 +33,8 @@ export class TabsPage {
     private articles: PostsProvider,
     public actionsheetCtrl: ActionSheetController,
     private alertProvider: AlertProvider,
-    private walletProvider: WalletProvider
+    private walletProvider: WalletProvider,
+    private translateService: TranslateService,
   ) {
     this.articles.getUnreadCount().then(count => {
       // console.log("Unread count", count);
@@ -83,23 +85,21 @@ export class TabsPage {
       cssClass: 'action-sheets-basic-page',
       buttons: [
         {
-          text: 'Send',
+          text: this.translateService.instant("WALLETS.SEND"),
           icon: 'custom-send',
           handler: () => {
-            console.log('Share clicked');
             this.gotoSend();
           }
         },
         {
-          text: 'Receive',
+          text: this.translateService.instant("WALLETS.RECEIVE"),
           icon:  'custom-receive',
           handler: () => {
-            console.log('Delete clicked');
             this.gotoReceive();
           }
         },
         {
-          text: 'Cancel',
+          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
           role: 'cancel', // will always sort to be on the bottom
           icon: 'close',
           handler: () => {

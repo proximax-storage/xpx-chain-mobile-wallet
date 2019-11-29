@@ -39,15 +39,23 @@
       <ng-container *ngIf="!messageShow;">
         <ng-container>
           <h2 ion-text color="dark" style="display: flex;">
-            <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
-              <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
+
+            <ng-container text-uppercase *ngIf="mosaic.name && mosaic.name !== ''; else notName">
+              <h2 ion-text text-uppercase color="dark"> {{ mosaic.name }} </h2>
             </ng-container>
 
-            <ng-template text-uppercase #viewHex>
-              <ng-container text-uppercase *ngIf="mosaic.hex">
-                <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
-              </ng-container>
+            <ng-template #notName>
+                <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
+                    <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
+                  </ng-container>
+      
+                  <ng-template text-uppercase #viewHex>
+                    <ng-container text-uppercase *ngIf="mosaic.hex">
+                      <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
+                    </ng-container>
+                  </ng-template>
             </ng-template>
+            
           </h2>
         </ng-container>
       </ng-container>

@@ -564,7 +564,9 @@ export class ProximaxProvider {
     //   namespace
     // );
   }
-
+getMosaicId(id: string | number[]): MosaicId {
+  return new MosaicId(id);
+}
   /**
  * Get the namespaces owned by the NEM address
  * @param address The NEM address
@@ -574,6 +576,9 @@ export class ProximaxProvider {
     return;
   }
 
+ getMosaicsName(mosaicsId: MosaicId[]): Observable<MosaicNames[]> {
+    return this.mosaicHttp.getMosaicsNames(mosaicsId); // Update-sdk-dragon
+  }
   /**
  * Get namespace id
  *

@@ -25,7 +25,7 @@
           <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
 
           <div *ngIf="!tablet">
-            <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 22 : '...' }}</p>
+            <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 46 : '...' }}</p>
           </div>
           <div *ngIf="tablet">
             <p class="wallet-number">{{ account.account?.address.address }}</p>
@@ -52,9 +52,9 @@
     <ion-slide (click)="showAddWalletPrompt()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="'wallet-create'">
-          <img class="wallet-create-front-logo wallet-logo" src="assets/imgs/wallet-add.svg">
-          <h2 class="wallet-create-title">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
-          <p class="wallet-create-subtitle">{{"WALLETS.CREATE.DESC" | translate}}</p>
+          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;" src="assets/imgs/wallet-add.svg">
+          <h2 class="wallet-create-title" style="text-align: center" >{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
         </div>
       </div>
     </ion-slide>

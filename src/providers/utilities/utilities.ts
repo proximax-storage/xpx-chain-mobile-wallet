@@ -215,7 +215,9 @@ export class UtilitiesProvider {
             mosaic.mosaicId !== '' &&
             mosaic.mosaicId.toLowerCase() === 'xpx' ||
             mosaic.mosaicId.toLowerCase() === AppConfig.mosaicXpxInfo.id.toLowerCase()
-          ) || mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.xpxHexId
+          ) ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.xpxHexId || 
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
         ) {
           return AppProvider.LOGO.XPX;
         } else if (

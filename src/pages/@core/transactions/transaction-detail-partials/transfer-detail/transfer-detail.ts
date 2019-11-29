@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TransactionType, Mosaic } from 'tsjs-xpx-chain-sdk';
+import { TransactionType, Mosaic, MosaicId, NamespaceId } from 'tsjs-xpx-chain-sdk';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { App } from '../../../../../providers/app/app';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
@@ -64,50 +64,124 @@ export class TransferDetailComponent {
   private async _getMosaicInfo() {
     try {
       // Get mosaic details
-    console.log('\n\n this.tx.mosaics', this.tx.mosaics);
-    if (this.tx.mosaics && this.tx.mosaics.length > 0) {
-      this.show = true;
-      this.tx.mosaics.forEach((element: Mosaic) => {
-        const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === element.id.toHex()) : null;
-        console.log('MOSAIC FOUND --->', mosaic);
-        if (mosaic) {
-          this.mosaicFound.push(new DefaultMosaic({
-            namespaceId: mosaic.namespaceId,
-            hex: mosaic.hex,
-            mosaicId: mosaic.mosaicId,
-            amount: element.amount.compact(),
-            amountCompact: element.amount.compact(),
-            divisibility: mosaic.divisibility
-          }));
-        } else {
-          console.log('MOSAIC NOT FOUND ---->');
-          this.mosaicFound.push(new DefaultMosaic({
-            namespaceId: '',
-            hex: element.id.toHex(),
-            mosaicId: '',
-            amount: element.amount.compact(),
-            amountCompact: element.amount.compact(),
-            divisibility: 6
-          }));
-        }
-      });
-    }
+      // console.log('\n\n this.tx.mosaics', this.tx.mosaics);
 
-    const valid = this.IsJsonString(this.tx.message.payload);
-    if (valid) {
-      this.data = JSON.parse(this.tx.message.payload);
-      if (this.data.message) {
-        this.messageShow = true
-        return this.data;
-      } else if (this.data.nis1Hash) {
-        this.messageShow = true
-        return this.data;
+      if (this.tx.mosaics && this.tx.mosaics.length > 0) {
+        const mosaics: Mosaic[] = this.tx.mosaics;
+        const names = await this.getNameMosacis(mosaics.map(x => x.id));
+        this.show = true;
+        for (const element of this.tx.mosaics) {
+          const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === element.id.toHex()) : null;
+          if (mosaic) {
+            let name = '';
+            if (names.length > 0) {
+              const exist = names.find(name => name.mosaicId.toHex() === element.id.toHex());
+              if (exist && exist.names.length > 0) {
+                name = exist.names[0].name;
+              } else {
+                const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
+                const namespaceNames = await this.getNamespacesName(namespaceIds);
+                let name = '';
+                if (namespaceNames.length > 0) {
+                  const exist = namespaceNames.find(name => name.namespaceId.toHex() === new NamespaceId([element.id.id.lower, element.id.id.higher]).toHex());
+                  if (exist && exist.name) {
+                    name = exist.name;
+                  }
+                }
+              }
+            } else {
+              const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
+              const namespaceNames = await this.getNamespacesName(namespaceIds);
+              let name = '';
+              if (namespaceNames.length > 0) {
+                const exist = namespaceNames.find(name => name.namespaceId.toHex() === new NamespaceId([element.id.id.lower, element.id.id.higher]).toHex());
+                if (exist && exist.name) {
+                  name = exist.name;
+                }
+              }
+            }
+            this.mosaicFound.push(new DefaultMosaic({
+              namespaceId: mosaic.namespaceId,
+              hex: mosaic.hex,
+              mosaicId: mosaic.mosaicId,
+              amount: element.amount.compact(),
+              amountCompact: element.amount.compact(),
+              divisibility: mosaic.divisibility,
+              name: name
+            }));
+          } else {
+            console.log('1.......... MOSAIC NOT FOUND ---->');
+            console.log('entro aqui');
+            const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
+            console.log('namespaceIds', namespaceIds);
+            const namespaceNames = await this.getNamespacesName(namespaceIds);
+            console.log('namespaceNames', namespaceNames);
+            let name = '';
+            if (namespaceNames.length > 0) {
+              const exist = namespaceNames.find(name => name.namespaceId.toHex() === new NamespaceId([element.id.id.lower, element.id.id.higher]).toHex());
+              console.log('\n exist', exist);
+              if (exist && exist.name) {
+                name = exist.name;
+              }
+            }
+
+            this.mosaicFound.push(new DefaultMosaic({
+              namespaceId: '',
+              hex: element.id.toHex(),
+              mosaicId: '',
+              amount: element.amount.compact(),
+              amountCompact: element.amount.compact(),
+              divisibility: 6,
+              name: name
+            }));
+          }
+        };
       }
-    } else {
-      this.messageShow = false
-    }
+
+      const valid = this.IsJsonString(this.tx.message.payload);
+      if (valid) {
+        this.data = JSON.parse(this.tx.message.payload);
+        if (this.data.message) {
+          this.messageShow = true
+          return this.data;
+        } else if (this.data.nis1Hash) {
+          this.messageShow = true
+          return this.data;
+        }
+      } else {
+        this.messageShow = false
+      }
     } catch (error) {
-      
+      console.log(error)
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {MosaicId[]} idMosaics
+   * @returns
+   * @memberof TransferDetailComponent
+   */
+  async getNameMosacis(idMosaics: MosaicId[]) {
+    return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
+  }
+
+  /**
+   *
+   *
+   * @param {NamespaceId[]} namespaceIds
+   * @returns
+   * @memberof TransferDetailComponent
+   */
+  async getNamespacesName(namespaceIds: NamespaceId[]) {
+    try {
+      //Gets array of NamespaceName for an account
+      const namespaceName = await this.proximaxProvider.namespaceHttp.getNamespacesName(namespaceIds).toPromise();
+      return namespaceName;
+    } catch (error) {
+      //Nothing!
+      return [];
     }
   }
 
