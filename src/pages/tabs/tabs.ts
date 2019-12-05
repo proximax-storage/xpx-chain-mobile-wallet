@@ -39,7 +39,7 @@ export class TabsPage {
     this.articles.getUnreadCount().then(count => {
       // console.log("Unread count", count);
       this.notificationCount = count;
-      this.account = this.walletProvider.selectesAccount;
+      // this.account = this.walletProvider.selectesAccount;
     })
   }
 
@@ -78,39 +78,45 @@ export class TabsPage {
     this.notificationCount = 0;
   }
 
-  openMenu() {
-    if (this.account != undefined || this.account != null){
-    let actionSheet = this.actionsheetCtrl.create({
-      title: 'Options',
-      cssClass: 'action-sheets-basic-page',
-      buttons: [
-        {
-          text: this.translateService.instant("WALLETS.SEND"),
-          icon: 'custom-send',
-          handler: () => {
-            this.gotoSend();
-          }
-        },
-        {
-          text: this.translateService.instant("WALLETS.RECEIVE"),
-          icon:  'custom-receive',
-          handler: () => {
-            this.gotoReceive();
-          }
-        },
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
-          role: 'cancel', // will always sort to be on the bottom
-          icon: 'close',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
-    });
-    actionSheet.present();
-  } else {
-    this.alertProvider.showMessage(this.translateService.instant("APP.POPUP.NO.ACCOUNTS"))
+  async getCurrentAccount() {
+    this.account = await this.walletProvider.getAccountSelected();
   }
+
+  async openMenu() {
+     await this.getCurrentAccount();
+
+    if (this.account != null) {
+      let actionSheet = this.actionsheetCtrl.create({
+        title: 'Options',
+        cssClass: 'action-sheets-basic-page',
+        buttons: [
+          {
+            text: this.translateService.instant("WALLETS.SEND"),
+            icon: 'custom-send',
+            handler: () => {
+              this.gotoSend();
+            }
+          },
+          {
+            text: this.translateService.instant("WALLETS.RECEIVE"),
+            icon: 'custom-receive',
+            handler: () => {
+              this.gotoReceive();
+            }
+          },
+          {
+            text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
+            role: 'cancel', // will always sort to be on the bottom
+            icon: 'close',
+            handler: () => {
+              console.log('Cancel clicked');
+            }
+          }
+        ]
+      });
+      actionSheet.present();
+    } else {
+      this.alertProvider.showMessage(this.translateService.instant("APP.POPUP.NO.ACCOUNTS"))
+    }
   }
 }
