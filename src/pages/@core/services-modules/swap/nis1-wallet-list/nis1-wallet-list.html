@@ -25,27 +25,20 @@
         </ion-item>
       </ion-card-header>
     </ion-card>
-
-    <ion-card>
-      <ion-grid padding empty *ngIf="accountsNIS1 && accountsNIS1.length === 0">
-        <ion-row>
-          <ion-col>
-            <p>
-            </p>
-          </ion-col>
-        </ion-row>
-        <br>
-        <ion-row>
-          <ion-col>
-            <img quarter-width [src]="AppConfi.STICKERS.SORRY">
-            <h6 ion-text color="grey" text-wrap>
-              <strong>{{"APP.EMPTY.MOSAICS" | translate}}</strong>
-            </h6>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card>
   </ion-list>
 
+  <ion-grid empty *ngIf="accountsNIS1 && accountsNIS1.length === 0">
+      <br><br><br>
+      <ion-row>
+        <ion-col>
+          <img half-width [src]="App.STICKERS.SORRY">
+  
+          <h6 ion-text color="grey" text-wrap>
+            <strong>{{"APP.EMPTY.MOSAICS" | translate}}</strong>
+          </h6>
+  
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   <section spacing></section>
 </ion-content>
