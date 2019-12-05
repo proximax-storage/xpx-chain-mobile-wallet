@@ -1,7 +1,9 @@
 <ion-header no-border>
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="dark"> {{ "SERVICES.SWAP_PROCESS.LIST.TITLE" | translate }}</span>
+      <strong>
+          <span ion-text color="dark"> {{ "SERVICES.SWAP_PROCESS.LIST.TITLE" | translate }}</span>
+      </strong>
     </ion-title>
 
     <ion-buttons right>
@@ -14,7 +16,7 @@
 
 <ion-content no-margin>
   <ion-list transparent-items *ngIf="!isLoading">
-    <ion-card no-margin-bottom *ngFor="let accountNIS1 of accountsNIS1; let i = index"  class="background-white">
+    <ion-card no-margin-bottom *ngFor="let accountNIS1 of accountsNIS1; let i = index" class="background-white">
       <ion-card-header no-padding>
         <ion-item (click)="openAccountNis1(accountNIS1)">
           <ion-icon color="dark" name="custom-address" item-start></ion-icon>
@@ -24,12 +26,25 @@
       </ion-card-header>
     </ion-card>
 
-    <!-- <section margin-top text-center>
-      <button no-margin gradient-button circle color-5 (click)="goImportAccount()">
-        <ion-icon name="md-add"></ion-icon>
-      </button>
-      <p text-wrap ion-text color="dark">{{ "SERVICES.SWAP_PROCESS.LIST.SUBTITLE" | translate }}</p>
-    </section> -->
+    <ion-card>
+      <ion-grid padding empty *ngIf="accountsNIS1 && accountsNIS1.length === 0">
+        <ion-row>
+          <ion-col>
+            <p>
+            </p>
+          </ion-col>
+        </ion-row>
+        <br>
+        <ion-row>
+          <ion-col>
+            <img quarter-width [src]="AppConfi.STICKERS.SORRY">
+            <h6 ion-text color="grey" text-wrap>
+              <strong>{{"APP.EMPTY.MOSAICS" | translate}}</strong>
+            </h6>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
   </ion-list>
 
   <section spacing></section>

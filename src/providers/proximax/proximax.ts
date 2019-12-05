@@ -396,6 +396,42 @@ export class ProximaxProvider {
   isHexString(data: string): boolean {
     return Convert.isHexString(data);
   }
+
+  /**
+   *
+   *
+   * @param {string} address
+   * @returns
+   * @memberof ProximaxProvider
+   */
+  validateAddress(address: string) {
+    if (address !== '') {
+      const addressTrimAndUpperCase = address.trim().toUpperCase().replace(/-/g, '');
+      if (addressTrimAndUpperCase.length === 40) {
+        if (address.charAt(0) === 'S') {
+          return true;
+        }
+        else if (address.charAt(0) === 'M') {
+          return true;
+        }
+        else if (address.charAt(0) === 'V') {
+          return true;
+        }
+        else if (address.charAt(0) === 'X') {
+          return true;
+        }
+        else if (address.charAt(0) === 'W') {
+          return true;
+        }
+        else if (address.charAt(0) === 'Z') {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   /**
    *
    *

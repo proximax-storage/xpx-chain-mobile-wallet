@@ -48,7 +48,7 @@
 
     </ion-list>
 
-    <ion-row *ngIf="export">
+    <ion-row *ngIf="export  && delete">
       <button reduce-margin gradient-button quarter-width color-5 medium (click)="showExportPrivateKeyModal()">
         {{"WALLETS.EXPORT.EXPORT_PRIVATE_KEY" | translate}}
       </button>
@@ -82,13 +82,13 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngIf="export && delete">
       <button reduce-margin gradient-button quarter-width color-5 medium (click)="showWalletUpdate()">
         {{"WALLETS.EDIT" | translate}}
       </button>
     </ion-row>
 
-    <ion-row align-items-center *ngIf="delete">
+    <ion-row align-items-center *ngIf="delete && export">
       <ion-col col="12" align-self-center>
         <button text-center full ion-button color="danger" clear (click)="showWalletDelete()">
           {{"WALLETS.DELETE" | translate}}

@@ -18,6 +18,8 @@ import {
   Transaction,
   AggregateTransaction,
   PublicAccount,
+  MosaicId,
+  NamespaceId,
 } from "tsjs-xpx-chain-sdk";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { App as AppConfi } from "../../providers/app/app";
@@ -84,6 +86,7 @@ export class HomePage {
   @ViewChild(Nav) navChild: Nav;
   address: any;
   amountXpx: string;
+  mosaicFound: any = [];
 
   constructor(
     public app: App,
@@ -102,7 +105,7 @@ export class HomePage {
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
-  ) { }
+  ) {this.mosaicFound = []; }
 
 
   ionViewWillEnter() {
@@ -153,7 +156,7 @@ export class HomePage {
 
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
-            this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics => {
+            this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics => {
               if (mosaics === null) {
                 this.showEmptyMessage();
                 this.hideLoaders();
@@ -167,18 +170,18 @@ export class HomePage {
                 this.unconfirmedTransactions = [];
                 this.aggregateTransactions = [];
 
-                
-               
-                let mosaicXpx = mosaics.filter(other =>  other.hex === AppConfig.xpxHexId);
-
+                let mosaicXpx = mosaics.filter(other => other.hex === AppConfig.xpxHexId);
                 this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
-                // console.log('this.mosaicXpx', mosaicXpx);
-                // console.log('amountXpx', this.amountXpx);
-                
-                this.mosaics= mosaics;
-                // this.mosaics = mosaics.filter(other =>  other.hex != AppConfig.xpxHexId);
-                // console.log('\n\n this.mosaics \n\n', this.mosaics, '\n\n');
-                
+                let names = [];
+                names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
+
+                for (const element of mosaics) {
+                  let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
+                  if(value.names  && value.names.length > 0){
+                    element.name = value.names[0].name;
+                  }
+                }
+                this.mosaics = mosaics;
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
                 this.getTransactionsAggregate(this.selectedAccount.publicAccount);
@@ -240,11 +243,11 @@ export class HomePage {
     const unconfirmedTransactions = this.unconfirmedTransactions;
     const aggregateTransactions = this.aggregateTransactions;
     console.log(this.aggregateTransactions);
-    
+
     const total = this.totalWalletBalance;
     const amountXpx = this.amountXpx;
     const mosaics = this.mosaics;
-    const payload = { selectedAccount, transactions, aggregateTransactions, unconfirmedTransactions, total,amountXpx, mosaics };
+    const payload = { selectedAccount, transactions, aggregateTransactions, unconfirmedTransactions, total, amountXpx, mosaics };
     const modal = this.modalCtrl.create(page, payload, {
       enableBackdropDismiss: false,
       showBackdrop: true
@@ -303,6 +306,17 @@ export class HomePage {
       this.isLoading = false;
       loader.dismiss();
     });
+  }
+
+  /**
+ *
+ *
+ * @param {MosaicId[]} idMosaics
+ * @returns
+ * @memberof TransferDetailComponent
+ */
+  async getNameMosacis(idMosaics: MosaicId[]) {
+    return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
   }
 
   /**

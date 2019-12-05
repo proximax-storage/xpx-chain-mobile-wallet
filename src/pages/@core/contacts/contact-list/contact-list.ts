@@ -68,7 +68,7 @@ export class ContactListPage {
 
   ) {
     this.storage.set("isQrActive", true);
-    this.address = this.walletProvider.selectesAccount.account.address.address;
+    // this.address = this.walletProvider.selectesAccount.account.address.address;
   }
 
   ionViewWillEnter() {
@@ -175,7 +175,7 @@ export class ContactListPage {
             let address = barcodeData.text.split("-").join("")
             if (address.length != 40) {
               this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
-            } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.address, address)) {
+            } else if (!this.proximaxProvider.validateAddress(address)) {
               this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
             } else {
               let page = "ContactAddPage";

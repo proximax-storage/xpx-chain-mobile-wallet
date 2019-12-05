@@ -40,7 +40,7 @@
 
       <section total text-center>
         <h2 price ion-text color="dark" *ngIf="selectedCoin">
-            USD$ {{ selectedCoin?.market_data.current_price.usd * amount  | number : '1.2-6' }}</h2>
+            US$ {{ selectedCoin?.market_data.current_price.usd * amount  | number : '1.2-6' }}</h2>
         <div *ngIf="msgErrorBalance !== ''">
           <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
         </div>

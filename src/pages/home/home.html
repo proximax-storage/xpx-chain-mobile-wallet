@@ -4,7 +4,7 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <ion-list title transparent>
+  <ion-list title transparent style="padding-top: 1em !important;">
     <ion-item transparent>
       <h2 padding-left title color="dark">
         <strong>
@@ -40,10 +40,15 @@
               class="wallet-space-25">{{ amountXpx }}</span>
             <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
-          <div class="wallet-space-25 wallet-label">
-            <span class="wallet-label"><strong>US$ </strong></span>{{ totalWalletBalance | number : '1.2-2'}}
+
+          <div class="wallet-label">
+            <span class="wallet-label"><strong>US$:</strong></span> <span
+              class="wallet-space-25">{{ totalWalletBalance | number : '1.2-2'}}</span>
             <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
+          <!-- <div class="wallet-space-25 wallet-label">
+            <span class="wallet-label"><strong>US$ </strong></span>{{ totalWalletBalance | number : '1.2-2'}}
+          </div> -->
         </div>
       </div>
     </ion-slide>
@@ -77,8 +82,8 @@
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 ion-text color="dark" *ngIf="mosaic.namespaceId != undefined && mosaic.namespaceId.length !=0 ">
-              {{ mosaic.namespaceId | uppercase }}.{{ mosaic.mosaicId | uppercase}}</h2>
+            <h2 ion-text color="dark" *ngIf="mosaic.name != undefined && mosaic.name.length !=0 ">
+              {{ mosaic.name | uppercase }}</h2>
             <h3 ion-text color="dark" *ngIf="mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined">
               {{ (mosaic.namespaceId.length === 0 || mosaic.namespaceId === undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}
             </h3>

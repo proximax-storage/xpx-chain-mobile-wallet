@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { App } from "../../../../../providers/app/app";
 import { NemProvider, AccountsInfoNis1Interface } from "../../../../../providers/nem/nem";
 import { AlertProvider } from "../../../../../providers/alert/alert";
+import { App as AppConfi } from "../../../../../providers/app/app";
 
 /**
  * Generated class for the Nis1WalletListPage page.
@@ -26,6 +27,7 @@ import { AlertProvider } from "../../../../../providers/alert/alert";
 export class Nis1WalletListPage {
 
   App = App;
+  AppConfi = AppConfi;
   accountsNIS1: NIS1AccountsInterface[] = null;
   wallets: any;
 

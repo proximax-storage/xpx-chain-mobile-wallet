@@ -210,7 +210,7 @@ export class MyApp {
       // } else 
 
       if(isQrActive) {
-         return this.storage.set('isQrActive', true);
+         return this.storage.set('isQrActive', false);
 
       } else if (
         // this.rootPage !== "OnboardingPage" &&
