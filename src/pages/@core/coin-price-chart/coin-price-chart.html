@@ -308,14 +308,14 @@
         </ion-item>
       </ion-card>
 
-      <ion-card>
+<!--       <ion-card>
         <ion-item>
           <p item-left ion-text color="dark">{{"WALLETS.DETAIL.GENESIS_DATE" | translate}}</p>
           <h3 item-end *ngIf="selectedCoin; else loading">
             {{ selectedCoin.genesis_date | date:'MMM dd, yyyy'}}
           </h3>
         </ion-item>
-      </ion-card>
+      </ion-card> -->
 
       <ion-card>
         <ion-item (click)="openLink('https:facebook.com/'+selectedCoin.links.facebook_username)">
@@ -346,8 +346,9 @@
 
     <ion-card (click)="readMore(selectedCoin.description['en'].length)" *ngIf="!showEmptyMosaic">
       <ion-item>
-        <p text-wrap text-justify-start *ngIf="selectedCoin.description; else loading">
-          {{ selectedCoin.description['en'] | ngXtruncate: descriptionLength : '...' }}</p>
+<!--         <p text-wrap text-justify-start *ngIf="selectedCoin.description; else loading">
+          {{ selectedCoin.description['en'] | ngXtruncate: descriptionLength : '...' }}</p> -->
+        <p item-left ion-text color="dark">{{"WALLETS.DETAIL.INFO.CONTENT" | translate}}</p>
       </ion-item>
     </ion-card>
   </div>

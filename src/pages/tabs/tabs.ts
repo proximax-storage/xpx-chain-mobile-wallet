@@ -110,7 +110,7 @@ export class TabsPage {
     });
     actionSheet.present();
   } else {
-    this.alertProvider.showMessage('No possee cuentas aun')
+    this.alertProvider.showMessage(this.translateService.instant("APP.POPUP.NO.ACCOUNTS"))
   }
   }
 }
