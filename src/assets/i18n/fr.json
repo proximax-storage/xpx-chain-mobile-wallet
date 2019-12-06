@@ -2,6 +2,8 @@
     "APP.MESSAGE.SUCCESS.TITLE": "Succès!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Votre transaction est en cours de traitement.",
     "APP.ERROR": "Quelque chose s'est mal passé. Veuillez réessayer",
+    "APP.POPUP.NO.ACCOUNTS": "You don't have account yet on this wallet.",
+    "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "You don't have a account with NIS1 balance to swap.",
     "APP.INVALID.USERNAME_OR_PASSWORD": "Le nom d'utilisateur ou le mot de passe que vous avez tapé est incorrect.",
     "APP.INVALID.PASSWORD": "Le mot de passe n'est pas valide.",
     "APP.BUTTON.TRY_AGAIN": "Réessayer",

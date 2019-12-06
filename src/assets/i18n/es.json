@@ -1,7 +1,9 @@
 {
     "APP.MESSAGE.SUCCESS.TITLE": "¡Éxito!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Su transacción ahora está siendo procesada.",
-    "APP.ERROR": "Algo salió mal. Inténtalo de nuevo",
+    "APP.ERROR": "Algo salió mal. Inténtalo de nuevo.",
+    "APP.POPUP.NO.ACCOUNTS": "Aún no posee cuentas en esta billetera.",
+    "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "No posee cuentas con balance NIS1 para realizar intercambio.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Transacción no soportada en esta versión de la mobile wallet.",
     "APP.INVALID.USERNAME_OR_PASSWORD": "El nombre de usuario o la contraseña son incorrectos.",
     "APP.INVALID.PASSWORD": "La contraseña no es válida.",
@@ -121,6 +123,7 @@
     "WALLETS.DETAIL.PRICE_CHART": "Tabla de precios",
     "WALLETS.DETAIL.INFO": "Información",
     "WALLETS.DETAIL.STATS": "Estadísticas",
+    "WALLETS.DETAIL.INFO.CONTENT": "ProximaX es una plataforma de desarrollo de infraestructura de tecnología de Libro Contable  Integrado y Distribuido (“IaDLT”) de última generación impulsada por la tecnología blockchain. Conocida como ProximaX Sirius, esta plataforma se compone de capas de almacenamiento, streaming, base de datos y blockchain fuera de cadena, punto a punto en una plataforma de desarrollo todo en uno, fácil de usar. Los usuarios de esta plataforma pueden optar por utilizar las diversas capas de la plataforma de desarrollo ProximaX Sirius en un entorno privado, público o híbrido. \n La inmensa flexibilidad y la amplitud de los casos de uso de la plataforma de desarrollo ProximaX Sirius incluyen, entre otros, KYC e identidad, streaming de video y chat, IoT y robótica, big data e IA, registros e informes, continuidad comercial, legal y servicios notariales, registros médicos, registro de tierras, financiación del comercio y gestión de la cadena de suministro.",
     "WALLETS.DETAIL.COPY_ADDRESS": "Su dirección se ha copiado al portapapeles",
     "WALLETS.DETAIL.MARKET_RANK": "Rango de mercado",
     "WALLETS.DETAIL.MARKET_CAP": "Tapa del mercado",
