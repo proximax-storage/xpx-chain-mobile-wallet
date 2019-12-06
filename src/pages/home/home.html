@@ -84,8 +84,8 @@
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
             <h2 ion-text color="dark" *ngIf="mosaic.name != undefined && mosaic.name.length !=0 ">
               {{ mosaic.name | uppercase }}</h2>
-            <h3 ion-text color="dark" *ngIf="mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined">
-              {{ (mosaic.namespaceId.length === 0 || mosaic.namespaceId === undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}
+            <h3 ion-text color="dark" *ngIf="mosaic.name === undefined || mosaic.name.length === 0">
+              {{ mosaic.hex | uppercase }}
             </h3>
             <section text-right item-right>
               <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>

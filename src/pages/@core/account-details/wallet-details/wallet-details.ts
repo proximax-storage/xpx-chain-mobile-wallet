@@ -86,7 +86,7 @@ export class WalletDetailsPage {
       ]
     });
   }
-  
+
   /**
  *
  *
@@ -124,9 +124,9 @@ export class WalletDetailsPage {
     const iv = this.selectedAccount.account.encryptedPrivateKey.iv;
     const encryptedKey = this.selectedAccount.account.encryptedPrivateKey.encryptedKey;
     this.privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
-    
-    if (this.privateKey && this.privateKey !== '' && (this.privateKey.length === 64 || this.privateKey.length === 66) ) {
-      if (val === 1) {
+
+    if (this.privateKey && this.privateKey !== '' && (this.privateKey.length === 64 || this.privateKey.length === 66)) {
+      if (Number(val)  === 1) {
         this.pass = false;
         this.export = true
 
@@ -141,11 +141,11 @@ export class WalletDetailsPage {
           .then(_ => {
             this.dismiss();
           });
-      } else {
+      } else if (Number(val) === 2) {
         this.deletePass = false;
         this.delete = true
-    let page = "WalletDeletePage";
-    this.showModal(page, { wallet: this.selectedAccount });
+        let page = "WalletDeletePage";
+        this.showModal(page, { wallet: this.selectedAccount });
       }
       this.form.get("password").setValue('');
     } else {
@@ -159,7 +159,7 @@ export class WalletDetailsPage {
 
   showWalletUpdate() {
     let page = "WalletUpdatePage";
-    this.showModal(page, { wallet: this.selectedAccount, amountXpx:this.amountXpx,  totalBalance: this.totalBalance});
+    this.showModal(page, { wallet: this.selectedAccount, amountXpx: this.amountXpx, totalBalance: this.totalBalance });
   }
 
   showWalletDelete() {

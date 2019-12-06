@@ -91,6 +91,7 @@ export class SendPage {
     // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
     this.configurationForm = this.sharedService.configurationForm;
+    this.storage.set("isQrActive", true);
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
@@ -169,12 +170,11 @@ export class SendPage {
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad SendPage");
-    this.storage.set("isQrActive", true);
   }
 
-  ionViewDidLeave() {
-    this.storage.set("isQrActive", false);
-  }
+  // ionViewDidLeave() {
+  //   // this.storage.set("isQrActive", false);
+  // }
 
   createForm() {
     // Initialize form
