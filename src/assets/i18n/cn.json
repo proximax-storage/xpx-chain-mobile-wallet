@@ -123,7 +123,7 @@
     "WALLETS.RECEIVE": "接收",
     "WALLETS.DETAIL.PRICE_CHART": "价格图表",
     "WALLETS.DETAIL.INFO": "信息",
-    "WALLETS.DETAIL.INFO.CONTENT": "ProximaX是由區塊鏈技術支持的下一代集成分佈式賬本技術（IaDLT）基礎架構開發平台。該平台被稱為ProximaX Sirius，它由一個易於使用的多合一開發平台中的脫鏈，對等存儲，流，數據庫和區塊鏈層組成。該平台的用戶可以選擇在私有，公共或混合環境中使用ProximaX Sirius開發平台的各個層。 \ n ProximaX Sirius開發平台的巨大靈活性和廣泛的用例包括但不限於KYC和身份，視頻流和聊天，IoT和機器人技術，大數據和AI，記錄和報告，業務連續性，法律公證服務，病歷，土地註冊，貿易融資和供應鏈管理。",
+    "WALLETS.DETAIL.INFO.CONTENT": "ProximaX是由區塊鏈技術支持的下一代集成分佈式賬本技術（IaDLT）基礎架構開發平台。該平台被稱為ProximaX Sirius，它由一個易於使用的多合一開發平台中的脫鏈，對等存儲，流，數據庫和區塊鏈層組成。該平台的用戶可以選擇在私有，公共或混合環境中使用ProximaX Sirius開發平台的各個層。 \n ProximaX Sirius開發平台的巨大靈活性和廣泛的用例包括但不限於KYC和身份，視頻流和聊天，IoT和機器人技術，大數據和AI，記錄和報告，業務連續性，法律公證服務，病歷，土地註冊，貿易融資和供應鏈管理。",
     "WALLETS.DETAIL.STATS": "统计",
     "WALLETS.DETAIL.COPY_ADDRESS": "您的地址已成功复制到剪贴板",
     "WALLETS.DETAIL.MARKET_RANK": "市场排名",
