@@ -28,23 +28,32 @@
             <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 46 : '...' }}</p>
           </div>
           <div *ngIf="tablet">
-            <p class="wallet-number">{{ account.account?.address.address }}</p>
+            <p class="wallet-number" style="font-size: 18px !important;">{{ account.account?.address.address }}</p>
           </div>
-          <div class="wallet-label">
+          <div class="wallet-label" style="font-size: 18px !important;">
             <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
             {{ account.account?.name }}
-            <!-- <p class="wallet-info">{{ account.account?.name }}</p> -->
           </div>
-          <div class="wallet-label">
-            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span> <span
-              class="wallet-space-25">{{ amountXpx }}</span>
+          <div *ngIf="!tablet" class="wallet-label">
+            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
+            <span class="wallet-space-25">{{ amountXpx }}</span>
             <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
 
-          <div class="wallet-label">
-            <span class="wallet-label"><strong>US$:</strong></span> <span
-              class="wallet-space-25">{{ totalWalletBalance | number : '1.2-2'}}</span>
+          <div *ngIf="tablet" class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
+            <span class="wallet-space-tablet">{{ amountXpx }}</span>
             <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
+          </div>
+
+          <div *ngIf="tablet" class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>US$:</strong></span>
+            <span class="wallet-space-tablet">{{ totalWalletBalance | number : '1.2-2'}}</span>
+          </div>
+
+          <div *ngIf="!tablet" class="wallet-label">
+            <span class="wallet-label"><strong>US$:</strong></span>
+            <span class="wallet-space-25">{{ totalWalletBalance | number : '1.2-2'}}</span>
           </div>
           <!-- <div class="wallet-space-25 wallet-label">
             <span class="wallet-label"><strong>US$ </strong></span>{{ totalWalletBalance | number : '1.2-2'}}
@@ -57,8 +66,9 @@
     <ion-slide (click)="showAddWalletPrompt()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="'wallet-create'">
-          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;" src="assets/imgs/wallet-add.svg">
-          <h2 class="wallet-create-title" style="text-align: center" >{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;"
+            src="assets/imgs/wallet-add.svg">
+          <h2 class="wallet-create-title" style="text-align: center">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
           <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
         </div>
       </div>

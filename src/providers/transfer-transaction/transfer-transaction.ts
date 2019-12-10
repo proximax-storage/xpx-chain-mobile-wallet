@@ -15,24 +15,31 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class TransferTransactionProvider {
   signedTxn: SignedTransaction;
-  getFee(): number {
-    const tx = this.build();
-    return this.helper.getRelativeAmount(tx.maxFee.compact());
-  }
+
   httpNodeUrl: any;
+  private _address: Address;
+  private _message: string;
+  private _mosaics: Mosaic[];
 
   constructor(
     private storage: Storage,
     private helper: HelperProvider
   ) {
-    this.storage.get("node").then(nodeStorage => {
-      this.httpNodeUrl = nodeStorage;
+    this.getinfo();
+  }
+
+
+  getinfo(){
+    this.storage.get('node').then(node => {
+      this.httpNodeUrl = node;
     });
   }
 
-  private _address: Address;
-  private _message: string;
-  private _mosaics: Mosaic[];
+  getFee(): number {
+    const tx = this.build();
+    return this.helper.getRelativeAmount(tx.maxFee.compact());
+  }
+
 
   // Recipient
   setRecipient(address: string) {
