@@ -13,22 +13,6 @@
 <ng-container *ngIf="tx.mosaics && tx.mosaics.length > 0 && mosaicFound.length > 0">
   <ion-card no-margin-bottom *ngFor="let mosaic of mosaicFound">
     <ion-item>
-      <!-- <img logo-small item-left [src]="utils.getLogo(mosaic)"> -->
-      <!-- Show MosaicInfo -->
-      <!-- <ng-container>
-        <h2 ion-text color="dark" style="display: flex;">
-          <ng-container text-uppercase *ngIf="mosaic.mosaicId && mosaic.namespaceId; else viewHex">
-            <h2 ion-text text-uppercase color="dark"> {{ mosaic.namespaceId }}.{{ mosaic.mosaicId }} </h2>
-          </ng-container>
-
-          <ng-template text-uppercase #viewHex>
-            <ng-container text-uppercase *ngIf="mosaic.hex">
-              <h2 ion-text text-uppercase color="dark"> {{ mosaic.hex }} </h2>
-            </ng-container>
-          </ng-template>
-        </h2>
-      </ng-container> -->
-
       <img logo-small item-left [src]="getLogo(messageShow, mosaic)">
       <ng-container *ngIf="messageShow;">
         <h2 ion-text color="dark" style="display: flex;">
