@@ -266,8 +266,5 @@
     "SETTINGS.LOGOUT": "Đăng xuất",
     "TRANSACTION_DETAIL.COSIGN": "Đồng ý để tiếp tục",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Đã đồng ký tên",
-    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Giao dịch đồng ký tên đã hoàn tất",
-    "WALLETS.DETAIL.INFORMATION.XARCADE": "Xarcade là một nhà phân phối/trao đổi game hiệu quả về chi phí trên nền tảng ProximaX dành cho nhà phát triển trò chơi và người chơi sử dụng. Nó là một ứng dụng đột phá và thay thế miễn phí trực tiếp các loại của hàng ứng dụng khác trên thị trường. Xarcade không thu bất cứ chi phí nào từ doanh thu của nhà phát triển game trên các loại tiền tệ trong trò chơi của họ, làm thay đổi mô hình hoạt động và tiết kiệm cho người chơi.",
-    "WALLETS.DETAIL.INFORMATION.SPORTSFIX": "SportFix nhắm đến việc thay đổi ngành công nghiệp lớn nhất thế giới - THỂ THAO. SportFix đưa ra một hệ thống không tập trung các phương tiện truyền thông thể thao nhắm đến việc hoàn toàn thay đổi sự tương tác giữa người hâm mộ và các bộ môn thể thao. Trong tình trạng hiện tại, SportFix là một dịch vụ thương mại phát triển cực mạnh trong khu vực Đông Nam Á về việt trình chiếu trực tiếp các hoạt động thể thao khu vực và quốc tế đến hàng triệu người hâm mộ mỗi tuần và trên đường trở thành một trong những nền tảng trình chiếu có giá trị cao nhất trong khu vực. Trong giai đoạn kế tiếp, SportFix sẽ cho ra đời SportFix Tokens (SFT) để cho người hâm mộ sử dụng trong việc tham gia và tương tác với những đội tuyển và câu lạc bộ trong một môi trường kinh tế đóng kín với toàn bộ các giao dịch kỹ thuật số sử dụng hợp đồng thông minh được thực hiện bởi nền tảng block chain",
-    "APP.SIGNUP.PASSWORD_MAX. MESSAGE": "Số lượng ký tự tối đa"
+    "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Giao dịch đồng ký tên đã hoàn tất"
 }
