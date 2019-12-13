@@ -4,7 +4,7 @@ import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Storage } from "@ionic/storage";
 import { UtilitiesProvider } from "../providers/utilities/utilities";
-import { OneSignal } from "@ionic-native/onesignal";
+//import { OneSignal } from "@ionic-native/onesignal";
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../app/app.config';
 import { Deeplinks, DeeplinkMatch } from "@ionic-native/deeplinks";
@@ -26,7 +26,6 @@ export class MyApp {
     private platform: Platform,
     private storage: Storage,
     private utils: UtilitiesProvider,
-    private oneSignal: OneSignal,
     private translateService: TranslateService,
     private deeplinks: Deeplinks
   ) {
@@ -245,7 +244,7 @@ export class MyApp {
     });
   }
 
-  initOneSignal() {
+/*  initOneSignal() {
     if (this.platform.is('cordova')) {
       console.log("You're on a mobile device");
       this.oneSignal.startInit(
@@ -258,18 +257,16 @@ export class MyApp {
       );
 
       this.oneSignal.handleNotificationReceived().subscribe(data => {
-        // do something when notification is received
         alert(data);
       });
 
       this.oneSignal.handleNotificationOpened().subscribe(() => {
-        // do something when a notification is opened
       });
 
       this.oneSignal.endInit();
     }
   }
-
+*/
   private initTranslate()
   {
      // Set the default language for translation strings, and the current language.

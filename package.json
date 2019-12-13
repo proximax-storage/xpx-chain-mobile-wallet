@@ -39,7 +39,6 @@
     "@ionic-native/file-path": "4.10.1",
     "@ionic-native/file-transfer": "^4.20.0",
     "@ionic-native/keyboard": "4.20.0",
-    "@ionic-native/onesignal": "^4.20.0",
     "@ionic-native/photo-library": "^4.20.0",
     "@ionic-native/qr-scanner": "4.20.0",
     "@ionic-native/safari-view-controller": "^4.20.0",
@@ -107,7 +106,6 @@
     "ngx-truncate": "0.0.1",
     "node-forge": "0.8.2",
     "node-sass": "4.12.0",
-    "onesignal-cordova-plugin": "^2.6.0",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "qrcode-generator": "^1.4.3",
     "rxjs": "^6.5.3",
@@ -155,7 +153,6 @@
       "cordova-plugin-browsertab": {},
       "cordova-plugin-safariviewcontroller": {},
       "cordova-plugin-decimal-key": {},
-      "onesignal-cordova-plugin": {},
       "cordova-plugin-statusbar": {},
       "cordova-base64-to-gallery": {},
       "ionic-plugin-deeplinks": {
@@ -165,8 +162,7 @@
       }
     },
     "platforms": [
-      "android",
-      "ios"
+      "android"
     ]
   },
   "config": {

@@ -127,7 +127,6 @@
     <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
     <plugin name="cordova-plugin-safariviewcontroller" spec="^1.6.0" />
     <plugin name="cordova-plugin-decimal-key" spec="^1.1.2" />
-    <plugin name="onesignal-cordova-plugin" spec="^2.6.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
     <plugin name="cordova-base64-to-gallery" spec="^4.1.3" />
     <plugin name="ionic-plugin-deeplinks" spec="^1.0.20">
