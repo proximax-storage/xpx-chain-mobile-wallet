@@ -152,7 +152,7 @@
     "WALLETS.MULTISIGTRANSACTION.DETAIL.ISSUER": "Emetteur",
     "WALLETS.MULTISIGTRANSACTION.DETAIL.FROM": "À partir d'un compte multisignature",
     "WALLETS.TRANSACTION.DETAIL.EMPTY_MESSAGE": "Vide",
-    "WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE": "Crypté",,
+    "WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE": "Crypté",
     "WALLETS.TRANSFER.INSUFFICIENT_BALANCE": "Désolé, vous n'avez pas un solde suffisant pour effectuer cette transaction.",
     "WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG": "La transaction n'est pas activée pour les comptes à signatures multiples.",
     "WALLETS.TRANSFER": "Transfer",
