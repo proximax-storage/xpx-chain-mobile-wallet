@@ -45,7 +45,6 @@ import { NgXtruncateModule } from 'ngx-truncate';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { LocalCacheProvider } from '../providers/local-cache/local-cache';
 import { LocalStorageProvider } from '../providers/local-storage/local-storage';
-import { OneSignal } from '@ionic-native/onesignal';
 import { PostsProvider } from '../providers/posts/posts';
 import { MarkdownModule } from '@ngx-markdown/core';
 import { TapticEngine } from '@ionic-native/taptic-engine';
@@ -140,7 +139,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     BarcodeScanner,
     LocalCacheProvider,
     LocalStorageProvider,
-    OneSignal,
     PostsProvider,
     TapticEngine,
     AppVersion,

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="40" id="io.proximax.siriuschainwallet" ios-CFBundleVersion="16" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="40" id="io.proximax.siriuschainwallet" ios-CFBundleVersion="40" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>ProximaX Sirius Wallet</name>
     <description>A simple and secure wallet to store, send and receive your ProximaX based digital assets. </description>
     <author email="core.dev@proximax.io" href="http://proximax.io/">ProximaX Limited</author>
@@ -127,7 +127,6 @@
     <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
     <plugin name="cordova-plugin-safariviewcontroller" spec="^1.6.0" />
     <plugin name="cordova-plugin-decimal-key" spec="^1.1.2" />
-    <plugin name="onesignal-cordova-plugin" spec="^2.6.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
     <plugin name="cordova-base64-to-gallery" spec="^4.1.3" />
     <plugin name="ionic-plugin-deeplinks" spec="^1.0.20">
