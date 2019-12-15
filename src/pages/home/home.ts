@@ -33,6 +33,8 @@ import { TransactionsProvider } from "../../providers/transactions/transactions"
 import { DefaultMosaic } from "../../models/default-mosaic";
 import { ProximaxProvider } from '../../providers/proximax/proximax';
 import { AppConfig } from './../../app/app.config';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+
 
 @Component({
   selector: "page-home",
@@ -77,7 +79,7 @@ export class HomePage {
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
 
-  tablet: boolean;
+  tablet: boolean = false;
 
   selectedWallet: CatapultsAccountsInterface;
   selectedAccount: CatapultsAccountsInterface;
@@ -104,16 +106,35 @@ export class HomePage {
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
-    private proximaxProvider: ProximaxProvider
+    private proximaxProvider: ProximaxProvider,
+    private screenOrientation: ScreenOrientation
   ) {this.mosaicFound = []; }
 
 
   ionViewWillEnter() {
     this.utils.setHardwareBack();
-    console.log('\n\n ------------ ionViewWillEnter ---> this.init() -------------------');
+    console.log('camnio de orientacion');
+    this.changeOrientation();
+    console.log('\n\n ------------ ionViewWillEnter ---> this.init(1) -------------------');
     this.init();
   }
 
+  changeOrientation(){
+    console.log('camnio ');
+    this.screenOrientation.onChange().subscribe(
+      () => {
+          
+          if (window.screen.width >= 768) {
+            // 768px portrait
+            this.tablet = true;
+            console.log("Orientation Changed", this.tablet);
+          } else {
+            this.tablet = false;
+            console.log("Orientation Changed", this.tablet);
+          }
+      }
+   );
+  }
   /**
    *
    *

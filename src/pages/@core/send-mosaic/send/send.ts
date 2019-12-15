@@ -26,6 +26,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 import { Password, MosaicId } from 'tsjs-xpx-chain-sdk';
+import { emit } from 'cluster';
 
 /**
  * Generated class for the SendPage page.
@@ -91,7 +92,7 @@ export class SendPage {
     // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
     this.configurationForm = this.sharedService.configurationForm;
-    this.storage.set("isQrActive", true);
+    
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
@@ -177,6 +178,7 @@ export class SendPage {
   // }
 
   createForm() {
+    this.storage.set("isQrActive", true);
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: "",
@@ -407,6 +409,7 @@ export class SendPage {
 
   scan() {
     this.storage.set("isQrActive", true);
+    this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true});
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";
       let address = barcodeData.text.split("-").join("")

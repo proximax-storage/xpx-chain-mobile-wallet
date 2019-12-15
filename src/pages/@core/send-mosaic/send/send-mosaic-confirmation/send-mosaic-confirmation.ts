@@ -172,7 +172,7 @@ export class SendMosaicConfirmationPage {
         const signedTxn = this.transferTransaction.signedTxn;
         this.transferTransaction.checkTransaction(signedTxn).subscribe(status => {
           this.block = false;
-          if (status.group === 'unconfirmed' || status.group === 'confirmed') {
+          if ( status.group && status.group === 'unconfirmed' || status.group === 'confirmed') {
             this.showSuccessMessage();
           } else {
             this.showErrorMessage(status.status);

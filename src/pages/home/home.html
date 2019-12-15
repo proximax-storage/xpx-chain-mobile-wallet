@@ -17,7 +17,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
+  <ion-slides *ngIf="!tablet" slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
     <ion-slide *ngFor="let account of accounts"
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
       <div class="wallet">
@@ -27,9 +27,7 @@
           <div *ngIf="!tablet">
             <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 46 : '...' }}</p>
           </div>
-          <div *ngIf="tablet">
-            <p class="wallet-number" style="font-size: 18px !important;">{{ account.account?.address.address }}</p>
-          </div>
+
           <div class="wallet-label" style="font-size: 18px !important;">
             <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
             {{ account.account?.name }}
@@ -37,27 +35,57 @@
           <div *ngIf="!tablet" class="wallet-label">
             <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
             <span class="wallet-space-25">{{ amountXpx }}</span>
-            <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
+          <div *ngIf="!tablet" class="wallet-label">
+            <span class="wallet-label"><strong>US$:</strong></span>
+            <span class="wallet-space-25">{{ totalWalletBalance | number : '1.2-2'}}</span>
+            <br>
+          </div>
+        </div>
+      </div>
+    </ion-slide>
+
+
+    <ion-slide (click)="showAddWalletPrompt()">
+      <div class="wallet">
+        <div class="wallet-content" [ngClass]="'wallet-create'">
+          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;"
+            src="assets/imgs/wallet-add.svg">
+          <h2 class="wallet-create-title" style="text-align: center">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+
+  
+  <ion-slides  *ngIf="tablet" slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
+    <ion-slide *ngFor="let account of accounts"
+      [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
+      <div class="wallet">
+        <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
+
+          <div *ngIf="tablet">
+            <p class="wallet-number" style="font-size: 18px !important;">{{ account.account?.address.address }}</p>
+          </div>
+          <div class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+            {{ account.account?.name }}
+          </div>
+
 
           <div *ngIf="tablet" class="wallet-label" style="font-size: 18px !important;">
             <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
             <span class="wallet-space-tablet">{{ amountXpx }}</span>
-            <!-- <p class="wallet-info">US$ {{ totalWalletBalance | number : '1.2-2'}}</p> -->
           </div>
 
           <div *ngIf="tablet" class="wallet-label" style="font-size: 18px !important;">
             <span class="wallet-label"><strong>US$:</strong></span>
             <span class="wallet-space-tablet">{{ totalWalletBalance | number : '1.2-2'}}</span>
+            <br>
           </div>
 
-          <div *ngIf="!tablet" class="wallet-label">
-            <span class="wallet-label"><strong>US$:</strong></span>
-            <span class="wallet-space-25">{{ totalWalletBalance | number : '1.2-2'}}</span>
-          </div>
-          <!-- <div class="wallet-space-25 wallet-label">
-            <span class="wallet-label"><strong>US$ </strong></span>{{ totalWalletBalance | number : '1.2-2'}}
-          </div> -->
         </div>
       </div>
     </ion-slide>
