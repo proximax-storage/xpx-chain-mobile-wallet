@@ -48,7 +48,7 @@
 
 
       <!-- Mosaic -->
-      <ion-card *ngIf="selectedMosaic" (click)="selectMosaic()">
+      <ion-card *ngIf="show" (click)="selectMosaic()">
         <ion-label text-left padding-left> {{ "WALLETS.BALANCE" | translate}}:</ion-label>
 
         <ion-item background-white>

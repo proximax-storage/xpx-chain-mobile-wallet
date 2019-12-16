@@ -48,7 +48,7 @@ export class SendPage {
   App = App;
   addressSourceType: { from: string; to: string };
   currentWallet: any;
-  selectedMosaic: DefaultMosaic = new DefaultMosaic({ namespaceId: 'prx', mosaicId: 'xpx', hex: AppConfig.xpxHexId, name:'prx.xpx', amount: 0, amountCompact: 0, divisibility: 0 });
+  selectedMosaic: DefaultMosaic = new DefaultMosaic({ namespaceId: 'prx', mosaicId: 'xpx', hex: AppConfig.xpxHexId, name: 'prx.xpx', amount: 0, amountCompact: 0, divisibility: 0 });
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
@@ -68,6 +68,7 @@ export class SendPage {
   configurationForm: ConfigurationForm = {};
   address: any;
   maxAmount: number;
+  show: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -92,7 +93,7 @@ export class SendPage {
     // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
     this.configurationForm = this.sharedService.configurationForm;
-    
+
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
@@ -128,18 +129,20 @@ export class SendPage {
           .subscribe(mosaics => {
             this.mosaics = mosaics;
 
-            mosaics.forEach(_mosaic => {
+            mosaics.forEach(async _mosaic => {
               if (_mosaic.mosaicId === this.selectedMosaicName) {
                 this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
                 console.log('trae name', this.selectedMosaic);
-                if(this.selectedMosaic.mosaicId === 'xpx'){
-                  this.selectedMosaic.name = 'prx.xpx';
+                let names = [];
+                names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
+                for (const element of mosaics) {
+                  let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
+                  if (value.names && value.names.length > 0) {
+                    element.name = value.names[0].name;
+                  }
+                  this.show = true;
                 }
-                // this.selectedMosaic.name = 'prx.xpx';
               }
-
-              // console.log('selectedMosaic', this.selectedMosaic);
-              
               let mosaicId = _mosaic.mosaicId;
               let coinId: string;
 
@@ -172,6 +175,10 @@ export class SendPage {
       this.form.patchValue({ message: this.payload.message });
     }
 
+  }
+
+  async getNameMosacis(idMosaics: MosaicId[]) {
+    return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
   }
 
   ionViewDidLoad() {
@@ -327,7 +334,7 @@ export class SendPage {
     const mosaicsToSend = this.validateMosaicsToSend();
 
     console.log('mosaicsmosaics', mosaicsToSend);
-    
+
     if (privateKey) {
       let message = this.form.get("message").value;
       let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
@@ -355,12 +362,12 @@ export class SendPage {
   }
 
 
-  validateMosaicsToSend(){
+  validateMosaicsToSend() {
     const mosaics = [];
     const amountXpx = this.form.get('amount').value;
 
     console.log('amountXpx', amountXpx);
-    
+
     if (amountXpx !== '' && amountXpx !== null && Number(amountXpx) !== 0) {
       // console.log(amountXpx);
       const arrAmount = amountXpx.toString().replace(/,/g, '').split('.');
@@ -380,23 +387,23 @@ export class SendPage {
       });
     }
 
-      return mosaics
-    }
-  
+    return mosaics
+  }
 
-    addZeros(cant: any, amount: string = '0') {
-      const x = '0';
-      if (amount === '0') {
-        for (let index = 0; index < cant - 1; index++) {
-          amount += x;
-        }
-      } else {
-        for (let index = 0; index < cant; index++) {
-          amount += x;
-        }
+
+  addZeros(cant: any, amount: string = '0') {
+    const x = '0';
+    if (amount === '0') {
+      for (let index = 0; index < cant - 1; index++) {
+        amount += x;
       }
-      return amount;
+    } else {
+      for (let index = 0; index < cant; index++) {
+        amount += x;
+      }
     }
+    return amount;
+  }
 
   /**
  *
@@ -416,13 +423,13 @@ export class SendPage {
 
   scan() {
     this.storage.set("isQrActive", true);
-    this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true});
+    this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true });
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";
       let address = barcodeData.text.split("-").join("")
       if (address.length != 40) {
         this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
-        
+
       } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, address)) {
         this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
       } else {

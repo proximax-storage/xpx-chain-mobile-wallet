@@ -114,18 +114,10 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
-
     this.mosaicHex = payload.mosaicHex;
-    
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
     this.mosaicName = payload.mosaicName;
-
-    // console.log('mosaicName', this.mosaicName);
-    
-    
-    console.log(this.mosaicId);
-    console.log(this.mosaicHex);
     // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
@@ -140,7 +132,7 @@ export class CoinPriceChartPage {
             this.showEmptyMessage = false;
           }
         });
-      } else if(this.mosaicId === 'xpx') {
+      } else if (this.mosaicId === 'xpx') {
         this.confirmedTransactions.push(confirmed);
       }
     });
@@ -176,9 +168,7 @@ export class CoinPriceChartPage {
       }
       this.showEmptyMosaic = true;
     } else if (this.mosaicId !== 'xpx' && this.mosaicId !== 'npxs' && this.mosaicId !== 'sft' && this.mosaicId !== 'xar') {
-      console.log('otros mosaicos aqioiiiiiii');
-      
-      
+
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -195,7 +185,6 @@ export class CoinPriceChartPage {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
       }
-      console.log('this.selectedCoin', this.selectedCoin);
       this.showEmptyMosaic = true;
     } else {
       if (this.coinId !== "") {
@@ -245,7 +234,6 @@ export class CoinPriceChartPage {
   }
 
   copy() {
-    console.log(this.selectedAccount);
     const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
     this.clipboard.copy(address.plain()).then(_ => {
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
@@ -283,8 +271,6 @@ export class CoinPriceChartPage {
   }
 
   showSendModal() {
-    console.log(this.accountInfo);
-
     if (this.isMultisig) {
       this.haptic.selection();
       let page = 'SendMultisigPage';
@@ -370,12 +356,10 @@ export class CoinPriceChartPage {
                   },
                     (error: any) => console.error(error)
                   );
-
               } else {
                 // use fallback browser, example InAppBrowser
               }
-            }
-            );
+            });
         }
       });
   }
