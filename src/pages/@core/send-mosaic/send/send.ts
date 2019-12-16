@@ -131,7 +131,11 @@ export class SendPage {
             mosaics.forEach(_mosaic => {
               if (_mosaic.mosaicId === this.selectedMosaicName) {
                 this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
-                this.selectedMosaic.name = 'prx.xpx';
+                console.log('trae name', this.selectedMosaic);
+                if(this.selectedMosaic.mosaicId === 'xpx'){
+                  this.selectedMosaic.name = 'prx.xpx';
+                }
+                // this.selectedMosaic.name = 'prx.xpx';
               }
 
               // console.log('selectedMosaic', this.selectedMosaic);
