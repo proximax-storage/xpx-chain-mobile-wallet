@@ -5,8 +5,13 @@
       *ngFor="let mosaic of mosaics" (click)="onSelect(mosaic);onSubmit()">
       <ion-item>
         <img logo-medium item-left [src]="utils.getLogo(mosaic)">
-        <h2 text-uppercase ion-text color="dark">{{ mosaic.mosaicId || ''}}</h2>
-        <p text-uppercase ion-text color="dark">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</p>
+        <h2 ion-text color="dark" *ngIf="mosaic.name != undefined && mosaic.name.length !=0 ">
+            {{ mosaic.name | uppercase }}</h2>
+          <h3 ion-text color="dark" *ngIf="mosaic.name === undefined || mosaic.name.length === 0">
+            {{ mosaic.hex | uppercase }}
+          </h3>
+        <!-- <h2 text-uppercase ion-text color="dark">{{ mosaic.mosaicId || ''}}</h2>
+        <p text-uppercase ion-text color="dark">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</p> -->
 
         <section item-right>
           <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>

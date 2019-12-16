@@ -48,7 +48,7 @@ export class SendPage {
   App = App;
   addressSourceType: { from: string; to: string };
   currentWallet: any;
-  selectedMosaic: DefaultMosaic = new DefaultMosaic({ namespaceId: 'prx', mosaicId: 'xpx', hex: AppConfig.xpxHexId, amount: 0, amountCompact: 0, divisibility: 0 });
+  selectedMosaic: DefaultMosaic = new DefaultMosaic({ namespaceId: 'prx', mosaicId: 'xpx', hex: AppConfig.xpxHexId, name:'prx.xpx', amount: 0, amountCompact: 0, divisibility: 0 });
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
@@ -131,8 +131,11 @@ export class SendPage {
             mosaics.forEach(_mosaic => {
               if (_mosaic.mosaicId === this.selectedMosaicName) {
                 this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
+                this.selectedMosaic.name = 'prx.xpx';
               }
 
+              // console.log('selectedMosaic', this.selectedMosaic);
+              
               let mosaicId = _mosaic.mosaicId;
               let coinId: string;
 
@@ -160,8 +163,6 @@ export class SendPage {
     // if deeplink
     this.payload = this.navParams.data;
     if (this.payload.amount) {
-      console.log("TCL: SendPage -> this.payload", this.payload)
-
       this.form.patchValue({ amount: this.payload.amount });
       this.form.patchValue({ recipientAddress: this.payload.address });
       this.form.patchValue({ message: this.payload.message });
@@ -297,6 +298,8 @@ export class SendPage {
           precision: data.divisibility
         };
         this.selectedMosaic = data;
+
+        console.log('12345678, selectedMosaic', this.selectedMosaic);
         // this.mosaics = data;
       }
     });

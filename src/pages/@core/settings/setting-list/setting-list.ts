@@ -25,7 +25,7 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 export class SettingListPage {
   currentWallet: SimpleWallet;
   accountInfo: AccountInfoWithMetaData;
-  version: string = '0.0.1';
+  version: string = '0.1.0';
   buildNumber: any = '10';
 
   constructor(
@@ -44,10 +44,10 @@ export class SettingListPage {
   ) {
     if (this.platform.is('cordova')) {
       this.appVersion.getVersionNumber().then(version => {
-        this.version = version || '0.0.1';
+        this.version = version || '0.1.0';
       }).then(_ => {
         this.appVersion.getVersionCode().then(build => {
-          this.buildNumber = build || '10';
+          this.buildNumber = build || '0';
         })
       })
     }

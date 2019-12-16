@@ -13,6 +13,7 @@ import { UtilitiesProvider } from "../../../../../providers/utilities/utilities"
 import {
   Address,
   MosaicInfo,
+  MosaicId,
 } from "tsjs-xpx-chain-sdk";
 import { MosaicsProvider } from "../../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
@@ -68,7 +69,22 @@ export class SendMosaicSelectPage {
       console.log('this.selectedWallet', this.selectedWallet);
       
         this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
-        this.mosaicsProvider.getMosaics(this.address).subscribe(mosaics=>{
+        this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics=>{
+
+          let names = [];
+          names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
+
+          console.log('.........................names', names);
+          
+          for (const element of mosaics) {
+            let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
+            console.log('.........................value', value);
+            
+            if(value.names  && value.names.length > 0){
+              element.name = value.names[0].name;
+            }
+          }
+
           this.mosaics = mosaics;
 
           console.log('this.mosaics', this.mosaics);
@@ -77,6 +93,10 @@ export class SendMosaicSelectPage {
     });
   }
 
+  async getNameMosacis(idMosaics: MosaicId[]) {
+    return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
+  }
+  
   loadDefaultMosaics() {
     return this.mosaicsProvider.loadDefaultMosaics();
   }

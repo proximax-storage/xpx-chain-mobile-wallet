@@ -264,6 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "Tiếng Nga",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Tiếng việt",
     "SETTINGS.LOGOUT": "Đăng xuất",
+    "SETTINGS.VERSION" : "Phiên bản {{phiên bản}} Beta",
     "TRANSACTION_DETAIL.COSIGN": "Đồng ý để tiếp tục",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Đã đồng ký tên",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Giao dịch đồng ký tên đã hoàn tất"

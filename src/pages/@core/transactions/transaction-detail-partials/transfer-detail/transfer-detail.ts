@@ -32,6 +32,7 @@ export class TransferDetailComponent {
   timestamp: string;
   deadline: string;
   mosaicFound = [];
+  valid: boolean;
 
   constructor(
     public utils: UtilitiesProvider,
@@ -135,6 +136,7 @@ export class TransferDetailComponent {
       }
 
       const valid = this.IsJsonString(this.tx.message.payload);
+      this.valid = valid;
       if (valid) {
         this.data = JSON.parse(this.tx.message.payload);
         if (this.data.message) {
@@ -145,6 +147,8 @@ export class TransferDetailComponent {
           return this.data;
         }
       } else {
+        this.data = this.tx.message.payload
+        return this.data
         this.messageShow = false
       }
     } catch (error) {

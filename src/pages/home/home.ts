@@ -33,8 +33,6 @@ import { TransactionsProvider } from "../../providers/transactions/transactions"
 import { DefaultMosaic } from "../../models/default-mosaic";
 import { ProximaxProvider } from '../../providers/proximax/proximax';
 import { AppConfig } from './../../app/app.config';
-import { ScreenOrientation } from '@ionic-native/screen-orientation';
-
 
 @Component({
   selector: "page-home",
@@ -79,7 +77,7 @@ export class HomePage {
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
 
-  tablet: boolean = false;
+  tablet: boolean;
 
   selectedWallet: CatapultsAccountsInterface;
   selectedAccount: CatapultsAccountsInterface;
@@ -106,35 +104,16 @@ export class HomePage {
     public mosaicsProvider: MosaicsProvider,
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
-    private proximaxProvider: ProximaxProvider,
-    private screenOrientation: ScreenOrientation
+    private proximaxProvider: ProximaxProvider
   ) {this.mosaicFound = []; }
 
 
   ionViewWillEnter() {
     this.utils.setHardwareBack();
-    console.log('camnio de orientacion');
-    this.changeOrientation();
-    console.log('\n\n ------------ ionViewWillEnter ---> this.init(1) -------------------');
+    console.log('\n\n ------------ ionViewWillEnter ---> this.init() -------------------');
     this.init();
   }
 
-  changeOrientation(){
-    console.log('camnio ');
-    this.screenOrientation.onChange().subscribe(
-      () => {
-          
-          if (window.screen.width >= 768) {
-            // 768px portrait
-            this.tablet = true;
-            console.log("Orientation Changed", this.tablet);
-          } else {
-            this.tablet = false;
-            console.log("Orientation Changed", this.tablet);
-          }
-      }
-   );
-  }
   /**
    *
    *
@@ -492,6 +471,7 @@ export class HomePage {
    * @memberof HomePage
    */
   gotoCoinPrice(mosaic) {
+    console.log('######################### entrando', mosaic);
     let coinName = "";
     if (mosaic.mosaicId === "xem") {
       coinName = "nem";
@@ -503,10 +483,13 @@ export class HomePage {
       coinName = "sportsfix";
     }
 
+  
+    
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
       const totalBalance = mosaic.amount * price;
       const mosaicHex = mosaic.hex;
       const mosaicId = mosaic.mosaicId;
+      const mosaicName = mosaic.name;
       const namespaceId = mosaic.namespaceId;
       const coinId = coinName;
       const selectedAccount = this.selectedAccount;
@@ -517,6 +500,7 @@ export class HomePage {
         totalBalance,
         mosaicHex,
         mosaicId,
+        mosaicName,
         namespaceId,
         coinId,
         selectedAccount,

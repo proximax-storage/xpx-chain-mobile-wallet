@@ -83,6 +83,7 @@ export class CoinPriceChartPage {
   array: any[] = [];
   account: any;
   divisibility: any;
+  mosaicName: any;
 
 
   constructor(
@@ -113,23 +114,25 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
-    console.log("TCL: CoinPriceChartPage -> payload", payload)
 
     this.mosaicHex = payload.mosaicHex;
     
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
+    this.mosaicName = payload.mosaicName;
+
+    // console.log('mosaicName', this.mosaicName);
+    
+    
     console.log(this.mosaicId);
     console.log(this.mosaicHex);
     // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
-    console.log('selectedAccount', this.selectedAccount);
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;
     this.confirmed.forEach((confirmed: Transaction) => {
-      console.log('confirmed', confirmed);
       if (confirmed.type === TransactionType.TRANSFER) {
         confirmed['mosaics'].forEach(async _mosaic => {
           if (_mosaic.id.toHex().toLowerCase() == this.mosaicHex) {
@@ -173,6 +176,9 @@ export class CoinPriceChartPage {
       }
       this.showEmptyMosaic = true;
     } else if (this.mosaicId !== 'xpx' && this.mosaicId !== 'npxs' && this.mosaicId !== 'sft' && this.mosaicId !== 'xar') {
+      console.log('otros mosaicos aqioiiiiiii');
+      
+      
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -189,6 +195,7 @@ export class CoinPriceChartPage {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
       }
+      console.log('this.selectedCoin', this.selectedCoin);
       this.showEmptyMosaic = true;
     } else {
       if (this.coinId !== "") {
@@ -203,10 +210,8 @@ export class CoinPriceChartPage {
       } else {
         this.showEmptyMosaic = true;
       }
-
     }
   }
-
 
   ionViewWillEnter() {
   }
@@ -222,7 +227,6 @@ export class CoinPriceChartPage {
       this.proximaxProvider.getMultisigAccountInfo(address).subscribe(accountInfo => {
         if (accountInfo) {
           this.accountInfo = accountInfo;
-          console.log('this.accountInfo', this.accountInfo)
           // Check if account is a cosignatory of multisig account(s)
           if (this.accountInfo.cosignatories.length > 0) {
             // console.log("This is a multisig account");

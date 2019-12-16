@@ -12,9 +12,13 @@
         {{ selectedCoin.name }} ({{ selectedCoin.symbol }})
       </span>
 
-      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.symbol === ''">
+      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.symbol === '' && mosaicName === undefined">
         {{ mosaicId }}
       </span>
+
+      <span text-uppercase ion-text color="dark" *ngIf="selectedCoin.symbol === '' && mosaicName !== undefined">
+          {{ mosaicName }}
+        </span>
     </ion-title> <!-- <span style="font-size: 18px;" text-uppercase>{{mosaicId}}</span> -->
 
     <ion-buttons end>
