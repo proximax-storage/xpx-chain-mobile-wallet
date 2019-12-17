@@ -264,6 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "Russian",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamese",
     "SETTINGS.LOGOUT": "Logout",
+    "SETTINGS.VERSION" : "Version {{version}} Beta",
     "TRANSACTION_DETAIL.COSIGN": "Approve to continue",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosigned",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "This multisig tranfer transaction has been successfuly cosigned."

@@ -471,6 +471,7 @@ export class HomePage {
    * @memberof HomePage
    */
   gotoCoinPrice(mosaic) {
+    console.log('######################### entrando', mosaic);
     let coinName = "";
     if (mosaic.mosaicId === "xem") {
       coinName = "nem";
@@ -482,10 +483,13 @@ export class HomePage {
       coinName = "sportsfix";
     }
 
+  
+    
     this.marketPrice.transform(mosaic.mosaicId).then(price => {
       const totalBalance = mosaic.amount * price;
       const mosaicHex = mosaic.hex;
       const mosaicId = mosaic.mosaicId;
+      const mosaicName = mosaic.name;
       const namespaceId = mosaic.namespaceId;
       const coinId = coinName;
       const selectedAccount = this.selectedAccount;
@@ -496,6 +500,7 @@ export class HomePage {
         totalBalance,
         mosaicHex,
         mosaicId,
+        mosaicName,
         namespaceId,
         coinId,
         selectedAccount,

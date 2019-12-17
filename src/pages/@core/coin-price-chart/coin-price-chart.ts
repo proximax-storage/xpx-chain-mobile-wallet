@@ -83,6 +83,7 @@ export class CoinPriceChartPage {
   array: any[] = [];
   account: any;
   divisibility: any;
+  mosaicName: any;
 
 
   constructor(
@@ -113,23 +114,17 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
-    console.log("TCL: CoinPriceChartPage -> payload", payload)
-
     this.mosaicHex = payload.mosaicHex;
-    
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
-    console.log(this.mosaicId);
-    console.log(this.mosaicHex);
+    this.mosaicName = payload.mosaicName;
     // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
-    console.log('selectedAccount', this.selectedAccount);
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;
     this.confirmed.forEach((confirmed: Transaction) => {
-      console.log('confirmed', confirmed);
       if (confirmed.type === TransactionType.TRANSFER) {
         confirmed['mosaics'].forEach(async _mosaic => {
           if (_mosaic.id.toHex().toLowerCase() == this.mosaicHex) {
@@ -137,7 +132,7 @@ export class CoinPriceChartPage {
             this.showEmptyMessage = false;
           }
         });
-      } else if(this.mosaicId === 'xpx') {
+      } else if (this.mosaicId === 'xpx') {
         this.confirmedTransactions.push(confirmed);
       }
     });
@@ -173,6 +168,7 @@ export class CoinPriceChartPage {
       }
       this.showEmptyMosaic = true;
     } else if (this.mosaicId !== 'xpx' && this.mosaicId !== 'npxs' && this.mosaicId !== 'sft' && this.mosaicId !== 'xar') {
+
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -203,10 +199,8 @@ export class CoinPriceChartPage {
       } else {
         this.showEmptyMosaic = true;
       }
-
     }
   }
-
 
   ionViewWillEnter() {
   }
@@ -222,7 +216,6 @@ export class CoinPriceChartPage {
       this.proximaxProvider.getMultisigAccountInfo(address).subscribe(accountInfo => {
         if (accountInfo) {
           this.accountInfo = accountInfo;
-          console.log('this.accountInfo', this.accountInfo)
           // Check if account is a cosignatory of multisig account(s)
           if (this.accountInfo.cosignatories.length > 0) {
             // console.log("This is a multisig account");
@@ -241,7 +234,6 @@ export class CoinPriceChartPage {
   }
 
   copy() {
-    console.log(this.selectedAccount);
     const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
     this.clipboard.copy(address.plain()).then(_ => {
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
@@ -279,8 +271,6 @@ export class CoinPriceChartPage {
   }
 
   showSendModal() {
-    console.log(this.accountInfo);
-
     if (this.isMultisig) {
       this.haptic.selection();
       let page = 'SendMultisigPage';
@@ -366,12 +356,10 @@ export class CoinPriceChartPage {
                   },
                     (error: any) => console.error(error)
                   );
-
               } else {
                 // use fallback browser, example InAppBrowser
               }
-            }
-            );
+            });
         }
       });
   }

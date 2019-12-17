@@ -264,6 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "Ruso",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamita",
     "SETTINGS.LOGOUT": "Cerrar sesión",
+    "SETTINGS.VERSION" : "Versión {{version}} Beta",
     "TRANSACTION_DETAIL.COSIGN": "Aprobar para continuar",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Cosignatario",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Esta transacción ha sido firmada con éxito"

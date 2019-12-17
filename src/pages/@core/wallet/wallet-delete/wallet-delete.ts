@@ -40,7 +40,7 @@ export class WalletDeletePage {
     private haptic: HapticProvider,
     private viewCtrl: ViewController
   ) {
-    this.selectedWallet = this.navParams.get('wallet');
+    this.selectedWallet = this.navParams.get('myWallets');
     console.log("SIRIUS CHAIN WALLET: WalletDeletePage -> this.selectedWallet", this.selectedWallet)
     this.init();
   }

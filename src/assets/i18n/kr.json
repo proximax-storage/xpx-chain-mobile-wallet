@@ -264,6 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "러시아인",
     "SETTINGS.LANGUAGE.VIETNAMESE": "베트남어",
     "SETTINGS.LOGOUT": "로그 아웃",
+    "SETTINGS.VERSION" : "버전 {{version}} 베타",
     "TRANSACTION_DETAIL.COSIGN": "계속하기 위해서 승인해 주십시오.",
     "TRANSACTION_DETAIL.COSIGN_DONE": "공동 서명하였습니다.",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "다중 서명 계좌 이동에 성공적으로 공동 서명하였습니다."

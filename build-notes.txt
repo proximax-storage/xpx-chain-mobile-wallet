@@ -4,8 +4,8 @@ eqhwBDirdso*
 keytool -genkey -v -keystore proximax.keystore -alias proximax_keystore -keyalg RSA -keysize 2048 -validity 10000 
 
 
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore proximax.keystore android-release-unsigned.apk proximax_keystore
-zipalign -v 4 android-release-unsigned.apk myProtectedApp.apk  
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore proximax.keystore app-release-unsigned.apk proximax_keystore
+zipalign -v 4 app-release-unsigned.apk myProtectedApp.apk  
 
 
 Windows: CMD

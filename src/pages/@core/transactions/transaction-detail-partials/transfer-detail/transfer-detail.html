@@ -171,8 +171,8 @@
   <ion-card-content no-padding>
     <ion-item>
       <h2 ion-text color="dark">{{"WALLETS.TRANSACTION.DETAIL.MESSAGE" | translate}}</h2>
-      <p text-wrap ion-text color="dark" *ngIf="tx.message.payload && tx?.message?.type == 0 && !messageShow">
-        {{ tx?.message?.payload }}
+      <p text-wrap ion-text color="dark">
+          {{ data }}
       </p>
       <p text-wrap ion-text color="dark" color="dark" *ngIf="tx.message.type == 1">
         {{"WALLETS.TRANSACTION.DETAIL.ENCRYPTED_MESSAGE" | translate}}

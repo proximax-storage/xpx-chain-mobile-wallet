@@ -264,6 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN" : "Russisch",
     "SETTINGS.LANGUAGE.VIETNAMESE": "Vietnamees",
     "SETTINGS.LOGOUT" : "Afmelden",
+    "SETTINGS.VERSION" : "Versie {{version}} Beta",
 		"TRANSACTION_DETAIL.COSIGN": "Ondertekenen om door te gaan",
 		"TRANSACTION_DETAIL.COSIGN_DONE": "Medeondertekend",
 		"TRANSACTION_DETAIL.COSIGN_MESSAGE": "Deze multi-handtekening transactie is succesvol medeondertekend."
