@@ -26,10 +26,107 @@ export class UtilitiesProvider {
     private events: Events,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
-  ) {
-    console.log('Hello UtilitiesProvider Provider');
+  ) { }
+
+
+  /**
+   *
+   *
+   * @param {*} cant
+   * @param {number} [amount=0]
+   * @returns
+   * @memberof UtilitiesProvider
+   */
+  addZeros(cant: any, amount: number = 0) {
+    let decimal: any;
+    let realAmount: any;
+    if (amount === 0) {
+      decimal = this.addDecimals(cant);
+      realAmount = `0${decimal}`;
+    } else {
+      const arrAmount = amount.toString().replace(/,/g, "").split(".");
+      if (arrAmount.length < 2) {
+        decimal = this.addDecimals(cant);
+      } else {
+        const arrDecimals = arrAmount[1].split("");
+        decimal = this.addDecimals(cant - arrDecimals.length, arrAmount[1]);
+      }
+      realAmount = `${arrAmount[0]}${decimal}`;
+    }
+    return realAmount;
   }
 
+  /**
+   *
+   *
+   * @param {*} cant
+   * @param {string} [amount="0"]
+   * @returns
+   * @memberof UtilitiesProvider
+   */
+  addDecimals(cant: any, amount: string = "0") {
+    const x = "0";
+    if (amount === "0") {
+      for (let index = 0; index < cant - 1; index++) {
+        amount += x;
+      }
+    } else {
+      for (let index = 0; index < cant; index++) {
+        amount += x;
+      }
+    }
+    return amount;
+  }
+
+
+  /**
+   *
+   *
+   * @param {number} quantityOne
+   * @param {number} quantityTwo
+   * @param {number} [limitDecimal=6]
+   * @returns {string}
+   * @memberof UtilitiesProvider
+   */
+  subtractAmount(quantityOne: number, quantityTwo: number, limitDecimal: number = 6): string {
+    let residue: string[] = (quantityOne - quantityTwo).toString().replace(/,/g, "").split(".");
+    let missing = (residue.length > 1) ? limitDecimal - residue[1].length : 6;
+    residue[1] = (residue.length > 1) ? residue[1].slice(0, 6) : '';
+    for (let index = 0; index < missing; index++) {
+      residue[1] += 0;
+    }
+
+    return residue.join().replace(/,/g, ".");
+  }
+
+
+  /**
+   *
+   *
+   * @param {string} str1
+   * @returns
+   * @memberof UtilitiesProvider
+   */
+  hexToAscii(str1: string) {
+    var hex = str1.toString();
+    var str = '';
+    for (var n = 0; n < hex.length; n += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+  }
+
+
+  // ----------------------------------------------------------------------------
+
+
+  /**
+   *
+   *
+   * @param {*} index
+   * @returns
+   * @memberof UtilitiesProvider
+   */
   setTabIndex(index) {
     return this.platform.registerBackButtonAction(() => {
       this.events.publish('tab:back', index);
@@ -43,10 +140,10 @@ export class UtilitiesProvider {
   }
 
   disableHardwareBack() {
-      this.platform.registerBackButtonAction((event)=>{
-          console.log('Prevent Back Button Page Change');
-      }, 101); // Priority 101 will override back button handling (we set in app.component.ts) as it is bigger then priority 100 configured in app.component.ts file */
-  }   
+    this.platform.registerBackButtonAction((event) => {
+      console.log('Prevent Back Button Page Change');
+    }, 101); // Priority 101 will override back button handling (we set in app.component.ts) as it is bigger then priority 100 configured in app.component.ts file */
+  }
 
   setHardwareBackToPage(page: string) {
     return this.platform.registerBackButtonAction(() => {
@@ -65,10 +162,10 @@ export class UtilitiesProvider {
     this.app.getRootNavs()[0].setRoot(page, data, {
       animate: true,
       // direction: 'backward'
-    }).then(() =>{
+    }).then(() => {
       this.app.navPop();
       //....
-  });;
+    });;
   }
 
   copy(text: string, type: string) {
@@ -95,44 +192,77 @@ export class UtilitiesProvider {
    * Get the logo of the mosaics
    * @param mosaic The mosaic object for querying the logo
    */
-  getLogo(mosaic: DefaultMosaic) {
-    if(!mosaic) {
-      return AppProvider.LOGO.DEFAULT;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'prx' &&
-      mosaic.mosaicId.toLowerCase() === 'xpx' || mosaic.hex.toLowerCase() ===  AppConfig.xpxHexId
-    ) {
-      return AppProvider.LOGO.XPX;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'pundix' &&
-      mosaic.mosaicId.toLowerCase() === 'npxs' || mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
-    ) {
-      return AppProvider.LOGO.NPXS;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'sportsfix' &&
-      mosaic.mosaicId.toLowerCase() === 'sft' || mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
-    ) {
-      return AppProvider.LOGO.SFT;
-    } else if (
-      mosaic.namespaceId.toLowerCase() === 'xarcade' &&
-      mosaic.mosaicId.toLowerCase() === 'xar' || mosaic.hex.toLowerCase() === '59096674da68a7e5'
-    ) {
-      return AppProvider.LOGO.XAR;
-    } else {
-      return AppProvider.LOGO.DEFAULT;
+  getLogo(mosaic: DefaultMosaic | string) {
+    try {
+      if (!mosaic) {
+        return AppProvider.LOGO.SIRIUS;
+      } else if (typeof(mosaic) === 'string') {
+        if (mosaic  === AppConfig.xpxHexId) {
+          return AppProvider.LOGO.XPX;
+        }
+
+        return AppProvider.LOGO.SIRIUS;
+      } else {
+        if (
+          (
+            mosaic.namespaceId &&
+            mosaic.namespaceId !== '' &&
+            mosaic.namespaceId.toLowerCase() === 'prx' ||
+            mosaic.namespaceId.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
+          ) &&
+          (
+            mosaic.mosaicId &&
+            mosaic.mosaicId !== '' &&
+            mosaic.mosaicId.toLowerCase() === 'xpx' ||
+            mosaic.mosaicId.toLowerCase() === AppConfig.mosaicXpxInfo.id.toLowerCase()
+          ) ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.xpxHexId || 
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
+        ) {
+          return AppProvider.LOGO.XPX;
+        } else if (
+          mosaic.namespaceId &&
+          mosaic.namespaceId !== '' &&
+          mosaic.namespaceId.toLowerCase() === 'pundix' &&
+          mosaic.mosaicId.toLowerCase() === 'npxs' ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === '1e29b3356f3e24e5'
+        ) {
+          return AppProvider.LOGO.NPXS;
+        } else if (
+          mosaic.namespaceId &&
+          mosaic.namespaceId !== '' &&
+          mosaic.namespaceId.toLowerCase() === 'sportsfix' &&
+          mosaic.mosaicId.toLowerCase() === 'sft' ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === '33b0efbf4a600cc9'
+        ) {
+          return AppProvider.LOGO.SFT;
+        } else if (
+          mosaic.namespaceId &&
+          mosaic.namespaceId &&
+          mosaic.namespaceId.toLowerCase() === 'xarcade' &&
+          mosaic.mosaicId.toLowerCase() === 'xar' ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === '59096674da68a7e5'
+        ) {
+          return AppProvider.LOGO.XAR;
+        } else {
+          return AppProvider.LOGO.SIRIUS;
+        }
+      }
+    } catch (error) {
+      return AppProvider.LOGO.SIRIUS;
     }
   }
 
-    /**
-   * Get the logo of the specified language
-   * @param lange The language object for getting the logo
-   */
+  /**
+ * Get the logo of the specified language
+ * @param lange The language object for getting the logo
+ */
   getFlag(lang) {
     if (lang.value == "cn") {
       return AppProvider.FLAGS.CN;
     } else if (lang.value == "en") {
       return AppProvider.FLAGS.EN;
-    }  else if (lang.value == "es") {
+    } else if (lang.value == "es") {
       return AppProvider.FLAGS.ES;
     } else if (lang.value == "fr") {
       return AppProvider.FLAGS.FR;
@@ -141,13 +271,13 @@ export class UtilitiesProvider {
     } else if (lang.value == "kr") {
       return AppProvider.FLAGS.KR;
     }
-     else if (lang.value == "nl") {
+    else if (lang.value == "nl") {
       return AppProvider.FLAGS.NL;
     } else if (lang.value == "ru") {
       return AppProvider.FLAGS.RU;
     } else if (lang.value == "vt") {
       return AppProvider.FLAGS.VT;
-    } 
+    }
   }
 
   /**
@@ -155,7 +285,7 @@ export class UtilitiesProvider {
    * @param page { Component || string } The page to set as modal.
    * @param data { Object } Any data to pass when modal is shown
    */
-  showModal(page, data = {}): Observable<any> {
+  showModal(page: any, data: Object = {}): Observable<any> {
     const modal = this.modalCtrl.create(page, data, {
       enableBackdropDismiss: false,
       showBackdrop: true

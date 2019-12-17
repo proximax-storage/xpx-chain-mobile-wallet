@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-
 import { AuthProvider } from '../auth/auth';
-import { SimpleWallet, Password, Address, EncryptedPrivateKey, 
-  AccountInfo, MosaicAmountView, NetworkType, PublicAccount, TransferTransaction,
-  Deadline, PlainMessage, Mosaic, MosaicId, UInt64, Account, TransactionHttp, NetworkCurrencyMosaic} from 'tsjs-xpx-chain-sdk';
+import {
+  SimpleWallet,
+  Password,
+  Address,
+  EncryptedPrivateKey,
+  AccountInfo,
+  MosaicAmountView,
+  PublicAccount,
+  Account,
+} from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet as SimpleWalletNIS1, PublicAccount as PublicAccountNIS1 } from 'nem-library';
 import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
-import { HttpClient } from '@angular/common/http';
+import { NemProvider } from '../nem/nem';
 
 /*
  Generated class for the NemProvider provider.
@@ -25,58 +32,434 @@ export class WalletProvider {
   publicAccount: PublicAccount;
   wallets: SimpleWallet[];
   selectedWallet: any;
+  selectesAccount: any;
 
   constructor(
-    private storage: Storage, 
-    private authProvider: AuthProvider, 
+    private authProvider: AuthProvider,
+    private nemProvider: NemProvider,
     private proximaxProvider: ProximaxProvider,
-    private http: HttpClient,) {
-      this.httpUrl = AppConfig.sirius.httpNodeUrl;
+    private storage: Storage,
+  ) {
+    this.httpUrl = AppConfig.sirius.httpNodeUrl;
   }
 
-    /**
-   * Create Simple Wallet
-   * @param walletName wallet idenitifier for app
-   * @param password wallet's password
-   * @param selected network
-   * @return Promise with wallet created
+
+  /**
+ * Check If Wallet Name Exists
+ * @param walletName
+ * @return Promise that resolves a boolean if exists
+ */
+  checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
+    let exists = false;
+    return this.getLocalWallets().then(wallets => {
+      if (wallets.length != 0) {
+        let _catapultAccounts: any = wallets.catapultAccounts;
+        for (var i = 0; i < _catapultAccounts.length; i++) {
+          if (_catapultAccounts[i].account.name === walletName || _catapultAccounts[i].account.address.address === walletAddress) {
+            exists = true;
+            break;
+          }
+        }
+      } else {
+        exists = false;
+      }
+      return exists;
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {string} user
+   * @param {string} password
+   * @returns
+   * @memberof WalletProvider
    */
-  public createSimpleWallet(
-  { walletName, password }: 
-  { walletName: string; password: string; }): 
-  SimpleWallet {
-    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  async createUser(user: string, password: string) {
+    const data = await this.storage.get('myWallets');
+    const wallets: WalletInterface[] = data ? data : [];
+    let foundWallet = wallets.filter((wallet: any) => {
+      return wallet.user.includes(user);
+    });
+
+    if (foundWallet.length > 0) {
+      return "duplicate";
+    } else {
+      var encrypted = this.authProvider.encryptAccount(password);
+      const wallet = {
+        user: user.toLowerCase(),
+        encrypted: encrypted.toString(),
+        catapultAccounts: null,
+        nis1Accounts: null
+      };
+
+      this.setSelectedWallet(wallet);
+      wallets.push(wallet);
+      return this.storage.set('myWallets', wallets);
+    }
   }
 
-  public createAccountFromPrivateKey(
-    { walletName, password, privateKey }: 
-    { walletName: string; password: string; privateKey: string; }): 
-    SimpleWallet {
+  /**
+*
+*
+* @param {string} walletName
+* @param {string} password
+* @param {string} privateKey
+* @returns {SimpleWallet}
+* @memberof WalletProvider
+*/
+  createAccountFromPrivateKey(walletName: string, password: string, privateKey: string): SimpleWallet {
     return this.proximaxProvider.createAccountFromPrivateKey(walletName, new Password(password), privateKey);
   }
 
-  public getAccount(wallet: SimpleWallet) : Observable<Account> {
+  /**
+   *
+   *
+   * @param {string} walletName
+   * @param {string} password
+   * @returns {SimpleWallet}
+   * @memberof WalletProvider
+   */
+  createSimpleWallet(walletName: string, password: string): SimpleWallet {
+    return this.proximaxProvider.createSimpleWallet(walletName, new Password(password));
+  }
+
+  deleteWallet(wallet: SimpleWallet) {
+    return this.getLocalWallets().then(wallets => {
+      let _catapultAccounts: any = wallets.catapultAccounts;
+      let _nis1Accounts: any = wallets.nis1Accounts;
+
+      _catapultAccounts.map((res, index) => {
+        if (res.account.name == wallet['account'].name) {
+          _catapultAccounts.splice(index, 1);
+        }
+      });
+
+      _nis1Accounts.map((res, index) => {
+        if (res.account.name == wallet['account'].name) {
+          _nis1Accounts.splice(index, 1);
+        }
+      });
+
+      let _wallets = {
+        catapultAccounts: _catapultAccounts,
+        encrypted: wallets.encrypted,
+        nis1Accounts: _nis1Accounts,
+        user: wallets.user
+      }
+
+      let walletsDeleted = [];
+      walletsDeleted.push(_wallets);
+      this.storage.set('selectedAccount', _catapultAccounts[0]);
+      this.storage.set('selectedWallet', _wallets);
+      this.storage.set('myWallets', walletsDeleted)
+      return;
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccountCatapult
+   * @returns
+   * @memberof WalletProvider
+   */
+  async filterCatapultAccountInWalletSelected(publicAccountCatapult: PublicAccount) {
+    const myWalletSelected = await this.getWalletSelected();
+    const myAccountFiltered = myWalletSelected.catapultAccounts.find(x => x.publicAccount.publicKey === publicAccountCatapult.publicKey);
+    return (myAccountFiltered) ? myAccountFiltered : null;
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletProvider
+   */
+  async getAccountsNis1() {
+    const selectedWallet: WalletInterface = await this.storage.get('selectedWallet');
+    return (selectedWallet && selectedWallet.nis1Accounts) ? selectedWallet.nis1Accounts : [];
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<CatapultsAccountsInterface>}
+   * @memberof WalletProvider
+   */
+  async getAccountSelected(): Promise<CatapultsAccountsInterface> {
+    const data = await this.storage.get('selectedAccount');
+    this.selectesAccount = data;
+    const result = data ? data : null;
+    return result;
+  }
+
+  /**
+ *
+ *
+ * @returns {Promise<CatapultsAccountsInterface[]>}
+ * @memberof WalletProvider
+ */
+  async getAccountsCatapult(): Promise<CatapultsAccountsInterface[]> {
+    const walletSelected = await this.getWalletSelected();
+    return (walletSelected && walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
+  }
+
+  /**
+ * Get Wallet Local
+ * @return Promise that returns wallets
+ */
+  public getLocalWallets(): Promise<any> {
+    return this.storage.get('myWallets').then(wallets => {
+      let complete = wallets[0]
+      let _wallets = wallets[0].catapultAccounts ? wallets[0].catapultAccounts : {};
+      const WALLETS = _wallets ? _wallets : [];
+      if (wallets[0].catapultAccounts != null) {
+        if (wallets) {
+          const walletsMap = WALLETS.map(walletFile => {
+            return { account: <SimpleWallet>(walletFile.account), publicAccount: walletFile.publicAccount, walletColor: walletFile.walletColor };
+          });
+          _wallets = {
+            catapultAccounts: walletsMap,
+            encrypted: complete.encrypted,
+            nis1Accounts: complete.nis1Accounts,
+            user: complete.user
+          }
+        } else {
+          _wallets = [];
+        }
+      } else {
+        _wallets = [];
+      }
+      return _wallets;
+    });
+  }
+
+  /**
+  *
+  *
+  * @returns {Promise<SimpleWallet>}
+  * @memberof WalletProvider
+  */
+  async getSelectedWallet(): Promise<SimpleWallet> {
+    let wallets = await this.storage.get('selectedWallet');
+    let _wallet = null;
+    if (wallets) {
+      const selectedWallet = wallets;
+      this.selectedWallet = selectedWallet;
+      _wallet = (<SimpleWallet>(selectedWallet));
+    }
+    else {
+      _wallet = null;
+    }
+    return _wallet;
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<any>}
+   * @memberof WalletProvider
+   */
+  async getWallets(): Promise<any> {
+    const dataAccountSelected = await this.getWalletSelected();
+    let _wallets = dataAccountSelected || {};
+    const WALLETS = _wallets['catapultAccounts'] || [];
+    if (WALLETS) {
+      const walletsMap = WALLETS.map(walletFile => {
+        let wallet = (walletFile as SimpleWallet);
+        wallet.walletColor = walletFile['walletColor'];
+        return wallet;
+      });
+      _wallets['catapultAccounts'] = walletsMap;
+    }
+    else {
+      _wallets['catapultAccounts'] = [];
+    }
+    return _wallets['catapultAccounts'];
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<WalletInterface>}
+   * @memberof WalletProvider
+   */
+  async getWalletSelected(): Promise<WalletInterface> {
+    const data = await this.storage.get('selectedWallet');
+    const result = data ? data : null;
+    return result;
+  }
+
+  /**
+   *
+   *
+   * @param {SimpleWallet} wallet
+   * @param {string} walletColor
+   * @returns {Promise<dataAccount>}
+   * @memberof WalletProvider
+   */
+  async storeWalletCatapult(catapultAccount: SimpleWallet, nis1Account: SimpleWalletNIS1, walletColor: string, password: Password, prefix: string): Promise<WalletInterface> {
+    const walletSelected = await this.getWalletSelected();
+    const catapultAccounts = (walletSelected.catapultAccounts) ? walletSelected.catapultAccounts : [];
+    const nis1Accounts = (walletSelected.nis1Accounts) ? walletSelected.nis1Accounts : [];
+    const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(
+      this.proximaxProvider.decryptPrivateKey(
+        password,
+        catapultAccount.encryptedPrivateKey.encryptedKey,
+        catapultAccount.encryptedPrivateKey.iv
+      ).toUpperCase(), catapultAccount.network
+    );
+
+    if (nis1Account) {
+      const publicAccountNis1 = this.nemProvider.createAccountPrivateKey(
+        this.proximaxProvider.decryptPrivateKey(
+          password,
+          catapultAccount.encryptedPrivateKey.encryptedKey,
+          catapultAccount.encryptedPrivateKey.iv
+        ).toUpperCase()
+      );
+
+      const accountnis1 = {
+        account: nis1Account,
+        prefix: prefix,
+        walletColor: walletColor,
+        publicAccount: publicAccountNis1,
+        publicAccountCatapult: publicAccount
+      };
+
+      nis1Accounts.push(accountnis1);
+      walletSelected['nis1Accounts'] = nis1Accounts;
+    }
+
+    const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
+    catapultAccounts.push(accountCatapult);
+    walletSelected['catapultAccounts'] = catapultAccounts;
+    const wallet: WalletInterface[] = await this.storage.get('myWallets');
+    const otherWallets: WalletInterface[] = wallet.filter(x => x.user !== walletSelected.user);
+    otherWallets.push(walletSelected);
+    this.setSelectedAccount(accountCatapult);
+    this.setSelectedWallet(walletSelected);
+    this.storage.set('myWallets', otherWallets);
+    return walletSelected;
+  }
+
+
+
+  /**
+   *
+   *
+   * @param {SimpleWallet} wallet
+   * @returns
+   * @memberof WalletProvider
+   */
+  setSelectedAccount(account: { account: SimpleWallet, walletColor: string, publicAccount: PublicAccount }) {
+    return this.storage.set('selectedAccount', account);
+  }
+
+  /**
+   *
+   *
+   * @param {WalletInterface} account
+   * @returns {Promise<any>}
+   * @memberof WalletProvider
+   */
+  setSelectedWallet(wallet: WalletInterface): Promise<any> {
+    this.storage.set('isAccountCreated', true);
+    this.storage.set('isLoggedIn', true);
+    this.storage.set('selectedWallet', wallet);
+    return;
+  }
+
+  /**
+  * 
+  * @param wallet 
+  * @param newWalletName 
+  * @param walletColor 
+  */
+  updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor: string) {
+    return this.getLocalWallets().then(wallets => {
+      let _catapultAccounts: any = wallets.catapultAccounts;
+      let _nis1Accounts: any = wallets.nis1Accounts;
+      let updateWallet: any;
+      for (let i = 0; i < _catapultAccounts.length; i++) {
+
+        if (_catapultAccounts[i].account.name == wallet.name) {
+          _catapultAccounts[i].account.name = newWalletName;
+          _catapultAccounts[i].walletColor = walletColor;
+          updateWallet = _catapultAccounts[i];
+        };
+      }
+      for (let i = 0; i < _nis1Accounts.length; i++) {
+
+        if (_nis1Accounts[i].account.name == wallet.name) {
+          _nis1Accounts[i].account.name = newWalletName;
+          _nis1Accounts[i].walletColor = walletColor;
+        };
+      }
+
+      let _wallets = {
+        catapultAccounts: _catapultAccounts,
+        encrypted: wallets.encrypted,
+        nis1Accounts: _nis1Accounts,
+        user: wallets.user
+      }
+
+      let walletsUpdate = [];
+      walletsUpdate.push(_wallets);
+      this.storage.set('selectedAccount', updateWallet);
+      this.storage.set('selectedWallet', _wallets);
+      this.storage.set('myWallets', walletsUpdate)
+      return;
+    });
+  }
+
+
+  /**
+   *
+   *
+   * @param {SimpleWallet} account
+   * @memberof WalletProvider
+   */
+  async validateExistAccount(account: SimpleWallet) {
+    const wallet: WalletInterface[] = await this.storage.get('myWallets');
+    let exist = false;
+    wallet.forEach((element: WalletInterface) => {
+      if (element.catapultAccounts) {
+        element.catapultAccounts.forEach((el) => {
+          const address = this.proximaxProvider.createFromRawAddress(el.account.address['address']).pretty();
+          if (address === account.address.pretty()) {
+            exist = true;
+          } else if (account.name === el.account.name) {
+            exist = true;
+          }
+        });
+      }
+    });
+    return exist;
+  }
+
+
+
+
+
+  // -----------------------------------------------------------------------
+
+  public getAccount(wallet: SimpleWallet): Observable<Account> {
     return new Observable(observer => {
       // Get user's password and unlock the wallet to get the account
-     this.authProvider
-     .getPassword()
-     .then(password => {
-       // Get user's password
-       const myPassword = new Password(password);
-
-       // Convert current wallet to SimpleWallet
-       const myWallet = this.convertToSimpleWallet(wallet)
-
-       // Unlock wallet to get an account using user's password 
-       const account = myWallet.open(myPassword);
-
-       observer.next(account);
-     
+      this.authProvider.getPassword().then(password => {
+        // Get user's password
+        const myPassword = new Password(password);
+        // Convert current wallet to SimpleWallet
+        const myWallet = this.convertToSimpleWallet(wallet)
+        // Unlock wallet to get an account using user's password 
+        const account = myWallet.open(myPassword);
+        observer.next(account);
       });
     });
   }
 
-  public getAccountInfo(account: Account) : Observable<AccountInfo> {
+  public getAccountInfo(account: Account): Observable<AccountInfo> {
     return this.proximaxProvider.getAccountInfo(Address.createFromRawAddress(account.address.plain()));
   }
 
@@ -101,362 +484,11 @@ export class WalletProvider {
     });
   };
 
-  /**
-   * Store wallet
-   * @param wallet
-   * @return Promise with stored wallet
-   */
-  public storeWallet(wallet: SimpleWallet, walletColor): Promise<SimpleWallet> {
-    let result = [];
-    return this.authProvider.getUsername().then(username => {
-      return this.getLocalWallets().then(value => {
-        let wallets = value;
-        result = wallets[username];
 
-        result.push({wallet: wallet, walletColor: walletColor});
-
-        wallets[username] = result;
-        this.storage.set('wallets', wallets);
-        return wallet;
-      });
-    });
-  }
-
-     /**
-   * Store wallet
-   * @param walletC
-   * @param walletN
-   * @return Promise with stored wallet
-   */
-
-  public storeWalletNis1(walletC, walletN, walletColor): Promise<SimpleWallet> {
-    let result = [];
-    return this.authProvider.getUsername().then(username => {
-      return this.getLocalWalletsNis().then(value => {
-        let wallets = value;
-        result = wallets[username];
-
-        result.push({wallet: walletC, walletNis1: walletN,  walletColor: walletColor});
-
-        wallets[username] = result;
-
-        this.storage.set('walletsNis1', wallets);
-        return walletN;
-      });
-    });
-  }
-  /**
-   * Update the wallet name of the given wallet.
-   * @param wallet The wallet to change the name.
-   * @param newWalletName The new name for the wallet.
-   */
-  public updateWalletName(wallet: SimpleWallet, newWalletName: string, walletColor:string) {
-    // return;
-    return this.authProvider.getUsername().then(username => {
-      return this.getLocalWallets().then(wallets => {
-        let _wallets: any = wallets[username];
-        let updateWallet :any;
-        for(let i=0; i<_wallets.length; i++) {
-          if(_wallets[i].wallet.name == wallet.name) {
-            _wallets[i].wallet.name = newWalletName;
-            _wallets[i].walletColor = walletColor;
-            updateWallet= _wallets[i];
-          };
-
-        }
-
-        
-
-        _wallets = _wallets.map(_ => {
-          return {
-            wallet: _.wallet,
-            walletColor: _.walletColor
-          }
-        });
-
-        const WALLET = {};
-        WALLET[username] = _wallets;
-
-        return this.storage.set('wallets', WALLET).then(_ => {
-          return updateWallet;
-        });
-      });
-    });
-  }
-
-  deleteWallet(wallet: SimpleWallet) {
-    
-    return this.authProvider.getUsername().then(username => {
-      return this.getLocalWallets().then(wallets => {
-        let _wallets: Array<any> = wallets[username];
-
-        console.log(_wallets, wallet);
-        _wallets.map((res,index)=> {
-          if (res.wallet.name == wallet.name) {
-            console.log("Deleting your wallet: ", wallet.name)
-            _wallets.splice(index, 1);
-
-            _wallets = _wallets.map(_ => {
-              return {
-                wallet: _.wallet,
-                walletColor: _.walletColor
-              }
-            });
-
-            const WALLET = {};
-            WALLET[username] = _wallets;
-
-            return this.storage.set('wallets', WALLET);
-          }
-        })
-        _wallets
-        return;
-
-        
-
-        
-      });
-    });
-  }
-
-  /**
-   * Check If Wallet Name Exists
-   * @param walletName
-   * @return Promise that resolves a boolean if exists
-   */
-  public checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
-    let exists = false;
-
-    return this.authProvider.getUsername().then(username => {
-      return this.getLocalWallets().then(wallets => {
-        const _wallets = wallets[username];
-        for (var i = 0; i < _wallets.length; i++) {
-          console.log('wallet storage', _wallets[i])
-          if (_wallets[i].wallet.name === walletName || _wallets[i].wallet.address.address === walletAddress) {
-            exists = true;
-            break;
-          }
-        }
-        return exists;
-      });
-    });
-  }
-
-  /**
-   * Retrieves selected wallet
-   * @return promise with selected wallet
-   */
-  public getSelectedWallet(): Promise<SimpleWallet> {
-    return this.authProvider.getUsername().then(username => {
-      return this.storage.get('selectedWallet').then(wallets => {
-        let _wallet = null;
-        if (wallets) {
-          const selectedWallet = wallets[username];
-          this.selectedWallet = selectedWallet
-          _wallet = <SimpleWallet>(selectedWallet);
-        } else {
-          _wallet = null;
-        }
-
-        return _wallet;
-      });
-    });
-  }
-
-  /**
-   * Get loaded wallets from localStorage
-   */
-  public getLocalWallets(): Promise<any> {
-    return this.authProvider.getUsername().then(username => {
-      return this.storage.get('wallets').then(wallets => {
-        let _wallets = wallets ? wallets : {};
-				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
-        const WALLETS = _wallets[username] ? _wallets[username] : [];
-
-        if (wallets) {
-          const walletsMap = WALLETS.map(walletFile => {
-            if (walletFile.name) {
-              return 
-              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            } else {
-              return { wallet:<SimpleWallet>(walletFile.wallet), walletColor: walletFile.walletColor};
-            }
-          });
-
-          _wallets[username] = walletsMap;
-        } else {
-          _wallets[username] = [];
-        }
-
-        return _wallets;
-      });
-    });
-  }
-
-    /**
-   * Get loaded wallets from localStorage
-   */
-  public getLocalWalletsNis(): Promise<any> {
-    return this.authProvider.getUsername().then(username => {
-      return this.storage.get('walletsNis1').then(wallets => {
-        let _wallets = wallets ? wallets : {};
-				console.log("LOG: WalletProvider -> constructor -> _wallets", _wallets)
-        const WALLETS = _wallets[username] ? _wallets[username] : [];
-
-        if (wallets) {
-          const walletsMap = WALLETS.map(walletFile => {
-            if (walletFile.name) {
-              return 
-              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            } else {
-              return { wallet:<SimpleWallet>(walletFile.wallet), walletNis1:<SimpleWallet>(walletFile.walletNis1), walletColor: walletFile.walletColor};
-            }
-          });
-
-          _wallets[username] = walletsMap;
-        } else {
-          _wallets[username] = [];
-        }
-
-        return _wallets;
-      });
-    });
-  }
-  
-  /**
-   * Get loaded wallets from localStorage
-   */
-  public getWallets(): Promise<any> {
-    return this.authProvider.getUsername().then(username => {
-    console.log("SIRIUS CHAIN WALLET: WalletProvider -> username", username)
-      return this.storage.get('wallets').then(wallets => {
-        console.log("LOG: WalletProvider -> constructor -> data", wallets)
-        let _wallets = wallets || {};
-        const WALLETS = _wallets[username] || [];
-        console.log("LOG: WalletProvider -> constructor -> ACCOUNT_WALLETS", WALLETS)
-
-        if (WALLETS) {
-          const walletsMap = WALLETS.map(walletFile => {
-          console.log("SIRIUS CHAIN WALLET: WalletProvider -> walletFile", walletFile)
-            
-            if (walletFile.name) {
-              return 
-              // this.convertJSONWalletToFileWallet(walletFile, walletFile.walletColor);
-            } else {
-              let wallet = walletFile.wallet as SimpleWallet;
-              wallet.walletColor = walletFile['walletColor'];
-              return wallet ;
-            }
-          });
-
-          _wallets[username] = walletsMap;
-        } else {
-          _wallets[username] = [];
-        }
-
-        return _wallets[username];
-      });
-    });
-  }
-
-  // private convertJSONWalletToFileWallet(wallet, walletColor): SimpleWallet {
-  //   let walletString = Base64.encode(
-  //     JSON.stringify({
-  //       address: wallet.accounts[0].address,
-  //       creationDate: DateTime.local().toString(),
-  //       encryptedPrivateKey: wallet.accounts[0].encrypted,
-  //       iv: wallet.accounts[0].iv,
-  //       network:
-  //         wallet.accounts[0].network == -104
-  //           ? NetworkTypes.TEST_NET
-  //           : NetworkTypes.MAIN_NET,
-  //       name: wallet.name,
-  //       type: 'simple',
-  //       schema: 1,
-  //     })
-  //   );
-  //   let importedWallet = SimpleWallet.readFromWLT(walletString);
-  //   importedWallet.walletColor = walletColor;
-  //   return importedWallet;
-  // }
-
-  /**
-   * Set a selected wallet
-   */
-  public setSelectedWallet(wallet: SimpleWallet) {
-    return Promise.all([
-      this.authProvider.getUsername(),
-      this.storage.get('selectedWallet')
-    ]).then(results => {
-      const EMAIL = results[0];
-      const SELECTED_WALLET = results[1] ? results[1] : {};
-      SELECTED_WALLET[EMAIL] = wallet;
-
-      return this.storage.set('selectedWallet', SELECTED_WALLET);
-    });
-  }
-
-  /**
-   * Remove selected Wallet
-   */
-  public unsetSelectedWallet() {
-    return this.authProvider.getUsername().then(email => {
-      this.storage.get('selectedWallet').then(selectedWallet => {
-        delete selectedWallet[email];
-
-        this.storage.set('selectedWallet', null);
-      });
-    });
-  }
-
-
-  decrypt(common: any, current: any, account: any = '', algo: any = '', network: any = '') {
-    // const acct = current;
-    // const net = NetworkType.TEST_NET;
-    // const alg = 2;
-    // const walletAccount = {
-    //   encrypted: current.encryptedPrivateKey.encryptedKey,
-    //   iv: current.encryptedPrivateKey.iv
-    // }
-    // console.log('common', common)
-    // console.log('walletAccount', walletAccount)
-    // console.log('alg', alg)
-    // // Try to generate or decrypt key
-    // if (!Crypto.passwordToPrivateKey(common, walletAccount, alg)) {
-    //   // console.log('passwordToPrivatekeyy ')
-    //   setTimeout(() => {
-    //     console.log('Error Invalid password')
-    //     // this.sharedService.showError('Error', '¡Invalid password!');
-    //   }, 500);
-    //   return false;
-    // }
-    // if (common.isHW) {
-    //   return true;
-    // }
-    // // console.log('pase common.common ', common.privateKey)
-    // // console.log('pase common.net ', net)
-    // // console.log('pase common.acct.address ', acct.address.address)
-    // if (!this.isPrivateKeyValid(common.privateKey) || !this.proximaxProvider.checkAddress(common.privateKey, net, acct.address.address)) {
-    //   setTimeout(() => {
-    //     console.log('Error Invalid password')
-    //     // this.sharedService.showError('Error', '¡Invalid password!');
-    //   }, 500);
-    //   return false;
-    // }
-    // // console.log('!this.isPrivateKeyValid......')
-    // //Get public account from private key
-    // this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(common.privateKey, net);
-    // // console.log('this.publicAccount ', this.publicAccount )
-    // return true;
-  }
-
-  
   isPrivateKeyValid(privateKey: any) {
     if (privateKey.length !== 64 && privateKey.length !== 66) {
-      console.error('Private key length must be 64 or 66 characters !');
       return false;
     } else if (!this.isHexadecimal(privateKey)) {
-      console.error('Private key must be hexadecimal only !');
       return false;
     } else {
       return true;
@@ -466,26 +498,25 @@ export class WalletProvider {
   isHexadecimal(str: { match: (arg0: string) => any; }) {
     return str.match('^(0x|0X)?[a-fA-F0-9]+$') !== null;
   }
+}
 
-  buildToSendTransfer(
-    common: { password?: any; privateKey?: any },
-    recipient: string,
-    message: string,
-    amount: any,
-    network: NetworkType,
-    mosaic: string | number[]
-  ) {
-    const recipientAddress = this.proximaxProvider.createFromRawAddress(recipient);
-    const transferTransaction = TransferTransaction.create(Deadline.create(10), recipientAddress,
-      [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(Number(amount))), NetworkCurrencyMosaic.createRelative(10)], PlainMessage.create(message), network
-    );
-    const account = Account.createFromPrivateKey(common.privateKey, network);
-    const signedTransaction = account.sign(transferTransaction, this.generationHash)
 
-    return {
-      signedTransaction: signedTransaction,
-      transactionHttp: this.proximaxProvider.transactionHttp
-    };
-  }
+export interface WalletInterface {
+  user: string;
+  encrypted: string;
+  catapultAccounts: CatapultsAccountsInterface[],
+  nis1Accounts: NIS1AccountsInterface[]
+}
 
+export interface CatapultsAccountsInterface {
+  account: SimpleWallet,
+  publicAccount: PublicAccount,
+  walletColor: string
+}
+
+export interface NIS1AccountsInterface {
+  account: SimpleWalletNIS1,
+  publicAccount: PublicAccountNIS1,
+  publicAccountCatapult: PublicAccount,
+  walletColor: string
 }

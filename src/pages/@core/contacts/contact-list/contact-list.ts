@@ -11,10 +11,14 @@ import {
 } from 'ionic-angular';
 
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
-import { BarcodeScannerProvider } from './../../../../providers/barcode-scanner/barcode-scanner';
 import { App } from './../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { TranslateService } from '@ngx-translate/core';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Storage } from "@ionic/storage";
+import { WalletProvider } from '../../../../providers/wallet/wallet';
+import { AlertProvider } from '../../../../providers/alert/alert';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the ContactListPage page.
@@ -43,21 +47,29 @@ export class ContactListPage {
     address: string;
     telegram: string;
   }> = [];
+  address: any;
 
   constructor(
+    private alertProvider: AlertProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     private alertCtrl: AlertController,
     private contactsProvider: ContactsProvider,
     private actionSheetCtrl: ActionSheetController,
     private platform: Platform,
-    private barcodeScannerProvider: BarcodeScannerProvider,
+    private proximaxProvider: ProximaxProvider,
+    private barcodeScanner: BarcodeScanner,
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
-    private modalCtrl:ModalController,
-    private translateService: TranslateService
-    
-  ) {}
+    private modalCtrl: ModalController,
+    private storage: Storage,
+    private translateService: TranslateService,
+    private walletProvider: WalletProvider,
+
+  ) {
+    this.storage.set("isQrActive", true);
+    // this.address = this.walletProvider.selectesAccount.account.address.address;
+  }
 
   ionViewWillEnter() {
     this.init();
@@ -158,20 +170,22 @@ export class ContactListPage {
             telegram: ''
           });
         } else if (data === ContactCreationType.QR_SCAN.toString()) {
-          this.barcodeScannerProvider
-            .getData('ContactListPage')
-            .then(result => {
-              const ACCOUNT_INFO = {
-                name: result.data.name || '',
-                address: result.data.addr || '',
-                telegram: result.data.telegram || ''
-              };
-
-              if (data) {
-                let page = "ContactAddPage";
-                this.showModal(page, ACCOUNT_INFO);
-              } 
-            });
+          this.barcodeScanner.scan().then(barcodeData => {
+            barcodeData.format = "QR_CODE";
+            let address = barcodeData.text.split("-").join("")
+            if (address.length != 40) {
+              this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
+            } else if (!this.proximaxProvider.validateAddress(address)) {
+              this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
+            } else {
+              let page = "ContactAddPage";
+              this.showModal(page, {
+                name: '',
+                address: barcodeData.text,
+                telegram: ''
+              });
+            }
+          });
         }
       }
     });
@@ -190,14 +204,14 @@ export class ContactListPage {
 
 
   showModal(page, params) {
-    const modal = this.modalCtrl.create(page, {data:params}, {
+    const modal = this.modalCtrl.create(page, { data: params }, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
     modal.present();
   }
 
-  
 
-  
+
+
 }

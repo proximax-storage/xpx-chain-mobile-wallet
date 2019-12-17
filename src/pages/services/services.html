@@ -5,7 +5,6 @@
   Ionic pages and navigation.
 -->
 <ion-content background>
-
   <ion-list title transparent>
     <ion-item transparent>
       <h2 padding-left title color="dark">
@@ -16,16 +15,13 @@
     </ion-item>
   </ion-list>
 
-  <br>
-  <br>
-
   <ion-list transparent-items>
   <!-- Uncomment to add Address Book -->
   <ion-card (click)="goto('ContactListPage')">
     <ion-item>
       <ion-icon item-left name="custom-address"></ion-icon>
       <h2>{{"SERVICES.ADDRESS_BOOK.TITLE" | translate}}</h2>
-      <p text-wrap>{{"SERVICES.ADDRESS_BOOK.DESC" | translate}}</p>
+      <!-- <p text-wrap>{{"SERVICES.ADDRESS_BOOK.DESC" | translate}}</p> -->
     </ion-item>
   </ion-card>
 
@@ -38,19 +34,19 @@
     </ion-item>
   </ion-card> -->
 
-  <ion-card (click)="goto('FaucetPage')">
+  <!-- <ion-card (click)="goto('FaucetPage')">
     <ion-item>
       <ion-icon item-left name="custom-faucet"></ion-icon>
       <h2> {{ "SERVICES.TESTNET_FAUCET.TITLE" | translate }}</h2>
       <p text-wrap>{{ "SERVICES.TESTNET_FAUCET.DESC" | translate}}</p>
     </ion-item>
-  </ion-card>
+  </ion-card> -->
 
   <ion-card (click)="goto('Nis1WalletListPage')">
     <ion-item>
       <ion-icon item-left name="custom-swap"></ion-icon>
       <h2>{{ "SERVICES.SWAP_PROCESS.TITLE" | translate }}</h2>
-      <p text-wrap>{{ "SERVICES.SWAP_PROCESS.DESC" | translate}}</p>
+      <!-- <p text-wrap>{{ "SERVICES.SWAP_PROCESS.DESC" | translate}}</p> -->
     </ion-item>
   </ion-card>
 

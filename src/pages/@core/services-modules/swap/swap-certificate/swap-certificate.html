@@ -23,11 +23,11 @@
 
 <ion-content fullscreen background padding>
 
-    <div text-center>
-        <p ion-text color="dark">
-            Important! Take a screenshot of this certificate for your records. It will be needed to follow up on your swap in the event of an error.
-        </p>
-      </div>
+  <div text-center>
+    <p ion-text color="dark">
+      {{ "WALLETS.IMPORT.SWAP_SUBTITLE" | translate}}
+    </p>
+  </div>
   <section wallets>
     <ion-list transparent-items>
       <ion-card balance>
@@ -45,108 +45,58 @@
 
       <ion-card balance>
         <ion-card-content>
-            <ion-item (click)="copy(address, 'address')">
-              <h1 wallet-name>
-                  {{ "SERVICES.SWAP_PROCESS.SIRIUS_WALLET" | translate }}
-              </h1>
-                <ion-icon name='custom-copy' item-end></ion-icon>
-                <p text-justify address>{{ address }} </p>
-            </ion-item>
+          <ion-item (click)="copy(address, 'address')">
+            <h1 wallet-name>
+              {{ "SERVICES.SWAP_PROCESS.SIRIUS_WALLET" | translate }}
+            </h1>
+            <ion-icon name='custom-copy' item-end></ion-icon>
+            <p text-justify address>{{ address }} </p>
+          </ion-item>
         </ion-card-content>
       </ion-card>
 
       <ion-card balance>
-          <ion-card-content>
-              <ion-item (click)="copy(publicKey, 'publicKey')">
-                <h1 wallet-name>{{ "WALLETS.PUBLIC_KEY" | translate }}</h1>
-                  
-                  <ion-icon name='custom-copy' item-end></ion-icon>
-                  <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ publicKey }} </p>
-              </ion-item>
-          </ion-card-content>
-        </ion-card>
+        <ion-card-content>
+          <ion-item (click)="copy(publicKey, 'publicKey')">
+            <h1 wallet-name>{{ "WALLETS.PUBLIC_KEY" | translate }}</h1>
 
-        <ion-card balance>
-            <ion-card-content>
-                <ion-item (click)="copy(transactionHash, 'hash')">
-                  <h1 wallet-name>{{ "WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</h1>
-                    
-                    <ion-icon name='custom-copy' item-end></ion-icon>
-                    <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ transactionHash }} </p>
-                  </ion-item>
-            </ion-card-content>
-          </ion-card>
+            <ion-icon name='custom-copy' item-end></ion-icon>
+            <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ publicKey }} </p>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
 
-          <ion-item no-lines>
-              <ion-label>
-                <p>
-                    I confirm that I have taken a screenshot of this certificate.
-                </p>
-              </ion-label>
-              <ion-checkbox [(ngModel)]="screenshotDone"></ion-checkbox>
-            </ion-item>
+      <ion-card balance>
+        <ion-card-content>
+          <ion-item (click)="copy(transactionHash, 'hash')">
+            <h1 wallet-name>{{ "WALLETS.TRANSACTION.DETAIL.HASH.NIS" | translate}}</h1>
+
+            <ion-icon name='custom-copy' item-end></ion-icon>
+            <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ transactionHash }} </p>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-item no-lines>
+        <ion-label>
+          <p>
+            {{ "WALLETS.IMPORT.SWAP_CHEK" | translate}}
+          </p>
+        </ion-label>
+        <ion-checkbox [(ngModel)]="screenshotDone"></ion-checkbox>
+      </ion-item>
     </ion-list>
-
-
-    <!-- <br>
-        <div>
-          <h1 wallet-name>
-            <span style="padding-left: 16px;" wallet-name >{{ "WALLETS.TRANSACTION.DETAIL.DATE" | translate }}</span>
-          </h1>
-          <ion-list transparent-items>
-            <ion-item>
-              <p text-justify address>{{ timestamp}} </p>
-            </ion-item>
-          </ion-list>
-        </div>
-
-        <div>
-            <h1 wallet-name>
-              <span style="padding-left: 16px;" wallet-name > {{ "SERVICES.SWAP_PROCESS.SIRIUS_WALLET" | translate }} </span>
-            </h1>
-            <ion-list transparent-items>
-                <ion-item (click)="copy(address, 'address')">
-                  <ion-icon name='custom-copy' item-end></ion-icon>
-                  <p text-justify address>{{ address }} </p>
-                </ion-item>
-              </ion-list>
-          </div>
-        <div>
-          <h1 wallet-name>
-            <span style="padding-left: 16px;" wallet-name >{{ "WALLETS.PUBLIC_KEY" | translate }}</span>
-          </h1>
-          <ion-list transparent-items>
-              <ion-item (click)="copy(publicKey, 'publicKey')">
-                  <ion-icon name='custom-copy' item-end></ion-icon>
-              <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ publicKey }} </p>
-            </ion-item>
-          </ion-list>
-        </div>
-
-          <h1 wallet-name>
-            <span style="padding-left: 16px;" wallet-name >{{ "WALLETS.TRANSACTION.DETAIL.HASH" | translate}}</span>
-          </h1>
-          <ion-list transparent-items>
-            <ion-item (click)="copy(transactionHash, 'hash')">
-              <ion-icon name='custom-copy' item-end></ion-icon>
-              <p style="white-space: pre-wrap; max-width: 310px;" text-justify address>{{ transactionHash }} </p>
-            </ion-item>
-          </ion-list> -->
 
   </section>
 
   <ion-grid normal>
     <ion-row>
       <ion-col>
-        <button [disabled]="!screenshotDone" (click)="dismiss()" gradient-button full color-5 ion-button icon-start no-margin>
+        <button [disabled]="!screenshotDone" (click)="shared()" gradient-button full color-5 ion-button icon-start
+          no-margin>
           {{"WALLETS.BUTTON.DONE" | translate}}
         </button>
       </ion-col>
-      <!-- <ion-col>
-        <button (click)="save()" gradient-button full color-6 ion-button icon-end no-margin>
-          {{"WALLETS.BUTTON.SAVE" | translate}}
-        </button>
-      </ion-col> -->
     </ion-row>
   </ion-grid>
 </ion-content>

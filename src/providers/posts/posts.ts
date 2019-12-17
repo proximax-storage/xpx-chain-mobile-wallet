@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LocalCacheProvider } from '../local-cache/local-cache';
 import { Storage } from '@ionic/storage';
 
 
@@ -17,12 +16,11 @@ export class PostsProvider {
   seenPosts: Array<any> = [];
 
 
-  constructor(public http: HttpClient, private cache: LocalCacheProvider, private storage: Storage) {
-    console.log('Hello PostsProvider Provider');
-    this.seenPosts
-
-    this.getSeenPosts().then(posts=> {
-			console.log("LOG: PostsProvider -> constructor -> posts", posts);
+  constructor(
+    public http: HttpClient,
+    private storage: Storage
+  ) {
+    this.getSeenPosts().then(posts => {
       this.seenPosts = posts || [];
     })
   }
@@ -30,10 +28,6 @@ export class PostsProvider {
   public getAll(): Observable<any> {
     let url = 'https://proximax-wallet-dashboard.herokuapp.com/posts?_sort=createdAt:DESC';
     return this.http.get(url);
-
-    // let url = 'https://proximax-wallet-dashboard.herokuapp.com/posts';
-    // let requestObservable = this.http.get(url);
-    // return this.cache.observable('posts', requestObservable, 60*60) // 1 hour validity
   }
 
   public seenPost(postId): Promise<any> {
@@ -43,7 +37,7 @@ export class PostsProvider {
       if (posts) {
         posts = posts.filter(_ => _.id != postId);
         posts.push({ id: postId });
-          
+
       } else {
         posts = [{ id: postId }]; // Genesis post
       }
@@ -71,16 +65,15 @@ export class PostsProvider {
   }
 
   public isNew(postId) {
-      if (this.seenPosts) {
-        let posts = this.seenPosts.filter(_ => _.id === postId);
-				console.log("LOG: PostsProvider -> publicisNew -> posts", posts);
-        if(posts.length > 0) {
-          return true;
-        } else {
-          return false;
-        } 
+    if (this.seenPosts) {
+      let posts = this.seenPosts.filter(_ => _.id === postId);
+      if (posts.length > 0) {
+        return true;
       } else {
         return false;
       }
+    } else {
+      return false;
+    }
   }
 }

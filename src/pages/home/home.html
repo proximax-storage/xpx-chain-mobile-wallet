@@ -4,11 +4,11 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <ion-list title transparent>
+  <ion-list title transparent style="padding-top: 1em !important;">
     <ion-item transparent>
       <h2 padding-left title color="dark">
         <strong>
-            {{ "WALLETS.TITLE" | translate }}
+          {{ "WALLETS.TITLE" | translate }}
         </strong>
       </h2>
       <button ion-button icon-only item-end clear (click)="showAddWalletPrompt()">
@@ -17,27 +17,29 @@
     </ion-item>
   </ion-list>
 
-  <ion-slides slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
-    <ion-slide *ngFor="let wallet of wallets"
-      [attr.selected]="selectedWallet?.name === wallet?.name ? true : null"
-       (press)="showWalletList()">
-      <div class="wallet" >
-        <div class="wallet-content" [ngClass]="wallet.walletColor" (click)="showWalletDetails(wallet)">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
+  <ion-slides *ngIf="!tablet" slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
+    <ion-slide *ngFor="let account of accounts"
+      [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
+      <div class="wallet">
+        <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
 
           <div *ngIf="!tablet">
-            <p class="wallet-number">{{ wallet?.address.plain() | ngXtruncate: 22 : '...' }}</p>
+            <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 46 : '...' }}</p>
           </div>
-          <div *ngIf="tablet">
-            <p class="wallet-number">{{ wallet?.address.plain() }}</p>
+
+          <div class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+            {{ account.account?.name }}
           </div>
-          <div class="wallet-space-75">
-            <span class="wallet-label">{{"WALLETS.WALLET_NAME" | translate}}</span>
-            <p class="wallet-info">{{ wallet?.name }}</p>
+          <div *ngIf="!tablet" class="wallet-label">
+            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
+            <span class="wallet-space-25">{{ amountXpx }}</span>
           </div>
-          <div class="wallet-space-25">
-            <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
-            <p class="wallet-info">${{ totalWalletBalance | number : '1.2-2'}} USD</p>
+          <div *ngIf="!tablet" class="wallet-label">
+            <span class="wallet-label"><strong>US$:</strong></span>
+            <span class="wallet-space-25">{{ totalWalletBalance | number : '1.2-2'}}</span>
+            <br>
           </div>
         </div>
       </div>
@@ -47,9 +49,55 @@
     <ion-slide (click)="showAddWalletPrompt()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="'wallet-create'">
-          <img class="wallet-create-front-logo wallet-logo" src="assets/imgs/wallet-add.svg">
-          <h2 class="wallet-create-title">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
-          <p class="wallet-create-subtitle">{{"WALLETS.CREATE.DESC" | translate}}</p>
+          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;"
+            src="assets/imgs/wallet-add.svg">
+          <h2 class="wallet-create-title" style="text-align: center">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+
+  
+  <ion-slides  *ngIf="tablet" slidesPerView="1.1" spaceBetween="0.5" (ionSlideDidChange)="slideChanged()">
+    <ion-slide *ngFor="let account of accounts"
+      [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
+      <div class="wallet">
+        <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
+
+          <div *ngIf="tablet">
+            <p class="wallet-number" style="font-size: 18px !important;">{{ account.account?.address.address }}</p>
+          </div>
+          <div class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+            {{ account.account?.name }}
+          </div>
+
+
+          <div *ngIf="tablet" class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
+            <span class="wallet-space-tablet">{{ amountXpx }}</span>
+          </div>
+
+          <div *ngIf="tablet" class="wallet-label" style="font-size: 18px !important;">
+            <span class="wallet-label"><strong>US$:</strong></span>
+            <span class="wallet-space-tablet">{{ totalWalletBalance | number : '1.2-2'}}</span>
+            <br>
+          </div>
+
+        </div>
+      </div>
+    </ion-slide>
+
+
+    <ion-slide (click)="showAddWalletPrompt()">
+      <div class="wallet">
+        <div class="wallet-content" [ngClass]="'wallet-create'">
+          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;"
+            src="assets/imgs/wallet-add.svg">
+          <h2 class="wallet-create-title" style="text-align: center">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
         </div>
       </div>
     </ion-slide>
@@ -66,34 +114,26 @@
     </ion-segment>
   </ion-grid>
 
-  <div *ngIf="menu=='mosaics'">
+  <div *ngIf="menu === 'mosaics'">
     <ion-list transparent-items *ngIf="!isLoading">
       <ion-card no-margin-bottom *ngFor="let mosaic of mosaics" (click)="gotoCoinPrice(mosaic)">
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 ion-text color="dark">{{ mosaic.mosaicId | uppercase}}</h2>
-            <p ion-text color="dark">{{ (mosaic.namespaceId.length==0 || mosaic.namespaceId==undefined ? mosaic.hex : mosaic.namespaceId) | uppercase }}</p>
+            <h2 ion-text color="dark" *ngIf="mosaic.name != undefined && mosaic.name.length !=0 ">
+              {{ mosaic.name | uppercase }}</h2>
+            <h3 ion-text color="dark" *ngIf="mosaic.name === undefined || mosaic.name.length === 0">
+              {{ mosaic.hex | uppercase }}
+            </h3>
             <section text-right item-right>
-              
               <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
             </section>
           </ion-item>
         </ion-card-header>
       </ion-card>
     </ion-list>
-    <section *ngIf="!mosaics && isLoading">
-      <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
-        <skeleton-loader></skeleton-loader>
-      </ion-card>
-      <ion-card no-border>
-        <ion-item text-center>
-          <ion-spinner name="dots"></ion-spinner>
-        </ion-item>
-      </ion-card>
-    </section>
 
-    <ion-grid padding empty *ngIf="showEmptyMosaic">
+    <ion-grid padding empty *ngIf="showEmptyMosaic || mosaics.length === 0">
       <ion-row>
         <ion-col>
           <p>
@@ -103,7 +143,7 @@
       <br>
       <ion-row>
         <ion-col>
-          <img quarter-width [src]="AppConfig.STICKERS.SORRY">
+          <img quarter-width [src]="AppConfi.STICKERS.SORRY">
           <h6 ion-text color="grey" text-wrap>
             <strong>{{"APP.EMPTY.MOSAICS" | translate}}</strong>
           </h6>
@@ -112,58 +152,25 @@
     </ion-grid>
   </div>
 
-
-
   <div *ngIf="menu=='transactions'">
-    <!-- Aggregate Transactions -->
-    <div *ngIf="aggregateTransactions?.length>0">
-      <ion-list transparent-items *ngIf="!isLoading">
-        <ion-card no-margin-bottom *ngFor="let transaction of aggregateTransactions; trackBy"
-          (click)="gotoTransactionDetail(transaction)">
-          <!-- if transfer  -->
-          <transfer-transaction *ngIf="transaction.innerTransactions[0].type == TransactionType.TRANSFER" [tx]="transaction" [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Partial'"></transfer-transaction>
-        </ion-card>
-      </ion-list>
-    </div>
-
-    <!-- Unconfirmed Transactions -->
-    <div *ngIf="unconfirmedTransactions?.length>0">
-      <ion-list transparent-items *ngIf="!isLoading">
-        <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy"
-          (click)="gotoTransactionDetail(transaction)">
-          <!-- if transfer  -->
-          <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-            [mosaics]="mosaics" [owner]="selectedAccount.address.plain()" [status]="'Unconfirmed'">
-          </transfer-transaction>
-        </ion-card>
-      </ion-list>
-    </div>
-
-    <!-- Transactions -->
-    <ion-list transparent-items *ngIf="!isLoading && confirmedTransactions">
-      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy"
-        (click)="gotoTransactionDetail(transaction)">        
-
+    <!-- Confirmed Transactions -->
+    <ion-list transparent-items *ngIf="confirmedTransactions?.length > 0">
+      <ion-card no-margin-bottom *ngFor="let transaction of confirmedTransactions; trackBy">
         <!-- if transfer  -->
-        <transfer-transaction *ngIf="transaction.type == TransactionType.TRANSFER" [tx]="transaction"
-          [mosaics]="mosaics" 
-          [owner]="selectedAccount.address.plain()" [status]="'Confirmed'">
-        </transfer-transaction>
+        <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Confirmed'"
+          (viewTxDetail)="goToTransactionDetail($event, 'confirmed')">
+        </transactions>
       </ion-card>
     </ion-list>
-    
-     <!-- Skeleton loader -->
-     <section *ngIf="isLoading">
-       <ion-card no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
-         <skeleton-loader></skeleton-loader>
-       </ion-card>
-       <ion-card no-border>
-         <ion-item text-center>
-           <ion-spinner name="dots"></ion-spinner>
-         </ion-item>
-       </ion-card>
-     </section>
-     <!-- ./Skeleton loader -->
+
+    <ion-list transparent-items *ngIf="unconfirmedTransactions?.length > 0">
+      <ion-card no-margin-bottom *ngFor="let transaction of unconfirmedTransactions; trackBy">
+        <!-- if transfer  -->
+        <transactions [tx]="transaction" [mosaics]="mosaics" [owner]="address.plain()" [status]="'Unconfirmed'"
+          (viewTxDetail)="goToTransactionDetail($event, 'unconfirmed')">
+        </transactions>
+      </ion-card>
+    </ion-list>
 
     <ion-grid padding empty *ngIf="showEmptyTransaction">
       <ion-row>
@@ -175,7 +182,7 @@
       <br>
       <ion-row>
         <ion-col>
-          <img quarter-width [src]="AppConfig.STICKERS.SORRY">
+          <img quarter-width [src]="AppConfi.STICKERS.SORRY">
           <h6 ion-text color="grey" text-wrap>
             <strong>{{"APP.EMPTY.TRANSACTIONS" | translate}}</strong>
           </h6>

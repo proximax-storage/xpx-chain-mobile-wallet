@@ -3,13 +3,12 @@ import { IonicPage, NavController, NavParams, ViewController, Platform } from 'i
 import { Clipboard } from '@ionic-native/clipboard';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
-import { WalletProvider } from '../../../providers/wallet/wallet';
-import { Account } from 'tsjs-xpx-chain-sdk';
 import { HapticProvider } from '../../../providers/haptic/haptic';
- /*
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { WalletProvider } from '../../../providers/wallet/wallet';
+/*
+* See https://ionicframework.com/docs/components/#navigation for more info on
+* Ionic pages and navigation.
+*/
 
 @IonicPage()
 @Component({
@@ -17,7 +16,7 @@ import { HapticProvider } from '../../../providers/haptic/haptic';
   templateUrl: 'receive.html'
 })
 export class ReceivePage {
-  address:string;
+  address: string;
   smallScreen: boolean = false;
   constructor(
     public viewCtrl: ViewController,
@@ -27,10 +26,15 @@ export class ReceivePage {
     private socialSharing: SocialSharing,
     private toastProvider: ToastProvider,
     private haptic: HapticProvider,
-    private platform: Platform
+    private platform: Platform,
+    private walletProvider: WalletProvider
   ) {
-    const account = this.navParams.data;
-    this.address = (account as Account).address.plain()
+    const wallet = this.navParams.data;
+    console.log('account', wallet);
+    
+    
+    this.address = this.walletProvider.selectesAccount.account.address.address;
+    // this.address = (account as Account).address.plain()
 
     this.platform.ready().then((readySource) => {
       if (this.platform.width() <= 330) {

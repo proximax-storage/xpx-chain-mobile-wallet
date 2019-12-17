@@ -4,12 +4,10 @@ import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Storage } from "@ionic/storage";
 import { UtilitiesProvider } from "../providers/utilities/utilities";
-import { OneSignal } from "@ionic-native/onesignal";
-import { Keyboard } from "@ionic-native/keyboard";
+//import { OneSignal } from "@ionic-native/onesignal";
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../app/app.config';
 import { Deeplinks, DeeplinkMatch } from "@ionic-native/deeplinks";
-import { TabsPage } from '../pages/tabs/tabs';
 
 @Component({
   templateUrl: "app.html"
@@ -20,6 +18,7 @@ export class MyApp {
   @ViewChild(Nav) navChild:Nav;
 
   match : DeeplinkMatch;
+  listNodes: string[];
 
   constructor(
     statusBar: StatusBar,
@@ -27,8 +26,6 @@ export class MyApp {
     private platform: Platform,
     private storage: Storage,
     private utils: UtilitiesProvider,
-    private oneSignal: OneSignal,
-    private keyboard: Keyboard,
     private translateService: TranslateService,
     private deeplinks: Deeplinks
   ) {
@@ -36,7 +33,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
-
+      this.storage.set('isQrActive', true);
       // Handle Deeplinks
 
       this.initTranslate();
@@ -113,11 +110,10 @@ export class MyApp {
 
   getNode(){
     this.storage.get("node").then(nodeStorage => {
-      if(nodeStorage === null || nodeStorage === undefined){
-        this.storage.set("node", AppConfig.sirius.httpNodeUrl);
-      }
+      this.listNodes =  AppConfig.sirius.nodes
+      const nodeSelected = (nodeStorage === null || nodeStorage === '') ? this.listNodes[Math.floor(Math.random() * this.listNodes.length)] : nodeStorage;
+        this.storage.set("node", nodeSelected);
     })
-
   }
 
   initOnPauseResume() {
@@ -168,6 +164,7 @@ export class MyApp {
       console.log("isModalShown:", !isModalShown);
       console.log("isAppPaused:", !isAppPaused);
       console.log("isLoggedIn:", isLoggedIn);
+      console.log("isQrActive:", isQrActive);
       console.log("pin:", pin);
 
       console.log(
@@ -247,7 +244,7 @@ export class MyApp {
     });
   }
 
-  initOneSignal() {
+/*  initOneSignal() {
     if (this.platform.is('cordova')) {
       console.log("You're on a mobile device");
       this.oneSignal.startInit(
@@ -260,18 +257,16 @@ export class MyApp {
       );
 
       this.oneSignal.handleNotificationReceived().subscribe(data => {
-        // do something when notification is received
         alert(data);
       });
 
       this.oneSignal.handleNotificationOpened().subscribe(() => {
-        // do something when a notification is opened
       });
 
       this.oneSignal.endInit();
     }
   }
-
+*/
   private initTranslate()
   {
      // Set the default language for translation strings, and the current language.

@@ -2,7 +2,7 @@ import { ViewController } from 'ionic-angular';
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IonicPage, NavController, NavParams, Haptic } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
@@ -40,7 +40,7 @@ export class WalletDeletePage {
     private haptic: HapticProvider,
     private viewCtrl: ViewController
   ) {
-    this.selectedWallet = this.navParams.get('wallet');
+    this.selectedWallet = this.navParams.get('myWallets');
     console.log("SIRIUS CHAIN WALLET: WalletDeletePage -> this.selectedWallet", this.selectedWallet)
     this.init();
   }
@@ -75,7 +75,6 @@ export class WalletDeletePage {
       this.haptic.notification({ type:'success'});
     await this.walletProvider
       .deleteWallet(this.selectedWallet)
-    await this.walletProvider.unsetSelectedWallet();
     return this.goBack();
   }
 

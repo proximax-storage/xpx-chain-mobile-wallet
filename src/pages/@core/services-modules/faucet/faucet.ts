@@ -4,7 +4,6 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { Account, TransactionHttp } from 'tsjs-xpx-chain-sdk';
 import { MosaicModel } from './mosaic.model';
 import { TransferTransactionProvider } from '../../../../providers/transfer-transaction/transfer-transaction';
@@ -31,7 +30,6 @@ export class FaucetPage {
     private proximaxProvider: ProximaxProvider,
     private toastCtrl: ToastController,
     private alertProvider: AlertProvider,
-    private translateService: TranslateService,
     private viewCtrl: ViewController,
     private transferTransaction: TransferTransactionProvider
     ) {

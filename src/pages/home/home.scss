@@ -7,9 +7,25 @@
         margin-top: 3em;
       }
     }
-    
+
     ion-content.has-refresher > .scroll-content {
       border-top: none !important;
     }
+
+    .slide-zoom {
+      text-align: start !important;
+    }
+
+    .wallet-content {
+      left: 20px;
+    }
+
+    .wallet-space-tablet {
+      position: absolute;
+      right: 30px;
+    }
+    // .swiper-slide {
+    //   width: 335.545px !important;
+    // }
   }
 }

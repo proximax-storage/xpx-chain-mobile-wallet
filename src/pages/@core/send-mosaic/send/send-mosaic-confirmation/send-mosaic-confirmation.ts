@@ -4,7 +4,7 @@ import { Component, trigger, transition, style, group, animate } from '@angular/
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
-import { SimpleWallet, Password, NetworkType} from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, PlainMessage, TransferTransaction } from 'tsjs-xpx-chain-sdk';
 
 
 import { App } from '../../../../../providers/app/app';
@@ -13,10 +13,11 @@ import { AlertProvider } from '../../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../../providers/auth/auth';
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
-import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
-import * as BcryptJS from "bcryptjs";
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
 import { TransferTransactionProvider } from '../../../../../providers/transfer-transaction/transfer-transaction';
+import { AppConfig } from '../../../../../app/app.config';
+import * as FeeCalculationStrategy from 'tsjs-xpx-chain-sdk/dist/src/model/transaction/FeeCalculationStrategy';
+import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 /**
  * Generated class for the SendMosaicConfirmationPage page.
@@ -33,36 +34,36 @@ import { TransferTransactionProvider } from '../../../../../providers/transfer-t
 
     trigger('container', [
       transition(':enter', [
-          style({opacity: '0'}),
-          group([
-            animate('500ms ease-out', style({opacity: '1'})),
-          ])
-          
+        style({ opacity: '0' }),
+        group([
+          animate('500ms ease-out', style({ opacity: '1' })),
+        ])
+
       ]),
       transition(':leave', [
-          group([
-            animate('500ms ease-out', style({opacity: '0'})),
-          ])
+        group([
+          animate('500ms ease-out', style({ opacity: '0' })),
+        ])
       ])
     ]),
 
     trigger('badge', [
-        transition(':enter', [
-            style({transform: 'translateY(400%)'}),
-            animate('500ms ease-out', style({transform: 'translateY(0)'}))
-        ]),
-        transition(':leave', [
-            animate('500ms ease-in', style({transform: 'translateY(400%)'}))   
-        ])
+      transition(':enter', [
+        style({ transform: 'translateY(400%)' }),
+        animate('500ms ease-out', style({ transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('500ms ease-in', style({ transform: 'translateY(400%)' }))
+      ])
     ]),
 
     trigger('message', [
       transition(':enter', [
-          style({opacity: '0'}),
-          animate('500ms 1000ms ease-out', style({opacity: '1'}))
+        style({ opacity: '0' }),
+        animate('500ms 1000ms ease-out', style({ opacity: '1' }))
       ]),
       transition(':leave', [
-          animate('500ms ease-in', style({opacity: '0'}))   
+        animate('500ms ease-in', style({ opacity: '0' }))
       ])
     ])
 
@@ -78,9 +79,12 @@ export class SendMosaicConfirmationPage {
 
   data: any;
 
-  fee: number = 0;
 
   displaySuccessMessage: boolean = false;
+  block: boolean = false;
+  transferBuilder: any;
+  namexPX: string;
+  fee: string;
 
   constructor(
     public navCtrl: NavController,
@@ -92,9 +96,9 @@ export class SendMosaicConfirmationPage {
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
     private translateService: TranslateService,
-    private proximaxProvider: ProximaxProvider,
     private walletProvider: WalletProvider,
-    private transferTransaction: TransferTransactionProvider
+    private transferTransaction: TransferTransactionProvider,
+    private proximaxProvider: ProximaxProvider
   ) {
     this.init();
     this.generationHash = this.walletProvider.generationHash
@@ -112,34 +116,44 @@ export class SendMosaicConfirmationPage {
     this.formGroup = this.formBuilder.group({});
 
     // Get NavParams data
-    console.log('navParams', this.navParams.data);
     this.data = this.navParams.data;
-    console.log("TCL: SendMosaicConfirmationPage -> init -> this.data", this.data)
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
-    // Initialize private data
-    this.authProvider.getPassword().then(password => {
-      this.credentials = {
-        password: password,
-        privateKey: ''
-      };
-    })
 
-    // Prepare transfer Transaction
-    this.prepareTransaction();
+    console.log('data', this.data);
+    if (this.data.mosaic.length > 0) {
+      if (this.data.mosaic[0].id.toHex() === AppConfig.xpxHexId) {
+        this.namexPX = 'PRX.XPX';
+      } else {
+        this.namexPX = this.data.mosaic[0].id.toHex();
+      }
+    }
+
+    const params = {
+      common: this.data.privateKey,
+      recipient: this.data.recipientAddress,
+      message: PlainMessage.create(this.data.message),
+      network: this.data.currentWallet.account.network,
+      mosaic: this.data.mosaic
+    };
+    this.transferBuilder = this.transferTransaction.buildTransferTransaction(params);
+
+    console.log('transferBuilder', this.transferBuilder);
+    this.calculateFee()
+
   }
-  prepareTransaction() {
-    
-    const mosaicModel = new MosaicModel();
-    mosaicModel.hexId = this.data.mosaic.hex;
-    mosaicModel.amount = this.data.amount;
 
-    //1. Build a transfer transaction
-    this.transferTransaction.setRecipient(this.data.recipientAddress);
-    this.transferTransaction.setMosaics([mosaicModel]);
-    this.transferTransaction.setMessage(this.data.message);
-    this.fee = this.transferTransaction.getFee();
-    console.log("TCL: SendMosaicConfirmationPage -> onSubmit -> fee", this.fee)
+
+  calculateFee() {
+    const x = TransferTransaction.calculateSize(PlainMessage.create(this.data.message).size(), this.data.mosaic.length);
+    const b = FeeCalculationStrategy.calculateFee(x);
+    if (this.data.message.length > 0) {
+      this.fee = this.proximaxProvider.amountFormatterSimple(b.compact());
+    } else if (this.data.message.length === 0 && this.data.mosaic.length === 0) {
+      this.fee = '0.037250';
+    } else {
+      this.fee = this.proximaxProvider.amountFormatterSimple(b.compact());
+    }
   }
 
   goBack() {
@@ -147,28 +161,29 @@ export class SendMosaicConfirmationPage {
   }
 
   onSubmit() {
-    console.log('transactionType', this.data.transactionType);
+    this.block = true;
+    // console.log('transactionType', this.data.transactionType);
     if (this.data.transactionType == 'multisig') {
       console.log("Multisig transfer");
-      if (this._allowedToSendTx()) {
-        // TODO: Multisig Send
-      } else {
-        this.showGenericError();
-      }
-    } else if (this.data.transactionType = 'normal'){
+    } else if (this.data.transactionType = 'normal') {
       console.log("Normal transfer");
-      if (this._allowedToSendTx()) {
-        
-        this.transferTransaction.send().subscribe(response => {
-          this.showSuccessMessage();
-        }, (err) => {
-            this.showErrorMessage(err);
-        }, () => {
-          console.log('Done transfer transaction.');
-        });
-      } else {
-        this.showGenericError();
-      }
+
+      this.transferTransaction.send(this.data.privateKey, this.transferBuilder.transferTransaction, this.data.currentWallet.account.network).subscribe(response => {
+        const signedTxn = this.transferTransaction.signedTxn;
+        this.transferTransaction.checkTransaction(signedTxn).subscribe(status => {
+          this.block = false;
+          if ( status.group && status.group === 'unconfirmed' || status.group === 'confirmed') {
+            this.showSuccessMessage();
+          } else {
+            this.showErrorMessage(status.status);
+          }
+        }, error => {
+          this.block = false;
+          this.showErrorMessage(error);
+        })
+      });
+    } else {
+      this.showGenericError();
     }
   }
 
@@ -180,35 +195,25 @@ export class SendMosaicConfirmationPage {
       });
 
   }
+
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });
     console.log(error);
     if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-      this.alertProvider.showMessage(
-        'Sorry, you don\'t have enough balance to continue the transaction.'
-      );
-    } else if (
-      error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
-    ) {
-      this.alertProvider.showMessage(
-        'The note you entered is too long. Please try again.'
-      );
-    } else if (error.statusCode == 404) {
-      this.alertProvider.showMessage(
-        'This address does not belong to this network'
-      );
-    } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
-      this.alertProvider.showMessage(
-        'Transaction is not allowed for multisignature enabled wallets.'
-      );
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.INSUFFICIENT_BALANCE"));
+    } else if (error.toString().indexOf('Failure_Core_Insufficient_Balance') >= 0) {
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.INSUFFICIENT_BALANCE"));
+    } else if (error.toString().indexOf('Failure_Multisig_Operation_Not_Permitted_By_Account') >= 0) {
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG"));
     } else {
       this.alertProvider.showMessage(
         error
       );
     }
-              
-              
+
+
   }
+
   showSuccessMessage() {
 
     this.displaySuccessMessage = true;
@@ -226,7 +231,7 @@ export class SendMosaicConfirmationPage {
       // );
       this.utils.setTabIndex(2);
       this.navCtrl.setRoot(
-        'TabsPage',
+        'SendPage',
         {},
         {
           animate: true,
@@ -237,22 +242,22 @@ export class SendMosaicConfirmationPage {
     }, 3000);
 
 
-    
+
   }
 
   /**
    * User checking if it can do the send transaction.
    */
-  private _allowedToSendTx() {
-    // TODO: do some checking before send transaction
-    
-    if (this.credentials.password) {
-      const myPassword = new Password(this.credentials.password);
-      console.log('myPassword', myPassword)
-        return true;
-    }
-    return false;
-  }
+  // private _allowedToSendTx() {
+  //   // TODO: do some checking before send transaction
+
+  //   if (this.credentials.password) {
+  //     const myPassword = new Password(this.credentials.password);
+  //     console.log('myPassword', myPassword)
+  //       return true;
+  //   }
+  //   return false;
+  // }
 
   dismiss() {
     this.viewCtrl.dismiss();

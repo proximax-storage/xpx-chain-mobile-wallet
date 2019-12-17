@@ -11,7 +11,6 @@ import {
   Namespace,
   ProvisionNamespaceTransaction
 } from "nem-library";
-import { AlertProvider } from "../../../../../providers/alert/alert";
 import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
 
 /**
@@ -40,7 +39,6 @@ export class NamespaceCreatePage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private authProvider: AuthProvider,
-    private alertProvider: AlertProvider,
     private walletProvider: WalletProvider,
     private utils: UtilitiesProvider,
     private proximaxProvider: ProximaxProvider,
@@ -106,6 +104,9 @@ export class NamespaceCreatePage {
     } else {
       tx = this.proximaxProvider.prepareNamespaceTransaction(form.name);
     }
+
+    console.log(tx);
+    
 
     // this.nemProvider
     //   .confirmTransaction(tx, this.currentWallet, this.PASSWORD)

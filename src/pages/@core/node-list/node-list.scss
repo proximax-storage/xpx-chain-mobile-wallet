@@ -5,6 +5,15 @@ page-node-list {
     left: 4px;
   }
 
+  ion-content {
+    position: none;
+     background-color: white !important; 
+    font-family: 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    width: 100%;
+}
+
   .select {
     padding: 11px 5px 11px 5px;
   }

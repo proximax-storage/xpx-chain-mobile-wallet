@@ -1,4 +1,4 @@
-import { Mosaic, Message, Address, Deadline, UInt64, PlainMessage, PublicAccount, TransactionInfo } from 'tsjs-xpx-chain-sdk';
+import { Mosaic, Message, Address, Deadline, UInt64, PublicAccount, TransactionInfo } from 'tsjs-xpx-chain-sdk';
 
 export class TransferTransaction {
     deadline: Deadline;

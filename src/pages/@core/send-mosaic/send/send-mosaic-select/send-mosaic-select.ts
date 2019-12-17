@@ -11,15 +11,12 @@ import { App } from "../../../../../providers/app/app";
 import { WalletProvider } from "../../../../../providers/wallet/wallet";
 import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 import {
-  SimpleWallet,
   Address,
   MosaicInfo,
-  Password,
-  Account
+  MosaicId,
 } from "tsjs-xpx-chain-sdk";
 import { MosaicsProvider } from "../../../../../providers/mosaics/mosaics";
-import { Observable } from "rxjs";
-import { AuthProvider } from "../../../../../providers/auth/auth";
+import { ProximaxProvider } from "../../../../../providers/proximax/proximax";
 
 /**
  * Generated class for the SendMosaicSelectPage page.
@@ -40,9 +37,10 @@ export class SendMosaicSelectPage {
   App = App;
   selectedMosaic: any;
   mosaics: any[] = [];
-  selectedWallet: SimpleWallet;
+  selectedWallet: any;
   fakeList: Array<any>;
   walletAddress: Address;
+  address: Address;
 
   constructor(
     public navCtrl: NavController,
@@ -52,48 +50,53 @@ export class SendMosaicSelectPage {
     public walletProvider: WalletProvider,
     public utils: UtilitiesProvider,
     public mosaicsProvider: MosaicsProvider,
-    private authProvider: AuthProvider
+    private proximaxProvider: ProximaxProvider,
   ) {
     this.fakeList = [{}, {}];
     this.selectedMosaicc = this.navParams.data.selectedMosaic;
+
+    console.log('this.navParams.data', this.navParams.data);
+    
   }
 
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
+  }
+  
   async ionViewWillEnter() {
-    // let filter = this.selectedMosaicc.filter(mosaics => mosaics)
-    //   await this.mosaicsProvider.getOwnedMosaic( filter ).then(result => {
-    //   filter.forEach(mosaicsI => {
-    //       let filter2 = result.filter(mosaics =>mosaics.hex === mosaicsI.id.toHex())
-    //       this.mosaics.push( filter2[0])
-    //   })
-    // })
+    this.walletProvider.getAccountSelected().then(selectedWallet => {
+      this.selectedWallet = selectedWallet
+      console.log('this.selectedWallet', this.selectedWallet);
+      
+        this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
+        this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics=>{
 
-    this.walletProvider.getSelectedWallet().then(selectedWallet => {
-      this.getAccount(selectedWallet).subscribe(account => {
-        console.log("4. LOG: HomePage -> ionViewWillEnter -> account", account);
-        this.mosaicsProvider.getMosaics(account.address).subscribe(mosaics=>{
+          let names = [];
+          names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
+
+          console.log('.........................names', names);
+          
+          for (const element of mosaics) {
+            let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
+            console.log('.........................value', value);
+            
+            if(value.names  && value.names.length > 0){
+              element.name = value.names[0].name;
+            }
+          }
+
           this.mosaics = mosaics;
+
+          console.log('this.mosaics', this.mosaics);
+          
         })
-      });
     });
   }
 
-  private getAccount(wallet: SimpleWallet): Observable<Account> {
-    return new Observable(observer => {
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider.getPassword().then(password => {
-        // Get user's password
-        const myPassword = new Password(password);
-
-        // Convert current wallet to SimpleWallet
-        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
-
-        // Unlock wallet to get an account using user's password
-        const _account = myWallet.open(myPassword);
-        observer.next(_account);
-      });
-    });
+  async getNameMosacis(idMosaics: MosaicId[]) {
+    return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
   }
-
+  
   loadDefaultMosaics() {
     return this.mosaicsProvider.loadDefaultMosaics();
   }

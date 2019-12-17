@@ -1,8 +1,9 @@
 <ion-header no-border>
-
   <ion-navbar transparent>
     <ion-title>
-      <span ion-text color="dark"> {{ "SERVICES.SWAP_PROCESS.LIST.TITLE" | translate }}</span>
+      <strong>
+          <span ion-text color="dark"> {{ "SERVICES.SWAP_PROCESS.LIST.TITLE" | translate }}</span>
+      </strong>
     </ion-title>
 
     <ion-buttons right>
@@ -11,28 +12,33 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content no-margin>
   <ion-list transparent-items *ngIf="!isLoading">
-    <ion-card no-margin-bottom *ngFor="let wallet of wallets; let i = index">
+    <ion-card no-margin-bottom *ngFor="let accountNIS1 of accountsNIS1; let i = index" class="background-white">
       <ion-card-header no-padding>
-        <ion-item (click)="openWalletNis1(wallet)">
+        <ion-item (click)="openAccountNis1(accountNIS1)">
           <ion-icon color="dark" name="custom-address" item-start></ion-icon>
-          <h2 text-uppercase ion-text color="dark"><strong>{{ wallet['walletNis1'].name }}</strong></h2>
-          <p ion-text color="dark">{{  wallet['walletNis1'].address.value }}</p>
+          <h2 text-uppercase ion-text color="dark"><strong>{{ accountNIS1.account.name }}</strong></h2>
+          <p ion-text color="dark">{{  accountNIS1.account.address.value }}</p>
         </ion-item>
       </ion-card-header>
     </ion-card>
-
-    <section margin-top text-center>
-      <button no-margin gradient-button circle color-5 (click)="importNis1Wallet()">
-        <ion-icon name="md-add"></ion-icon>
-      </button>
-      <p text-wrap ion-text color="dark">{{ "SERVICES.SWAP_PROCESS.LIST.SUBTITLE" | translate }}</p>
-    </section>
   </ion-list>
 
+  <ion-grid empty *ngIf="accountsNIS1 && accountsNIS1.length === 0">
+      <br><br><br>
+      <ion-row>
+        <ion-col>
+          <img half-width [src]="App.STICKERS.SORRY">
+  
+          <h6 ion-text color="grey" text-wrap>
+            <strong>{{"APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS" | translate}}</strong>
+          </h6>
+  
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   <section spacing></section>
 </ion-content>

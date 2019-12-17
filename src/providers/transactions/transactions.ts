@@ -13,24 +13,30 @@ import { ProximaxProvider } from '../proximax/proximax';
 @Injectable()
 export class TransactionsProvider {
 
-  constructor(public http: HttpClient, private proximaxProvider: ProximaxProvider) {
-    console.log('Hello TransactionsProvider Provider');
-  }
+  constructor(public http: HttpClient, private proximaxProvider: ProximaxProvider) {}
 
-  getAllTransactionsFromAccount(publicAccount: PublicAccount): Observable<Transaction[]> {
+  
+  /**
+   *
+   *
+   * @param {PublicAccount} publicAccount
+   * @returns {Observable<Transaction[]>}
+   * @memberof TransactionsProvider
+   */
+  getAllTransactionsFromAccount(publicAccount: PublicAccount, id = null): Observable<Transaction[]> {
     const pageSize = 10;
-    const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount, pageSize)
+    const transaction = this.proximaxProvider.getAllTransactionsFromAccount(publicAccount, id, pageSize)
     return transaction;
   }
 
   getAllTransactionsUnconfirmed(publicAccount: PublicAccount): Observable<Transaction[]> {
-    const pageSize = 10;
+    const pageSize = 100;
     const transaction = this.proximaxProvider.getAllTransactionsUnconfirmed(publicAccount, pageSize)
     return transaction;
   }
 
   getAllTransactionsAggregate(publicAccount: PublicAccount): Observable<AggregateTransaction[]> {
-    const pageSize = 10;
+    const pageSize = 100;
     const transaction = this.proximaxProvider.getAllTransactionsAggregate(publicAccount, pageSize)
     return transaction;
   }

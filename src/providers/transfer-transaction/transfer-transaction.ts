@@ -1,13 +1,10 @@
 import { HelperProvider } from './../helper/helper';
-import { WalletProvider } from './../wallet/wallet';
 import { AppConfig } from './../../app/app.config';
 import { Injectable } from '@angular/core';
-import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, SimpleWallet, Password, Account, SignedTransaction, TransactionHttp, Message, EmptyMessage, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
+import { Address, Mosaic, MosaicId, UInt64, PlainMessage, TransferTransaction, Deadline, Account, SignedTransaction, TransactionHttp, TransactionAnnounceResponse } from 'tsjs-xpx-chain-sdk';
 import { MosaicModel } from './mosaic.model';
 import { Observable } from 'rxjs';
-import { AuthProvider } from '../auth/auth';
 import { Storage } from '@ionic/storage';
-import { ConfirmedTransactionListener } from 'nem-library';
 
 /*
   Generated class for the TransferTransactionProvider provider.
@@ -17,30 +14,32 @@ import { ConfirmedTransactionListener } from 'nem-library';
 */
 @Injectable()
 export class TransferTransactionProvider {
-  getFee() : number {
-    const tx = this.build();
-    console.log("TCL: TransferTransactionProvider -> getFee -> tx", tx);
-    return this.helper.getRelativeAmount(tx.maxFee.compact());
-  }
+  signedTxn: SignedTransaction;
+
   httpNodeUrl: any;
-
-  constructor(
-    private walletProvider: WalletProvider,
-    private authProvider: AuthProvider,
-    private storage: Storage,
-    private helper: HelperProvider
-    ){
-
-      this.storage.get("node").then( nodeStorage=>{
-        
-          this.httpNodeUrl = nodeStorage ;
-        });
-
-  }
-
   private _address: Address;
   private _message: string;
   private _mosaics: Mosaic[];
+
+  constructor(
+    private storage: Storage,
+    private helper: HelperProvider
+  ) {
+    this.getinfo();
+  }
+
+
+  getinfo(){
+    this.storage.get('node').then(node => {
+      this.httpNodeUrl = node;
+    });
+  }
+
+  getFee(): number {
+    const tx = this.build();
+    return this.helper.getRelativeAmount(tx.maxFee.compact());
+  }
+
 
   // Recipient
   setRecipient(address: string) {
@@ -63,14 +62,21 @@ export class TransferTransactionProvider {
   // Mosaics
   setMosaics(mosaicHexIds: MosaicModel[]) {
     const mosaics = mosaicHexIds.map(mosaic => {
-      const mosaicId = new MosaicId(mosaic.hexId);
-      const relativeAmount = mosaic.amount * Math.pow(10, 6);
-      const uint64Amount = UInt64.fromUint(relativeAmount);
-      return new Mosaic(mosaicId, uint64Amount);
+
+      if (mosaic.amount > 0){
+        const mosaicId = new MosaicId(mosaic.hexId);
+        const relativeAmount = mosaic.amount * Math.pow(10, 6);
+        const uint64Amount = UInt64.fromUint(relativeAmount);
+        return new Mosaic(mosaicId, uint64Amount);
+      } else {
+        return null;
+      }
+
     });
     this._mosaics = mosaics;
     return this;
   }
+
   get mosaics(): Mosaic[] {
     return this._mosaics || [];
   }
@@ -84,26 +90,26 @@ export class TransferTransactionProvider {
     return TransferTransaction.create(Deadline.create(), this.recipient, this.mosaics, message, AppConfig.sirius.networkType);
   }
 
-  send(): Observable<TransactionAnnounceResponse> {
+  send(privateKey, transferTransaction, networkType): Observable<TransactionAnnounceResponse> {
 
+    console.log('#################### llega');
     return new Observable(observer => {
-      
-    // 1. Get account
-    this.getAccount().subscribe(account => {
-      const _account = account;
-      console.log('LOG: TransferTransactionProvider -> send -> _account', _account);
+      // 1. account
+      const account = Account.createFromPrivateKey(privateKey, networkType);
 
+
+      console.log('#################### paso aqii');
+      
+      // const _account = account;
       // 2. Get transfer transaction
-      const transferTransaction = this.build();
+      // const transferTransaction = this.build();
 
       // 3. Sign and announce a transaction
       const signedTxn = account.sign(transferTransaction, AppConfig.sirius.networkGenerationHash);
       console.log('LOG: TransferTransactionProvider -> send -> signedTxn', signedTxn);
+      this.signedTxn = signedTxn;
 
-      // 4. Monitor transaction status
-      this.checkTransaction(signedTxn);
-
-      // 5. Announce transaction
+      // 4. Announce transaction
       const transactionHttp = new TransactionHttp(this.httpNodeUrl);
       transactionHttp.announce(signedTxn).subscribe(response => {
         observer.next(response);
@@ -112,68 +118,86 @@ export class TransferTransactionProvider {
       }, () => {
         observer.complete();
       });
-      
-    })
-
-
     });
-
-    
   }
 
-  private checkTransaction(txn: SignedTransaction): Promise<boolean> {
+  checkTransaction(txn: SignedTransaction): Observable<any> {
     const transactionHttp = new TransactionHttp(this.httpNodeUrl);
-
-    return new Promise((resolve) => {
+    return new Observable((resolve) => {
       setTimeout(async () => {
         try {
           const status = await transactionHttp.getTransactionStatus(txn.hash).toPromise();
-          console.log('TCL: SimpleTransfer -> status, ' + JSON.stringify(status, null, 3));
-          if (status.group === 'confirmed') {
-            // TODO: notification
-            resolve(true);
-          } else if(status.group === 'unconfirmed') {
-            // TODO: notification
-          } else {
-            this.checkTransaction(txn);
-          }
+          resolve.next(status);
         } catch (error) {
-          console.log(JSON.stringify(error, null, 2));
-          this.checkTransaction(txn);
+          resolve.next(error);
+          // console.log(JSON.stringify(error, null, 2));
         }
-      }, 1000);
+      }, 5000);
     });
   }
 
-  private getAccount(): Observable<Account> {
-    return new Observable(observer => {
+  buildTransactionHttp() {
+    return  new TransactionHttp(this.httpNodeUrl);;
+  }
 
-      // Get selected Wallet
-      this.walletProvider.getSelectedWallet().then(selectedWallet => {
-      console.log('LOG: TransferTransactionProvider -> selectedWallet', selectedWallet);
+  buildTransferTransaction(params) {
+    const recipientAddress = Address.createFromRawAddress(params.recipient);
+    const mosaics = params.mosaic;
+    console.log('.mosaicsmosaicsmosaicsmosaics', mosaics);
+    
+    const allMosaics = [];
+    if(mosaics != undefined || mosaics != null){
+      mosaics.forEach(element => {
+        console.log('element', Number(element.amount.replace(/,/g, '').replace(/./g, '')));
+        const convert = new Mosaic(
+          new MosaicId([element.id.id['lower'], element.id.id['higher']]),
+          UInt64.fromUint(Number(element.amount.toString().replace(/,/g, '').split('.')))
+        );
+        allMosaics.push(convert)
 
-        const _selectedWallet = selectedWallet;
+        console.log('\n\n', convert);
+      });
+  
+
+      console.log('allMosaics', allMosaics);
       
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider
-        .getPassword()
-        .then(password => {
-        console.log('LOG: TransferTransactionProvider -> password', password);
-          // Get user's password
-          const myPassword = new Password(password);
+    }
 
-          // Convert current wallet to SimpleWallet
-          const myWallet = this.walletProvider.convertToSimpleWallet(_selectedWallet);
+    const transferTransaction = TransferTransaction.create(
+      Deadline.create(), 
+      recipientAddress,
+      allMosaics,
+      params.message,
+      params.network
+    );
 
-          // Unlock wallet to get an account using user's password 
-          const account = myWallet.open(myPassword);
+    console.log('transferTransaction', transferTransaction);
+    
 
-          observer.next(account);
+    // console.log(this.generationHash);
+    const account = Account.createFromPrivateKey(
+      params.common,
+      params.network
+    );
 
-        });
+    console.log('account',account);
+    
+    const signedTransaction = account.sign(
+      transferTransaction,
+      AppConfig.sirius.networkGenerationHash
+    );
 
-      })
-    });
+    console.log('signedTransaction', signedTransaction);
+    
+    const transactionHttp =  new TransactionHttp(this.httpNodeUrl);
+    console.log('transactionHttp', transactionHttp);
+    
+    return {
+      signedTransaction: signedTransaction,
+      transactionHttp: transactionHttp,
+      transferTransaction: transferTransaction
+    };
   }
+
 
 }

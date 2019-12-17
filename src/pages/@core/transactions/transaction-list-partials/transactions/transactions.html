@@ -1,0 +1,74 @@
+<ng-container *ngIf="showTx">
+    <ion-card-header reduce-transfer-tx-header (click)="viewDetail(tx)">
+      <ion-item>
+        <img logo-small item-left [src]="LOGO" alt="logo">
+  
+        <!-- Show MosaicInfo -->
+        <ng-container *ngIf="(MOSAIC_INFO && MOSAIC_INFO?.fullName ) || (!MOSAIC_INFO && MESSAGE_ !== '')">
+          <h2 ion-text color="dark" style="display: flex;">
+            <ng-container *ngIf="MOSAIC_INFO?.fullName">
+              {{ MOSAIC_INFO.fullName }}
+            </ng-container>
+            <ng-container *ngIf="!MOSAIC_INFO && MESSAGE_ !== ''">
+              {{ MESSAGE_ }}
+            </ng-container>
+  
+            <ng-container *ngIf="tx && tx.recipient">
+              <img logo-small style="height: 2rem; margin-left: .5rem; width: 30px !important;" src="assets/imgs/icon-receive-transactions.svg"
+                *ngIf="owner == tx?.recipient.plain()">
+              <img logo-small style="height: 2rem; margin-left: .5rem; width: 30px !important;" src="assets/imgs/icon-send-transactions.svg"
+                *ngIf="owner != tx?.recipient.plain()">
+            </ng-container>
+          </h2>
+        </ng-container>
+  
+        <section item-right>
+          <ng-container *ngIf="AMOUNT">
+            <h2 text-right ion-text color="dark">
+              {{ AMOUNT  }}
+            </h2>
+          </ng-container>
+  
+          <p text-right ion-text color="dark">
+            <small>
+              {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
+            </small>
+          </p>
+  
+          <p float-right ion-text *ngIf="status === 'Confirmed'" color="success">
+            <small>{{status}}</small>
+          </p>
+  
+          <p float-right ion-text *ngIf="status === 'Unconfirmed'" color="danger">
+            <small>{{status}}</small>
+          </p>
+  
+          <p float-right ion-text *ngIf="status === 'Partial'" color="grey">
+            <small>{{status}}</small>
+          </p>
+        </section>
+  
+        <ng-container *ngIf="type !== ''">
+          <p float-left ion-text color="dark">
+            <small>{{type}}</small>
+          </p>
+        </ng-container>
+      </ion-item>
+  
+      <!-- <ion-item transaction-status>
+        <section item-right>
+          <p float-right ion-text *ngIf="status === 'Confirmed'" color="success">
+            <small>{{status}}</small>
+          </p>
+  
+          <p float-right ion-text *ngIf="status === 'Unconfirmed'" color="danger">
+            <small>{{status}}</small>
+          </p>
+  
+          <p float-right ion-text *ngIf="status === 'Partial'" color="grey">
+            <small>{{status}}</small>
+          </p>
+        </section>
+      </ion-item> -->
+    </ion-card-header>
+  </ng-container>

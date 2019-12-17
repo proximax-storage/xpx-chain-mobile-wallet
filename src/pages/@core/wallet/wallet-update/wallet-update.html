@@ -24,7 +24,7 @@
           <u>{{ selectedWallet.name }}</u>
           wallet -->
 
-          {{"WALLETS.EDIT.PROMPT" | translate: {walletName: selectedWallet.name } }}
+          {{"WALLETS.EDIT.PROMPT" | translate: {walletName: walletName } }}
         </h3>
         <p ion-text color="dark">
           {{"WALLETS.EDIT.DESC" | translate}}
@@ -36,14 +36,25 @@
           <div class="wallet-content" [ngClass]="walletColor" text-center>
             <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-wallet-white.png">
             <p class="wallet-number">{{walletAddress}}</p>
-            <div class="wallet-space-75">
+            <div class="wallet-label" style="text-align: start !important;">
+                <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+                {{ walletName}}
+              </div>
+              <div class="wallet-label" style="text-align: start !important;">
+                <span class="wallet-label"><strong style="text-align: start !important;">XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>  <span class="wallet-space-25 wallet-label"> {{ amountXpx }}</span>
+              </div>
+              <div class="wallet-space-25 wallet-label">
+                <span class="wallet-label"><strong>US$ </strong></span>{{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}}
+              </div>
+
+            <!-- <div class="wallet-space-75">
               <span class="wallet-label">{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</span>
               <p class="wallet-info">{{ walletName }}</p>
             </div>
             <div class="wallet-space-25">
               <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
               <p class="wallet-info">${{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}} USD</p>
-            </div>
+            </div> -->
           </div>
         </div>
       </ion-col>
@@ -93,13 +104,22 @@
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
           <ion-item transparent padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
-            <ion-input formControlName="name" type="text" autocapitalize="none" placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()">
+            <ion-input formControlName="name" type="text" autocapitalize="none"
+              placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()"
+              (ionChange)="minName()">
             </ion-input>
           </ion-item>
-
+          <div>
+            <p error padding-left text-left style="color: #e06e36 !important; margin-top: -4px!important;">
+              <strong
+                *ngIf='nameMin'>{{('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: configurationForm.nameWallet.minLength })}}</strong>
+              <strong
+                *ngIf='nameMax'>{{('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: configurationForm.nameWallet.maxLength })}}</strong>
+            </p>
+          </div>
 
           <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
-              {{"WALLETS.BUTTON.SAVE" | translate}}
+            {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>
       </ion-col>

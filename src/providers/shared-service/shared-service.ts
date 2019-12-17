@@ -13,8 +13,8 @@ export class SharedService {
       maxLength: 20
     },
     nameWallet: {
-      minLength: 2,
-      maxLength: 30
+      minLength: 3,
+      maxLength: 10
     },
     privateKey: {
       minLength: 64,

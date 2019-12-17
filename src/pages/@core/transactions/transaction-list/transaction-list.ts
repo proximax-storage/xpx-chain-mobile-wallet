@@ -1,16 +1,19 @@
-import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams, ModalController, InfiniteScroll, ViewController, ActionSheetController } from "ionic-angular";
-import { SimpleWallet, Transaction, Pageable, AccountInfoWithMetaData } from "nem-library";
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams, ModalController, ViewController, ActionSheetController } from "ionic-angular";
+import { Transaction, Pageable, AccountInfoWithMetaData } from "nem-library";
+import { TranslateService } from '@ngx-translate/core';
+import { Clipboard } from "@ionic-native/clipboard";
+import { TransactionType, AggregateTransaction } from "tsjs-xpx-chain-sdk";
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { CoinPriceChartProvider } from "../../../../providers/coin-price-chart/coin-price-chart";
 import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
 import { App } from "../../../../providers/app/app";
 import { ToastProvider } from "../../../../providers/toast/toast";
-import { Clipboard } from "@ionic-native/clipboard";
 import { GetMarketPricePipe } from "../../../../pipes/get-market-price/get-market-price";
 import { HapticProvider } from '../../../../providers/haptic/haptic';
-import { TranslateService } from '@ngx-translate/core';
-import { TransactionType, AggregateTransaction } from "tsjs-xpx-chain-sdk";
+import { TransactionsProvider } from "../../../../providers/transactions/transactions";
+import { CatapultsAccountsInterface } from "../../../../providers/wallet/wallet";
+
 
 /**
  * Generated class for the TransactionListPage page.
@@ -26,39 +29,33 @@ import { TransactionType, AggregateTransaction } from "tsjs-xpx-chain-sdk";
   providers: [GetMarketPricePipe]
 })
 export class TransactionListPage {
-  /** Transaction list member variables */
+
   App = App;
-  TransactionType = TransactionType;
-
-  currentWallet: SimpleWallet;
-  fakeList: Array<any>;
-
-  unconfirmedTransactions: Array<any>;
   aggregateTransactions: Array<AggregateTransaction> = [];
-  confirmedTransactions: Array<any>;
+  confirmedTransactions = [];
+  menu = 'confirmed';
   showEmptyMessage: boolean;
+  TransactionType = TransactionType;
+  unconfirmedTransactions = [];
+
+  // --------------------------------------------------
+
+
   isLoading: boolean;
-
   isLoadingInfinite: boolean = false;
-
   pageable: Pageable<Transaction[]>;
-
-  @ViewChild(InfiniteScroll)
-  private infiniteScroll: InfiniteScroll;
-
   coindId: string;
   mosaicId: string;
   walletName: string;
-
-
   totalBalance: number;
 
   // Multisignature
   isMultisig: boolean;
   accountInfo: AccountInfoWithMetaData;
-  selectedAccount: any;
-
+  selectedAccount: CatapultsAccountsInterface;
   mosaics: any[] = [];
+  searchMore = true;
+  amountXpx: any;
 
   constructor(
     public navCtrl: NavController,
@@ -72,125 +69,175 @@ export class TransactionListPage {
     private toastProvider: ToastProvider,
     private actionSheetCtrl: ActionSheetController,
     private haptic: HapticProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private transactionsProvider: TransactionsProvider
   ) {
     const payload = this.navParams.data;
     console.log("SIRIUS CHAIN WALLET: TransactionListPage -> payload", payload)
 
     this.totalBalance = payload.total;
     this.confirmedTransactions = payload.transactions;
+    this.unconfirmedTransactions = payload.unconfirmedTransactions;
+    console.log('this.unconfirmedTransactions', this.unconfirmedTransactions);
+    
     this.aggregateTransactions = payload.aggregateTransactions;
+
+    console.log('this.aggregateTransactions', this.aggregateTransactions);
     this.selectedAccount = payload.selectedAccount;
     this.mosaics = payload.mosaics;
+    this.amountXpx = payload.amountXpx;
 
-    if(this.confirmedTransactions === null){
+    if (this.confirmedTransactions === null) {
       this.showEmptyMessage = true;
     }
-
   }
 
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad TransactionListPage");
-    
-  }
-  goto(page) {
-    this.navCtrl.push(page);
+  /**
+   *
+   *
+   * @param {string} val
+   * @memberof TransactionListPage
+   */
+  copy(val: string) {
+    this.clipboard.copy(val).then(_ => {
+      this.toastProvider.show(this.translateService.instant("WALLETS.DETAIL.COPY_ADDRESS"), 3, true);
+    });
   }
 
+  /**
+   *
+   *
+   * @memberof TransactionListPage
+   */
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
+  /**
+   *
+   *
+   * @param {*} infiniteScroll
+   * @memberof TransactionListPage
+   */
+  getMoreConfirmedTxn(infiniteScroll: any) {
+    if (this.searchMore) {
+      setTimeout(async () => {
+        const lastTransactionId = this.confirmedTransactions[this.confirmedTransactions.length - 1].transactionInfo.id;
+        console.log('Begin async operation', lastTransactionId);
+        this.transactionsProvider.getAllTransactionsFromAccount(this.selectedAccount.publicAccount, lastTransactionId).subscribe(
+          next => {
+            console.log('last 10 txn --->', next);
+            if (next.length > 0) {
+              next.forEach(element => {
+                this.confirmedTransactions.push(element);
+              });
+            } else {
+              this.searchMore = false;
+            }
+            infiniteScroll.complete();
+          }
+        );
+      }, 1500);
+    } else {
+      infiniteScroll.complete();
+    }
+  }
+
+
+  /**
+  *
+  *
+  * @param {Transaction} tx
+  * @param {string} status
+  * @memberof TransactionListPage
+  */
+  goToTransactionDetail(tx: Transaction, status: string) {
+    let page = "TransactionDetailPage";
+    const transactions = tx;
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics, status };
+    this.showModal(page, payload);
+  }
+
+  /**
+   *
+   *
+   * @memberof TransactionListPage
+   */
+  moreDetails() {
+    let page = "WalletDetailsPage";
+    this.showModal(page, { totalBalance: this.totalBalance, amountXpx: this.amountXpx, selectedAccount: this.selectedAccount });
+  }
+
+  /**
+   *
+   *
+   * @memberof TransactionListPage
+   */
   showReceiveModal() {
     let page = "ReceivePage";
-    const modal = this.modalCtrl.create(page, this.selectedAccount, {
+    const modal = this.modalCtrl.create(page, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
     modal.present();
   }
 
+  /**
+   *
+   *
+   * @memberof TransactionListPage
+   */
   showSendModal() {
-
     console.log(this.accountInfo);
-
     if (this.isMultisig) {
       this.haptic.selection();
       let page = 'SendMultisigPage';
-
       const title = this.translateService.instant("WALLETS.SEND.PROMPT");
       const normalTX = this.translateService.instant("WALLETS.SEND.NORMAL");
       const multisigTX = this.translateService.instant("WALLETS.SEND.MULTISIG");
       const cancelButton = this.translateService.instant("WALLETS.BUTTON.CANCEL");
-
       const actionSheet = this.actionSheetCtrl.create({
         title: title,
         cssClass: 'wallet-on-press',
-        buttons: [
-          {
-            text: normalTX,
-            handler: () => {
-              let page = 'SendPage';
-              this.showModal(page, { mosaicSelectedName: 'xpx' })
-            }
-          },
-          {
-            text: multisigTX,
-            handler: () => {
-              this.showModal(page, { mosaicSelectedName: 'xpx' })
-            }
-          },
-          {
-            text: cancelButton,
-            role: 'cancel',
-            handler: () => {
-              // this.showModal(page,{ mosaicSelectedName: 'xpx'})
-            }
+        buttons: [{
+          text: normalTX,
+          handler: () => {
+            let page = 'SendPage';
+            this.showModal(page, { mosaicSelectedName: 'xpx' })
           }
-        ]
+        }, {
+          text: multisigTX,
+          handler: () => {
+            this.showModal(page, { mosaicSelectedName: 'xpx' })
+          }
+        }, {
+          text: cancelButton,
+          role: 'cancel',
+          handler: () => {
+          }
+        }]
       });
+      
       actionSheet.present();
-      // this.showModal(page,{ mosaicSelectedName: 'xpx'})
     } else {
       let page = "SendPage";
       this.showModal(page, { mosaicSelectedName: 'xpx' })
     }
   }
 
-  showExportPrivateKeyModal() {
-    let page = "PrivateKeyPasswordPage";
-    this.showModal(page, {})
-  }
-
-  moreDetails() {
-    let page = "WalletDetailsPage";
-    this.showModal(page, { totalBalance: this.totalBalance, selectedAccount: this.selectedAccount });
-  }
-
-  showModal(page, params) {
+  /**
+   *
+   *
+   * @param {*} page
+   * @param {*} params
+   * @memberof TransactionListPage
+   */
+  showModal(page: any, params: any) {
     const modal = this.modalCtrl.create(page, params, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
     modal.present();
-  }
-
-  /** Transaction list methods */
-  trackByHash(index) {
-    return index;
-  }
-
-  gotoTransactionDetail(tx) {
-    let page = "TransactionDetailPage";
-    const transactions = tx;
-    const mosaics = this.mosaics;
-    const payload = { transactions, mosaics}
-    this.showModal(page, payload);
-  }
-
-  dismiss() {
-    this.viewCtrl.dismiss();
-  }
-
-  copy(val) {
-    this.clipboard.copy(val).then(_ => {
-      this.toastProvider.show(this.translateService.instant("WALLETS.DETAIL.COPY_ADDRESS"), 3, true);
-    });
   }
 }

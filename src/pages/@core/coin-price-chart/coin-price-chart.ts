@@ -15,7 +15,6 @@ import {
   Transaction,
   TransactionType,
   MultisigAccountInfo,
-  TransferTransaction,
 } from 'tsjs-xpx-chain-sdk';
 
 import { GetMarketPricePipe } from '../../../pipes/get-market-price/get-market-price';
@@ -27,6 +26,7 @@ import { ToastProvider } from '../../../providers/toast/toast';
 import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { DefaultMosaic } from '../../../models/default-mosaic';
 import { ProximaxProvider } from '../../../providers/proximax/proximax';
+import { CatapultsAccountsInterface } from '../../../providers/wallet/wallet';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -56,9 +56,9 @@ export class CoinPriceChartPage {
   App = App;
   TransactionType = TransactionType;
 
-  selectedAccount: any;
+  selectedAccount: CatapultsAccountsInterface;
   fakeList: Array<any>;
-  confirmedTransactions: TransferTransaction[]=[];
+  confirmedTransactions: Transaction[] = [];
   showEmptyMessage: boolean;
   isLoading: boolean;
 
@@ -80,9 +80,10 @@ export class CoinPriceChartPage {
   accountInfo: MultisigAccountInfo;
   isMultisig: boolean;
   public mosaics: DefaultMosaic[] = [];
-  array: any[]=[];
+  array: any[] = [];
   account: any;
   divisibility: any;
+  mosaicName: any;
 
 
   constructor(
@@ -100,7 +101,7 @@ export class CoinPriceChartPage {
     private haptic: HapticProvider,
     private browserTab: BrowserTab,
     private safariViewController: SafariViewController,
-  ) { 
+  ) {
     this.selectedSegment = 'transactions';
     this.durations = [
       { label: "24H", value: 1 },
@@ -113,40 +114,42 @@ export class CoinPriceChartPage {
     this.selectedDuration = this.durations[0];
 
     const payload = this.navParams.data;
-    console.log("TCL: CoinPriceChartPage -> payload", payload)
-
     this.mosaicHex = payload.mosaicHex;
     this.mosaicId = payload.mosaicId;
     this.namespaceId = payload.namespaceId;
-     // will be used to filter transactions
+    this.mosaicName = payload.mosaicName;
+    // will be used to filter transactions
     this.coinId = payload.coinId;
     this.selectedAccount = payload.selectedAccount;
     this.confirmed = payload.transactions;
     this.mosaics = payload.mosaics;
     this.account = payload.selectedAccount;
+    this.confirmed.forEach((confirmed: Transaction) => {
+      if (confirmed.type === TransactionType.TRANSFER) {
+        confirmed['mosaics'].forEach(async _mosaic => {
+          if (_mosaic.id.toHex().toLowerCase() == this.mosaicHex) {
+            this.confirmedTransactions.push(confirmed);
+            this.showEmptyMessage = false;
+          }
+        });
+      } else if (this.mosaicId === 'xpx') {
+        this.confirmedTransactions.push(confirmed);
+      }
+    });
 
-    this.confirmed.forEach((confirmed:TransferTransaction) => {
-      confirmed.mosaics.forEach(async _mosaic => {
-        if(_mosaic.id.toHex().toLowerCase() == this.mosaicHex){
-          this.confirmedTransactions.push(confirmed);
-          this.showEmptyMessage = false;
-        }
-      });
-    });    
-    
-    if(this.confirmedTransactions.length < 1){
+    if (this.confirmedTransactions.length < 1) {
       this.showEmptyMessage = true;
     }
+
     this.navParams.data.mosaics.forEach(element => {
-      if(element.hex === this.navParams.data.mosaicHex){
-        this.mosaicAmount = element.amountCompact; 
-        this.divisibility = element.divisibility; 
+      if (element.hex === this.navParams.data.mosaicHex) {
+        this.mosaicAmount = element.amountCompact;
+        this.divisibility = element.divisibility;
       }
     });
     this.totalBalance = this.navParams.data['totalBalance'];
-    
-    if (this.mosaicId == 'xar') {
 
+    if (this.mosaicId == 'xar') {
       this.selectedCoin = {
         "name": "Xarcade",
         "symbol": "XAR",
@@ -164,7 +167,8 @@ export class CoinPriceChartPage {
         }
       }
       this.showEmptyMosaic = true;
-    }  else if (this.mosaicId != 'xpx' && this.mosaicId != 'npxs' && this.mosaicId != 'sft' && this.mosaicId != 'xar') { 
+    } else if (this.mosaicId !== 'xpx' && this.mosaicId !== 'npxs' && this.mosaicId !== 'sft' && this.mosaicId !== 'xar') {
+
       this.selectedCoin = {
         "name": this.mosaicId,
         "symbol": this.namespaceId,
@@ -180,46 +184,49 @@ export class CoinPriceChartPage {
         "description": {
           en: "Xarcade is a ProximaX-powered cost-effective video game distribution/exchange platform for both game developers and gamers to use. It is a game changer and is a cost-less direct alternative to other app stores in the market. Xarcade does not levy game developers anything for the sale of in-game credits, changing the paradigm, and passing these cost savings to gamers."
         }
-      } 
+      }
       this.showEmptyMosaic = true;
     } else {
-      if (this.coinId != "") {
+      if (this.coinId !== "") {
         this.coingeckoProvider.getDetails(this.coinId).subscribe(coin => {
           this.selectedCoin = coin;
-          if (coin.id == 'proximax') {
+          if (coin.id === 'proximax') {
             this.selectedCoin.links.announcement_url = ["https://blog.proximax.com"]
             this.selectedCoin.links.blockchain_site = ["https://bctestnetexplorer.xpxsirius.io/#/"]
           }
           this.showEmptyMosaic = false;
         });
+      } else {
+        this.showEmptyMosaic = true;
       }
     }
   }
+
   ionViewWillEnter() {
   }
 
-  getAbsoluteAmount(amount, divisibility){
-    return  this.proximaxProvider.amountFormatter(amount, divisibility)
+  getAbsoluteAmount(amount, divisibility) {
+    return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
-  
+
   getAccountInfo() {
     // console.info("Getting account information.", this.selectedAccount.address)
     try {
-      this.proximaxProvider.getMultisigAccountInfo(this.selectedAccount.address).subscribe(accountInfo => {
-          if (accountInfo) {
-            this.accountInfo = accountInfo;
-            console.log('this.accountInfo', this.accountInfo)
-            // Check if account is a cosignatory of multisig account(s)
-            if (this.accountInfo.cosignatories.length > 0) {
-              // console.log("This is a multisig account");
-              this.isMultisig = true;
-            }
+      const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
+      this.proximaxProvider.getMultisigAccountInfo(address).subscribe(accountInfo => {
+        if (accountInfo) {
+          this.accountInfo = accountInfo;
+          // Check if account is a cosignatory of multisig account(s)
+          if (this.accountInfo.cosignatories.length > 0) {
+            // console.log("This is a multisig account");
+            this.isMultisig = true;
           }
+        }
 
-        }, (err: any) => {
-          console.log(err)
-          this.isMultisig = false;
-        });
+      }, (err: any) => {
+        console.log(err)
+        this.isMultisig = false;
+      });
     } catch (error) {
       console.log(error);
     }
@@ -227,7 +234,8 @@ export class CoinPriceChartPage {
   }
 
   copy() {
-    this.clipboard.copy(this.selectedAccount.address.plain()).then(_ => {
+    const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
+    this.clipboard.copy(address.plain()).then(_ => {
       this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
     });
   }
@@ -253,7 +261,7 @@ export class CoinPriceChartPage {
 
   showReceiveModal() {
     let page = "ReceivePage";
-    const modal = this.modalCtrl.create(page, this.account, {
+    const modal = this.modalCtrl.create(page, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
@@ -263,8 +271,6 @@ export class CoinPriceChartPage {
   }
 
   showSendModal() {
-    console.log(this.accountInfo);
-
     if (this.isMultisig) {
       this.haptic.selection();
       let page = 'SendMultisigPage';
@@ -311,11 +317,11 @@ export class CoinPriceChartPage {
     modal.present();
   }
 
-  gotoTransactionDetail(tx) {
+  goToTransactionDetail(tx) {
     const page = "TransactionDetailPage";
     const transactions = tx;
-    const mosaics = this.mosaics; 
-    const payload = {transactions, mosaics};
+    const mosaics = this.mosaics;
+    const payload = { transactions, mosaics };
     this.showModal(page, payload);
   }
 
@@ -350,12 +356,10 @@ export class CoinPriceChartPage {
                   },
                     (error: any) => console.error(error)
                   );
-
               } else {
                 // use fallback browser, example InAppBrowser
               }
-            }
-            );
+            });
         }
       });
   }

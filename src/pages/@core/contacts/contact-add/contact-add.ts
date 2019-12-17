@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
-import { Address } from 'tsjs-xpx-chain-sdk';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { App } from '../../../../providers/app/app';
 import { ContactsProvider } from '../../../../providers/contacts/contacts';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
-
+import { Storage } from "@ionic/storage";
+import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 /**
  * Generated class for the ContactAddPage page.
  *
@@ -27,6 +27,8 @@ export class ContactAddPage {
   alfaNumberPattern = '^[a-zA-Z0-9\-\]+$';
   userTelegram = '^[a-zA-Z0-9@]+$';
   formGroup: FormGroup;
+  data: any;
+  address: any;
 
   constructor(
     public navCtrl: NavController,
@@ -37,8 +39,12 @@ export class ContactAddPage {
     private viewCtrl: ViewController,
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService,
-    private walletProvider: WalletProvider
+    private walletProvider: WalletProvider,
+    private storage: Storage,
+    private barcodeScanner: BarcodeScanner,
+    
   ) {
+    this.address = this.walletProvider.selectesAccount.account.address.address;
     this.init();
     this.subscribeValue();
   }
@@ -56,7 +62,6 @@ export class ContactAddPage {
     });
 
     if (this.navParams.data) {
-      console.log(this.navParams.get('data'));
       this.formGroup.setValue(this.navParams.get('data'));
     }
   }
@@ -72,7 +77,7 @@ export class ContactAddPage {
         const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
         if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectedWallet.address.plain(), accountRecipient)) {
+          if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectesAccount.account.address.address, accountRecipient)) {
             // this.blockSendButton = true;
             this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
           } else {
@@ -94,16 +99,49 @@ export class ContactAddPage {
    
     const DATA = form;
     if (!this.proximaxProvider.isValidAddress(CONTACT_ADDRESS)) {
-      this.alertProvider.showMessage(
-        this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_ERROR")
-      );
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_ERROR"));
     } else {
       DATA.address = CONTACT_ADDRESS;
-      this.contactsProvider.push(DATA).then(_ => {
-        this.gotoHome();
+      this.contactsProvider.push(DATA).then(result => {
+        if(!result){
+          this.gotoHome();
+        } else{
+          this.alertProvider.showMessage(this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_EXISTS"));
+        }
       });
     }
   }
+
+  scan() {
+    this.storage.set("isQrActive", true);
+    this.barcodeScanner
+      .scan()
+      .then(barcodeData => {
+        barcodeData.format = "QR_CODE";
+        let address = barcodeData.text.split("-").join("")
+        if (address.length != 40) {
+          this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID")
+        } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.address, address)) {
+          this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
+        } else {
+          this.formGroup.patchValue({ recipientAddress: barcodeData.text });
+        }
+      })
+      .catch(err => {
+        // console.log("Error", err);
+        if (
+          err
+            .toString()
+            .indexOf(
+              this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")
+            ) >= 0
+        ) {
+          let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2");
+          this.alertProvider.showMessage(message);
+        }
+      });
+  }
+
 
   dismiss() {
     this.viewCtrl.dismiss();

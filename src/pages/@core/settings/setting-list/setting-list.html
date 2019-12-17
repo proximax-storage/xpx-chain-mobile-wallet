@@ -6,7 +6,6 @@
 -->
 
 <ion-content background>
-
   <ion-list title transparent>
     <ion-item transparent>
       <h2 padding-left title color="dark">
@@ -17,16 +16,12 @@
     </ion-item>
   </ion-list>
 
-  <br>
-  <br>
-
-
   <ion-list transparent-items>
     <ion-card (click)="gotoGuide()">
       <ion-item>
         <ion-icon item-left name="custom-guide"></ion-icon>
         <h2>{{"SETTINGS.WALLET_GUIDE" | translate}}</h2>
-        <p text-wrap>{{"SETTINGS.WALLET_GUIDE.DESC" | translate}}</p>
+        <!-- <p text-wrap>{{"SETTINGS.WALLET_GUIDE.DESC" | translate}}</p> -->
       </ion-item>
     </ion-card>
     
@@ -34,7 +29,7 @@
         <ion-item>
           <ion-icon item-left name="custom-nodes"></ion-icon>
           <h2>{{"SETTINGS.NODES" | translate}}</h2>
-          <p text-wrap>{{"SETTINGS.NODES.DESC" | translate}}</p>
+          <!-- <p text-wrap>{{"SETTINGS.NODES.DESC" | translate}}</p> -->
         </ion-item>
       </ion-card>
 
@@ -42,7 +37,7 @@
         <ion-item>
           <ion-icon item-left name="custom-languaje"></ion-icon>
           <h2>{{"SETTINGS.LANGUAGE" | translate}}</h2>
-          <p text-wrap>{{"SETTINGS.LANGUAGE.DESC" | translate}}</p>
+          <!-- <p text-wrap>{{"SETTINGS.LANGUAGE.DESC" | translate}}</p> -->
         </ion-item>
       </ion-card>
 
@@ -79,6 +74,8 @@
 
 <ion-footer>
     <ion-list-header>
-      version {{version}} build {{buildNumber}}
+        {{'SETTINGS.VERSION' | translate: {version: version } }}
+        <!-- version {{version}} Beta -->
+      <!-- version {{version}} build {{buildNumber}} -->
     </ion-list-header>
 </ion-footer>

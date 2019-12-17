@@ -146,6 +146,15 @@ ion-icon {
     height: 1em;
   }
 
+  &[class*="tab-"] {
+    //mask-size: contain;
+   // mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: currentColor;
+    width: 1.5em;
+    height: 1.5em;
+  }
+
   &[class*="custom-account"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-accounts-gray.svg);
   }
@@ -154,6 +163,15 @@ ion-icon {
   }
   &[class*="custom-services"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-services-gray.svg);
+  }
+  &[class*="custom-send"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-send-transfer-white.svg);
+  }
+  &[class*="custom-receive"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-receive-transfer-white.svg);
+  }
+  &[class*="custom-send-receive"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-transfer-assets-white.svg);
   }
   &[class*="custom-settings"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-settings-gray.svg);

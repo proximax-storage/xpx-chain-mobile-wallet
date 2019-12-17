@@ -4,14 +4,10 @@ import { IonicPage, NavController, NavParams, ViewController } from "ionic-angul
 
 import { App } from "../../../../../providers/app/app";
 import { AuthProvider } from "../../../../../providers/auth/auth";
-import { NemProvider } from "../../../../../providers/nem/nem";
-import { WalletProvider } from "../../../../../providers/wallet/wallet";
-import { UtilitiesProvider } from "../../../../../providers/utilities/utilities";
 import {
   SimpleWallet,
   Namespace
 } from "nem-library";
-import { AlertProvider } from "../../../../../providers/alert/alert";
 
 /**
  * Generated class for the MosaicCreatePage page.
@@ -39,10 +35,6 @@ export class MosaicCreatePage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private authProvider: AuthProvider,
-    private alertProvider: AlertProvider,
-    private walletProvider: WalletProvider,
-    private utils: UtilitiesProvider,
-    private nemProvider: NemProvider,
     private viewCtrl: ViewController
   ) {
     this.init();

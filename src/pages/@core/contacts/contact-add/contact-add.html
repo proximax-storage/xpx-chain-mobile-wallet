@@ -32,7 +32,7 @@
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
-        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+        <form [formGroup]="formGroup" >
           <ion-item transparent padding>
             <ion-label stacked>{{"SERVICES.ADDRESS_BOOK.FIELDS.NAME" | translate}}</ion-label>
             <ion-input formControlName="name" type="text" autocapitalize="none" placeholder=""></ion-input>
@@ -41,25 +41,30 @@
 
           <ion-item transparent padding>
             <ion-label stacked>{{"SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS" | translate}}</ion-label>
-            <ion-textarea autosize row="1" formControlName="address" type="text" autocapitalize="none" placeholder=""></ion-textarea>
+            <ion-textarea autosize row="1" formControlName="address" type="text" autocapitalize="none" placeholder="">
+            </ion-textarea>
+            <br><br>
+            <button clear item-right ion-button icon-only style="margin-top: 46px !important;" (click)="scan()">
+              <ion-icon color="" name="custom-qrcode"></ion-icon>
+            </button>
           </ion-item>
           <div *ngIf="msgErrorUnsupported !== ''">
             <!-- <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors"> -->
-              <strong style="color:red;">{{msgErrorUnsupported}}</strong>
+            <strong style="color:red;">{{msgErrorUnsupported}}</strong>
             <!-- </p> -->
           </div>
           <!-- <p description>Example: <strong>TDDG3UDZBGZUIOCDCOPT45N...</strong></p> -->
 
           <ion-item transparent padding>
             <ion-label stacked>
-                {{"SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM_OPTIONAL" | translate}}
+              {{"SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM_OPTIONAL" | translate}}
             </ion-label>
             <ion-input formControlName="telegram" type="text" autocapitalize="none" placeholder=""></ion-input>
           </ion-item>
           <!-- <p description>Example: <strong>@jondoe</strong></p> -->
 
-          <button gradient-button  color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
-            Save
+          <button gradient-button color-5 [disabled]="formGroup.invalid" (click)="onSubmit(formGroup.value)"type="submit" color="dark">
+            {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>
       </ion-col>

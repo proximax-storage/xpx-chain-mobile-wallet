@@ -24,24 +24,75 @@ export class ContactsProvider {
     console.log('Hello CrudProvider Provider');
   }
 
-  private doesContactExist(contact) {
+  /**
+   *
+   *
+   * @param {*} contact
+   * @returns
+   * @memberof ContactsProvider
+   */
+  doesContactExist(contact) {
     return this.getAll().then(contacts => {
-      const CONTACT_INDEX = findIndex(contacts, contact);
-      let result = false;
-
-      if (CONTACT_INDEX >= 0 && contacts.length >= 0) {
+      const exit = contacts.filter(contc => contc.address === contact.address)
+      let result;
+      if (exit.length > 0) {
         result = true;
+      } else {
+        result = false;
       }
-
       return result;
     });
   }
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof ContactsProvider
+   */
   getAll() {
     return this.storage.get('contacts').then(contacts => {
       return contacts || [];
     });
   }
+
+  /**
+   *
+   *
+   * @param {*} contact
+   * @returns
+   * @memberof ContactsProvider
+   */
+  push(contact) {
+    return this.doesContactExist(contact).then(doesContactExist => {
+      if (!doesContactExist) {
+        return this.getAll().then(contacts => {
+          contacts.push({ id: uniqid.time(), ...contact });
+          this.storage.set('contacts', contacts)
+          return false;
+        });
+      } else {
+        return true;
+      }
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof ContactsProvider
+   */
+  remove(id) {
+    return this.getAll().then(contacts => {
+      const CONTACT_INDEX = findIndex(contacts, { id: id });
+      contacts.splice(CONTACT_INDEX, 1);
+      return this.storage.set('contacts', contacts);
+    });
+  }
+
+  //----------------------------------------------------------------------------------------
 
   search(rawAddress: string): Promise<string> {
     const ADDRESS = new Address(rawAddress);
@@ -67,15 +118,6 @@ export class ContactsProvider {
     );
   }
 
-  push(contact) {
-    return this.doesContactExist(contact).then(doesContactExist => {
-      return this.getAll().then(contacts => {
-        contacts.push({ id: uniqid.time(), ...contact });
-
-        return this.storage.set('contacts', contacts);
-      });
-    });
-  }
 
   update(id, contact) {
     return this.doesContactExist(contact).then(doesContactExist => {
@@ -92,12 +134,5 @@ export class ContactsProvider {
     });
   }
 
-  remove(id) {
-    return this.getAll().then(contacts => {
-      const CONTACT_INDEX = findIndex(contacts, { id: id });
-      contacts.splice(CONTACT_INDEX, 1);
 
-      return this.storage.set('contacts', contacts);
-    });
-  }
 }

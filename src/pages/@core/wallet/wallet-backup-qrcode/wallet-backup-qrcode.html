@@ -38,8 +38,7 @@
 
           <ngx-kjua text-center fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="350" [mPosX]="50" [mPosY]="50"
             [mSize]="10" [fontcolor]="'#005E62'" [mode]="'label'" [render]="'label'" [label]="'ProximaX'"
-            [back]="'#fff'"
-            [text]="QRData">
+            [back]="'#fff'" [text]="QRData">
           </ngx-kjua>
 
           <section *ngIf="!privateKey" text-center>
@@ -50,7 +49,6 @@
             <ion-item>
               <ion-icon item-left name="ios-key-outline"></ion-icon>
               <p text-wrap *ngIf="privateKey">{{ privateKey }}</p>
-
               <section text-center>
                 <ion-spinner *ngIf="!privateKey"></ion-spinner>
               </section>
