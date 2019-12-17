@@ -43,7 +43,7 @@ export class TransferDetailComponent {
 
   ngOnInit() {
     this.tx = this.tx.type === TransactionType.TRANSFER ? this.tx : this.tx['innerTransactions'][0];
-    if (this.status != 'partials') {
+    if (this.status != 'partials' && this.tx.transactionInfo.height.compact() != 0) {
       this.getBolck();
     } else {
       this.deadline = this.proximaxProvider.dateFormat(this.tx.deadline);
