@@ -44,11 +44,11 @@ export class NemProvider {
   assetHttp: AssetHttp;
   qrService: QRService;
   nis1 = {
-    url: 'https://bctestnetswap.xpxsirius.io:7890',
-    urlExplorer: 'http://testnet-explorer.nemtool.com/#/s_tx?hash=',
-    networkType: NetworkTypes.TEST_NET,
-    burnAddress: 'TBF4LAZUEJMBIOC6J24D6ZGGXE5W775TX555CTTN',
-    nodes: [{ protocol: "https", domain: "bctestnetswap.xpxsirius.io", port: 7890 } as ServerConfig]
+    url: AppConfig.swap.url,
+    urlExplorer: AppConfig.swap.urlExplorer,
+    networkType: AppConfig.swap.networkType,
+    burnAddress: AppConfig.swap.burnAddress,
+    nodes: AppConfig.swap.nodes
   };
   nis1AccountsFoundSubject: Subject<AccountsInfoNis1Interface> = new Subject<AccountsInfoNis1Interface>(); // RJ
   nis1AccountsFound$: Observable<AccountsInfoNis1Interface> = this.nis1AccountsFoundSubject.asObservable(); // RJ
@@ -61,8 +61,8 @@ export class NemProvider {
     private translateService: TranslateService,
   ) {
     let serverConfig: ServerConfig[];
-    serverConfig = [{ protocol: "https", domain: "bctestnetswap.xpxsirius.io", port: 7890 } as ServerConfig]
-    NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
+    serverConfig = AppConfig.swap.nodes;
+    NEMLibrary.bootstrap(AppConfig.swap.networkType);
     this.accountHttp = new AccountHttp(serverConfig);
     this.assetHttp = new AssetHttp(serverConfig);
     this.transactionHttp = new TransactionHttp(serverConfig);
