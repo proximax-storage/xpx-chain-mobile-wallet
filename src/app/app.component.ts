@@ -109,8 +109,14 @@ export class MyApp {
   }
 
   getNode(){
+
+    console.log('node');
+    
     this.storage.get("node").then(nodeStorage => {
       this.listNodes =  AppConfig.sirius.nodes
+
+      console.log('this.listNodes', this.listNodes);
+      
       const nodeSelected = (nodeStorage === null || nodeStorage === '') ? this.listNodes[Math.floor(Math.random() * this.listNodes.length)] : nodeStorage;
         this.storage.set("node", nodeSelected);
     })

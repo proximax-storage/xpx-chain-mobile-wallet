@@ -95,6 +95,7 @@ export class WalletInfoPage {
     this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
     this.address = new Address(this.nis1Account.address.value);
     this.maxAmount = this.accountInfoNis1.balance.length;
+
     this.createForm();
     this.amountChange();
     loader.dismiss();
@@ -165,7 +166,6 @@ export class WalletInfoPage {
    */
   amountChange() {
     this.form.get('amount').valueChanges.subscribe(value => {
-      console.log(value);
       if (value !== null && value !== undefined) {
         if (value > parseFloat(this.accountInfoNis1.balance.split(',').join(''))) {
           this.blockButton = true;
