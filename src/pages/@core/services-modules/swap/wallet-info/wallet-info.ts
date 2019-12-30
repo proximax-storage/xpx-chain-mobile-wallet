@@ -166,6 +166,7 @@ export class WalletInfoPage {
    */
   amountChange() {
     this.form.get('amount').valueChanges.subscribe(value => {
+      console.log(value);
       if (value !== null && value !== undefined) {
         if (value > parseFloat(this.accountInfoNis1.balance.split(',').join(''))) {
           this.blockButton = true;

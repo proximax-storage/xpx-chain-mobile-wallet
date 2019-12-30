@@ -1,16 +1,10 @@
-import { MosaicModel } from './../../../../../providers/transfer-transaction/mosaic.model';
-
 import { Component, trigger, transition, style, group, animate } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
-
 import { SimpleWallet, PlainMessage, TransferTransaction } from 'tsjs-xpx-chain-sdk';
-
-
 import { App } from '../../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { AlertProvider } from '../../../../../providers/alert/alert';
-import { AuthProvider } from '../../../../../providers/auth/auth';
 import { HapticProvider } from '../../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../../providers/wallet/wallet';
@@ -85,13 +79,14 @@ export class SendMosaicConfirmationPage {
   transferBuilder: any;
   namexPX: string;
   fee: string;
+  amountConfirm: any;
+  amountFormatter: string;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private alertProvider: AlertProvider,
-    private authProvider: AuthProvider,
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
@@ -117,10 +112,10 @@ export class SendMosaicConfirmationPage {
 
     // Get NavParams data
     this.data = this.navParams.data;
+ 
+    this.amountFormatter = this.getAbsoluteAmount(this.data.mosaic[0].amount, this.data.divisibility)
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
-
-    console.log('data', this.data);
     if (this.data.mosaic.length > 0) {
       if (this.data.mosaic[0].id.toHex() === AppConfig.xpxHexId) {
         this.namexPX = 'PRX.XPX';
@@ -137,12 +132,14 @@ export class SendMosaicConfirmationPage {
       mosaic: this.data.mosaic
     };
     this.transferBuilder = this.transferTransaction.buildTransferTransaction(params);
-
-    console.log('transferBuilder', this.transferBuilder);
     this.calculateFee()
 
   }
 
+  getAbsoluteAmount(amount, divisibility) {
+    const amountFormatter = this.proximaxProvider.amountFormatter(amount, divisibility)
+    return amountFormatter;
+  }
 
   calculateFee() {
     const x = TransferTransaction.calculateSize(PlainMessage.create(this.data.message).size(), this.data.mosaic.length);
@@ -155,6 +152,7 @@ export class SendMosaicConfirmationPage {
       this.fee = this.proximaxProvider.amountFormatterSimple(b.compact());
     }
   }
+
 
   goBack() {
     return this.navCtrl.pop();

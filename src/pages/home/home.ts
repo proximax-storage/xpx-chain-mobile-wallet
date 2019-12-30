@@ -171,7 +171,12 @@ export class HomePage {
                 this.aggregateTransactions = [];
 
                 let mosaicXpx = mosaics.filter(other => other.hex === AppConfig.xpxHexId);
-                this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
+
+                console.log('mosaicXpx', mosaicXpx);
+                if(mosaicXpx && mosaicXpx.length > 0){
+                  this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
+                }
+               
                 let names = [];
                 names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
 
@@ -490,6 +495,7 @@ export class HomePage {
       const mosaicHex = mosaic.hex;
       const mosaicId = mosaic.mosaicId;
       const mosaicName = mosaic.name;
+      const divisibility = mosaic.divisibility;
       const namespaceId = mosaic.namespaceId;
       const coinId = coinName;
       const selectedAccount = this.selectedAccount;
@@ -500,6 +506,7 @@ export class HomePage {
         totalBalance,
         mosaicHex,
         mosaicId,
+        divisibility,
         mosaicName,
         namespaceId,
         coinId,

@@ -2,10 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { App } from './../../../../providers/app/app';
-import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet-backup';
 import { SocialSharing } from '../../../../../node_modules/@ionic-native/social-sharing';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { SimpleWallet, Password } from 'tsjs-xpx-chain-sdk';
+import { Clipboard } from '@ionic-native/clipboard';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastProvider } from '../../../../providers/toast/toast';
 /**
  * Generated class for the WalletBackupPage page.
  *
@@ -36,11 +39,25 @@ export class WalletBackupPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private walletBackupProvider: WalletBackupProvider,
     private socialSharing: SocialSharing,
     private modalCtrl: ModalController,
-    private utils: UtilitiesProvider
+    private utils: UtilitiesProvider,
+    private proximaxProvider: ProximaxProvider,
+    private clipboard: Clipboard,
+    private toastProvider: ToastProvider,
+    private translateService: TranslateService
+    
   ) {
+    this.data = this.navParams.data;
+    
+
+    console.log('his.data',this.data);
+    
+    if(this.data && this.data.password){
+      let password = new Password(this.data.password);
+      this.data.privateKey = this.proximaxProvider.decryptPrivateKey(password, this.data.wallet.encryptedPrivateKey.encryptedKey,
+        this.data.wallet.encryptedPrivateKey.iv);
+    }
   }
 
   /**
@@ -50,7 +67,9 @@ export class WalletBackupPage {
    */
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-    this.data = this.navParams.data;
+  
+
+    
   }
 
   /**
@@ -76,8 +95,14 @@ export class WalletBackupPage {
    * @memberof WalletBackupPage
    */
   copy() {
-    this.walletBackupProvider.copyToClipboard(this.data.privateKey);
-    this.goHome();
+    console.log('a copiar', this.data.privateKey);
+    this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
+      let alertTitle = value;
+      this.clipboard.copy(this.data.privateKey).then(_ => {
+        this.toastProvider.show(alertTitle, 3, true);
+        this.goHome();
+      });
+    })
   }
 
   /**

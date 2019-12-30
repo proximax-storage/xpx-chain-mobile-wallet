@@ -10,6 +10,7 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { Password } from 'tsjs-xpx-chain-sdk';
+import { AppConfig } from '../../../../app/app.config';
 
 /**
  * Generated class for the WalletAddPage page.
@@ -38,6 +39,7 @@ export class WalletAddPage {
   passwordIcon: string = "ios-eye-outline";
   nameMin: boolean;
   nameMax: boolean;
+  exampleAccount = AppConfig.accountExample
 
   constructor(
     public navCtrl: NavController,
@@ -121,8 +123,8 @@ export class WalletAddPage {
     // });
   }
 
-  goToBackup(wallet) {
-    return this.navCtrl.push('WalletBackupPage', wallet);
+  goToBackup(wallet, password) {
+    return this.navCtrl.push('WalletBackupPage', {wallet: wallet, password: password});
   }
 
   goHome() {
@@ -144,7 +146,10 @@ export class WalletAddPage {
             this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
           } else {
             this.walletProvider.storeWalletCatapult(this.catapultWallet, null, this.walletColor, new Password(form.password), '').then(_ => {
-              this.goToBackup(this.catapultWallet);
+
+              console.log('#######', _);
+              
+              this.goToBackup(this.catapultWallet, form.password);
             });
           }
         })

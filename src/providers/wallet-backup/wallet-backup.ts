@@ -21,6 +21,9 @@ export class WalletBackupProvider {
 
 
   copyToClipboard(privateKey) {
+
+    console.log('copi', privateKey);
+    
     this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
       let alertTitle = value;
       return this.clipboard.copy(privateKey).then(_ => {

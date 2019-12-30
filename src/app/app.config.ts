@@ -18,6 +18,7 @@ import { NetworkTypes, ServerConfig } from "nem-library";
 //     networkGenerationHash: '56D112C98F7A7E34D1AEDC4BD01BC06CA2276DD546A93E36690B785E82439CA9'
 //   },
 //   xpxHexId: '13bfc518e40549d7',
+//   accountExample: 'TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH',
 //   mosaicXpxInfo: {
 //     name: 'prx.xpx',
 //     coin: 'XPX',
@@ -65,6 +66,7 @@ export const AppConfig = {
     networkGenerationHash: '10540AD3A1BF46B1A05D8B1CF0252BC9FB2E0B53CFD748262B0CE341CEAFEB6B'
   },
   xpxHexId: '402b2f579faebc59',
+  accountExample: 'XDDXG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4P',
   mosaicXpxInfo: {
     name: 'prx.xpx',
     coin: 'XPX',
@@ -81,10 +83,10 @@ export const AppConfig = {
     burnAddress: 'ND7WVWPWNTJR75CYC3D73LSVP7WIL7BL77QNT7NZ',
     addressAccountMultisig: 'XDKK47EMX4Q2NVU6TIN4RS22SZZ47UEFJ454L4NV',
     addressAccountSimple: 'XDHQTCJLDDSNOVXPGRE25YNHXV27EAKAEUGJKRLK',
-    nodes: [{ 
-      protocol: "https", 
-      domain: "swap.brimstone.xpxsirius.io", 
-      port: 7890 
+    nodes: [{
+      protocol: "https",
+      domain: "swap.brimstone.xpxsirius.io",
+      port: 7890
     } as ServerConfig],
   }
 };

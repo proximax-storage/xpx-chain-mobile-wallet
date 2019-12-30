@@ -319,6 +319,9 @@ export class WalletProvider {
         ).toUpperCase()
       );
 
+      console.log('publicAccountNis1', publicAccountNis1);
+      
+
       const accountnis1 = {
         account: nis1Account,
         prefix: prefix,
@@ -329,6 +332,14 @@ export class WalletProvider {
 
       nis1Accounts.push(accountnis1);
       walletSelected['nis1Accounts'] = nis1Accounts;
+      const x= this.proximaxProvider.decryptPrivateKey(
+        password,
+        catapultAccount.encryptedPrivateKey.encryptedKey,
+        catapultAccount.encryptedPrivateKey.iv
+      )
+
+      console.log('#####____________', x);
+      
     }
 
     const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
