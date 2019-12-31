@@ -29,11 +29,11 @@
             </h2>
           </ng-container>
   
-          <p text-right ion-text color="dark">
+          <!-- <p text-right ion-text color="dark">
             <small>
               {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
             </small>
-          </p>
+          </p> -->
   
           <p float-right ion-text *ngIf="status === 'Confirmed'" color="success">
             <small>{{status}}</small>

@@ -170,7 +170,7 @@ export class ProximaxProvider {
           this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
           return null;
         }
-
+        
         if (common) {
           return common.privateKey;;
         }

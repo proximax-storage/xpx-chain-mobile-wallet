@@ -4,7 +4,7 @@ import { IonicPage, NavController, NavParams, AlertController, ModalController }
 import { Storage } from '@ionic/storage';
 import { SimpleWallet as SimpleWalletNEM, Password } from 'nem-library';
 import { TranslateService } from '@ngx-translate/core';
-
+import { AppConfig } from '../../../../app/app.config';
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AuthProvider } from '../../../../providers/auth/auth';
@@ -48,6 +48,7 @@ export class WalletAddPrivateKeyPage {
   prefix: any;
   nameMin: boolean;
   nameMax: boolean;
+  exampleAccount = AppConfig.accountExample
 
 
   constructor(
@@ -68,6 +69,7 @@ export class WalletAddPrivateKeyPage {
     private proximaxProvider: ProximaxProvider,
   ) {
     this.accountColor = 'wallet-1';
+    this.storage.set("isQrActive", true);
     this.configurationForm = this.sharedService.configurationForm;
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.createForm();
@@ -142,12 +144,12 @@ export class WalletAddPrivateKeyPage {
       privateKey: ['', [
         Validators.required,
         Validators.minLength(this.configurationForm.privateKey.minLength),
-        Validators.minLength(this.configurationForm.privateKey.minLength)
+        Validators.maxLength(this.configurationForm.privateKey.maxLength)
       ]],
       password: ['', [
         Validators.required,
         Validators.minLength(this.configurationForm.passwordWallet.minLength),
-        Validators.minLength(this.configurationForm.passwordWallet.minLength)
+        Validators.maxLength(this.configurationForm.passwordWallet.maxLength)
       ]]
     });
 
@@ -210,8 +212,9 @@ export class WalletAddPrivateKeyPage {
    * @memberof WalletAddPrivateKeyPage
    */
   ionViewDidLeave() {
-    this.storage.set('isQrActive', false);
     // show tabs when page is dismissed
+    this.storage.set("isQrActive", true);
+
     let tabs = document.querySelectorAll('.tabbar');
     if (tabs !== null) {
       Object.keys(tabs).map((key) => {
@@ -242,7 +245,7 @@ export class WalletAddPrivateKeyPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
+    
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";
       if (barcodeData.text.length === 64 || barcodeData.text.length === 66 && this.proximaxProvider.isHexString(barcodeData.text)) {

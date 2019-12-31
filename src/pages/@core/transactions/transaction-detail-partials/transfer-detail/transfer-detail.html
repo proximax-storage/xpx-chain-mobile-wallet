@@ -51,7 +51,7 @@
 
         <p text-right ion-text color="dark">
           <small>
-            {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }}
+            <!-- {{ tx.deadline.value.minusMinutes(1439).toString() | timeago }} -->
           </small>
         </p>
       </section>
@@ -76,9 +76,9 @@
         {{ deadline }}
       </p>
 
-      <p item-right>
+      <!-- <p item-right>
         {{ tx?.deadline.value.minusMinutes(1439).toString() | timeago  }}
-      </p>
+      </p> -->
     </ion-item>
   </ion-card-content>
 </ion-card>

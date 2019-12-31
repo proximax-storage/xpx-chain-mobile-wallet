@@ -113,9 +113,13 @@ export class CoinPriceChartPage {
     ];
     this.selectedDuration = this.durations[0];
 
+    console.log('coin price chat ', this.navParams);
+    
+
     const payload = this.navParams.data;
     this.mosaicHex = payload.mosaicHex;
     this.mosaicId = payload.mosaicId;
+    this.divisibility = payload.divisibility
     this.namespaceId = payload.namespaceId;
     this.mosaicName = payload.mosaicName;
     // will be used to filter transactions
@@ -283,13 +287,13 @@ export class CoinPriceChartPage {
             text: 'Normal Transaction',
             handler: () => {
               let page = 'SendPage';
-              this.showModal(page, { mosaicSelectedName: this.mosaicId })
+              this.showModal(page, { mosaicSelectedName: this.mosaicId, divisibility: this.divisibility })
             }
           },
           {
             text: 'Multisig Transaction',
             handler: () => {
-              this.showModal(page, { mosaicSelectedName: this.mosaicId })
+              this.showModal(page, { mosaicSelectedName: this.mosaicId, divisibility: this.divisibility })
             }
           },
           {
@@ -305,7 +309,7 @@ export class CoinPriceChartPage {
       // this.showModal(page,{ mosaicSelectedName: this.mosaicId})
     } else {
       let page = "SendPage";
-      this.showModal(page, { mosaicSelectedName: this.mosaicId })
+      this.showModal(page, { mosaicSelectedName: this.mosaicId, divisibility: this.divisibility })
     }
   }
 

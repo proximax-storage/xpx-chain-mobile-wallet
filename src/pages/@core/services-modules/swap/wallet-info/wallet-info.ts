@@ -95,6 +95,7 @@ export class WalletInfoPage {
     this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
     this.address = new Address(this.nis1Account.address.value);
     this.maxAmount = this.accountInfoNis1.balance.length;
+
     this.createForm();
     this.amountChange();
     loader.dismiss();

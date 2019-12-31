@@ -56,12 +56,6 @@ export class SendPage {
   selectedMosaicName: string;
   periodCount = 0;
   decimalCount: number = 0;
-  optionsXPX = {
-    prefix: "",
-    thousands: ",",
-    decimal: ".",
-    precision: "6"
-  };
   passwordType: string = "password";
   passwordIcon: string = "ios-eye-outline";
   payload: any = {};
@@ -69,6 +63,8 @@ export class SendPage {
   address: any;
   maxAmount: number;
   show: boolean = false;
+  divisibility: any;
+  optionsXPX: { prefix: string; thousands: string; decimal: string; precision: any; };
 
   constructor(
     public navCtrl: NavController,
@@ -92,7 +88,26 @@ export class SendPage {
   ) {
     // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
+    this.divisibility = this.navParams.get("divisibility");
     this.configurationForm = this.sharedService.configurationForm;
+
+    console.log('-------------------2222', this.divisibility);
+    if (this.divisibility === undefined) {
+      this.optionsXPX = {
+        prefix: "",
+        thousands: ",",
+        decimal: ".",
+        precision: "6"
+      };
+    } else {
+      this.optionsXPX = {
+        prefix: "",
+        thousands: ",",
+        decimal: ".",
+        precision: this.divisibility
+      }
+    }
+
 
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
@@ -129,37 +144,42 @@ export class SendPage {
           .subscribe(mosaics => {
             this.mosaics = mosaics;
 
-            mosaics.forEach(async _mosaic => {
-              if (_mosaic.mosaicId === this.selectedMosaicName) {
-                this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
-                console.log('trae name', this.selectedMosaic);
-                let names = [];
-                names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
-                for (const element of mosaics) {
-                  let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
-                  if (value.names && value.names.length > 0) {
-                    element.name = value.names[0].name;
+            if (this.mosaics && this.mosaics.length > 0) {
+              mosaics.forEach(async _mosaic => {
+                if (_mosaic.mosaicId === this.selectedMosaicName) {
+                  this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
+                  console.log('trae name', this.selectedMosaic);
+                  this.divisibility = this.selectedMosaic.divisibility
+
+                  let names = [];
+                  names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
+                  for (const element of mosaics) {
+                    let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
+                    if (value.names && value.names.length > 0) {
+                      element.name = value.names[0].name;
+                    }
+                    this.show = true;
                   }
-                  this.show = true;
                 }
-              }
-              let mosaicId = _mosaic.mosaicId;
-              let coinId: string;
+                let mosaicId = _mosaic.mosaicId;
+                let coinId: string;
 
-              if (mosaicId === "xpx") {
-                coinId = "proximax";
-              } else if (mosaicId === "npxs") {
-                coinId = "pundi-x";
-              }
+                if (mosaicId === "xpx") {
+                  coinId = "proximax";
+                } else if (mosaicId === "npxs") {
+                  coinId = "pundi-x";
+                }
 
-              // Get coin price
-              // Check if  null
-              if (coinId) {
-                this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
-                  this.selectedCoin = coin;
-                });
-              }
-            });
+                // Get coin price
+                // Check if  null
+                if (coinId) {
+                  this.coingeckoProvider.getDetails(coinId).subscribe(coin => {
+                    this.selectedCoin = coin;
+                  });
+                }
+              });
+            }
+
           });
         // Set sender address to currenWallet.address
         this.form.get("senderName").setValue(this.currentWallet.name);
@@ -302,6 +322,7 @@ export class SendPage {
     }).subscribe(data => {
       console.log("TCL: SendPage -> selectMosaic -> data", data)
       if (data) {
+        this.divisibility = data.divisibility
         this.optionsXPX = {
           prefix: "",
           thousands: ",",
@@ -309,8 +330,6 @@ export class SendPage {
           precision: data.divisibility
         };
         this.selectedMosaic = data;
-
-        console.log('12345678, selectedMosaic', this.selectedMosaic);
         // this.mosaics = data;
       }
     });
@@ -333,8 +352,6 @@ export class SendPage {
 
     const mosaicsToSend = this.validateMosaicsToSend();
 
-    console.log('mosaicsmosaics', mosaicsToSend);
-
     if (privateKey) {
       let message = this.form.get("message").value;
       let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
@@ -346,7 +363,8 @@ export class SendPage {
           mosaic: mosaicsToSend,
           currentWallet: this.currentWallet,
           transactionType: "normal",
-          // total: total,
+          total: total,
+          divisibility: this.divisibility,
           message: message,
           privateKey: privateKey
         },
@@ -366,19 +384,18 @@ export class SendPage {
     const mosaics = [];
     const amountXpx = this.form.get('amount').value;
 
-    console.log('amountXpx', amountXpx);
-
     if (amountXpx !== '' && amountXpx !== null && Number(amountXpx) !== 0) {
       // console.log(amountXpx);
       const arrAmount = amountXpx.toString().replace(/,/g, '').split('.');
       let decimal;
       let realAmount;
+      const divisibility = (this.selectedMosaic) ? this.selectedMosaic.divisibility : 6;
 
       if (arrAmount.length < 2) {
-        decimal = this.addZeros(6);
+        decimal = this.addZeros(divisibility);
       } else {
         const arrDecimals = arrAmount[1].split('');
-        decimal = this.addZeros(6 - arrDecimals.length, arrAmount[1]);
+        decimal = this.addZeros(divisibility - arrDecimals.length, arrAmount[1]);
       }
       realAmount = `${arrAmount[0]}${decimal}`;
       mosaics.push({
@@ -392,17 +409,22 @@ export class SendPage {
 
 
   addZeros(cant: any, amount: string = '0') {
-    const x = '0';
-    if (amount === '0') {
-      for (let index = 0; index < cant - 1; index++) {
-        amount += x;
+    if (cant > 0) {
+      const x = '0';
+      if (amount === '0') {
+        for (let index = 0; index < cant - 1; index++) {
+          amount += x;
+        }
+      } else {
+        for (let index = 0; index < cant; index++) {
+          amount += x;
+        }
       }
-    } else {
-      for (let index = 0; index < cant; index++) {
-        amount += x;
-      }
+      return amount;
     }
-    return amount;
+
+    return ''
+
   }
 
   /**
