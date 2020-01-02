@@ -5,7 +5,7 @@
 # ProximaX Sirius Wallet
 ProximaX Sirius Wallet is one of the official ProximaX applications, which offers total security for the storage, shipment and receipt of your assets. With ProximaX Sirius Wallet you can make your transactions safely, It is available for Android and ios.
 
-#### A simple yet elegant wallet for ProximaX blockchain.[￼![Appstore](https://camo.githubusercontent.com/ddac8b1e589cfdb5b7ed6efd92fca87cf4553f1a/68747470733a2f2f626c756577616c6c65742e696f2f696d672f6170702d73746f72652d62616467652e737667)](https://apps.apple.com/us/app/proximax-sirius-wallet/id1475020250?l=es&ls=1)
+#### A simple yet elegant wallet for ProximaX blockchain.
 
 
 [![Appstore](https://camo.githubusercontent.com/ddac8b1e589cfdb5b7ed6efd92fca87cf4553f1a/68747470733a2f2f626c756577616c6c65742e696f2f696d672f6170702d73746f72652d62616467652e737667)](https://apps.apple.com/us/app/proximax-sirius-wallet/id1475020250?l=es&ls=1)
