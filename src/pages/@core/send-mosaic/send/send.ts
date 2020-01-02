@@ -353,8 +353,15 @@ export class SendPage {
     const mosaicsToSend = this.validateMosaicsToSend();
 
     if (privateKey) {
+      let total;
+      console.log('Number(this.form.get("amount").value', Number(this.form.get("amount").value));
+      if ( Number(this.form.get("amount").value) !=  0 ){
+        total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
+      } else {
+        total = '0';
+      }
       let message = this.form.get("message").value;
-      let total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
+      
       let page = "SendMosaicConfirmationPage";
       const modal = this.modalCtrl.create(
         page,
@@ -384,9 +391,15 @@ export class SendPage {
     const mosaics = [];
     const amountXpx = this.form.get('amount').value;
 
+    console.log('-----amountXpx', amountXpx);
+    
+
     if (amountXpx !== '' && amountXpx !== null && Number(amountXpx) !== 0) {
       // console.log(amountXpx);
       const arrAmount = amountXpx.toString().replace(/,/g, '').split('.');
+
+      console.log('######### arrAmount', arrAmount);
+      
       let decimal;
       let realAmount;
       const divisibility = (this.selectedMosaic) ? this.selectedMosaic.divisibility : 6;
@@ -395,9 +408,18 @@ export class SendPage {
         decimal = this.addZeros(divisibility);
       } else {
         const arrDecimals = arrAmount[1].split('');
+
+        console.log('restando', divisibility - arrDecimals.length);
+        
         decimal = this.addZeros(divisibility - arrDecimals.length, arrAmount[1]);
+
+        console.log('decimal', decimal);
+        
       }
       realAmount = `${arrAmount[0]}${decimal}`;
+
+      console.log('------realAmount', realAmount);
+      
       mosaics.push({
         id: new MosaicId(this.selectedMosaic.hex),
         amount: realAmount
@@ -423,7 +445,12 @@ export class SendPage {
       return amount;
     }
 
-    return ''
+    if (amount === '0') {
+      return ''
+    }
+
+    return amount;
+
 
   }
 

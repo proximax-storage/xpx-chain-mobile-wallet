@@ -112,11 +112,11 @@ export class SendMosaicConfirmationPage {
 
     // Get NavParams data
     this.data = this.navParams.data;
- 
-    this.amountFormatter = this.getAbsoluteAmount(this.data.mosaic[0].amount, this.data.divisibility)
     this.currentWallet = <SimpleWallet>this.data.currentWallet;
 
     if (this.data.mosaic.length > 0) {
+      this.amountFormatter = this.getAbsoluteAmount(this.data.mosaic[0].amount, this.data.divisibility)
+
       if (this.data.mosaic[0].id.toHex() === AppConfig.xpxHexId) {
         this.namexPX = 'PRX.XPX';
       } else {
