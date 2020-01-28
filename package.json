@@ -64,7 +64,7 @@
     "cordova-base64-to-gallery": "^4.1.3",
     "cordova-build-increment": "0.1.0",
     "cordova-clipboard": "^1.3.0",
-    "cordova-ios": "^4.5.5",
+    "cordova-ios": "^5.1.1",
     "cordova-plugin-add-swift-support": "^1.6.0",
     "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-browsertab": "^0.2.0",
@@ -164,6 +164,7 @@
       }
     },
     "platforms": [
+      "ios",
       "android"
     ]
   },

@@ -5,6 +5,7 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { Address } from 'tsjs-xpx-chain-sdk';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { TranslateService } from '@ngx-translate/core';
+import { AppConfig } from '../../../../../app/app.config'
 
 
 /**
@@ -41,7 +42,8 @@ export class SwapCertificatePage {
     let address = Address.createFromRawAddress(this.navParams.data.address.address);
     this.address = address.pretty();
     this.timestamp = new Date(this.navParams.data.timestamp);
-    this.url = `http://testnet-explorer.nemtool.com/#/s_tx?hash=${this.transactionHash}`;
+    this.url = AppConfig.swap.urlExplorer.concat(this.transactionHash);
+    // this.url = `http://testnet-explorer.nemtool.com/#/s_tx?hash=${this.transactionHash}`;
   }
 
 
