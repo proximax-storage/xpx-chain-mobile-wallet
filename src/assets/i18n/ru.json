@@ -264,7 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "русский",
     "SETTINGS.LANGUAGE.VIETNAMESE": "вьетнамский",
     "SETTINGS.LOGOUT": "Выйти",
-    "SETTINGS.VERSION" : "Версия {{версия}} бета",
+    "SETTINGS.VERSION" : "Версия {{версия}}",
     "TRANSACTION_DETAIL.COSIGN": "Подтвердить продолжение",
     "TRANSACTION_DETAIL.COSIGN_DONE": "Подписано со-подписантом",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "Эта мультиподписная транзакция перевода успешно подписана"

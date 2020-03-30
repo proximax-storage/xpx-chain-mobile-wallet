@@ -264,7 +264,7 @@
     "SETTINGS.LANGUAGE.RUSSIAN": "ロシア",
     "SETTINGS.LANGUAGE.VIETNAMESE": "ベトナム人",
     "SETTINGS.LOGOUT": "ログアウト",
-    "SETTINGS.VERSION" : "バージョン{{version}}ベータ",
+    "SETTINGS.VERSION" : "バージョン{{version}}",
     "TRANSACTION_DETAIL.COSIGN": "続行を承認",
     "TRANSACTION_DETAIL.COSIGN_DONE": "署名しました",
     "TRANSACTION_DETAIL.COSIGN_MESSAGE": "このマルチシグ・トランスファー・トランザクションへの署名は成功しました"
