@@ -22,7 +22,7 @@
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
 
           <div *ngIf="!tablet">
             <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 46 : '...' }}</p>
@@ -64,7 +64,7 @@
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-beta-white.svg">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
 
           <div *ngIf="tablet">
             <p class="wallet-number" style="font-size: 18px !important;">{{ account.account?.address.address }}</p>
