@@ -21,36 +21,22 @@
     <ion-item>
       <ion-icon item-left name="custom-address"></ion-icon>
       <h2>{{"SERVICES.ADDRESS_BOOK.TITLE" | translate}}</h2>
-      <!-- <p text-wrap>{{"SERVICES.ADDRESS_BOOK.DESC" | translate}}</p> -->
     </ion-item>
   </ion-card>
-
-  <!-- Uncomment to add multisig -->
-  <!-- <ion-card (click)="showModal('MultisigSupportPage')">
-    <ion-item>
-      <ion-icon item-left name="custom-multisig"></ion-icon>
-      <h2>{{"SERVICES.MULTISIGN_SUPPORT.TITLE" | translate}}</h2>
-      <p text-wrap>{{"SERVICES.MULTISIGN_SUPPORT.DESC" | translate}}</p>
-    </ion-item>
-  </ion-card> -->
-
-  <!-- <ion-card (click)="goto('FaucetPage')">
-    <ion-item>
-      <ion-icon item-left name="custom-faucet"></ion-icon>
-      <h2> {{ "SERVICES.TESTNET_FAUCET.TITLE" | translate }}</h2>
-      <p text-wrap>{{ "SERVICES.TESTNET_FAUCET.DESC" | translate}}</p>
-    </ion-item>
-  </ion-card> -->
 
   <ion-card (click)="goto('Nis1WalletListPage')">
     <ion-item>
       <ion-icon item-left name="custom-swap"></ion-icon>
       <h2>{{ "SERVICES.SWAP_PROCESS.TITLE" | translate }}</h2>
-      <!-- <p text-wrap>{{ "SERVICES.SWAP_PROCESS.DESC" | translate}}</p> -->
     </ion-item>
   </ion-card>
 
-
+  <ion-card (click)="scanGiftCards(true)">
+    <ion-item>
+      <ion-icon item-left name="custom-swap"></ion-icon>
+      <h2>{{ "SERVICES.GIFT_CARD.TITLE" | translate }}</h2>
+    </ion-item>
+  </ion-card>
 
   <!-- QR code of NEM address -->
   <!-- <ion-card (click)="goto('NamespaceListPage')">

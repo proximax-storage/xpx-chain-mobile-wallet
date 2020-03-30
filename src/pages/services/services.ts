@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { UtilitiesProvider } from '../../providers/utilities/utilities';
+import { AlertProvider } from '../../providers/alert/alert';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the ServicesPage page.
@@ -20,7 +22,9 @@ export class ServicesPage {
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private utils: UtilitiesProvider, 
-    private modalCtrl: ModalController) {
+    private modalCtrl: ModalController,
+    private alertProvider: AlertProvider,
+    private translateService: TranslateService,) {
   }
 
   ionViewDidLoad() {
@@ -41,6 +45,18 @@ export class ServicesPage {
       showBackdrop: true
     });
     modal.present();
+  }
+
+  scanGiftCards(value) {
+
+    console.log(value);
+    
+    
+    if( value === true){
+      this.goto('GiftCardsPage')
+    } else {
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
+    }
   }
 
 }
