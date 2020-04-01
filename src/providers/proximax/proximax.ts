@@ -170,7 +170,7 @@ export class ProximaxProvider {
           this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
           return null;
         }
-        
+
         if (common) {
           return common.privateKey;;
         }
@@ -196,7 +196,7 @@ export class ProximaxProvider {
     // return null;
     return this.accountHttp.getAccountInfo(address);
   }
-  
+
   /**
    * Gets a BlockInfo for a given block height
    *  @param height - Block height
@@ -336,7 +336,7 @@ export class ProximaxProvider {
     return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
 
-  /**
+   /**
    *
    *
    * @param {MosaicId[]} mosaicIsd
@@ -397,6 +397,49 @@ export class ProximaxProvider {
     return Convert.isHexString(data);
   }
 
+  unSerialize(hex) {
+    const dataUin8 = Convert.hexToUint8(hex)
+    const amountUin8 = new Uint8Array(8)
+    let amountUin32 = new Uint32Array(2)
+    const pkUin8 = new Uint8Array(32)
+    const mosaicId = new Uint8Array(8)
+    const typeUin8 = new Uint8Array(1)
+    const desUin8 = new Uint8Array(20)
+    amountUin8.set(new Uint8Array(dataUin8.subarray(0, 8)), 0)
+    pkUin8.set(new Uint8Array(dataUin8.subarray(8, 40)), 0)
+    mosaicId.set(new Uint8Array(dataUin8.subarray(40, 48)), 0)
+    typeUin8.set(new Uint8Array(dataUin8.subarray(48, 49)), 0)
+    desUin8.set(new Uint8Array(dataUin8.subarray(49, dataUin8.byteLength)), 0)
+    amountUin32 = Convert.uint8ToUint32(amountUin8)
+    const amount = UInt64.fromHex(Convert.uint8ToHex(amountUin8))
+    const privatekey = Convert.uint8ToHex(pkUin8)
+    const mosac = Convert.uint8ToHex(mosaicId)
+    const type = this.hexToString(Convert.uint8ToHex(typeUin8))
+    const des = this.hexToString(Convert.uint8ToHex(desUin8))
+    // console.log('amount: ', amount)
+    // console.log('privatekey :', privatekey)
+    // console.log('misaics id :', mosac)
+    // console.log('type :', type)
+    // console.log('des :', des)
+
+    const dataScan = [{
+      "amountGift": amount.compact(),
+      "pkGift": privatekey,
+      "mosaicGift": mosac,
+      "typeGif": type,
+      "descGift": des
+    }
+    ]
+    return dataScan;
+  }
+
+  hexToString(hex) {
+    var string = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      string += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return string;
+  }
   /**
    *
    *
@@ -600,9 +643,9 @@ export class ProximaxProvider {
     //   namespace
     // );
   }
-getMosaicId(id: string | number[]): MosaicId {
-  return new MosaicId(id);
-}
+  getMosaicId(id: string | number[]): MosaicId {
+    return new MosaicId(id);
+  }
   /**
  * Get the namespaces owned by the NEM address
  * @param address The NEM address
@@ -612,7 +655,7 @@ getMosaicId(id: string | number[]): MosaicId {
     return;
   }
 
- getMosaicsName(mosaicsId: MosaicId[]): Observable<MosaicNames[]> {
+  getMosaicsName(mosaicsId: MosaicId[]): Observable<MosaicNames[]> {
     return this.mosaicHttp.getMosaicsNames(mosaicsId); // Update-sdk-dragon
   }
   /**

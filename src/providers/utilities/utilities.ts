@@ -197,7 +197,7 @@ export class UtilitiesProvider {
       if (!mosaic) {
         return AppProvider.LOGO.SIRIUS;
       } else if (typeof(mosaic) === 'string') {
-        if (mosaic  === AppConfig.xpxHexId) {
+        if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
         }
 
