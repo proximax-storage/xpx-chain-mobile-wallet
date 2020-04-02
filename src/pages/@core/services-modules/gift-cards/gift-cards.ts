@@ -65,6 +65,7 @@ export class GiftCardsPage {
     this.mosaicsAmount = this.dataGif[0].amountGift
     this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
     this.mosaicsID = new MosaicId(this.mosaicsHex)
+   
     this.createForm()
     this.dataMosaics()
     this.getAccountSelected()
@@ -83,6 +84,15 @@ export class GiftCardsPage {
           Validators.maxLength(46)
         ]
       ],
+      idenficatorUser: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(12),
+          Validators.pattern('^[+]?([0-9]*[.])?[0-9]+$'),
+        ]
+      ]
     })
 
     this.addressSourceType = {
@@ -154,6 +164,9 @@ export class GiftCardsPage {
 
   onSubmit() {
     this.block = true;
+
+    console.log(this.form);
+    
 
   }
 

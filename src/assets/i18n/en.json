@@ -217,6 +217,7 @@
     "SERVICES.SWAP_PROCESS.VALIDATION_11": "Account not allowed",
     "SERVICES.GIFT_CARD.TITLE":"Scan your gift cards",
     "SERVICES.GIFT_CARD.TRANSFER.ERROR":"Could not scan the QR code",
+    "SERVICES.GIFT_CARD.IDENTIFICATOR.USER":"ID number of beneficiary",
     "GIFT_CARD.TITLE":"Gift card details",
     "SETTINGS": "Settings",
     "SETTINGS.WALLET_GUIDE": "Wallet Guide",

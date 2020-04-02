@@ -26,7 +26,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 import { Password, MosaicId } from 'tsjs-xpx-chain-sdk';
-import { emit } from 'cluster';
 
 /**
  * Generated class for the SendPage page.

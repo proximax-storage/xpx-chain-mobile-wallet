@@ -91,10 +91,22 @@
                 </button>
               </ion-item>
             </ion-card>
+            <div *ngIf="msgErrorUnsupported !== ''">
+              <strong style="color:red;padding-right: 17rem;">{{msgErrorUnsupported}}</strong>
+            </div>
+
+            <!-- To -->
+            <h6 margin-left text-left ion-text color="dark">
+              {{"SERVICES.GIFT_CARD.IDENTIFICATOR.USER" | translate}}
+            </h6>
+            <ion-card no-margin-bottom>
+              <ion-item>
+                <ion-input formControlName="idenficatorUser" type="text" value=""
+                  placeholder="{{'WALLETS.SEND.ADDRESS.OPTION1' | translate}}"></ion-input>
+              </ion-item>
+            </ion-card>
           </form>
-          <div *ngIf="msgErrorUnsupported !== ''">
-            <strong style="color:red;padding-right: 17rem;">{{msgErrorUnsupported}}</strong>
-          </div>
+
 
           <!-- Note -->
           <h6 margin-left text-left ion-text color="dark">
@@ -104,7 +116,7 @@
             <ion-item>
               <p ion-text text-wrap color="dark">
                 <span>
-                  {{ dataGif[0].descGift }}
+                  {{ dataGif[0].codeGift }}
                 </span>
               </p>
             </ion-item>
