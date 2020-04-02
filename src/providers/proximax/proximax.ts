@@ -34,6 +34,7 @@ import {
   Deadline,
   Mosaic,
   Convert,
+  SignedTransaction,
 } from 'tsjs-xpx-chain-sdk';
 import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
@@ -95,6 +96,10 @@ export class ProximaxProvider {
       this.blockHttp = new BlockHttp(this.httpUrl);
 
     })
+  }
+
+  announceTx(signedTransaction: SignedTransaction) {
+    return this.transactionHttp.announce(signedTransaction)
   }
 
   /**
@@ -336,13 +341,13 @@ export class ProximaxProvider {
     return Account.createFromPrivateKey(privateKey, networkType).publicAccount;
   }
 
-   /**
-   *
-   *
-   * @param {MosaicId[]} mosaicIsd
-   * @returns {Observable<MosaicInfo[]>}
-   * @memberof ProximaxProvider
-   */
+  /**
+  *
+  *
+  * @param {MosaicId[]} mosaicIsd
+  * @returns {Observable<MosaicInfo[]>}
+  * @memberof ProximaxProvider
+  */
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
@@ -415,14 +420,14 @@ export class ProximaxProvider {
     amountUin32 = Convert.uint8ToUint32(amountUin8)
     const amount = UInt64.fromHex(Convert.uint8ToHex(amountUin8))
     const privatekey = Convert.uint8ToHex(pkUin8)
-    const mosac = Convert.uint8ToHex(mosaicId)
+    const mosaic = Convert.uint8ToHex(mosaicId)
     const type = this.hexToString(Convert.uint8ToHex(typeUin8))
     const code = UInt64.fromHex(Convert.uint8ToHex(codeUin8))
 
     const dataScan = [{
       "amountGift": amount.compact(),
       "pkGift": privatekey,
-      "mosaicGift": mosac,
+      "mosaicGift": mosaic,
       "typeGif": type,
       "codeGift": code.compact()
     }]

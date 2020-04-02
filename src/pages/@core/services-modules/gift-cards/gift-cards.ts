@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { App } from '../../../../providers/app/app';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
-import { MosaicInfo, Mosaic, MosaicId, UInt64 } from 'tsjs-xpx-chain-sdk';
+import { MosaicInfo, Mosaic, MosaicId, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction } from 'tsjs-xpx-chain-sdk';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from "@ionic/storage";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -27,8 +27,8 @@ import { ConfigurationForm } from '../../../../providers/shared-service/shared-s
 export class GiftCardsPage {
 
   App = App;
-  addressOrigin: any;
-  addressDetination: any;
+  addressOrigin: Address;
+  addressDetination: Address;
   addressSourceType: { from: string; to: string; };
   amountFormatter: string = '0';
   block: boolean;
@@ -65,7 +65,7 @@ export class GiftCardsPage {
     this.mosaicsAmount = this.dataGif[0].amountGift
     this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
     this.mosaicsID = new MosaicId(this.mosaicsHex)
-   
+
     this.createForm()
     this.dataMosaics()
     this.getAccountSelected()
@@ -110,11 +110,11 @@ export class GiftCardsPage {
   // OBTENER INFO DEL MOSAIC 
   async dataMosaics() {
     const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.mosaicsID.id]).toPromise();
-    this.addressDetination = mosaicsFound[0].owner.address.pretty()
+    this.addressDetination = mosaicsFound[0].owner.address
     this.divisibility = mosaicsFound[0].divisibility
     this.amountFormatter = this.proximaxProvider.amountFormatter(this.mosaicsAmount, this.divisibility)
 
-    if (this.addressDetination) {
+    if (this.addressDetination.pretty()) {
       this.loading = false
     }
 
@@ -133,7 +133,7 @@ export class GiftCardsPage {
   getAccountSelected() {
     this.walletProvider.getAccountSelected().then(currentWallet => {
       this.currentWallet = this.proximaxProvider.createFromRawAddress(currentWallet.account.address['address'])
-      this.addressOrigin = this.currentWallet.pretty()
+      this.addressOrigin = this.currentWallet
     })
   }
 
@@ -164,10 +164,46 @@ export class GiftCardsPage {
 
   onSubmit() {
     this.block = true;
-
     console.log(this.form);
-    
+    const networkType = this.addressDetination.networkType
+    const giftCardAccount = Account.createFromPrivateKey(this.dataGif.pkGift, networkType);
+    // toGovernmentTx
+    const deadLine = Deadline.create()
+    const toDetinationTx = TransferTransaction.create(
+      deadLine,
+      this.addressDetination,
+      [this.mosaics],
+      PlainMessage.create('send 1 care pack to Goverment'),
+      networkType
+    )
 
+    console.log('toDetinationTx', toDetinationTx)
+    // toOriginTx
+    const toOriginTx = TransferTransaction.create(
+      deadLine,
+      this.addressOrigin,
+      [],
+      PlainMessage.create('Distribuitor Tx'),
+      networkType
+    )
+    console.log('toOriginTx', toOriginTx)
+    // Build Complete Transaction
+    const aggregateTransaction = AggregateTransaction.createComplete(
+      deadLine,
+      [],
+      networkType,
+      []
+    );
+
+    console.log('\n aggregateTransaction \n', aggregateTransaction)
+    // Sign bonded Transaction
+    const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, this.walletProvider.generationHash);
+    console.log('\n signedTransaction \n', signedTransaction)
+    // Announce Transaction
+    this.proximaxProvider.announceTx(signedTransaction).subscribe(
+      next => console.log('Tx sent......'),
+      error => console.log('Error to Sent ->', error)
+    );
   }
 
   scan() {
@@ -178,8 +214,7 @@ export class GiftCardsPage {
       let address = barcodeData.text.split("-").join("")
       if (address.length != 40) {
         this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
-
-      } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.addressOrigin, address)) {
+      } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.addressOrigin.pretty(), address)) {
         this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
       } else {
         this.form.patchValue({ recipientAddress: barcodeData.text });
@@ -206,7 +241,7 @@ export class GiftCardsPage {
     this.form.get("recipientAddress").valueChanges.subscribe(value => {
       const accountRecipient = value !== undefined && value !== null && value !== "" ? value.split("-").join("") : "";
       if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
-        if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.addressOrigin, accountRecipient)) {
+        if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.addressOrigin.pretty(), accountRecipient)) {
           // this.blockSendButton = true;
           this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
