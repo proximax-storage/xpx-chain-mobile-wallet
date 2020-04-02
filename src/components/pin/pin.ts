@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { HapticProvider } from '../../providers/haptic/haptic';
 import * as BcryptJS from "bcryptjs";
-
+import { Storage } from "@ionic/storage";
 /**
  * Generated class for the PinComponent component.
  *
@@ -35,8 +35,9 @@ export class PinComponent implements OnChanges {
 
   @Output() submit: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private haptic: HapticProvider) {
+  constructor(private haptic: HapticProvider, private storage: Storage) {
     this.keypadNums = this.random9DigitNumberNotStartingWithZero().toString().split(",").map(Number);
+    this.storage.set("isQrActive", true);
   }
 
   ngOnChanges(val: any) {
