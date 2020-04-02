@@ -88,9 +88,8 @@ export class GiftCardsPage {
         "",
         [
           Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(12),
-          Validators.pattern('^[+]?([0-9]*[.])?[0-9]+$'),
+          Validators.minLength(3),
+          Validators.maxLength(1000),
         ]
       ]
     })
