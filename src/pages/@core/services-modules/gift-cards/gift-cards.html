@@ -97,20 +97,24 @@
 
             <!-- To -->
             <h6 margin-left text-left ion-text color="dark">
-              {{"SERVICES.GIFT_CARD.IDENTIFICATOR.USER" | translate}}
+              {{"WALLETS.SEND.NOTES" | translate}}
             </h6>
             <ion-card no-margin-bottom>
               <ion-item>
-                <ion-input formControlName="idenficatorUser" type="text" value=""
+                <ion-textarea ion-text color="dark" autosize rows="2" ion-text color="dark" formControlName="idenficatorUser"
+            placeholder="{{'WALLETS.GIFT_CARD.NOTES.PLACEHOLDER' | translate}}"></ion-textarea>
+        </ion-item>
+
+                <!-- <ion-input formControlName="idenficatorUser" type="text" value=""
                   placeholder="{{'WALLETS.SEND.ADDRESS.OPTION1' | translate}}"></ion-input>
-              </ion-item>
+              </ion-item> -->
             </ion-card>
           </form>
 
 
-          <!-- Note -->
+          <!-- CARD NUMBER -->
           <h6 margin-left text-left ion-text color="dark">
-            {{"WALLETS.SEND.NOTES" | translate}}
+            {{"SERVICES.GIFT_CARD.CARD.ID" | translate}}
           </h6>
           <ion-card>
             <ion-item>

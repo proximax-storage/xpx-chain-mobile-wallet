@@ -188,6 +188,9 @@ ion-icon {
   &[class*="custom-swap"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-swap-gray.svg);
   }
+  &[class*="custom-gift"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-sirius-gift-green.svg);
+  }
   &[class*="custom-guide"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-wallet-guide-green.svg);
   }
