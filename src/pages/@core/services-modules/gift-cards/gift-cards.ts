@@ -189,7 +189,10 @@ export class GiftCardsPage {
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
-      [],
+      [
+        toDetinationTx.toAggregate(giftCardAccount.publicAccount),
+        toOriginTx.toAggregate(giftCardAccount.publicAccount)
+      ],
       networkType,
       []
     );
