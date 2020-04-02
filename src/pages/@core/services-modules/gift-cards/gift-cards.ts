@@ -163,7 +163,7 @@ export class GiftCardsPage {
 
   onSubmit() {
     this.block = true;
-    console.log(this.form);
+    alert(this.form);
     const networkType = this.addressDetination.networkType
     const giftCardAccount = Account.createFromPrivateKey(this.dataGif.pkGift, networkType);
     // toGovernmentTx
@@ -176,7 +176,7 @@ export class GiftCardsPage {
       networkType
     )
 
-    console.log('toDetinationTx', toDetinationTx)
+    alert(`toDetinationTx \n ${toDetinationTx}`)
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -185,7 +185,7 @@ export class GiftCardsPage {
       PlainMessage.create('Distribuitor Tx'),
       networkType
     )
-    console.log('toOriginTx', toOriginTx)
+    alert(`toOriginTx \n ${toOriginTx}`)
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -197,14 +197,14 @@ export class GiftCardsPage {
       []
     );
 
-    console.log('\n aggregateTransaction \n', aggregateTransaction)
+    alert(`\n aggregateTransaction \n ${aggregateTransaction}`)
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, this.walletProvider.generationHash);
-    console.log('\n signedTransaction \n', signedTransaction)
+    alert(`\n signedTransaction \n ${signedTransaction}`)
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
-      next => console.log('Tx sent......'),
-      error => console.log('Error to Sent ->', error)
+      next => alert('Tx sent......'),
+      error => alert(`Error to Sent -> ${error}`)
     );
   }
 
