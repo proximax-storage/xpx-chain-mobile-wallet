@@ -176,12 +176,7 @@ export class GiftCardsPage {
     //   description: this.form.get("idenficatorUser").value
     // }
 
-    const giftCardIdUint8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8((this.dataGif[0].codeGift))))
-    const descriptionUint8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(this.form.get("idenficatorUser").value)))
-    const msg = new Uint8Array(giftCardIdUint8.byteLength + descriptionUint8.byteLength);
-    msg.set(new Uint8Array(giftCardIdUint8), 0);
-    msg.set(new Uint8Array(descriptionUint8), giftCardIdUint8.byteLength);
-    console.log('msg is....', Convert.uint8ToHex(msg))
+    const msg = this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value)
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       this.addressDetination,
@@ -220,6 +215,34 @@ export class GiftCardsPage {
       next => console.log('Tx sent......'),
       error => console.log('Error to Sent ->', error)
     );
+  }
+
+  serializeData(code, dni) {
+    const codeUin64 = UInt64.fromUint(code)
+    const codeUin8 = Convert.hexToUint8(codeUin64.toHex())
+    const dniUin64 = UInt64.fromUint(dni)
+    const dniUin8 = Convert.hexToUint8(dniUin64.toHex())
+    return this.concatUniArray(codeUin8, dniUin8)
+ }
+
+concatUniArray(buffer1, buffer2) {
+    const  tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength)
+    tmp.set(new Uint8Array(buffer1), 0);
+    tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+    console.log(tmp)
+    return Convert.uint8ToHex(tmp);
+ }
+ 
+ unSerialize(hex) {
+    const dataUin8 = Convert.hexToUint8(hex)
+    const codeUin8 = new Uint8Array(8)
+    const dniUin8 = new Uint8Array(8)
+    codeUin8.set(new Uint8Array(dataUin8.subarray(0, 8)), 0)
+    dniUin8.set(new Uint8Array(dataUin8.subarray(8, 16)), 0)
+    const code = UInt64.fromHex(Convert.uint8ToHex(codeUin8))
+    const dni = UInt64.fromHex(Convert.uint8ToHex(dniUin8))
+    console.log('code', code)
+    console.log('dni', dni)
   }
 
   scan() {
