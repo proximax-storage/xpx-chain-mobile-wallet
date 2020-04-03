@@ -176,12 +176,12 @@ export class GiftCardsPage {
     //   description: this.form.get("idenficatorUser").value
     // }
 
-    const msg = this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value)
+    const msg = JSON.stringify({type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value)})
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       this.addressDetination,
       [this.mosaics],
-      PlainMessage.create(Convert.uint8ToHex(msg)),
+      PlainMessage.create(msg),
       networkType
     )
 
@@ -191,7 +191,7 @@ export class GiftCardsPage {
       deadLine,
       this.addressOrigin,
       [],
-      PlainMessage.create('Distribuitor Tx'),
+      PlainMessage.create(msg),
       networkType
     )
     console.log('toOriginTx', toOriginTx)
