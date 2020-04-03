@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { App } from '../../../../providers/app/app';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
-import { MosaicInfo, Mosaic, MosaicId, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction } from 'tsjs-xpx-chain-sdk';
+import { MosaicInfo, Mosaic, MosaicId, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert } from 'tsjs-xpx-chain-sdk';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from "@ionic/storage";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -11,6 +11,7 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { AppConfig } from '../../../../app/app.config';
 
 /**
  * Generated class for the GiftCardsPage page.
@@ -163,20 +164,33 @@ export class GiftCardsPage {
 
   onSubmit() {
     this.block = true;
-    alert(this.form);
+    console.log(this.form);
+    console.log(this.dataGif)
     const networkType = this.addressDetination.networkType
-    const giftCardAccount = Account.createFromPrivateKey(this.dataGif.pkGift, networkType);
+    const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
+    console.log('giftCardAccount', giftCardAccount)
     // toGovernmentTx
     const deadLine = Deadline.create()
+    // const msg = {
+    //   giftCardId: this.dataGif[0].codeGift,
+    //   description: this.form.get("idenficatorUser").value
+    // }
+
+    const giftCardIdUint8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8((this.dataGif[0].codeGift))))
+    const descriptionUint8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(this.form.get("idenficatorUser").value)))
+    const msg = new Uint8Array(giftCardIdUint8.byteLength + descriptionUint8.byteLength);
+    msg.set(new Uint8Array(giftCardIdUint8), 0);
+    msg.set(new Uint8Array(descriptionUint8), giftCardIdUint8.byteLength);
+    console.log('msg is....', Convert.uint8ToHex(msg))
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       this.addressDetination,
       [this.mosaics],
-      PlainMessage.create('send 1 care pack to Goverment'),
+      PlainMessage.create(Convert.uint8ToHex(msg)),
       networkType
     )
 
-    alert(`toDetinationTx \n ${toDetinationTx}`)
+    console.log('toDetinationTx', toDetinationTx)
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -185,7 +199,7 @@ export class GiftCardsPage {
       PlainMessage.create('Distribuitor Tx'),
       networkType
     )
-    alert(`toOriginTx \n ${toOriginTx}`)
+    console.log('toOriginTx', toOriginTx)
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -197,14 +211,14 @@ export class GiftCardsPage {
       []
     );
 
-    alert(`\n aggregateTransaction \n ${aggregateTransaction}`)
+    console.log('\n aggregateTransaction \n', aggregateTransaction)
     // Sign bonded Transaction
-    const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, this.walletProvider.generationHash);
-    alert(`\n signedTransaction \n ${signedTransaction}`)
+    const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
+    console.log('\n signedTransaction \n', signedTransaction)
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
-      next => alert('Tx sent......'),
-      error => alert(`Error to Sent -> ${error}`)
+      next => console.log('Tx sent......'),
+      error => console.log('Error to Sent ->', error)
     );
   }
 

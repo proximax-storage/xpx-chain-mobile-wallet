@@ -51,8 +51,9 @@
             <!-- NO TRANSFERIBLE-->
             <ion-item *ngIf="!showTransferable">
               <img item-left logo-small [src]="App.USER">
-              <p small ion-text color="dark">
-                {{ addressDetination }} </p>
+              <p small ion-text color="dark" *ngIf="addressDetination">
+                {{ addressDetination.pretty() }} 
+              </p>
               <ion-spinner name="crescent" *ngIf="loading" style="padding-right: 228px !important;"></ion-spinner>
             </ion-item>
 
