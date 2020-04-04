@@ -132,7 +132,7 @@
       <ion-col col-12 text-center>
         <ion-col buttons col-12 text-center>
           <button gradient-button ion-button color-5 type="submit" color="dark"
-            [disabled]="block || msgErrorUnsupported || dataGif[0].typeGif === '1' && form.invalid"
+            [disabled]="block || msgErrorUnsupported || dataGif[0].typeGif === '1' && form.controls.recipientAddress.value === ''"
             (click)="onSubmit()">
             {{"WALLETS.BUTTON.CONFIRM" | translate}}
             <ion-spinner color="white" *ngIf="block" style="padding-right: 38px !important;"></ion-spinner>

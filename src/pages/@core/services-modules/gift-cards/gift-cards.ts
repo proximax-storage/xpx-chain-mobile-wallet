@@ -137,11 +137,12 @@ export class GiftCardsPage {
     })
   }
 
-  // OBTENER NAME DEL MOSAIC 
-  async mosaicName() {
-    this.proximaxProvider.getMosaicsName([this.mosaicsID.id]).subscribe(name => {
-      this.nameMosaic = name[0].names[0].name
-    })
+  hexToString(hex) {
+    var string = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      string += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return string;
   }
 
   ionViewDidLoad() {
@@ -151,6 +152,12 @@ export class GiftCardsPage {
   init() {
   }
 
+  // OBTENER NAME DEL MOSAIC 
+  async mosaicName() {
+    this.proximaxProvider.getMosaicsName([this.mosaicsID.id]).subscribe(name => {
+      this.nameMosaic = name[0].names[0].name
+    })
+  }
 
   onChangeTo(val) {
     if (val === "manual") {
@@ -176,7 +183,7 @@ export class GiftCardsPage {
     //   description: this.form.get("idenficatorUser").value
     // }
 
-    const msg = JSON.stringify({type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value)})
+    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       this.addressDetination,
@@ -218,28 +225,27 @@ export class GiftCardsPage {
   }
 
   serializeData(code, dni) {
-    const codeUin64 = UInt64.fromUint(code)
-    const codeUin8 = Convert.hexToUint8(codeUin64.toHex())
+    const codeUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(code)))
     const dniUin64 = UInt64.fromUint(dni)
     const dniUin8 = Convert.hexToUint8(dniUin64.toHex())
     return this.concatUniArray(codeUin8, dniUin8)
- }
+  }
 
-concatUniArray(buffer1, buffer2) {
-    const  tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength)
+  concatUniArray(buffer1, buffer2) {
+    const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength)
     tmp.set(new Uint8Array(buffer1), 0);
     tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
     console.log(tmp)
     return Convert.uint8ToHex(tmp);
- }
- 
- unSerialize(hex) {
+  }
+
+  unSerialize(hex) {
     const dataUin8 = Convert.hexToUint8(hex)
-    const codeUin8 = new Uint8Array(8)
+    const codeUin8 = new Uint8Array(20)
     const dniUin8 = new Uint8Array(8)
-    codeUin8.set(new Uint8Array(dataUin8.subarray(0, 8)), 0)
-    dniUin8.set(new Uint8Array(dataUin8.subarray(8, 16)), 0)
-    const code = UInt64.fromHex(Convert.uint8ToHex(codeUin8))
+    codeUin8.set(new Uint8Array(dataUin8.subarray(0, 20)), 0)
+    dniUin8.set(new Uint8Array(dataUin8.subarray(20, 28)), 0)
+    const code = this.hexToString(Convert.uint8ToHex(codeUin8))
     const dni = UInt64.fromHex(Convert.uint8ToHex(dniUin8))
     console.log('code', code)
     console.log('dni', dni)

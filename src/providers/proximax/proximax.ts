@@ -409,28 +409,29 @@ export class ProximaxProvider {
     const pkUin8 = new Uint8Array(32)
     const mosaicId = new Uint8Array(8)
     const typeUin8 = new Uint8Array(1)
-    const codeUin8 = new Uint8Array(8)
-    let codeUin32 = new Uint32Array(2)
+    const codeUin8 = new Uint8Array(20)
     amountUin8.set(new Uint8Array(dataUin8.subarray(0, 8)), 0)
     pkUin8.set(new Uint8Array(dataUin8.subarray(8, 40)), 0)
     mosaicId.set(new Uint8Array(dataUin8.subarray(40, 48)), 0)
     typeUin8.set(new Uint8Array(dataUin8.subarray(48, 49)), 0)
-    codeUin8.set(new Uint8Array(dataUin8.subarray(49, 57)), 0)
-    codeUin32 = Convert.uint8ToUint32(codeUin8)
+    codeUin8.set(new Uint8Array(dataUin8.subarray(49, dataUin8.byteLength)), 0)
     amountUin32 = Convert.uint8ToUint32(amountUin8)
     const amount = UInt64.fromHex(Convert.uint8ToHex(amountUin8))
     const privatekey = Convert.uint8ToHex(pkUin8)
     const mosaic = Convert.uint8ToHex(mosaicId)
     const type = this.hexToString(Convert.uint8ToHex(typeUin8))
-    const code = UInt64.fromHex(Convert.uint8ToHex(codeUin8))
+    const code = this.hexToString(Convert.uint8ToHex(codeUin8))
 
     const dataScan = [{
       "amountGift": amount.compact(),
       "pkGift": privatekey,
       "mosaicGift": mosaic,
       "typeGif": type,
-      "codeGift": code.compact()
+      "codeGift": code
     }]
+
+    console.log('dataScan', dataScan);
+    
     return dataScan;
   }
 

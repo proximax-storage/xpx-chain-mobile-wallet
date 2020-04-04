@@ -30,6 +30,9 @@ export class App {
     XAR: `assets/imgs/mosaics/xar.png`,
     DEFAULT: `assets/imgs/mosaics/default.png`,
     SWAP: `assets/imgs/xpx-swap.png`,
+    OTHERGIFTCARD: `assets/imgs/icon-mosaics-carepack-laikipia.svg`,
+    SIRIUSGIFTCARD: `assets/imgs/icon-sirius-mosaics-sirius-gift.svg`,
+    
     BONDED: `assets/imgs/icon-aggregate-bonded.svg`,
     SIRIUS: `assets/imgs/icon-sirius-mosaics.svg`,
     OTHER: `assets/imgs/icon-other-transactions.svg`,
