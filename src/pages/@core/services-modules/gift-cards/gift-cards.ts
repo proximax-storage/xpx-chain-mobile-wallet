@@ -12,6 +12,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 import { AppConfig } from '../../../../app/app.config';
+import { TransferTransactionProvider } from '../../../../providers/transfer-transaction/transfer-transaction';
+import { HapticProvider } from '../../../../providers/haptic/haptic';
+import { MosaicsProvider } from '../../../../providers/mosaics/mosaics';
 
 /**
  * Generated class for the GiftCardsPage page.
@@ -36,6 +39,7 @@ export class GiftCardsPage {
   configurationForm: ConfigurationForm = {};
   currentWallet: any;
   dataGif: any;
+  displaySuccessMessage: boolean = false;
   divisibility: number;
   form: FormGroup;
   hexadecimal: any;
@@ -47,19 +51,23 @@ export class GiftCardsPage {
   msgErrorUnsupported: any;
   nameMosaic: string;
   showTransferable: boolean;
+  feeMax: number;
 
   constructor(
     public alertProvider: AlertProvider,
     private barcodeScanner: BarcodeScanner,
     public formBuilder: FormBuilder,
+    private haptic: HapticProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     private proximaxProvider: ProximaxProvider,
     private storage: Storage,
     private translateService: TranslateService,
+    private transferTransaction: TransferTransactionProvider,
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController,
-    public walletProvider: WalletProvider
+    public walletProvider: WalletProvider,
+    public mosaicsProvider: MosaicsProvider,
   ) {
     this.dataGif = this.navParams.data;
     this.mosaicsHex = this.dataGif[0].mosaicGift
@@ -72,6 +80,7 @@ export class GiftCardsPage {
     this.getAccountSelected()
     this.mosaicName()
     this.subscribeValue()
+    this.calculateFeeTxComplete()
   }
 
   createForm() {
@@ -89,8 +98,7 @@ export class GiftCardsPage {
         "",
         [
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(1000),
+          Validators.maxLength(10),
         ]
       ]
     })
@@ -107,6 +115,42 @@ export class GiftCardsPage {
     }
   }
 
+
+  calculateFeeTxComplete() {
+    const networkType = AppConfig.sirius.networkType
+    const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
+    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData('GFDTYH', '1237654637') })
+    const deadLine = Deadline.create()
+
+    const Tx1 = TransferTransaction.create(
+      deadLine,
+      this.addressOrigin,
+      [this.mosaics],
+      PlainMessage.create(msg),
+      networkType
+    )
+
+    const Tx2 = TransferTransaction.create(
+      deadLine,
+      this.addressOrigin,
+      [],
+      PlainMessage.create(msg),
+      networkType
+    )
+
+    const aggregateTx = AggregateTransaction.createComplete(
+      deadLine,
+      [
+        Tx1.toAggregate(giftCardAccount.publicAccount),
+        Tx2.toAggregate(giftCardAccount.publicAccount)
+      ],
+      networkType,
+      []
+    );
+
+    this.feeMax = aggregateTx.maxFee.compact() * 20 / 100 + aggregateTx.maxFee.compact()
+  }
+
   // OBTENER INFO DEL MOSAIC 
   async dataMosaics() {
     const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.mosaicsID.id]).toPromise();
@@ -115,6 +159,7 @@ export class GiftCardsPage {
     this.amountFormatter = this.proximaxProvider.amountFormatter(this.mosaicsAmount, this.divisibility)
 
     if (this.addressDetination.pretty()) {
+      // this.test()
       this.loading = false
     }
 
@@ -124,6 +169,13 @@ export class GiftCardsPage {
       this.showTransferable = true
     }
   }
+
+  // test(){
+  //   this.mosaicsProvider.getMosaics(this.addressDetination).subscribe(async mosaics => {
+
+  //     console.log('\n ########_______******** \n', JSON.stringify(mosaics))
+  //   })
+  // }
 
   dismiss() {
     this.viewCtrl.dismiss();
@@ -170,29 +222,29 @@ export class GiftCardsPage {
   }
 
   onSubmit() {
+    let addressDetination: any
+    if(this.form.controls.recipientAddress.value === ''){
+      addressDetination = this.addressDetination
+    } else {
+      addressDetination = this.proximaxProvider.createFromRawAddress(this.form.controls.recipientAddress.value)
+    }
+
     this.block = true;
-    console.log(this.form);
-    console.log(this.dataGif)
-    const networkType = this.addressDetination.networkType
+    const networkType = AppConfig.sirius.networkType
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
-    console.log('giftCardAccount', giftCardAccount)
     // toGovernmentTx
     const deadLine = Deadline.create()
-    // const msg = {
-    //   giftCardId: this.dataGif[0].codeGift,
-    //   description: this.form.get("idenficatorUser").value
-    // }
-
     const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
+
     const toDetinationTx = TransferTransaction.create(
       deadLine,
-      this.addressDetination,
+      addressDetination,
       [this.mosaics],
       PlainMessage.create(msg),
       networkType
     )
 
-    console.log('toDetinationTx', toDetinationTx)
+    // console.log('toDetinationTx', toDetinationTx)
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -201,7 +253,7 @@ export class GiftCardsPage {
       PlainMessage.create(msg),
       networkType
     )
-    console.log('toOriginTx', toOriginTx)
+    // console.log('toOriginTx', toOriginTx)
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -210,18 +262,35 @@ export class GiftCardsPage {
         toOriginTx.toAggregate(giftCardAccount.publicAccount)
       ],
       networkType,
-      []
+      [],
+      UInt64.fromUint(this.feeMax)
     );
 
-    console.log('\n aggregateTransaction \n', aggregateTransaction)
+    // console.log('\n aggregateTransaction \n', aggregateTransaction)
+    // console.log('\n signedTransaction \n', JSON.stringify(aggregateTransaction))
+
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
-    console.log('\n signedTransaction \n', signedTransaction)
+    // console.log('\n signedTransaction \n', JSON.stringify(signedTransaction))
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
       next => console.log('Tx sent......'),
       error => console.log('Error to Sent ->', error)
     );
+
+    this.transferTransaction.checkTransaction(signedTransaction).subscribe(status => {
+      if (status.group && status.group === 'unconfirmed' || status.group === 'confirmed') {
+        this.block = false;
+        this.displaySuccessMessage = true;
+        this.showSuccessMessage();
+      } else {
+        this.showErrorMessage(status.status);
+        this.block = false;
+      }
+    }, error => {
+      this.block = false;
+      this.showErrorMessage(error);
+    })
   }
 
   serializeData(code, dni) {
@@ -229,6 +298,38 @@ export class GiftCardsPage {
     const dniUin64 = UInt64.fromUint(dni)
     const dniUin8 = Convert.hexToUint8(dniUin64.toHex())
     return this.concatUniArray(codeUin8, dniUin8)
+  }
+
+  showErrorMessage(error) {
+    this.haptic.notification({ type: 'warning' });
+    console.log(error);
+    if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.NOTES.PLACEHOLDER"));
+    } else if (error.toString().indexOf('Failure_Core_Insufficient_Balance') >= 0) {
+      this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.NOTES.PLACEHOLDER"));
+    } else if (error.toString().indexOf('Failure_Multisig_Operation_Not_Permitted_By_Account') >= 0) {
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.TRANSFER.ALLOWED_FOR_MULTISIG"));
+    } else {
+      this.alertProvider.showMessage(
+        error
+      );
+    }
+  }
+
+  showSuccessMessage() {
+    setTimeout(() => {
+      this.displaySuccessMessage = false;
+      this.haptic.notification({ type: 'success' });
+      this.utils.setTabIndex(2);
+      this.navCtrl.setRoot(
+        'TabsPage',
+        {},
+        {
+          animate: true,
+          direction: 'backward'
+        }
+      );
+    }, 3000);
   }
 
   concatUniArray(buffer1, buffer2) {

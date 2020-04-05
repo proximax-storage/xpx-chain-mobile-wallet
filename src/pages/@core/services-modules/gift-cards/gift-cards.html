@@ -22,7 +22,7 @@
 
 
 <ion-content fullscreen background>
-  <ion-grid>
+  <ion-grid *ngIf="!displaySuccessMessage">
     <ion-row>
       <ion-col col-12 text-center>
         <ion-list transparent-items>
@@ -96,14 +96,14 @@
               <strong style="color:red;padding-right: 17rem;">{{msgErrorUnsupported}}</strong>
             </div>
 
-            <!-- To -->
+            <!-- Description -->
             <h6 margin-left text-left ion-text color="dark">
-              {{"WALLETS.SEND.NOTES" | translate}}
+              {{"SERVICES.GIFT_CARD.CARD.DESC" | translate}}
             </h6>
             <ion-card no-margin-bottom>
               <ion-item>
                 <ion-textarea ion-text color="dark" autosize rows="2" ion-text color="dark" formControlName="idenficatorUser"
-            placeholder="{{'WALLETS.GIFT_CARD.NOTES.PLACEHOLDER' | translate}}"></ion-textarea>
+            placeholder="{{'WALLETS.GIFT_CARD.DESC.PLACEHOLDER' | translate}}"></ion-textarea>
         </ion-item>
 
                 <!-- <ion-input formControlName="idenficatorUser" type="text" value=""
@@ -132,7 +132,7 @@
       <ion-col col-12 text-center>
         <ion-col buttons col-12 text-center>
           <button gradient-button ion-button color-5 type="submit" color="dark"
-            [disabled]="block || msgErrorUnsupported || dataGif[0].typeGif === '1' && form.controls.recipientAddress.value === ''"
+            [disabled]="block || msgErrorUnsupported || dataGif[0].typeGif === '1' && form.controls.recipientAddress.value === '' || form.controls.idenficatorUser.invalid"
             (click)="onSubmit()">
             {{"WALLETS.BUTTON.CONFIRM" | translate}}
             <ion-spinner color="white" *ngIf="block" style="padding-right: 38px !important;"></ion-spinner>
@@ -141,4 +141,14 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <div padding *ngIf="displaySuccessMessage" class="achievement-container">
+    <div class="medal">
+      <img class="image" src="assets/imgs/success.svg" />
+    </div>
+    <div padding class="message">
+      <h5 text-center>{{"APP.MESSAGE.SUCCESS.TITLE" | translate}}</h5>
+      <p text-center>{{"APP.MESSAGE.SUCCESS.SUBTITLE" | translate}}</p>
+    </div>
+  </div>
 </ion-content>

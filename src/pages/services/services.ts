@@ -33,7 +33,7 @@ export class ServicesPage {
     private barcodeScanner: BarcodeScanner,
     private proximaxProvider: ProximaxProvider,
     private storage: Storage,
-    private walletProvider: WalletProvider,) {
+    private walletProvider: WalletProvider, ) {
   }
 
 
@@ -81,13 +81,20 @@ export class ServicesPage {
       this.barcodeScanner
         .scan()
         .then(barcodeData => {
-          const dataFormat = this.proximaxProvider.unSerialize(barcodeData.text)
+          // barcodeData.format = "QR_CODE";
 
-          if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
-            this.gotoGift('GiftCardsPage', dataFormat)
+          if (barcodeData.cancelled === true) {
+            console.log('no tiene datos el scan');
           } else {
-            this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
+            // aqui va la validacion 
+            const dataFormat = this.proximaxProvider.unSerialize(barcodeData.text)
+            if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
+              this.gotoGift('GiftCardsPage', dataFormat)
+            } else {
+              this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
+            }
           }
+
         })
         .catch(err => {
           if (err.toString().indexOf(
@@ -101,18 +108,18 @@ export class ServicesPage {
       // DATA DE PRUEBA BINARIO CERIALIZADO DE LA GIFT CARD
 
       // misaics no transferable
-     /* const dataHex = '0000000000000001942110B5FF15C06141A14322E7A3054D5B1227215B7836224F106471C1AAF2ED4FF17E357254D4513063783135393837353637343334353637383635'
-
-      // misaics transferable
-      // const dataHex = '000000E8D4A51000942110B5FF15C06141A14322E7A3054D5B1227215B7836224F106471C1AAF2ED13BFC518E40549D7316378313539383735363734333435363738363533'
-
-        const dataFormat = this.proximaxProvider.unSerialize(dataHex)
-        if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
-          this.gotoGift('GiftCardsPage', dataFormat)
-        } else {
-          this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
-        } 
-*/
+      /* const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C24FF17E357254D45130374A48594436'
+ 
+       // misaics transferable
+       // const dataHex = '000000E8D4A51000942110B5FF15C06141A14322E7A3054D5B1227215B7836224F106471C1AAF2ED13BFC518E40549D7316378313539383735363734333435363738363533'
+ 
+         const dataFormat = this.proximaxProvider.unSerialize(dataHex)
+         if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
+           this.gotoGift('GiftCardsPage', dataFormat)
+         } else {
+           this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
+         } 
+ */
       // FIN DATA DE PRUEBA BINARIO CERIALIZADO DE LA GIFT CARD
 
     } else {

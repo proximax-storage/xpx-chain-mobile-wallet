@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TransactionType } from 'tsjs-xpx-chain-sdk';
+import { TransactionType, MosaicInfo } from 'tsjs-xpx-chain-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import { App } from '../../../../../providers/app/app';
 import { DefaultMosaic } from '../../../../../models/default-mosaic';
@@ -236,28 +236,42 @@ export class TransactionComponent {
         break;
 
       case TransactionType.AGGREGATE_COMPLETE:
-      
+
+
+
         const valid = this.IsJsonString(this.tx['innerTransactions'][0].message.payload);
         if (valid) {
-        const msg = JSON.parse(this.tx['innerTransactions'][0]["message"].payload);
-        if (msg && msg["type"] && msg["type"] === "gift") {
-          // console.log('---------------', this.tx['innerTransactions'][0].mosaics[0].id.toHex());
-          if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.mosaicXpxInfo.id){
-            this.MESSAGE_ = "Sirius Gift Card";
-            this.MOSAIC_INFO = null;
-            this.AMOUNT = null;
-            this.LOGO = App.LOGO.SIRIUSGIFTCARD;
-            this.showTx = true;
-            this.statusViewDetail = false;
+          const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.tx['innerTransactions'][0].mosaics[0].id]).toPromise();
+          // console.log('mosaicsFoundmosaicsFoundmosaicsFound', mosaicsFound);
+          const msg = JSON.parse(this.tx['innerTransactions'][0]["message"].payload);
+          if (msg && msg["type"] && msg["type"] === "gift") {
+            // console.log('---------------', this.tx['innerTransactions'][0]);
+            if (this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.mosaicXpxInfo.id) {
+              this.MESSAGE_ = "Sirius Gift Card";
+              this.MOSAIC_INFO = null;
+              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
+              this.LOGO = App.LOGO.SIRIUSGIFTCARD;
+              this.showTx = true;
+              this.statusViewDetail = false;
+            } else {
+              this.MESSAGE_ = "Gift Card";
+              this.MOSAIC_INFO = null;
+              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
+              this.LOGO = App.LOGO.OTHERGIFTCARD;
+              this.showTx = true;
+              this.statusViewDetail = false;
+            }
+
           } else {
-            this.MESSAGE_ = "Gift Card";
+            let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
+            this.MESSAGE_ = 'Other Transactions';
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
-            this.LOGO = App.LOGO.OTHERGIFTCARD;
-            this.showTx = true;
+            this.LOGO = App.LOGO.OTHER;
+            this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
             this.statusViewDetail = false;
+            this.showTx = true;
           }
-          
         } else {
           let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
           this.MESSAGE_ = 'Other Transactions';
@@ -268,16 +282,6 @@ export class TransactionComponent {
           this.statusViewDetail = false;
           this.showTx = true;
         }
-      } else {
-        let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
-          this.MESSAGE_ = 'Other Transactions';
-          this.MOSAIC_INFO = null;
-          this.AMOUNT = null;
-          this.LOGO = App.LOGO.OTHER;
-          this.type = (type && type !== '') ? this.arraTypeTransaction[type]['name'] : '';
-          this.statusViewDetail = false;
-          this.showTx = true;
-      }
 
 
         // if (valid) {

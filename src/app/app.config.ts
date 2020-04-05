@@ -17,6 +17,7 @@ export const AppConfig = {
     networkType: NetworkType.TEST_NET,
     networkGenerationHash: '56D112C98F7A7E34D1AEDC4BD01BC06CA2276DD546A93E36690B785E82439CA9'
   },
+  carepack: '4ff17e357254d451',
   xpxHexId: '13bfc518e40549d7',
   accountExample: 'TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH',
   mosaicXpxInfo: {
@@ -65,6 +66,7 @@ export const AppConfig = {
 //     networkType: NetworkType.MAIN_NET,
 //     networkGenerationHash: '10540AD3A1BF46B1A05D8B1CF0252BC9FB2E0B53CFD748262B0CE341CEAFEB6B'
 //   },
+  // carepack: '',
 //   xpxHexId: '402b2f579faebc59',
 //   accountExample: 'XDDXG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4P',
 //   mosaicXpxInfo: {

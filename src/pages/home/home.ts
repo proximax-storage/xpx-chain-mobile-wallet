@@ -172,7 +172,7 @@ export class HomePage {
 
                 let mosaicXpx = mosaics.filter(other => other.hex === AppConfig.xpxHexId);
 
-                console.log('mosaicXpx', mosaicXpx);
+                // console.log('mosaicXpx', mosaicXpx);
                 if(mosaicXpx && mosaicXpx.length > 0){
                   this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
                 }

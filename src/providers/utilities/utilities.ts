@@ -199,6 +199,10 @@ export class UtilitiesProvider {
       } else if (typeof(mosaic) === 'string') {
         if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
+        } else {
+          if (mosaic.toLowerCase()  === AppConfig.carepack) {
+            return AppProvider.LOGO.OTHERGIFTCARD;
+          }
         }
 
         return AppProvider.LOGO.SIRIUS;
@@ -220,6 +224,15 @@ export class UtilitiesProvider {
           mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
         ) {
           return AppProvider.LOGO.XPX;
+        } else if (
+          (
+            mosaic.mosaicId &&
+            mosaic.mosaicId !== '' &&
+            mosaic.mosaicId.toLowerCase() === AppConfig.carepack.toLowerCase()
+          ) ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.carepack
+        ) {
+          return AppProvider.LOGO.OTHERGIFTCARD;
         } else if (
           mosaic.namespaceId &&
           mosaic.namespaceId !== '' &&
