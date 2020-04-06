@@ -52,6 +52,7 @@ export class GiftCardsPage {
   nameMosaic: string;
   showTransferable: boolean;
   feeMax: number;
+  characterMax = 10;
 
   constructor(
     public alertProvider: AlertProvider,
@@ -98,7 +99,7 @@ export class GiftCardsPage {
         "",
         [
           Validators.required,
-          Validators.maxLength(10),
+          Validators.maxLength(this.characterMax),
         ]
       ]
     })
@@ -119,7 +120,7 @@ export class GiftCardsPage {
   calculateFeeTxComplete() {
     const networkType = AppConfig.sirius.networkType
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
-    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData('GFDTYH', '1237654637') })
+    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData('C3975E', '1237654637') })
     const deadLine = Deadline.create()
 
     const Tx1 = TransferTransaction.create(
@@ -149,6 +150,9 @@ export class GiftCardsPage {
     );
 
     this.feeMax = aggregateTx.maxFee.compact() * 20 / 100 + aggregateTx.maxFee.compact()
+
+    console.log(this.feeMax);
+    
   }
 
   // OBTENER INFO DEL MOSAIC 
@@ -222,6 +226,8 @@ export class GiftCardsPage {
   }
 
   onSubmit() {
+    console.log('type', typeof(this.form.get("idenficatorUser").value));
+    
     let addressDetination: any
     if(this.form.controls.recipientAddress.value === ''){
       addressDetination = this.addressDetination
@@ -234,7 +240,7 @@ export class GiftCardsPage {
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
     // toGovernmentTx
     const deadLine = Deadline.create()
-    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
+    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData('this.dataGif[0].codeGift', this.form.get("idenficatorUser").value) })
 
     const toDetinationTx = TransferTransaction.create(
       deadLine,
@@ -294,16 +300,15 @@ export class GiftCardsPage {
   }
 
   serializeData(code, dni) {
-    const codeUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(code)))
+
+    console.log('code', code);
+    console.log('dni', dni);
+    
+    
+    const codeUin8 = Convert.hexToUint8(code)
     const dniUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(dni)))
     return this.concatUniArray(codeUin8, dniUin8)
-
-
-    // const codeUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(code)))
-    // const dniUin64 = UInt64.fromUint(dni)
-    // const dniUin8 = Convert.hexToUint8(dniUin64.toHex())
-    // return this.concatUniArray(codeUin8, dniUin8)
-  }
+ }
 
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });

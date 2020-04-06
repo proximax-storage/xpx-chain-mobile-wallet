@@ -219,6 +219,7 @@
     "SERVICES.GIFT_CARD.TRANSFER.ERROR":"Could not scan the QR code",
     "SERVICES.GIFT_CARD.CARD.ID":"Card identifier",
     "SERVICES.GIFT_CARD.CARD.DESC":"Description",
+    "SERVICES.GIFT_CARD.ERROR":"Exceeded character limit {{error}}",
     "SERVICES.GIFT_CARD.NOTES.PLACEHOLDER": "This gift card has already been used",
     "WALLETS.GIFT_CARD.DESC.PLACEHOLDER": "Enter your description",
     "GIFT_CARD.TITLE":"Gift card details",

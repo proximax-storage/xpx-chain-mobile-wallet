@@ -70,8 +70,6 @@ export class ServicesPage {
     modal.present();
   }
 
-
-
   async scanGiftCards() {
     this.storage.set("isQrActive", true);
     await this.getCurrentAccount();
