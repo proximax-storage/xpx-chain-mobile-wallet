@@ -23,24 +23,24 @@ export class NodeListPage {
 
   url: string;
   public blockHeight: number = 0;
-  public nodes: Array<any> = [
-    { name: "arcturus.xpxsirius.io", endpoint: "arcturus.xpxsirius.io" },
-    { name: "aldebaran.xpxsirius.io", endpoint: "aldebaran.xpxsirius.io" },
-    { name: "betelgeuse.xpxsirius.io", endpoint: "betelgeuse.xpxsirius.io" },
-    { name: "bigcalvin.xpxsirius.io", endpoint: "bigcalvin.xpxsirius.io" },
-    { name: "westerlund.xpxsirius.io", endpoint: "westerlund.xpxsirius.io" },
-    { name: "canismajor.xpxsirius.io", endpoint: "canismajor.xpxsirius.io" },
-    { name: "coronaborealis.xpxsirius.io", endpoint: "coronaborealis.xpxsirius.io" },
-    { name: "delphinus.xpxsirius.io", endpoint: "delphinus.xpxsirius.io" },
-    { name: "eridanus.xpxsirius.io", endpoint: "eridanus.xpxsirius.io" },
-    { name: "lyrasithara.xpxsirius.io", endpoint: "lyrasithara.xpxsirius.io" },
-  ];
-
   // public nodes: Array<any> = [
-  //   { name: "bctestnet1.brimstone.xpxsirius.io", endpoint: "bctestnet1.brimstone.xpxsirius.io" },
-  //   { name: "bctestnet2.brimstone.xpxsirius.io", endpoint: "bctestnet2.brimstone.xpxsirius.io" },
-  //   { name: "bctestnet3.brimstone.xpxsirius.io", endpoint: "bctestnet3.brimstone.xpxsirius.io" },
+  //   { name: "arcturus.xpxsirius.io", endpoint: "arcturus.xpxsirius.io" },
+  //   { name: "aldebaran.xpxsirius.io", endpoint: "aldebaran.xpxsirius.io" },
+  //   { name: "betelgeuse.xpxsirius.io", endpoint: "betelgeuse.xpxsirius.io" },
+  //   { name: "bigcalvin.xpxsirius.io", endpoint: "bigcalvin.xpxsirius.io" },
+  //   { name: "westerlund.xpxsirius.io", endpoint: "westerlund.xpxsirius.io" },
+  //   { name: "canismajor.xpxsirius.io", endpoint: "canismajor.xpxsirius.io" },
+  //   { name: "coronaborealis.xpxsirius.io", endpoint: "coronaborealis.xpxsirius.io" },
+  //   { name: "delphinus.xpxsirius.io", endpoint: "delphinus.xpxsirius.io" },
+  //   { name: "eridanus.xpxsirius.io", endpoint: "eridanus.xpxsirius.io" },
+  //   { name: "lyrasithara.xpxsirius.io", endpoint: "lyrasithara.xpxsirius.io" },
   // ];
+
+  public nodes: Array<any> = [
+    { name: "bctestnet1.brimstone.xpxsirius.io", endpoint: "bctestnet1.brimstone.xpxsirius.io" },
+    { name: "bctestnet2.brimstone.xpxsirius.io", endpoint: "bctestnet2.brimstone.xpxsirius.io" },
+    { name: "bctestnet3.brimstone.xpxsirius.io", endpoint: "bctestnet3.brimstone.xpxsirius.io" },
+  ];
   public node: Node;
   currentNode: string = "";
   selectedNode: NodeEndpoint;

@@ -52,7 +52,6 @@ export class GiftCardsPage {
   nameMosaic: string;
   showTransferable: boolean;
   feeMax: number;
-  characterMax = 10;
 
   constructor(
     public alertProvider: AlertProvider,
@@ -99,7 +98,7 @@ export class GiftCardsPage {
         "",
         [
           Validators.required,
-          Validators.maxLength(this.characterMax),
+          Validators.maxLength(10),
         ]
       ]
     })
@@ -150,9 +149,6 @@ export class GiftCardsPage {
     );
 
     this.feeMax = aggregateTx.maxFee.compact() * 20 / 100 + aggregateTx.maxFee.compact()
-
-    console.log(this.feeMax);
-    
   }
 
   // OBTENER INFO DEL MOSAIC 
@@ -226,8 +222,6 @@ export class GiftCardsPage {
   }
 
   onSubmit() {
-    console.log('type', typeof(this.form.get("idenficatorUser").value));
-    
     let addressDetination: any
     if(this.form.controls.recipientAddress.value === ''){
       addressDetination = this.addressDetination
@@ -240,7 +234,7 @@ export class GiftCardsPage {
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
     // toGovernmentTx
     const deadLine = Deadline.create()
-    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData('this.dataGif[0].codeGift', this.form.get("idenficatorUser").value) })
+    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
 
     const toDetinationTx = TransferTransaction.create(
       deadLine,
@@ -250,7 +244,6 @@ export class GiftCardsPage {
       networkType
     )
 
-    // console.log('toDetinationTx', toDetinationTx)
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -259,7 +252,6 @@ export class GiftCardsPage {
       PlainMessage.create(msg),
       networkType
     )
-    // console.log('toOriginTx', toOriginTx)
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -271,9 +263,6 @@ export class GiftCardsPage {
       [],
       UInt64.fromUint(this.feeMax)
     );
-
-    // console.log('\n aggregateTransaction \n', aggregateTransaction)
-    // console.log('\n signedTransaction \n', JSON.stringify(aggregateTransaction))
 
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
@@ -300,11 +289,6 @@ export class GiftCardsPage {
   }
 
   serializeData(code, dni) {
-
-    console.log('code', code);
-    console.log('dni', dni);
-    
-    
     const codeUin8 = Convert.hexToUint8(code)
     const dniUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(dni)))
     return this.concatUniArray(codeUin8, dniUin8)

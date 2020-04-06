@@ -106,11 +106,11 @@
             placeholder="{{'WALLETS.GIFT_CARD.DESC.PLACEHOLDER' | translate}}"></ion-textarea>
         </ion-item>
 
-        <div *ngIf="form.controls.idenficatorUser.value.length > 10" >
+        <!-- <div *ngIf="form.controls.idenficatorUser.invalid" >
           <p error padding-left text-left  style="color: #e06e36 !important; margin-top: -4px!important;"  >
-            <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MAX.MESSAGEE' | translate: {Max: characterMax }) :'') }}</strong>
+            <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
           </p>
-        </div>
+        </div> -->
                 <!-- <ion-input formControlName="idenficatorUser" type="text" value=""
                   placeholder="{{'WALLETS.SEND.ADDRESS.OPTION1' | translate}}"></ion-input>
               </ion-item> -->

@@ -409,7 +409,7 @@ export class ProximaxProvider {
     const pkUin8 = new Uint8Array(32)
     const mosaicId = new Uint8Array(8)
     const typeUin8 = new Uint8Array(1)
-    const codeUin8 = new Uint8Array(20)
+    const codeUin8 = new Uint8Array(3)
     amountUin8.set(new Uint8Array(dataUin8.subarray(0, 8)), 0)
     pkUin8.set(new Uint8Array(dataUin8.subarray(8, 40)), 0)
     mosaicId.set(new Uint8Array(dataUin8.subarray(40, 48)), 0)
@@ -420,7 +420,7 @@ export class ProximaxProvider {
     const privatekey = Convert.uint8ToHex(pkUin8)
     const mosaic = Convert.uint8ToHex(mosaicId)
     const type = this.hexToString(Convert.uint8ToHex(typeUin8))
-    const code = this.hexToString(Convert.uint8ToHex(codeUin8))
+    const code = Convert.uint8ToHex(codeUin8)
 
     const dataScan = [{
       "amountGift": amount.compact(),
