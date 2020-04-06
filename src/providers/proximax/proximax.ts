@@ -266,7 +266,7 @@ export class ProximaxProvider {
     return this.accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(queryParams))
       .pipe(
         flatMap(txn => txn),
-        filter((txn: Transaction) => txn.type === TransactionType.AGGREGATE_BONDED),
+        filter((txn: Transaction) => txn.type === TransactionType.AGGREGATE_BONDED || txn.type === TransactionType.AGGREGATE_COMPLETE),
         map(txn => <AggregateTransaction>txn),
         toArray()
       );

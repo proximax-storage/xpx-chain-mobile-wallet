@@ -133,6 +133,7 @@ export class HomePage {
       content: "Loading..."
     };
 
+    
     let loader = this.loadingCtrl.create(options);
     loader.present();
     this.totalWalletBalance = 0;
@@ -147,6 +148,8 @@ export class HomePage {
             this.selectedAccount = catapulAccounts[0];
           }
 
+    console.log('gsgfs', this.selectedAccount);
+
           // Slide to selected wallet
           this.accounts.forEach((acc, index) => {
             if (this.selectedAccount.account.name === acc.account.name) {
@@ -156,8 +159,15 @@ export class HomePage {
 
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
+
+            console.log("entra en tru")
             this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics => {
+              console.log("entra en tru", mosaics)
+
               if (mosaics === null) {
+                this.getConfirmedTxn(this.selectedAccount.publicAccount);
+                this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
+                this.getTransactionsAggregate(this.selectedAccount.publicAccount);
                 this.showEmptyMessage();
                 this.hideLoaders();
                 loader.dismiss();
@@ -186,6 +196,7 @@ export class HomePage {
                     element.name = value.names[0].name;
                   }
                 }
+
                 this.mosaics = mosaics;
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);

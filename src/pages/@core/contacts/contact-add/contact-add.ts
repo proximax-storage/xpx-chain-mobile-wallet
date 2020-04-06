@@ -102,6 +102,7 @@ export class ContactAddPage {
       this.alertProvider.showMessage(this.translateService.instant("SERVICES.ADDRESS_BOOK.ADD_ERROR"));
     } else {
       DATA.address = CONTACT_ADDRESS;
+      DATA.name = form.name.replace(" ", "-")
       this.contactsProvider.push(DATA).then(result => {
         if(!result){
           this.gotoHome();

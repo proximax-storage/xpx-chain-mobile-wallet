@@ -15,6 +15,7 @@ import { SharedService, ConfigurationForm } from '../../../../providers/shared-s
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { ContactsProvider } from '../../../../providers/contacts/contacts';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -67,6 +68,7 @@ export class WalletAddPrivateKeyPage {
     private sharedService: SharedService,
     private barcodeScanner: BarcodeScanner,
     private proximaxProvider: ProximaxProvider,
+    public contactsProvider: ContactsProvider,
   ) {
     this.accountColor = 'wallet-1';
     this.storage.set("isQrActive", true);
@@ -100,6 +102,13 @@ export class WalletAddPrivateKeyPage {
         if (!existAccount) {
           this.nis1Account = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
           this.walletProvider.storeWalletCatapult(this.catapultAccount, this.nis1Account, this.accountColor, new Password(form.password), this.prefix).then(_ => {
+            
+            const data = {
+              name: form.name.replace(" ", "-").concat('-owner'),
+              address: this.catapultAccount.address.plain(),
+              telegram: ""
+            }
+            this.contactsProvider.push(data)
             this.goToBackup(this.catapultAccount, form.privateKey);
           });
 

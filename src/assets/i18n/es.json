@@ -218,7 +218,7 @@
     "SERVICES.SWAP_PROCESS.VALIDATION_11": "Cuenta no permitida para intercambiar",
     "SERVICES.GIFT_CARD.TITLE":"Escanea tus tarjetas de regalo",
     "SERVICES.GIFT_CARD.TRANSFER.ERROR":"No se pudo escanear el código QR",
-    "SERVICES.GIFT_CARD.CARD.ID":"Número",
+    "SERVICES.GIFT_CARD.CARD.ID":"Identificador de tarjeta",
     "SERVICES.GIFT_CARD.CARD.DESC":"Descripción",
     "SERVICES.GIFT_CARD.NOTES.PLACEHOLDER": "Esta tarjeta de regalo ya ha sido utilizada",
     "WALLETS.GIFT_CARD.DESC.PLACEHOLDER": "Ingrese su descripción",

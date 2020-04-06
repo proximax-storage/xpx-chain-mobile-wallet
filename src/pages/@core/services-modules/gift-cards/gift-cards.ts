@@ -295,9 +295,14 @@ export class GiftCardsPage {
 
   serializeData(code, dni) {
     const codeUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(code)))
-    const dniUin64 = UInt64.fromUint(dni)
-    const dniUin8 = Convert.hexToUint8(dniUin64.toHex())
+    const dniUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(dni)))
     return this.concatUniArray(codeUin8, dniUin8)
+
+
+    // const codeUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(code)))
+    // const dniUin64 = UInt64.fromUint(dni)
+    // const dniUin8 = Convert.hexToUint8(dniUin64.toHex())
+    // return this.concatUniArray(codeUin8, dniUin8)
   }
 
   showErrorMessage(error) {

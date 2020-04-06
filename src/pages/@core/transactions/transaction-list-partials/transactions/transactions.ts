@@ -253,11 +253,21 @@ export class TransactionComponent {
               this.LOGO = App.LOGO.SIRIUSGIFTCARD;
               this.showTx = true;
               this.statusViewDetail = false;
-            } else {
-              this.MESSAGE_ = "Gift Card";
+            } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.carepack){
+
+              this.MESSAGE_ = "Kenya Care Pack";
               this.MOSAIC_INFO = null;
               this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
               this.LOGO = App.LOGO.OTHERGIFTCARD;
+              this.showTx = true;
+              this.statusViewDetail = false;
+
+            } else {
+              
+              this.MESSAGE_ = "Gift Card";
+              this.MOSAIC_INFO = null;
+              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
+              this.LOGO = App.LOGO.SIRIUS;
               this.showTx = true;
               this.statusViewDetail = false;
             }
