@@ -142,6 +142,10 @@ export class HomePage {
       this.accounts = catapulAccounts;
       if (this.accounts.length > 0) {
         this.walletProvider.getAccountSelected().then(selectedAccount => {
+
+          console.log('ksdksdjsd', selectedAccount);
+          console.log('ksdksdjsd', JSON.stringify(selectedAccount) );
+          
           if (selectedAccount) {
             this.selectedAccount = selectedAccount;
           } else {
