@@ -53,36 +53,26 @@ import { AppConfig } from './../../app/app.config';
 export class HomePage {
   amount: string;
   hex: string;
-
   mosaicName: string[];
-
   @ViewChild(Slides) slides: Slides;
-
   menu = "mosaics";
   AppConfi = AppConfi;
-
   mosaics: Array<DefaultMosaic> = [];
   accounts: Array<CatapultsAccountsInterface> = [];
-
   data: any[] = [];
   totalWalletBalance = 0;
-
   App = App;
   TransactionType = TransactionType;
-
   unconfirmedTransactions: Array<Transaction> = [];
   aggregateTransactions: Array<AggregateTransaction> = [];
   confirmedTransactions = [];
   showEmptyTransaction: boolean = false;
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
-
   tablet: boolean;
-
   selectedWallet: CatapultsAccountsInterface;
   selectedAccount: CatapultsAccountsInterface;
   accountInfo: AccountInfo;
-
   @ViewChild(Nav) navChild: Nav;
   address: any;
   amountXpx: string;
@@ -107,10 +97,8 @@ export class HomePage {
     private proximaxProvider: ProximaxProvider
   ) {this.mosaicFound = []; }
 
-
   ionViewWillEnter() {
     this.utils.setHardwareBack();
-    console.log('\n\n ------------ ionViewWillEnter ---> this.init() -------------------');
     this.init();
   }
 
@@ -143,16 +131,11 @@ export class HomePage {
       if (this.accounts.length > 0) {
         this.walletProvider.getAccountSelected().then(selectedAccount => {
 
-          console.log('ksdksdjsd', selectedAccount);
-          console.log('ksdksdjsd', JSON.stringify(selectedAccount) );
-          
           if (selectedAccount) {
             this.selectedAccount = selectedAccount;
           } else {
             this.selectedAccount = catapulAccounts[0];
           }
-
-    console.log('gsgfs', this.selectedAccount);
 
           // Slide to selected wallet
           this.accounts.forEach((acc, index) => {
@@ -164,10 +147,7 @@ export class HomePage {
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
 
-            console.log("entra en tru")
             this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics => {
-              console.log("entra en tru", mosaics)
-
               if (mosaics === null) {
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
@@ -236,12 +216,9 @@ export class HomePage {
    * @memberof HomePage
    */
   async onWalletSelect(selectedAccount: CatapultsAccountsInterface) {
-    console.log('\n\n-----------onWalletSelect --> init()-----------------\n\n');
-
     if (this.selectedAccount.account === selectedAccount.account) {
       this.selectedAccount = selectedAccount;
     }
-
     await this.walletProvider.setSelectedAccount(selectedAccount).then(async () => {
       await this.init();
     });

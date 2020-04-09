@@ -49,7 +49,7 @@
                 </ion-item>
               </ion-card> -->
   
-              <ion-card (click)="copy()">
+              <ion-card (click)="copy(1)">
                 <ion-item>
                   <ion-icon item-left ion-text color="dark" name="ios-copy-outline"></ion-icon>
                   <h2 ion-text color="dark">{{"WALLETS.EXPORT.COPY_PRIVATE_KEY" | translate}}</h2>
@@ -57,10 +57,26 @@
                 </ion-item>
               </ion-card>
   
-              <ion-card (click)="share()">
+              <ion-card (click)="shared(1)">
                 <ion-item>
                   <ion-icon item-left ion-text color="dark" name="ios-share-outline"></ion-icon>
                   <h2 ion-text color="dark">{{"WALLETS.EXPORT.EXPORT_PRIVATE_KEY" | translate}}</h2>
+                  <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
+                </ion-item>
+              </ion-card>
+
+              <ion-card (click)="copy(2)">
+                <ion-item>
+                  <ion-icon item-left ion-text color="dark" name="ios-copy-outline"></ion-icon>
+                  <h2 ion-text color="dark">{{"WALLETS.EXPORT.COPY_PUBLIC_KEY" | translate}}</h2>
+                  <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
+                </ion-item>
+              </ion-card>
+
+              <ion-card (click)="shared(2)">
+                <ion-item>
+                  <ion-icon item-left ion-text color="dark" name="ios-share-outline"></ion-icon>
+                  <h2 ion-text color="dark">{{"WALLETS.EXPORT.EXPORT_PUBLIC_KEY" | translate}}</h2>
                   <ion-icon item-right ion-text color="dark" name="ios-arrow-forward"></ion-icon>
                 </ion-item>
               </ion-card>

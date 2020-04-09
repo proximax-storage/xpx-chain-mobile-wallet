@@ -109,7 +109,7 @@ export class WalletAddPrivateKeyPage {
               telegram: ""
             }
             this.contactsProvider.push(data)
-            this.goToBackup(this.catapultAccount, form.privateKey);
+            this.goToBackup(this.catapultAccount, form.privateKey, form.password);
           });
 
           const nis1Account = this.nem.createAccountPrivateKey(form.privateKey);
@@ -186,8 +186,8 @@ export class WalletAddPrivateKeyPage {
    * @returns
    * @memberof WalletAddPrivateKeyPage
    */
-  goToBackup(wallet: SimpleWallet, privateKey: string) {
-    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, privateKey: privateKey });
+  goToBackup(wallet: SimpleWallet, privateKey: string, password: string) {
+    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, privateKey: privateKey, password: password });
   }
 
   /**

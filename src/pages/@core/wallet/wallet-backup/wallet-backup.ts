@@ -35,6 +35,7 @@ export class WalletBackupPage {
   showBackupfile: boolean;
   privateKey: string;
   currentWallet: SimpleWallet;
+  publicAccount: any;
 
   constructor(
     public navCtrl: NavController,
@@ -46,17 +47,18 @@ export class WalletBackupPage {
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
     private translateService: TranslateService
-    
+
   ) {
     this.data = this.navParams.data;
-    
 
-    console.log('his.data',this.data);
-    
-    if(this.data && this.data.password){
+
+    console.log('his.data', this.data);
+
+    if (this.data && this.data.password) {
       let password = new Password(this.data.password);
       this.data.privateKey = this.proximaxProvider.decryptPrivateKey(password, this.data.wallet.encryptedPrivateKey.encryptedKey,
         this.data.wallet.encryptedPrivateKey.iv);
+        this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.data.privateKey, this.data.wallet.network)
     }
   }
 
@@ -67,9 +69,6 @@ export class WalletBackupPage {
    */
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-  
-
-    
   }
 
   /**
@@ -94,15 +93,22 @@ export class WalletBackupPage {
    *
    * @memberof WalletBackupPage
    */
-  copy() {
-    console.log('a copiar', this.data.privateKey);
-    this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
-      let alertTitle = value;
-      this.clipboard.copy(this.data.privateKey).then(_ => {
-        this.toastProvider.show(alertTitle, 3, true);
-        this.goHome();
-      });
-    })
+  copy(val) {
+    if (val === 1) {
+      this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
+        let alertTitle = value;
+        this.clipboard.copy(this.data.privateKey).then(_ => {
+          this.toastProvider.show(alertTitle, 3, true);
+        });
+      })
+    } else {
+      this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
+        let alertTitle = value;
+        this.clipboard.copy(this.publicAccount.publicKey).then(_ => {
+          this.toastProvider.show(alertTitle, 3, true);
+        });
+      })
+    }
   }
 
   /**
@@ -128,7 +134,6 @@ export class WalletBackupPage {
     modal.present();
   }
 
-
   /**
    *
    *
@@ -143,7 +148,11 @@ export class WalletBackupPage {
    *
    * @memberof WalletBackupPage
    */
-  share() {
-    this.socialSharing.share(this.data.privateKey, null, null)
+  shared(val) {
+    if (val === 1) {
+      this.socialSharing.share(this.data.privateKey, null, null)
+    } else {
+      this.socialSharing.share(this.publicAccount.publicKey, null, null)
+    }
   }
 }
