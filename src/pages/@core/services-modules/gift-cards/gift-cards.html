@@ -52,7 +52,7 @@
             <ion-item *ngIf="!showTransferable">
               <img item-left logo-small [src]="App.USER">
               <p small ion-text color="dark" *ngIf="addressDetination">
-                {{ addressDetination.pretty() }} 
+                {{ addressDetination.pretty() }}
               </p>
               <ion-spinner name="crescent" *ngIf="loading" style="padding-right: 228px !important;"></ion-spinner>
             </ion-item>
@@ -102,19 +102,17 @@
             </h6>
             <ion-card no-margin-bottom>
               <ion-item>
-                <ion-textarea ion-text color="dark" autosize rows="2"  ion-text color="dark" formControlName="idenficatorUser"
-            placeholder="{{'WALLETS.GIFT_CARD.DESC.PLACEHOLDER' | translate}}"></ion-textarea>
-        </ion-item>
-
-        <!-- <div *ngIf="form.controls.idenficatorUser.invalid" >
-          <p error padding-left text-left  style="color: #e06e36 !important; margin-top: -4px!important;"  >
-            <strong>{{ (error.passwordMin ? ('APP.SIGNUP.PASSWORD_MIN.MESSAGE' | translate: {Min: passwordMin }) :'') }}</strong>
-          </p>
-        </div> -->
-                <!-- <ion-input formControlName="idenficatorUser" type="text" value=""
-                  placeholder="{{'WALLETS.SEND.ADDRESS.OPTION1' | translate}}"></ion-input>
-              </ion-item> -->
+                <ion-textarea ion-text color="dark" autosize rows="2" ion-text color="dark"
+                  formControlName="idenficatorUser" placeholder="{{'WALLETS.GIFT_CARD.DESC.PLACEHOLDER' | translate}}"
+                  (ionChange)="maxCacarcter()"></ion-textarea>
+              </ion-item>
             </ion-card>
+            <div *ngIf="form.controls.idenficatorUser.invalid">
+              <p error padding-left text-left style="color: #e06e36 !important; margin-top: -4px!important;"
+                *ngFor="let error of form.errors">
+                <strong>{{ (error.caracterMax ? ('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: caracterMax }) :'') }}</strong>
+              </p>
+            </div>
           </form>
 
 

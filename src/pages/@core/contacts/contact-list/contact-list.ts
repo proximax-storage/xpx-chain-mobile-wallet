@@ -16,7 +16,6 @@ import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { TranslateService } from '@ngx-translate/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from "@ionic/storage";
-import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
@@ -64,8 +63,6 @@ export class ContactListPage {
     private modalCtrl: ModalController,
     private storage: Storage,
     private translateService: TranslateService,
-    private walletProvider: WalletProvider,
-
   ) {
     this.storage.set("isQrActive", true);
     // this.address = this.walletProvider.selectesAccount.account.address.address;

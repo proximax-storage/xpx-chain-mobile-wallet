@@ -52,6 +52,7 @@ export class GiftCardsPage {
   nameMosaic: string;
   showTransferable: boolean;
   feeMax: number;
+  caracterMax: number = 10;
 
   constructor(
     public alertProvider: AlertProvider,
@@ -98,7 +99,7 @@ export class GiftCardsPage {
         "",
         [
           Validators.required,
-          Validators.maxLength(10),
+          Validators.maxLength(this.caracterMax),
         ]
       ]
     })
@@ -209,6 +210,11 @@ export class GiftCardsPage {
     this.proximaxProvider.getMosaicsName([this.mosaicsID.id]).subscribe(name => {
       this.nameMosaic = name[0].names[0].name
     })
+  }
+
+  maxCacarcter () {
+    let str = this.form.controls.idenficatorUser.value;
+    return str.length > this.caracterMax ? this.form.setErrors([{ caracterMax: true }]) : null;
   }
 
   onChangeTo(val) {

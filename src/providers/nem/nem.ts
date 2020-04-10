@@ -4,7 +4,6 @@ import * as js_joda_1 from 'js-joda';
 
 import {
   NEMLibrary,
-  NetworkTypes,
   AccountHttp,
   Password,
   SimpleWallet,

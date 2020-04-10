@@ -19,7 +19,6 @@ import {
   AggregateTransaction,
   PublicAccount,
   MosaicId,
-  NamespaceId,
 } from "tsjs-xpx-chain-sdk";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { App as AppConfi } from "../../providers/app/app";

@@ -405,7 +405,7 @@ export class ProximaxProvider {
   unSerialize(hex) {
     const dataUin8 = Convert.hexToUint8(hex)
     const amountUin8 = new Uint8Array(8)
-    let amountUin32 = new Uint32Array(2)
+    let  amountUin32 = new Uint32Array(2)
     const pkUin8 = new Uint8Array(32)
     const mosaicId = new Uint8Array(8)
     const typeUin8 = new Uint8Array(1)
@@ -422,6 +422,9 @@ export class ProximaxProvider {
     const type = this.hexToString(Convert.uint8ToHex(typeUin8))
     const code = Convert.uint8ToHex(codeUin8)
 
+    console.log(amountUin32);
+    console.log(codeUin8);
+    
     const dataScan = [{
       "amountGift": amount.compact(),
       "pkGift": privatekey,
@@ -430,7 +433,7 @@ export class ProximaxProvider {
       "codeGift": code
     }]
 
-    console.log('dataScan', dataScan);
+    // console.log('dataScan', dataScan);
     
     return dataScan;
   }
