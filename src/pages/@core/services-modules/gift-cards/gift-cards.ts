@@ -150,6 +150,9 @@ export class GiftCardsPage {
     );
 
     this.feeMax = aggregateTx.maxFee.compact() * 20 / 100 + aggregateTx.maxFee.compact()
+
+    console.log('this.feeMax', this.feeMax);
+    
   }
 
   // OBTENER INFO DEL MOSAIC 
