@@ -1,100 +1,74 @@
-<!-- Fee -->
+<!-- Mosaic -->
 <ion-card>
   <ion-item>
-    <img logo-small item-left [src]="App.LOGO.NEM">
-    <h2 ion-text color="dark">XEM</h2>
-    <p ion-text color="dark">
-      <small>
-        NEM
-      </small>
-    </p>
-
-    <section text-right item-right>
-      <h2 ion-text color="danger">- {{ tx.fee | formatXEM }} </h2>
-      <p text-right text-left ion-text color="dark">
-        <small>
-          {{ tx.fee | formatXEM| currency }}
-        </small>
-      </p>
+    <ion-avatar item-start>
+      <img [src]="utils.getLogo(mosaicsHex)">
+    </ion-avatar>
+    <p text-uppercase ion-text color="dark" *ngIf="!nameMosaic">
+      {{ mosaicsHex }}</p>
+    <!-- -->
+    <p text-uppercase ion-text color="dark" *ngIf="nameMosaic" >
+      {{ nameMosaic }}</p>
+    <section item-right>
+      <!-- <h2 style="padding-top: 9px !important;"> 1</h2> -->
+      <h2 style="padding-top: 9px !important;"> {{ amountFormatter }}</h2>
     </section>
   </ion-item>
 </ion-card>
-<!-- ./Fee -->
 
-<!-- Date -->
 <ion-card>
-  <ion-card-content no-padding>
-    <ion-item>
-      <h2 ion-text color="dark">Date</h2>
-
-      <p text-wrap ion-text color="dark">
-        {{ tx.timeWindow.timeStamp.toString() | date:'EEEE, MMMM d, y, h:mm:ss a' }}
-      </p>
-
-      <p item-right>
-        {{ tx.timeWindow.timeStamp.toString() | timeago }}
-      </p>
-    </ion-item>
-  </ion-card-content>
+  <ion-item>
+    <h6 ion-text color="dark">
+      {{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}
+    </h6>
+    <p small ion-text color="dark">
+      6/4/2020 13:31:09
+    </p>
+  </ion-item>
 </ion-card>
-<!-- ./Date -->
 
-<!-- Action -->
 <ion-card>
-  <ion-card-content no-padding>
-    <ion-item>
-      <h2 ion-text color="dark">Action</h2>
-
-      <p ion-text color="success" *ngIf="tx.mode == 1">
-        Activate harvesting
-      </p>
-
-      <p ion-text color="danger" *ngIf="tx.mode == 2">
-        Deactivate harvesting
-      </p>
-    </ion-item>
-  </ion-card-content>
+  <ion-item>
+    <h6 ion-text color="dark">
+      {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
+    </h6>
+    <p small ion-text color="dark">
+      {{ dataTotal.recipient.pretty() }}
+    </p>
+  </ion-item>
 </ion-card>
-<!-- ./Action -->
 
-<!-- Fee -->
 <ion-card>
-  <ion-card-content no-padding>
-    <ion-item>
-      <h2 ion-text color="dark">Fee</h2>
-
-      <p text-wrap ion-text color="dark">
-        {{ tx.fee | formatXEM }} XEM
-      </p>
-    </ion-item>
-  </ion-card-content>
+  <ion-item>
+    <h6 ion-text color="dark">
+      {{"SERVICES.GIFT_CARD.CARD.DESC" | translate}}
+    </h6>
+    <p small ion-text color="dark">
+      {{ this.detalDesc.Descrip }}
+    </p>
+  </ion-item>
 </ion-card>
-<!-- ./Fee -->
 
-<!-- Block -->
+<!-- CARD NUMBER -->
 <ion-card>
-  <ion-card-content no-padding>
-    <ion-item>
-      <h2 ion-text color="dark">Block</h2>
-
-      <p text-wrap ion-text color="dark">
-        {{ tx?.transactionInfo?.height | number }}
-      </p>
-    </ion-item>
-  </ion-card-content>
+  <ion-item>
+    <h6 ion-text color="dark">
+      {{"SERVICES.GIFT_CARD.CARD.ID" | translate}}
+    </h6>
+    <p small ion-text color="dark">
+      {{ this.detalDesc.Code }}
+    </p>
+  </ion-item>
 </ion-card>
-<!-- ./Block -->
 
-<!-- Hash -->
-<ion-card (click)="utils.copy(tx?.transactionInfo?.hash?.data, 'hash')">
-  <ion-card-content no-padding>
-    <ion-item>
-      <h2 ion-text color="dark">Hash</h2>
-
-      <p text-wrap>
-        {{ tx?.transactionInfo?.hash?.data }}
-      </p>
-    </ion-item>
-  </ion-card-content>
+<!-- HASH -->
+<ion-card>
+  <ion-item>
+    <h6 ion-text color="dark">
+      {{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}
+    </h6>
+    <p small ion-text color="dark">
+      {{ hashTansaction }}
+    </p>
+  </ion-item>
 </ion-card>
-<!-- ./Hash -->
