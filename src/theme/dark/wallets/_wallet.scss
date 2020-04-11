@@ -10,7 +10,7 @@ ion-slide {
 }
 
 .alert-wrapper {
-  border: 2px solid #01454d !important;
+  // border: 2px solid #01454d !important;
   border-radius: 2rem !important;
 }
 
@@ -39,13 +39,35 @@ ion-slide {
 }
 
 .wallet-logo {
-  height: 24px;
+  height: 59px;
 }
 
 .wallet-front-logo {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 8px;
+  right: 228px;
+}
+
+.wallet-front-logo-new {
+  position: absolute;
+  top: 8px;
+  right: 249px;
+}
+
+.wallet-text {
+  position: absolute;
+  top: 4px;
+  right: 175px;
+  color: white;
+  font-size: 13px;
+}
+
+.wallet-text-new {
+  position: absolute;
+  top: 4px;
+  right: 198px;
+  color: white;
+  font-size: 13px;
 }
 
 .wallet-number {

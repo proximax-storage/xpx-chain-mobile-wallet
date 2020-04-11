@@ -1,9 +1,3 @@
-<!--
-  Generated template for the WalletUpdatePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header no-border>
   <ion-navbar transparent>
     <ion-buttons end>
@@ -17,44 +11,33 @@
 
   <ion-grid>
     <ion-row>
-
       <ion-col col-12 text-center>
         <h3 ion-text color="dark">
-          <!-- Update
-          <u>{{ selectedWallet.name }}</u>
-          wallet -->
-
           {{"WALLETS.EDIT.PROMPT" | translate: {walletName: walletName } }}
         </h3>
         <p ion-text color="dark">
           {{"WALLETS.EDIT.DESC" | translate}}
         </p>
       </ion-col>
-
       <ion-col>
         <div class="wallet">
           <div class="wallet-content" [ngClass]="walletColor" text-center>
-            <img class="wallet-front-logo wallet-logo" src="assets/imgs/sirius-wallet-white.png">
+            <img class="wallet-front-logo-new wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+            <p class="wallet-text-new"> {{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p>
             <p class="wallet-number">{{walletAddress}}</p>
             <div class="wallet-label" style="text-align: start !important;">
-                <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
-                {{ walletName}}
-              </div>
-              <div class="wallet-label" style="text-align: start !important;">
-                <span class="wallet-label"><strong style="text-align: start !important;">XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>  <span class="wallet-space-25 wallet-label"> {{ amountXpx }}</span>
-              </div>
-              <div class="wallet-space-25 wallet-label">
-                <span class="wallet-label"><strong>US$ </strong></span>{{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}}
-              </div>
-
-            <!-- <div class="wallet-space-75">
-              <span class="wallet-label">{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</span>
-              <p class="wallet-info">{{ walletName }}</p>
+              <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+              {{ walletName}}
             </div>
-            <div class="wallet-space-25">
-              <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
-              <p class="wallet-info">${{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}} USD</p>
-            </div> -->
+            <div class="wallet-label" style="text-align: start !important;">
+              <span class="wallet-label"><strong style="text-align: start !important;">XPX
+                  {{"WALLETS.BALANCE" | translate}}:</strong></span> <span class="wallet-space-25 wallet-label">
+                {{ amountXpx }}</span>
+            </div>
+            <div class="wallet-space-25 wallet-label">
+              <span class="wallet-label"><strong>US$
+                </strong></span>{{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}}
+            </div>
           </div>
         </div>
       </ion-col>
@@ -70,36 +53,11 @@
           <div class="color-box">
             <button two (click)="changeWalletColor('wallet-2')"></button>
           </div>
-          <div class="color-box">
-            <button four (click)="changeWalletColor('wallet-4')"></button>
-          </div>
           <div class="color-box ">
             <button three (click)="changeWalletColor('wallet-3')"></button>
           </div>
         </div>
       </ion-col>
-      <ion-col col-12>
-      </ion-col>
-      <ion-col text-center>
-        <div class="color-palette">
-          <div class="color-box ">
-            <button five (click)="changeWalletColor('wallet-5')"></button>
-          </div>
-          <div class="color-box">
-            <button six (click)="changeWalletColor('wallet-6')"></button>
-          </div>
-          <div class="color-box">
-            <button seven (click)="changeWalletColor('wallet-7')"></button>
-          </div>
-          <div class="color-box ">
-            <button eight (click)="changeWalletColor('wallet-8')"></button>
-          </div>
-
-        </div>
-      </ion-col>
-
-
-
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
           <ion-item transparent padding>
@@ -117,13 +75,11 @@
                 *ngIf='nameMax'>{{('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: configurationForm.nameWallet.maxLength })}}</strong>
             </p>
           </div>
-
-          <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
+          <button gradient-button color-11 [disabled]="formGroup.invalid" type="submit">
             {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>
       </ion-col>
-
       <ion-col col-12></ion-col>
       <ion-col col-12></ion-col>
       <ion-col col-12></ion-col>

@@ -50,8 +50,8 @@
           <ion-card>
             <!-- NO TRANSFERIBLE-->
             <ion-item *ngIf="!showTransferable">
-              <img item-left logo-small [src]="App.USER">
-              <p small ion-text color="dark" *ngIf="addressDetination">
+              <img item-left logo-small color="dark" [src]="App.USER">
+              <p small ion-text color="black" *ngIf="addressDetination">
                 {{ addressDetination.pretty() }}
               </p>
               <ion-spinner name="crescent" *ngIf="loading" style="padding-right: 228px !important;"></ion-spinner>
@@ -73,10 +73,10 @@
           <ion-card *ngIf="addressSourceType.to === 'contact'" (click)="selectContact('to')">
             <ion-item>
               <img item-left logo-small [src]="App.USER">
-              <h2 ion-text color="dark">
+              <h2 ion-text color="black">
                 {{ form.get('recipientName').value || "WALLETS.SEND.ADDRESS.OPTION2" | translate }}
               </h2>
-              <p small ion-text color="dark">
+              <p small ion-text color="black">
                 {{ form.get('recipientAddress').value || '' }}</p>
             </ion-item>
           </ion-card>
@@ -102,7 +102,7 @@
             </h6>
             <ion-card no-margin-bottom>
               <ion-item>
-                <ion-textarea ion-text color="dark" autosize rows="2" ion-text color="dark"
+                <ion-textarea ion-text color="black" autosize rows="2" ion-text
                   formControlName="idenficatorUser" placeholder="{{'WALLETS.GIFT_CARD.DESC.PLACEHOLDER' | translate}}"
                   (ionChange)="maxCacarcter()"></ion-textarea>
               </ion-item>
@@ -122,7 +122,7 @@
           </h6>
           <ion-card>
             <ion-item>
-              <p ion-text text-wrap color="dark">
+              <p ion-text text-wrap color="black">
                 <span>
                   {{ dataGif[0].codeGift }}
                 </span>
@@ -134,7 +134,7 @@
 
       <ion-col col-12 text-center>
         <ion-col buttons col-12 text-center>
-          <button gradient-button ion-button color-5 type="submit" color="dark"
+          <button gradient-button ion-button color-11 type="submit" color="dark"
             [disabled]="block || msgErrorUnsupported || dataGif[0].typeGif === '1' && form.controls.recipientAddress.value === '' || form.controls.idenficatorUser.invalid"
             (click)="onSubmit()">
             {{"WALLETS.BUTTON.CONFIRM" | translate}}

@@ -22,7 +22,8 @@
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+          <p class="wallet-text "> {{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p>
 
           <div *ngIf="!tablet">
             <p class="wallet-number">{{ account.account?.address.address | ngXtruncate: 46 : '...' }}</p>
@@ -104,11 +105,11 @@
   </ion-slides>
 
   <ion-grid normal>
-    <ion-segment mode='md' [(ngModel)]="menu" color="dark">
-      <ion-segment-button value="mosaics" checked>
+    <ion-segment mode='md' [(ngModel)]="menu" color="dark" >
+      <ion-segment-button value="mosaics" checked style="font-weight: bold !important;">
         {{"WALLETS.MOSAICS" | translate}}
       </ion-segment-button>
-      <ion-segment-button value="transactions">
+      <ion-segment-button value="transactions" style="font-weight: bold !important;">
         {{"WALLETS.TRANSACTIONS" | translate}}
       </ion-segment-button>
     </ion-segment>

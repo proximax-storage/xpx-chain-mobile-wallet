@@ -8,11 +8,10 @@
 
   <ion-slides pager onboarding>
     <ion-slide *ngFor="let slide of slides">
-      <ion-toolbar transparent>
+      <!-- <ion-toolbar transparent>
         <ion-buttons end>
-          <!-- <button ion-button color="dark" (click)="ionSlide.slideTo(6, 1000)">Skip</button> -->
         </ion-buttons>
-      </ion-toolbar>
+      </ion-toolbar> -->
       <ion-grid>
         <ion-row>
           <ion-col col-12 align-self-center>
@@ -20,7 +19,7 @@
           </ion-col>
           <ion-col col-12 align-self-start>
             <h2 ion-text color="dark" class="slide-title" [innerHTML]="slide.title | noSanitize"></h2>
-            <p text-justify ion-text color="dark" [innerHTML]="slide.description | noSanitize"></p>
+            <p text-justify ion-text color="black" [innerHTML]="slide.description | noSanitize"></p>
           </ion-col>
 
           <ion-col col-12></ion-col>
@@ -38,14 +37,14 @@
                 </ion-col>
                 <ion-col col-12 align-self-start>
                   <h2 ion-text color="dark" class="slide-title">{{"SETTINGS.WALLET_GUIDE.PAGE5.TITLE" | translate}}</h2>
-                  <p text-justify ion-text color="dark"><br>&nbsp;<br>{{"SETTINGS.WALLET_GUIDE.PAGE5.CONTENT1" | translate}} <a href="https://t.me/@ProximaXio">@ProximaXio</a>.</p>
+                  <p text-justify ion-text color="black"><br>&nbsp;<br>{{"SETTINGS.WALLET_GUIDE.PAGE5.CONTENT1" | translate}} <a href="https://t.me/@ProximaXio">@ProximaXio</a>.</p>
                 </ion-col>
                 
               </ion-row>
 
               <ion-row>
                 <ion-col align-self-center>
-                    <button gradient-button color-5 (click)="gotoWelcome()">
+                    <button gradient-button color-11 (click)="gotoWelcome()">
                         {{"WALLETS.BUTTON.DONE" | translate}}  
                        </button>
                 </ion-col>

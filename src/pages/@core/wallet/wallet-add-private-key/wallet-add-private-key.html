@@ -20,12 +20,12 @@
 
       <ion-col col-12 text-center>
         <h3 ion-text color="dark">{{"WALLETS.CREATE.IMPORT.TITLE" | translate}}</h3>
-        <p ion-text color="dark">
+        <p ion-text color="black">
           {{"WALLETS.CREATE.IMPORT.DESC" | translate}}
         </p>
 
         <!-- <h4 (click)="scan()">{{"WALLETS.CREATE.IMPORT.QR_SCAN" | translate}}</h4> -->
-        <button (click)="scan()" gradient-button color-5 type="button" color="dark">
+        <button (click)="scan()" gradient-button color-11 type="button" color="dark">
           {{"WALLETS.CREATE.IMPORT.QR_SCAN" | translate}}
         </button>
 
@@ -34,7 +34,8 @@
       <ion-col>
         <div class="wallet">
           <div class="wallet-content" [ngClass]="accountColor">
-            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
+            <img class="wallet-front-logo-new wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+            <p class="wallet-text-new"> {{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p>
             <p class="wallet-number">{{ exampleAccount }}</p>
 
             <div class="wallet-label" style="text-align: start !important;">
@@ -80,34 +81,6 @@
           <div class="color-box ">
             <!-- <div class="color" style="background:#c6f8ff;"></div> -->
             <button three (click)="changeAccountColor('wallet-3')"></button>
-          </div>
-
-          <div class="color-box">
-            <!-- <div class="color" style="background:#f2962f;"></div> -->
-            <button four (click)="changeAccountColor('wallet-4')"></button>
-          </div>
-
-        </div>
-      </ion-col>
-      <ion-col col-12>
-      </ion-col>
-      <ion-col text-center>
-        <div class="color-palette">
-          <div class="color-box ">
-            <!-- <div class="color" style="background:#1f6b86;"></div> -->
-            <button five (click)="changeAccountColor('wallet-5')"></button>
-          </div>
-          <div class="color-box">
-            <!-- <div class="color" style="background:#5c9ebb;"></div> -->
-            <button six (click)="changeAccountColor('wallet-6')"></button>
-          </div>
-          <div class="color-box">
-            <!-- <div class="color" style="background:#f2962f;"></div> -->
-            <button seven (click)="changeAccountColor('wallet-7')"></button>
-          </div>
-          <div class="color-box ">
-            <!-- <div class="color" style="background:#c6f8ff;"></div> -->
-            <button eight (click)="changeAccountColor('wallet-8')"></button>
           </div>
 
         </div>
@@ -159,12 +132,12 @@
 
           <br>
 
-          <button gradient-button color-5 [disabled]="formGroup.invalid" type="submit" color="dark">
+          <button gradient-button color-11 [disabled]="formGroup.invalid" type="submit" color="dark">
             {{"WALLETS.CREATE.IMPORT" | translate}}
           </button>
 
 
-          <button gradient-button color-5 type="button" color="dark" (click)="goHome()">
+          <button gradient-button color-10 type="button" color="dark" (click)="goHome()">
             {{"WALLETS.BUTTON.CANCEL" | translate}}
           </button>
 

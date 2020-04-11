@@ -16,7 +16,7 @@ export class App {
     INVALID: `${App.ASSETS}/stickers/invalid.png`
   };
   public static SLIDES = {
-    SLIDE1: `${App.ASSETS}/slides/logo-proximax-sirius-wallet.svg`,
+    SLIDE1: `${App.ASSETS}/slides/logo-two4one-mobile-wallet.svg`,
     SLIDE2: `${App.ASSETS}/slides/icon-private-key-full-color-80h.svg`,
     SLIDE3: `${App.ASSETS}/slides/icon-storage-full-color-80h.svg`,
     SLIDE4: `${App.ASSETS}/slides/icon-blockchain-full-color-80h.svg`,

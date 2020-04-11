@@ -23,16 +23,16 @@
   <ion-grid>
     <ion-row>
       <ion-col col-12 *ngIf="!smallScreen">
-        <ngx-kjua text-center *ngIf="address" fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="300"
+        <ngx-kjua text-center *ngIf="address" fill="#222222" [ecLevel]="'H'" [crisp]="true" [size]="300"
           [mPosX]="50" [mPosY]="50" [mSize]="10" [fontcolor]="'#005E62'" [mode]="'label'" [render]="'label'"
-          [label]="'ProximaX'" [back]="'#fff'" [text]="address">
+          [label]="" [back]="'#fff'" [text]="address">
         </ngx-kjua>
       </ion-col>
 
       <ion-col col-12 *ngIf="smallScreen">
-        <ngx-kjua text-center *ngIf="address" fill="#003642" [ecLevel]="'H'" [crisp]="true" [size]="200"
+        <ngx-kjua text-center *ngIf="address" fill="#222222" [ecLevel]="'H'" [crisp]="true" [size]="200"
           [mPosX]="50" [mPosY]="50" [mSize]="10" [fontcolor]="'#005E62'" [mode]="'label'" [render]="'label'"
-          [label]="'ProximaX'" [back]="'#fff'" [text]="address">
+          [label]="" [back]="'#fff'" [text]="address">
         </ngx-kjua>
       </ion-col>
 
@@ -57,14 +57,14 @@
           <ion-grid normal no-spacing>
             <ion-row justify-content-center>
               <ion-col col-6>
-                <button gradient-button medium color-5 ion-button icon-end no-margin (click)="copy()">
+                <button gradient-button medium color-11 ion-button icon-end no-margin (click)="copy()">
                     {{"WALLETS.BUTTON.COPY" | translate}}
                     &nbsp; 
                   <ion-icon name="custom-copy"></ion-icon>
                 </button>
               </ion-col>
               <ion-col col-6>
-                <button gradient-button medium color-5 ion-button icon-end no-margin (click)="share()">
+                <button gradient-button medium color-11 ion-button icon-end no-margin (click)="share()">
                     {{"WALLETS.BUTTON.EXPORT" | translate}}
                     &nbsp; 
                   <ion-icon name="custom-export"></ion-icon>

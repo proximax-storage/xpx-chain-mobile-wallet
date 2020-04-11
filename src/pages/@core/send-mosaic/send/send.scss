@@ -101,6 +101,8 @@ page-send {
 
   ion-item[select-contact] {
     margin-bottom: -16px;
+    color: color($colors, black) !important;
+  
   }
 
   .select .select-icon .select-icon-inner {
