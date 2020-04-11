@@ -254,14 +254,16 @@ export class TransactionComponent {
               this.showTx = true;
               this.statusViewDetail = true;
             } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.mosaicCarepack || this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.namespaceCarepack){
-
-              this.MESSAGE_ = "Centum Foundation";
+              this.proximaxProvider.getMosaicsName([this.tx['innerTransactions'][0].mosaics[0].id]).subscribe(name => {
+                // this.nameMosaic = 
+              
+              this.MESSAGE_ = name[0].names[0].name
               this.MOSAIC_INFO = null;
               this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
               this.LOGO = App.LOGO.OTHERGIFTCARD;
               this.showTx = true;
               this.statusViewDetail = true;
-
+            })
             } else {
               
               this.MESSAGE_ = "Gift Card";

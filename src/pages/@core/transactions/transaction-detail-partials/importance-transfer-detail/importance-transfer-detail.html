@@ -11,7 +11,7 @@
       {{ nameMosaic }}</p>
     <section item-right>
       <!-- <h2 style="padding-top: 9px !important;"> 1</h2> -->
-      <h2 style="padding-top: 9px !important;"> {{ amountFormatter }}</h2>
+      <h2 style="padding-top: 9px !important; color: black;"> {{ amountFormatter }}</h2>
     </section>
   </ion-item>
 </ion-card>
@@ -21,8 +21,8 @@
     <h6 ion-text color="dark">
       {{"WALLETS.TRANSACTION.DETAIL.DATE" | translate}}
     </h6>
-    <p small ion-text color="dark">
-      6/4/2020 13:31:09
+    <p small ion-text color="black">
+      {{ timestamp }}
     </p>
   </ion-item>
 </ion-card>
@@ -32,7 +32,7 @@
     <h6 ion-text color="dark">
       {{"WALLETS.TRANSACTION.DETAIL.RECEIVER" | translate}}
     </h6>
-    <p small ion-text color="dark">
+    <p small ion-text color="black">
       {{ dataTotal.recipient.pretty() }}
     </p>
   </ion-item>
@@ -43,7 +43,7 @@
     <h6 ion-text color="dark">
       {{"SERVICES.GIFT_CARD.CARD.DESC" | translate}}
     </h6>
-    <p small ion-text color="dark">
+    <p small ion-text color="black">
       {{ this.detalDesc.Descrip }}
     </p>
   </ion-item>
@@ -55,7 +55,7 @@
     <h6 ion-text color="dark">
       {{"SERVICES.GIFT_CARD.CARD.ID" | translate}}
     </h6>
-    <p small ion-text color="dark">
+    <p small ion-text color="black">
       {{ this.detalDesc.Code }}
     </p>
   </ion-item>
@@ -67,7 +67,7 @@
     <h6 ion-text color="dark">
       {{"WALLETS.TRANSACTION.DETAIL.HASH" | translate}}
     </h6>
-    <p small ion-text color="dark">
+    <p small ion-text color="black">
       {{ hashTansaction }}
     </p>
   </ion-item>
