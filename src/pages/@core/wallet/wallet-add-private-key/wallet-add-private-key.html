@@ -33,8 +33,35 @@
 
       <ion-col>
         <div class="wallet">
+          <div class="wallet-content" [ngClass]="accountColor" >
+            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+            <!-- <p class="wallet-text ">{{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p> -->
+  
+            <div *ngIf="!tablet">
+              <p class="wallet-number">{{ exampleAccount }}</p>
+            </div>
+  
+            <div class="wallet-label" style="font-size: 14px !important;">
+              <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+              {{ "WALLETS.ACCOUNT" | translate}}
+            </div>
+            <div *ngIf="!tablet" class="wallet-label">
+              <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
+              <span class="wallet-space-25">0</span>
+            </div>
+            <div *ngIf="!tablet" class="wallet-label">
+              <span class="wallet-label"><strong>US$:</strong></span>
+              <span class="wallet-space-25">0</span>
+              <br>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+      <!-- <ion-col>
+        <div class="wallet">
           <div class="wallet-content" [ngClass]="accountColor">
-            <img class="wallet-front-logo-new wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
             <p class="wallet-text-new"> {{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p>
             <p class="wallet-number">{{ exampleAccount }}</p>
 
@@ -42,27 +69,9 @@
               <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
               {{ walletName}}
             </div>
-            <!-- <div class="wallet-label" style="text-align: start !important;">
-              <span class="wallet-label"><strong style="text-align: start !important;">XPX
-                  {{"WALLETS.BALANCE" | translate}}:</strong></span> <span
-                class="wallet-space-25 wallet-label">0.000000</span>
-            </div>
-            <div class="wallet-space-25 wallet-label">
-              <span class="wallet-label"><strong>US$ </strong></span>0.00
-            </div> -->
-
-
-            <!-- <div class="wallet-space-75">
-              <span class="wallet-label">{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</span>
-              <p class="wallet-info">{{walletName}}</p>
-            </div>
-            <div class="wallet-space-25">
-              <span class="wallet-label">{{"WALLETS.BALANCE" | translate}}</span>
-              <p class="wallet-info">USD$ 0.00</p>
-            </div> -->
           </div>
         </div>
-      </ion-col>
+      </ion-col> -->
       <ion-col col-12 text-center>
         <br>
         <h3 ion-text color="dark">{{"WALLETS.COMMON.CHOOSE_COLOR" | translate}}</h3>

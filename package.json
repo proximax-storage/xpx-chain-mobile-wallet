@@ -1,7 +1,7 @@
 {
-  "name": "proximax-sirius-wallet",
+  "name": "two4one-wallet",
   "version": "0.0.1",
-  "author": "Ionic Framework",
+  "author": "Proximax",
   "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
@@ -113,6 +113,7 @@
     "qrcode-generator": "^1.4.3",
     "rxjs": "^6.5.5",
     "rxjs-compat": "^6.5.5",
+    "sharp": "^0.25.2",
     "short-num": "0.2.0",
     "sw-toolbox": "3.6.0",
     "tsjs-xpx-chain-sdk": "^0.6.1",

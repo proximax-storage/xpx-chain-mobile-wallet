@@ -19,7 +19,34 @@
           {{"WALLETS.EDIT.DESC" | translate}}
         </p>
       </ion-col>
+
       <ion-col>
+        <div class="wallet">
+          <div class="wallet-content" [ngClass]="walletColor" >
+            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+            <!-- <p class="wallet-text ">{{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p> -->
+  
+            <div *ngIf="!tablet">
+              <p class="wallet-number">{{ walletAddress }}</p>
+            </div>
+  
+            <div class="wallet-label" style="font-size: 14px !important;">
+              <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
+              {{ walletName}}
+            </div>
+            <div *ngIf="!tablet" class="wallet-label">
+              <span class="wallet-label"><strong>XPX {{"WALLETS.BALANCE" | translate}}:</strong></span>
+              <span class="wallet-space-25">{{ amountXpx }}</span>
+            </div>
+            <div *ngIf="!tablet" class="wallet-label">
+              <span class="wallet-label"><strong>US$:</strong></span>
+              <span class="wallet-space-25">{{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}}</span>
+              <br>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+      <!-- <ion-col>
         <div class="wallet">
           <div class="wallet-content" [ngClass]="walletColor" text-center>
             <img class="wallet-front-logo-new wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
@@ -40,7 +67,7 @@
             </div>
           </div>
         </div>
-      </ion-col>
+      </ion-col> -->
       <ion-col col-12 text-center>
         <br>
         <h3 ion-text color="dark">{{"WALLETS.COMMON.CHOOSE_COLOR" | translate}}</h3>
