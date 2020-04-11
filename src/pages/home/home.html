@@ -50,9 +50,9 @@
     <ion-slide (click)="showAddWalletPrompt()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="'wallet-create'">
-          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto;"
+          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto; color: #7E0101;"
             src="assets/imgs/wallet-add.svg">
-          <h2 class="wallet-create-title" style="text-align: center">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <h2 class="wallet-create-title" style="text-align: center; color: #7E0101;">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
           <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
         </div>
       </div>
@@ -121,13 +121,13 @@
         <ion-card-header no-padding>
           <ion-item>
             <img logo-small item-left [src]="utils.getLogo(mosaic)">
-            <h2 ion-text color="dark" *ngIf="mosaic.name != undefined && mosaic.name.length !=0 ">
+            <h2 ion-text color="black" *ngIf="mosaic.name != undefined && mosaic.name.length !=0 ">
               {{ mosaic.name | uppercase }}</h2>
-            <h3 ion-text color="dark" *ngIf="mosaic.name === undefined || mosaic.name.length === 0">
+            <h3 ion-text color="black" *ngIf="mosaic.name === undefined || mosaic.name.length === 0">
               {{ mosaic.hex | uppercase }}
             </h3>
             <section text-right item-right>
-              <h2 ion-text color="dark">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
+              <h2 ion-text color="black">{{getAbsoluteAmount(mosaic.amountCompact, mosaic.divisibility)}}</h2>
             </section>
           </ion-item>
         </ion-card-header>

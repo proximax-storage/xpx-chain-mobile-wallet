@@ -255,7 +255,7 @@ export class TransactionComponent {
               this.statusViewDetail = true;
             } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.carepack){
 
-              this.MESSAGE_ = "Kenya Care Pack";
+              this.MESSAGE_ = "Centum Foundation";
               this.MOSAIC_INFO = null;
               this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
               this.LOGO = App.LOGO.OTHERGIFTCARD;

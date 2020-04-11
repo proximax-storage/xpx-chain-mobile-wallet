@@ -67,7 +67,7 @@
 
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
-          <ion-item transparent padding>
+          <ion-item padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
             <ion-input formControlName="name" type="text" autocapitalize="none"
               placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}" (input)="updateName()"
@@ -82,7 +82,7 @@
                 *ngIf='nameMax'>{{('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: configurationForm.nameWallet.maxLength })}}</strong>
             </p>
           </div>
-          <ion-item transparent padding>
+          <ion-item padding>
             <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
             <ion-input formControlName="password" [type]="passwordType"
               placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>

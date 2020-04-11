@@ -97,7 +97,7 @@
 
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="createAccount(formGroup.value)">
-          <ion-item transparent padding>
+          <ion-item padding>
             <ion-label stacked>{{"WALLETS.COMMON.LABEL.WALLET_NAME" | translate}}</ion-label>
             <ion-input [minlength]="configurationForm.nameWallet.minLength" formControlName="name" type="text"
               autocapitalize="none" placeholder="{{'WALLETS.COMMON.PLACEHOLDER.WALLET_NAME' | translate}}"
@@ -113,7 +113,7 @@
             </p>
           </div>
 
-          <ion-item transparent padding>
+          <ion-item padding>
             <ion-label stacked>{{"WALLETS.CREATE.IMPORT.PRIVATE_KEY.LABEL" | translate}}</ion-label>
             <ion-textarea rows="3" [maxlength]="configurationForm.privateKey.maxLength"
               [minlength]="configurationForm.privateKey.minLength" formControlName="privateKey" type="text"
@@ -122,7 +122,7 @@
           </ion-item>
 
           <!-- PASSWORD -->
-          <ion-item transparent padding>
+          <ion-item padding>
             <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
             <ion-input formControlName="password" [type]="passwordType"
               placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
