@@ -12,7 +12,7 @@ export class App {
   private static ASSETS = "assets/imgs";
   public static STICKERS = {
     SORRY: `${App.ASSETS}/stickers/sorry.png`,
-    HINT: `${App.ASSETS}/stickers/icon-private-key-full-color-80h.svg`,
+    HINT: `${App.ASSETS}/slides/icon-private-key-full-color-80h.svg`,
     INVALID: `${App.ASSETS}/stickers/invalid.png`
   };
   public static SLIDES = {

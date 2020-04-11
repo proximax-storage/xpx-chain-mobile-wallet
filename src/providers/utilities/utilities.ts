@@ -200,7 +200,7 @@ export class UtilitiesProvider {
         if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
         } else {
-          if (mosaic.toLowerCase()  === AppConfig.carepack) {
+          if (mosaic.toLowerCase()  === AppConfig.mosaicCarepack) {
             return AppProvider.LOGO.OTHERGIFTCARD;
           }
         }
@@ -226,11 +226,17 @@ export class UtilitiesProvider {
           return AppProvider.LOGO.XPX;
         } else if (
           (
+            mosaic.namespaceId &&
+            mosaic.namespaceId !== '' &&
+            mosaic.namespaceId.toLowerCase() === 'prx' ||
+            mosaic.namespaceId.toLowerCase() === AppConfig.namespaceCarepack.toLowerCase()
+          ) &&
+          (
             mosaic.mosaicId &&
             mosaic.mosaicId !== '' &&
-            mosaic.mosaicId.toLowerCase() === AppConfig.carepack.toLowerCase()
+            mosaic.mosaicId.toLowerCase() === AppConfig.mosaicCarepack.toLowerCase()
           ) ||
-          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.carepack
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.mosaicCarepack
         ) {
           return AppProvider.LOGO.OTHERGIFTCARD;
         } else if (
