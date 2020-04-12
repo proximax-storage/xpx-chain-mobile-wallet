@@ -90,6 +90,14 @@ export class TransactionComponent {
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService
   ) {
+    this.LOGO = App.LOGO.DEFAULT;
+    this.AMOUNT = 0.000000;
+    this.MOSAIC_INFO = { namespaceId: '', mosaicId: '', hex: '', amount: 0, amountCompact: 0, divisibility: 0 };
+    this.array = [];
+    this.showTx = false;
+    this.MESSAGE_ = '';
+    this.statusViewDetail = false;
+    this.type = '';
   }
 
   ngOnInit() {
@@ -242,7 +250,7 @@ export class TransactionComponent {
         const valid = this.IsJsonString(this.tx['innerTransactions'][0].message.payload);
         if (valid) {
           const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.tx['innerTransactions'][0].mosaics[0].id]).toPromise();
-          // console.log('mosaicsFoundmosaicsFoundmosaicsFound', mosaicsFound);
+          console.log('mosaicsFoundmosaicsFoundmosaicsFound', this.tx['innerTransactions']);
           const msg = JSON.parse(this.tx['innerTransactions'][0]["message"].payload);
           if (msg && msg["type"] && msg["type"] === "gift") {
             // console.log('---------------', this.tx['innerTransactions'][0]);
@@ -254,16 +262,16 @@ export class TransactionComponent {
               this.showTx = true;
               this.statusViewDetail = true;
             } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.namespaceLikipia){
-              this.proximaxProvider.getMosaicsName([this.tx['innerTransactions'][0].mosaics[0].id]).subscribe(name => {
+              // this.proximaxProvider.getMosaicsName([this.tx['innerTransactions'][0].mosaics[0].id]).subscribe(name => {
                 // this.nameMosaic = 
               
-              this.MESSAGE_ = name[0].names[0].name
+              this.MESSAGE_ = AppConfig.nameNamespaceGiftTest
               this.MOSAIC_INFO = null;
-              this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
+              this.AMOUNT = this.tx['innerTransactions'][0].mosaics[0].amount.compact();
               this.LOGO = App.LOGO.OTHERGIFTCARD;
               this.showTx = true;
               this.statusViewDetail = true;
-            })
+            // })
             } else {
               
               this.MESSAGE_ = "Gift Card";

@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
 import { App } from '../../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { NavParams } from 'ionic-angular';
-import { Convert, MosaicInfo } from 'tsjs-xpx-chain-sdk';
+import { Convert, MosaicInfo, NamespaceId } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 @Component({
@@ -46,13 +46,32 @@ export class ImportanceTransferDetailComponent {
             this.nameMosaic = name[0].names[0].name
           }
         })
-        const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.dataTotal.mosaics[0].id]).toPromise();
-        const divisibility = mosaicsFound[0].divisibility
+        const namespaceIds =  this.dataTotal.mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
+        const namespaceNames = await this.getNamespacesName(namespaceIds);
+        if(namespaceNames.length >0 && namespaceNames[0].name) {
+          this.nameMosaic = namespaceNames[0].name
+        }
+        console.log('names pace ',namespaceNames );
+        
+        // const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.dataTotal.mosaics[0].id]).toPromise();
+        // const divisibility = mosaicsFound[0].divisibility
         const mosaicsAmount = this.dataTotal.mosaics[0].amount.compact()
-        this.amountFormatter = this.proximaxProvider.amountFormatter(mosaicsAmount, divisibility)
+        // this.amountFormatter = this.proximaxProvider.amountFormatter(mosaicsAmount, divisibility)
+        this.amountFormatter = mosaicsAmount
       })
   }
 
+
+  async getNamespacesName(namespaceIds: NamespaceId[]) {
+    try {
+      //Gets array of NamespaceName for an account
+      const namespaceName = await this.proximaxProvider.namespaceHttp.getNamespacesName(namespaceIds).toPromise();
+      return namespaceName;
+    } catch (error) {
+      //Nothing!
+      return [];
+    }
+  }
   getBolck() {
     this.proximaxProvider.getBlockInfo(this.tx.transactionInfo.height.compact()).subscribe((blockInfo) => {
       this.timestamp = this.proximaxProvider.dateFormatUTC(blockInfo.timestamp);

@@ -344,6 +344,9 @@ export class HomePage {
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
       if (transactions) {
+
+        console.log('transactionstransactionstransactions', transactions);
+        
         // const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
         // this.aggregateTransactions = transferTransactionsAggregate;
         this.aggregateTransactions = transactions;

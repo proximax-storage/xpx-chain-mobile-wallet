@@ -77,12 +77,11 @@ export class GiftCardsPage {
     this.addressDetination = AppConfig.accountGiftTest 
     this.nameMosaic = AppConfig.nameNamespaceGiftTest
     this.amountFormatter = this.mosaicsAmount 
-    console.log('this.mosaicsHex', this.mosaicsHex);
-    
+    const idValue = UInt64.fromHex(this.mosaicsHex)
+
     // this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
-    this.mosaics = new Mosaic(new NamespaceId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
-    // this.mosaicsID = new MosaicId(this.mosaicsHex)
-    console.log('5555555', this.mosaics);
+    this.mosaics = new Mosaic(new NamespaceId([idValue.lower, idValue.higher]), UInt64.fromUint(Number(this.mosaicsAmount)));
+    console.log('this.mosaics', this.mosaics);
     
 
     this.createForm()
@@ -135,7 +134,7 @@ export class GiftCardsPage {
   calculateFeeTxComplete() {
     const networkType = AppConfig.sirius.networkType
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
-    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData('C3975E', '1237654637') })
+    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, '1237654637') })
     const deadLine = Deadline.create()
 
     const Tx1 = TransferTransaction.create(
@@ -163,7 +162,6 @@ export class GiftCardsPage {
       networkType,
       []
     );
-
     this.feeMax = aggregateTx.maxFee.compact() * 20 / 100 + aggregateTx.maxFee.compact()
 
     console.log('this.feeMax', this.feeMax);
@@ -261,6 +259,8 @@ export class GiftCardsPage {
     const deadLine = Deadline.create()
     const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
 
+    
+    
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       addressDetination,
@@ -269,6 +269,7 @@ export class GiftCardsPage {
       networkType
     )
 
+    console.log('******************* toDetinationTx', JSON.stringify(toDetinationTx) );
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -277,6 +278,8 @@ export class GiftCardsPage {
       PlainMessage.create(msg),
       networkType
     )
+
+    console.log('################## toOriginTx', JSON.stringify(toOriginTx) );
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -289,8 +292,13 @@ export class GiftCardsPage {
       UInt64.fromUint(this.feeMax)
     );
 
+    console.log('max fee de la agregafa', this.feeMax);
+    
+    console.log('---------------------- aggregateTransaction', JSON.stringify(aggregateTransaction) );
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
+
+    console.log('---------------------- signedTransaction', JSON.stringify(signedTransaction) );
     // console.log('\n signedTransaction \n', JSON.stringify(signedTransaction))
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
@@ -299,6 +307,9 @@ export class GiftCardsPage {
     );
 
     this.transferTransaction.checkTransaction(signedTransaction).subscribe(status => {
+
+      console.log('eoroeroeroeroeroeoreoreoroeoreoroer', JSON.stringify(status));
+      
       if (status.group && status.group === 'unconfirmed' || status.group === 'confirmed') {
         this.block = false;
         this.displaySuccessMessage = true;
