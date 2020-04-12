@@ -16,6 +16,7 @@ import { ProximaxProvider } from '../proximax/proximax';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app/app.config';
 import { NemProvider } from '../nem/nem';
+import { CustomSimpleWallet } from './simple-wallet';
 
 /*
  Generated class for the NemProvider provider.
@@ -30,7 +31,7 @@ export class WalletProvider {
   AppConfig: any;
   wallet: any;
   publicAccount: PublicAccount;
-  wallets: SimpleWallet[];
+  wallets: CustomSimpleWallet[];
   selectedWallet: any;
   selectesAccount: any;
 
@@ -267,7 +268,7 @@ export class WalletProvider {
     if (WALLETS) {
       const walletsMap = WALLETS.map(walletFile => {
         let wallet = (walletFile as SimpleWallet);
-        wallet.walletColor = walletFile['walletColor'];
+        //wallet.walletColor = walletFile['walletColor'];
         return wallet;
       });
       _wallets['catapultAccounts'] = walletsMap;

@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { App } from '../../../../providers/app/app';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
-import { MosaicInfo, Mosaic, MosaicId, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert, NamespaceId } from 'tsjs-xpx-chain-sdk';
+import { MosaicInfo, Mosaic, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert, NamespaceId } from 'tsjs-xpx-chain-sdk';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from "@ionic/storage";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
