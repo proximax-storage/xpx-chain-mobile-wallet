@@ -7,6 +7,7 @@
     "APP.POPUP.NO.ACCOUNTS": "You don't have account yet on this wallet.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "You don't have a account with NIS1 balance to swap.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Transaction not supported in this version of the mobile wallet.",
+    "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "Gift card not supported in this version of the mobile wallet.",
     "APP.INVALID.USERNAME_OR_PASSWORD": "The username or password you entered is incorrect.",
     "APP.INVALID.PASSWORD": "The password is invalid.",
     "APP.BUTTON.TRY_AGAIN": "Try again",

@@ -5,6 +5,7 @@
     "APP.POPUP.NO.ACCOUNTS": "Bạn chưa có tài khoản trên ví này.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "Bạn không có tài khoản với số dư NIS1 để trao đổi.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Giao dịch không được hỗ trợ trên phiên bản này trên ví  di động",
+    "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "Thẻ quà tặng không được hỗ trợ trong phiên bản ví di động này.",
     "APP.INVALID.USERNAME_OR_PASSWORD": "Tên đăng nhập hoặc mật khảu bạn nhập không đúng",
     "APP.INVALID.PASSWORD": "Mật khẩu của bạn không phù hợp",
     "APP.BUTTON.TRY_AGAIN": "Vui lòng thử lại",

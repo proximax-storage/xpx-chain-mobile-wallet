@@ -253,7 +253,7 @@ export class TransactionComponent {
               this.LOGO = App.LOGO.SIRIUSGIFTCARD;
               this.showTx = true;
               this.statusViewDetail = true;
-            } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.mosaicCarepack || this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.namespaceCarepack){
+            } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.namespaceLikipia){
               this.proximaxProvider.getMosaicsName([this.tx['innerTransactions'][0].mosaics[0].id]).subscribe(name => {
                 // this.nameMosaic = 
               

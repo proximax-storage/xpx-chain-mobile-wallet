@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { App } from '../../../../providers/app/app';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
-import { MosaicInfo, Mosaic, MosaicId, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert } from 'tsjs-xpx-chain-sdk';
+import { MosaicInfo, Mosaic, MosaicId, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert, NamespaceId } from 'tsjs-xpx-chain-sdk';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from "@ionic/storage";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -32,7 +32,7 @@ export class GiftCardsPage {
 
   App = App;
   addressOrigin: Address;
-  addressDetination: Address;
+  addressDetination: any;
   addressSourceType: { from: string; to: string; };
   amountFormatter: string = '0';
   block: boolean;
@@ -53,6 +53,7 @@ export class GiftCardsPage {
   showTransferable: boolean;
   feeMax: number;
   caracterMax: number = 10;
+  noSoported: boolean = false;
 
   constructor(
     public alertProvider: AlertProvider,
@@ -71,17 +72,31 @@ export class GiftCardsPage {
     public mosaicsProvider: MosaicsProvider,
   ) {
     this.dataGif = this.navParams.data;
-    this.mosaicsHex = this.dataGif[0].mosaicGift
+    this.mosaicsHex = this.dataGif[0].mosaicGift.toLowerCase()
     this.mosaicsAmount = this.dataGif[0].amountGift
-    this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
-    this.mosaicsID = new MosaicId(this.mosaicsHex)
+    this.addressDetination = AppConfig.accountGiftTest 
+    this.nameMosaic = AppConfig.nameNamespaceGiftTest
+    this.amountFormatter = this.mosaicsAmount 
+    console.log('this.mosaicsHex', this.mosaicsHex);
+    
+    // this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
+    this.mosaics = new Mosaic(new NamespaceId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
+    // this.mosaicsID = new MosaicId(this.mosaicsHex)
+    console.log('5555555', this.mosaics);
+    
 
     this.createForm()
-    this.dataMosaics()
+    // this.dataMosaics()
     this.getAccountSelected()
-    this.mosaicName()
+    // this.mosaicName()
     this.subscribeValue()
     this.calculateFeeTxComplete()
+
+    if (this.dataGif[0].typeGif === '0') {
+      this.showTransferable = false
+    } else {
+      this.noSoported = true
+    }
   }
 
   createForm() {
@@ -232,8 +247,9 @@ export class GiftCardsPage {
 
   onSubmit() {
     let addressDetination: any
+    
     if(this.form.controls.recipientAddress.value === ''){
-      addressDetination = this.addressDetination
+      addressDetination = this.proximaxProvider.createFromRawAddress(this.addressDetination)
     } else {
       addressDetination = this.proximaxProvider.createFromRawAddress(this.form.controls.recipientAddress.value)
     }

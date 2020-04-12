@@ -5,6 +5,7 @@
     "APP.POPUP.NO.ACCOUNTS": "您在這個錢包上還沒有賬戶。",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "您沒有要交換NIS1餘額的帳戶。",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "当前版本移动钱包不支持此交易类型",
+    "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "此版本的手机钱包不支持礼品卡。",
     "APP.INVALID.USERNAME_OR_PASSWORD": "您输入的用户名或密码不正确。",
     "APP.INVALID.PASSWORD": "密码不合法",
     "APP.BUTTON.TRY_AGAIN": "再试一次",

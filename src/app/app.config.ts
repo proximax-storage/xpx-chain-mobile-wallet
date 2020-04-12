@@ -17,8 +17,10 @@ export const AppConfig = {
     networkType: NetworkType.TEST_NET,
     networkGenerationHash: '56D112C98F7A7E34D1AEDC4BD01BC06CA2276DD546A93E36690B785E82439CA9'
   },
-  mosaicCarepack: '4ff17e357254d451',
-  namespaceCarepack:  'CF231D202AB020FA',
+  // mosaicCarepack: '4ff17e357254d451',
+  accountGiftTest: 'VCER34-5Q2YJR-GE6YSU-H4HJM7-6AN7C2-I5NIMY-2KFE',
+  nameNamespaceGiftTest: 'two4one.hampervoucher.laikipia',
+  namespaceLikipia: 'cf231d202ab020fa',
   xpxHexId: '13bfc518e40549d7',
   accountExample: 'TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH',
   mosaicXpxInfo: {
@@ -68,7 +70,9 @@ export const AppConfig = {
 //     networkGenerationHash: '10540AD3A1BF46B1A05D8B1CF0252BC9FB2E0B53CFD748262B0CE341CEAFEB6B'
 //   },
   // mosaicCarepack: '',
-  // namespaceCarepack:  'CF231D202AB020FA',
+  // accountGiftTest: 'VDF4RLEV4MKNMYWZO2AYIPXHUDJ4OWHHEE6NHHQM',
+  // nameNamespaceGiftTest: 'two4one.hampervoucher.laikipia',
+  // namespaceCarepack:  'cf231d202ab020fa',
 //   xpxHexId: '402b2f579faebc59',
 //   accountExample: 'XDDXG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4P',
 //   mosaicXpxInfo: {

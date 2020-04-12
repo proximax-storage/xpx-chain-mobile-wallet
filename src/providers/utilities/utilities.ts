@@ -200,7 +200,7 @@ export class UtilitiesProvider {
         if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
         } else {
-          if (mosaic.toLowerCase()  === AppConfig.mosaicCarepack) {
+          if (mosaic.toLowerCase()  === AppConfig.namespaceLikipia) {
             return AppProvider.LOGO.OTHERGIFTCARD;
           }
         }
@@ -229,14 +229,14 @@ export class UtilitiesProvider {
             mosaic.namespaceId &&
             mosaic.namespaceId !== '' &&
             mosaic.namespaceId.toLowerCase() === 'prx' ||
-            mosaic.namespaceId.toLowerCase() === AppConfig.namespaceCarepack.toLowerCase()
+            mosaic.namespaceId.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
           ) &&
           (
             mosaic.mosaicId &&
             mosaic.mosaicId !== '' &&
-            mosaic.mosaicId.toLowerCase() === AppConfig.mosaicCarepack.toLowerCase()
+            mosaic.mosaicId.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
           ) ||
-          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.mosaicCarepack
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
         ) {
           return AppProvider.LOGO.OTHERGIFTCARD;
         } else if (

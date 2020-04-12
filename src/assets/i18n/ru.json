@@ -5,6 +5,7 @@
     "APP.POPUP.NO.ACCOUNTS": "У вас еще нет аккаунта на этом кошельке.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "У вас нет учетной записи с балансом NIS1 для обмена.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Тип транзакции не поддерживается в этой версии мобильного кошелька",
+    "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "Подарочная карта не поддерживается в этой версии мобильного кошелька.",
     "APP.INVALID.USERNAME_OR_PASSWORD": "Неверное имя пользователя или пароль.",
     "APP.INVALID.PASSWORD": "Неверный пароль",
     "APP.BUTTON.TRY_AGAIN": "Попробуйте снова",

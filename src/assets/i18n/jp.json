@@ -5,6 +5,7 @@
     "APP.POPUP.NO.ACCOUNTS": "このウォレットにはまだアカウントがありません。",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "NIS1残高を交換するアカウントがありません。",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "このバージョンのモバイルウォレットではこのタイプのトランザクションをサポートしていません",
+    "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "このバージョンのモバイルウォレットではギフトカードはサポートされていません",
     "APP.INVALID.USERNAME_OR_PASSWORD": "入力されたユーザー名またはパスワードは正しくありません",
     "APP.INVALID.PASSWORD": "パスワードが違います",
     "APP.BUTTON.TRY_AGAIN": "再試行する",

@@ -106,18 +106,23 @@ export class ServicesPage {
       // DATA DE PRUEBA BINARIO CERIALIZADO DE LA GIFT CARD
 
       // misaics no transferable
-      /* const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C24FF17E357254D45130B200B8'
+      //  const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C24FF17E357254D45130B200B8'
  
+      // namespace no transferable
+      // const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C2CF231D202AB020FA30B200B8'
+
        // misaics transferable
-       // const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C24FF17E357254D45131B200B8'
+      //  const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C2CF231D202AB020FA31B200B8'
  
-         const dataFormat = this.proximaxProvider.unSerialize(dataHex)
-         if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
-           this.gotoGift('GiftCardsPage', dataFormat)
-         } else {
-           this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
-         } 
- */
+        //  const dataFormat = this.proximaxProvider.unSerialize(dataHex)
+        //  if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
+        //    console.log('dataFormat', dataFormat);
+           
+        //    this.gotoGift('GiftCardsPage', dataFormat)
+        //  } else {
+        //    this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
+        //  } 
+ 
       // FIN DATA DE PRUEBA BINARIO CERIALIZADO DE LA GIFT CARD
 
     } else {

@@ -5,6 +5,7 @@
   "APP.POPUP.NO.ACCOUNTS": "U heeft nog geen account voor deze portemonnee.",
   "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "U hebt geen account met NIS1-saldo om te wisselen.",
   "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Dit transactietype wordt niet ondersteund in deze versie.",
+  "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "Cadeaubon wordt niet ondersteund in deze versie van de mobiele portemonnee.",
   "APP.INVALID.USERNAME_OR_PASSWORD": "Uw gebruikersnaam of wachtwoord is onjuist.",
   "APP.INVALID.PASSWORD": "Wachtwoord is onjuist.",
   "APP.BUTTON.TRY_AGAIN": "Probeer het opnieuw",

@@ -5,6 +5,7 @@
     "APP.POPUP.NO.ACCOUNTS": "Vous n'avez pas encore de compte sur ce portefeuille.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "Vous n'avez pas de compte avec solde NIS1 à échanger.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Le type de transaction n'est pas pris en charge dans cette version du wallet mobile.",
+    "APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT": "Carte-cadeau non prise en charge dans cette version du portefeuille mobile.",
     "APP.INVALID.USERNAME_OR_PASSWORD": "Le nom d'utilisateur ou le mot de passe que vous avez tapé est incorrect.",
     "APP.INVALID.PASSWORD": "Le mot de passe n'est pas valide.",
     "APP.BUTTON.TRY_AGAIN": "Réessayer",
