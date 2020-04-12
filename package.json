@@ -127,7 +127,8 @@
     "cz-conventional-changelog": "^2.1.0",
     "cz-conventional-changelog-emoji": "^0.1.0",
     "javascript-obfuscator": "^0.18.8",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "onesignal-cordova-plugin": "^2.6.0"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -176,7 +177,8 @@
         "DEEPLINK_4_HOST": " ",
         "DEEPLINK_5_SCHEME": " ",
         "DEEPLINK_5_HOST": " "
-      }
+      },
+      "onesignal-cordova-plugin": {}
     },
     "platforms": [
       "android",
