@@ -75,16 +75,17 @@ export class GiftCardsPage {
     this.mosaicsHex = this.dataGif[0].mosaicGift.toLowerCase()
     this.mosaicsAmount = this.dataGif[0].amountGift
     this.addressDetination = AppConfig.accountGiftTest 
-    this.nameMosaic = AppConfig.nameNamespaceGiftTest
+    // this.nameMosaic = AppConfig.nameNamespaceGiftTest
     this.amountFormatter = this.mosaicsAmount 
     const idValue = UInt64.fromHex(this.mosaicsHex)
 
+    this.nameNamespace(idValue)
     // this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
     this.mosaics = new Mosaic(new NamespaceId([idValue.lower, idValue.higher]), UInt64.fromUint(Number(this.mosaicsAmount)));
     console.log('this.mosaics', this.mosaics);
     
 
-    this.createForm()
+    this.nameNamespace(idValue)
     // this.dataMosaics()
     this.getAccountSelected()
     // this.mosaicName()
@@ -95,6 +96,25 @@ export class GiftCardsPage {
       this.showTransferable = false
     } else {
       this.noSoported = true
+    }
+  }
+
+
+  async nameNamespace (namespaceIds) {
+    const namespaceNames = await this.getNamespacesName(namespaceIds);
+    if(namespaceNames.length >0 && namespaceNames[0].name) {
+      this.nameMosaic = namespaceNames[0].name
+    }
+
+  }
+  async getNamespacesName(namespaceIds: NamespaceId[]) {
+    try {
+      //Gets array of NamespaceName for an account
+      const namespaceName = await this.proximaxProvider.namespaceHttp.getNamespacesName(namespaceIds).toPromise();
+      return namespaceName;
+    } catch (error) {
+      //Nothing!
+      return [];
     }
   }
 
