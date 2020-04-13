@@ -74,18 +74,21 @@ export class GiftCardsPage {
     this.dataGif = this.navParams.data;
     this.mosaicsHex = this.dataGif[0].mosaicGift.toLowerCase()
     this.mosaicsAmount = this.dataGif[0].amountGift
-    this.addressDetination = AppConfig.accountGiftTest 
+    // this.addressDetination = AppConfig.accountGiftTest 
     // this.nameMosaic = AppConfig.nameNamespaceGiftTest
     this.amountFormatter = this.mosaicsAmount 
     const idValue = UInt64.fromHex(this.mosaicsHex)
 
+
+    console.log('############', idValue);
+    
     this.nameNamespace(idValue)
     // this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
     this.mosaics = new Mosaic(new NamespaceId([idValue.lower, idValue.higher]), UInt64.fromUint(Number(this.mosaicsAmount)));
     console.log('this.mosaics', this.mosaics);
     
-
-    this.nameNamespace(idValue)
+    this.createForm()
+    // this.nameNamespace(idValue)
     // this.dataMosaics()
     this.getAccountSelected()
     // this.mosaicName()
@@ -101,12 +104,41 @@ export class GiftCardsPage {
 
 
   async nameNamespace (namespaceIds) {
-    const namespaceNames = await this.getNamespacesName(namespaceIds);
+    console.log('**************', namespaceIds);
+    
+    const namespaceNames = await this.getNamespacesName([namespaceIds]);
+    console.log('**************namespaceNames', namespaceNames);
     if(namespaceNames.length >0 && namespaceNames[0].name) {
       this.nameMosaic = namespaceNames[0].name
     }
+      
+      const namespace = await this.getNamespaces(namespaceIds);
+      console.log('**************namespace', namespace);
+      if(namespace) {
+        this.addressDetination = namespace['owner'].address
+
+        if (this.addressDetination.pretty()) {
+          // this.test()
+          this.loading = false
+        }
+        // this.nameMosaic = namespaceNames[0].name
+      }
+    // }
 
   }
+
+  
+  async getNamespaces(namespaceIds: NamespaceId) {
+    try {
+      //Gets array of NamespaceName for an account
+      const namespace = await this.proximaxProvider.namespaceHttp.getNamespace(namespaceIds).toPromise();
+      return namespace;
+    } catch (error) {
+      //Nothing!
+      return [];
+    }
+  }
+
   async getNamespacesName(namespaceIds: NamespaceId[]) {
     try {
       //Gets array of NamespaceName for an account
@@ -267,7 +299,7 @@ export class GiftCardsPage {
     let addressDetination: any
     
     if(this.form.controls.recipientAddress.value === ''){
-      addressDetination = this.proximaxProvider.createFromRawAddress(this.addressDetination)
+      addressDetination = this.addressDetination
     } else {
       addressDetination = this.proximaxProvider.createFromRawAddress(this.form.controls.recipientAddress.value)
     }
@@ -335,8 +367,12 @@ export class GiftCardsPage {
         this.displaySuccessMessage = true;
         this.showSuccessMessage();
       } else {
-        this.showErrorMessage(status.status);
-        this.block = false;
+        if(status.status){
+          this.showErrorMessage(status.status);
+          this.block = false;
+        } else {
+          this.showErrorInesperado();
+        }
       }
     }, error => {
       this.block = false;
@@ -364,6 +400,12 @@ export class GiftCardsPage {
         error
       );
     }
+  }
+
+  showErrorInesperado() {
+    this.haptic.notification({ type: 'warning' });
+    this.alertProvider.showMessage(this.translateService.instant("APP.ERROR"));
+    
   }
 
   showSuccessMessage() {

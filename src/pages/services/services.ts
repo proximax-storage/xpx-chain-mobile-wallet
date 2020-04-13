@@ -86,6 +86,9 @@ export class ServicesPage {
           } else {
             // aqui va la validacion 
             const dataFormat = this.proximaxProvider.unSerialize(barcodeData.text)
+
+            console.log( JSON.stringify(dataFormat));
+            
             if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
               this.gotoGift('GiftCardsPage', dataFormat)
             } else {

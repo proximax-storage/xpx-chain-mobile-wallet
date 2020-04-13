@@ -2,6 +2,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "Успех!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Ваша транзакция сейчас обрабатывается.",
     "APP.ERROR": "Что-то пошло не так. Пожалуйста, попробуйте еще раз",
+    "APP.ERROR_NODE": "Ошибка подключения к узлу",
     "APP.POPUP.NO.ACCOUNTS": "У вас еще нет аккаунта на этом кошельке.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "У вас нет учетной записи с балансом NIS1 для обмена.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Тип транзакции не поддерживается в этой версии мобильного кошелька",

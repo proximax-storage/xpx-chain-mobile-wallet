@@ -2,6 +2,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "Sự thành công!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Giao dịch của bạn hiện đang được xử lý.",
     "APP.ERROR": "Có lỗi xảy ra. Vui lòng thử lại",
+    "APP.ERROR_NODE": "Lỗi kết nối với nút",
     "APP.POPUP.NO.ACCOUNTS": "Bạn chưa có tài khoản trên ví này.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "Bạn không có tài khoản với số dư NIS1 để trao đổi.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Giao dịch không được hỗ trợ trên phiên bản này trên ví  di động",

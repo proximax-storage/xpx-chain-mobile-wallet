@@ -52,9 +52,9 @@
             <ion-item *ngIf="!showTransferable">
               <img item-left logo-small color="dark" [src]="App.USER">
               <p small ion-text color="black" *ngIf="addressDetination">
-                {{ addressDetination }}
+                {{ addressDetination.pretty() }}
               </p>
-              <!-- <ion-spinner name="crescent" *ngIf="loading" style="padding-right: 228px !important;"></ion-spinner> -->
+              <ion-spinner name="crescent" *ngIf="loading" style="padding-right: 228px !important;"></ion-spinner>
             </ion-item>
 
             <!-- TRANSFERIBLE -->
@@ -145,7 +145,7 @@
             <ion-col>
               <img quarter-width [src]="App.STICKERS.SORRY">
               <h6 ion-text color="grey" text-wrap>
-                <strong>{{"APP.MESSAGE.ERROR_GIFY_NOT_SUPPORT" | translate}}</strong>
+                <strong>{{"APP.MESSAGE.ERROR_GIFY_NOT_SUPPOR" | translate}}</strong>
               </h6>
             </ion-col>
           </ion-row>

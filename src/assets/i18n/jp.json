@@ -2,6 +2,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "成功！",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "トランザクションは現在処理中です。",
     "APP.ERROR": "何か問題がありました。もう一度やり直してください",
+    "APP.ERROR_NODE": "ノードへの接続エラー",
     "APP.POPUP.NO.ACCOUNTS": "このウォレットにはまだアカウントがありません。",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "NIS1残高を交換するアカウントがありません。",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "このバージョンのモバイルウォレットではこのタイプのトランザクションをサポートしていません",

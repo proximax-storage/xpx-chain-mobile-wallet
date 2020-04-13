@@ -195,7 +195,7 @@ export class UtilitiesProvider {
   getLogo(mosaic: DefaultMosaic | string) {
     try {
       if (!mosaic) {
-        return AppProvider.LOGO.SIRIUS;
+        return AppProvider.LOGO.OTHERGIFTCARD;
       } else if (typeof(mosaic) === 'string') {
         if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
@@ -205,7 +205,7 @@ export class UtilitiesProvider {
           }
         }
 
-        return AppProvider.LOGO.SIRIUS;
+        return AppProvider.LOGO.OTHERGIFTCARD;
       } else {
         if (
           (
@@ -264,11 +264,11 @@ export class UtilitiesProvider {
         ) {
           return AppProvider.LOGO.XAR;
         } else {
-          return AppProvider.LOGO.SIRIUS;
+          return AppProvider.LOGO.OTHERGIFTCARD;
         }
       }
     } catch (error) {
-      return AppProvider.LOGO.SIRIUS;
+      return AppProvider.LOGO.OTHERGIFTCARD;
     }
   }
 

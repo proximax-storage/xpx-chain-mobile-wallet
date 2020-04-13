@@ -4,6 +4,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "¡Éxito!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Su transacción ahora está siendo procesada.",
     "APP.ERROR": "Algo salió mal. Inténtalo de nuevo.",
+    "APP.ERROR_NODE": "Error al conectar al nodo",
     "APP.POPUP.NO.ACCOUNTS": "Aún no posee cuentas en esta billetera.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "No posee cuentas con balance NIS1 para realizar intercambio.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Transacción no soportada en esta versión de la mobile wallet.",

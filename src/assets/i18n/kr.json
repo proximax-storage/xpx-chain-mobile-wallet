@@ -2,6 +2,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "성공!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "거래가 처리 중입니다.",
     "APP.ERROR": "문제가 발생했습니다. 다시 시도하십시오.",
+    "APP.ERROR_NODE": "노드 연결 오류",
     "APP.POPUP.NO.ACCOUNTS": "이 지갑에 아직 계정이 없습니다.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "교환 할 NIS1 잔액이있는 계정이 없습니다.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "이런 종류의 거래는 이 버전의 모바일 지갑에서는 지원되지 않습니다.",

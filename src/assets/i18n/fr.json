@@ -2,6 +2,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "Succès!",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "Votre transaction est en cours de traitement.",
     "APP.ERROR": "Quelque chose s'est mal passé. Veuillez réessayer",
+    "APP.ERROR_NODE": "Erreur de connexion au nœud",
     "APP.POPUP.NO.ACCOUNTS": "Vous n'avez pas encore de compte sur ce portefeuille.",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "Vous n'avez pas de compte avec solde NIS1 à échanger.",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Le type de transaction n'est pas pris en charge dans cette version du wallet mobile.",

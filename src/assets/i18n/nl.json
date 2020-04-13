@@ -2,6 +2,7 @@
   "APP.MESSAGE.SUCCESS.TITLE": "Succes!",
   "APP.MESSAGE.SUCCESS.SUBTITLE": "Uw transactie wordt nu verwerkt.",
   "APP.ERROR": "Er is iets fout gegaan. Probeer het opnieuw",
+  "APP.ERROR_NODE": "Fout bij verbinden met knooppunt",
   "APP.POPUP.NO.ACCOUNTS": "U heeft nog geen account voor deze portemonnee.",
   "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "U hebt geen account met NIS1-saldo om te wisselen.",
   "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "Dit transactietype wordt niet ondersteund in deze versie.",

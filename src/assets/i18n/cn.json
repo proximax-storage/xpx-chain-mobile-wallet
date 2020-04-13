@@ -2,6 +2,7 @@
     "APP.MESSAGE.SUCCESS.TITLE": "成功",
     "APP.MESSAGE.SUCCESS.SUBTITLE": "您的交易现在正在处理中。",
     "APP.ERROR": "有些不对劲。请再试一次",
+    "APP.ERROR_NODE": "连接到节点时出错",
     "APP.POPUP.NO.ACCOUNTS": "您在這個錢包上還沒有賬戶。",
     "APP.MESSAGE.ERROR.NO.SWAP.ACCOUNTS": "您沒有要交換NIS1餘額的帳戶。",
     "APP.MESSAGE.ERROR_TXN_NOT_SUPPORT": "当前版本移动钱包不支持此交易类型",

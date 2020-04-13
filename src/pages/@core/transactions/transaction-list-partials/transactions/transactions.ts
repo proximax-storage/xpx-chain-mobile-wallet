@@ -263,6 +263,9 @@ export class TransactionComponent {
               this.statusViewDetail = true;
             // } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.namespaceLikipia){
             } else{
+
+              console.log('this.tx[innerTransactions][0].mosaics[0].id.toHex()', this.tx['innerTransactions'][0].mosaics[0].id.toHex());
+              
               // this.proximaxProvider.getMosaicsName([this.tx['innerTransactions'][0].mosaics[0].id]).subscribe(name => {
               let namespaceIds = new NamespaceId([this.tx['innerTransactions'][0].mosaics[0].id.id.lower, this.tx['innerTransactions'][0].mosaics[0].id.id.higher])
               const name  = await this.proximaxProvider.namespaceHttp.getNamespacesName([namespaceIds]).toPromise();
