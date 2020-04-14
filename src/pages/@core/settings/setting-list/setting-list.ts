@@ -74,7 +74,6 @@ export class SettingListPage {
    */
   showLanguage() {
     this.storage.get("lang").then(lang => {
-      this.storage.set("isQrActive", true);
       this.utils.showInsetModal('LanguagePage', {
         selectedLanguage: lang
       }).subscribe(lang => {
@@ -113,7 +112,7 @@ export class SettingListPage {
 
   resetPIN() {
     // Reset pin first.
-    this.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage' });
+    this.showModal('VerificationCodePage', { status: 'setup', destination: '' });
   }
 
   showResetPINPrompt() {

@@ -71,7 +71,6 @@ export class WalletAddPrivateKeyPage {
     public contactsProvider: ContactsProvider,
   ) {
     this.accountColor = 'wallet-1';
-    this.storage.set("isQrActive", true);
     this.configurationForm = this.sharedService.configurationForm;
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.createForm();
@@ -222,8 +221,6 @@ export class WalletAddPrivateKeyPage {
    */
   ionViewDidLeave() {
     // show tabs when page is dismissed
-    this.storage.set("isQrActive", true);
-
     let tabs = document.querySelectorAll('.tabbar');
     if (tabs !== null) {
       Object.keys(tabs).map((key) => {
@@ -238,7 +235,6 @@ export class WalletAddPrivateKeyPage {
    * @memberof WalletAddPrivateKeyPage
    */
   ionViewDidLoad() {
-    this.storage.set('isQrActive', true);
   }
 
   minName() {

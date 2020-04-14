@@ -71,7 +71,6 @@ export class ServicesPage {
   }
 
   async scanGiftCards() {
-    this.storage.set("isQrActive", true);
     await this.getCurrentAccount();
     if (this.account != null) {
 

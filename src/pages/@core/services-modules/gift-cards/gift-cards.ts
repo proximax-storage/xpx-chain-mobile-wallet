@@ -445,7 +445,6 @@ export class GiftCardsPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
     this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true });
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";

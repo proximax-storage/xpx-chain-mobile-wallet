@@ -114,7 +114,6 @@ export class ContactAddPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
     this.barcodeScanner
       .scan()
       .then(barcodeData => {

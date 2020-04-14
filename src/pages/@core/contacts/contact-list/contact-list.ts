@@ -64,7 +64,6 @@ export class ContactListPage {
     private storage: Storage,
     private translateService: TranslateService,
   ) {
-    this.storage.set("isQrActive", true);
     // this.address = this.walletProvider.selectesAccount.account.address.address;
   }
 

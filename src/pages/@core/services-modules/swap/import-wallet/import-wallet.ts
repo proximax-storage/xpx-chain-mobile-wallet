@@ -68,11 +68,9 @@ export class ImportWalletPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ImportWalletPage');
-    this.storage.set('isQrActive', true);
   }
 
   ionViewDidLeave() {
-    this.storage.set('isQrActive', false);
   }
 
   init() {
@@ -95,7 +93,6 @@ export class ImportWalletPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
       let privKey = JSON.parse(barcodeData.text);
 

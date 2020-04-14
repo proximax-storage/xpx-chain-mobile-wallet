@@ -12,6 +12,11 @@ import { NetworkTypes, ServerConfig } from "nem-library";
 //       "https://bctestnet2.brimstone.xpxsirius.io",
 //       "https://bctestnet3.brimstone.xpxsirius.io"
 //     ],
+//     nodelist: [
+//       { name: "bctestnet1.brimstone.xpxsirius.io", endpoint: "bctestnet1.brimstone.xpxsirius.io" },
+//       { name: "bctestnet2.brimstone.xpxsirius.io", endpoint: "bctestnet2.brimstone.xpxsirius.io" },
+//       { name: "bctestnet3.brimstone.xpxsirius.io", endpoint: "bctestnet3.brimstone.xpxsirius.io" },
+//     ],
 //     httpNodeUrl: "https://bctestnet1.brimstone.xpxsirius.io",
 //     wsNodeUrl: "ws://bctestnet1.brimstone.xpxsirius.io:3000",
 //     networkType: NetworkType.TEST_NET,
@@ -63,11 +68,25 @@ export const AppConfig = {
       "https://delphinus.xpxsirius.io",
       "https://lyrasithara.xpxsirius.io"
     ],
+    nodelist: [
+      { name: "arcturus.xpxsirius.io", endpoint: "arcturus.xpxsirius.io" },
+      { name: "aldebaran.xpxsirius.io", endpoint: "aldebaran.xpxsirius.io" },
+      { name: "betelgeuse.xpxsirius.io", endpoint: "betelgeuse.xpxsirius.io" },
+      { name: "bigcalvin.xpxsirius.io", endpoint: "bigcalvin.xpxsirius.io" },
+      { name: "canismajor.xpxsirius.io", endpoint: "canismajor.xpxsirius.io" },
+      { name: "coronaborealis.xpxsirius.io", endpoint: "coronaborealis.xpxsirius.io" },
+      { name: "delphinus.xpxsirius.io", endpoint: "delphinus.xpxsirius.io" },
+      { name: "eridanus.xpxsirius.io", endpoint: "eridanus.xpxsirius.io" },
+      { name: "lyrasithara.xpxsirius.io", endpoint: "lyrasithara.xpxsirius.io" },
+      { name: "westerlund.xpxsirius.io", endpoint: "westerlund.xpxsirius.io" },
+
+    ],
     httpNodeUrl: "https://arcturus.xpxsirius.io",
     wsNodeUrl: "ws://arcturus.xpxsirius.io:3000",
     networkType: NetworkType.MAIN_NET,
     networkGenerationHash: '10540AD3A1BF46B1A05D8B1CF0252BC9FB2E0B53CFD748262B0CE341CEAFEB6B'
   },
+
   accountGiftTest: 'XDF4RLEV4MKNMYWZO2AYIPXHUDJ4OWHHEESYF26Q',
   nameNamespaceGiftTest: 'two4one.hampervoucher.laikipia',
   namespaceLikipia: 'cf231d202ab020fa',

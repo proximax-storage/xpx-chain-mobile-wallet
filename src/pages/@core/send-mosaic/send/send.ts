@@ -209,7 +209,6 @@ export class SendPage {
   // }
 
   createForm() {
-    this.storage.set("isQrActive", true);
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: "",
@@ -470,7 +469,6 @@ export class SendPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
     this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true });
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";

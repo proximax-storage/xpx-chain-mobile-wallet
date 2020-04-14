@@ -34,6 +34,7 @@ export class WalletProvider {
   wallets: CustomSimpleWallet[];
   selectedWallet: any;
   selectesAccount: any;
+  walletsMap: { account: SimpleWallet; publicAccount: any; walletColor: any; };
 
   constructor(
     private authProvider: AuthProvider,
@@ -53,6 +54,8 @@ export class WalletProvider {
   checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
     return this.getLocalWallets().then(wallets => {
+      console.log('wallets', wallets);
+      
       if (wallets.length != 0) {
         let _catapultAccounts: any = wallets.catapultAccounts;
         for (var i = 0; i < _catapultAccounts.length; i++) {
@@ -127,20 +130,24 @@ export class WalletProvider {
 
   deleteWallet(wallet: SimpleWallet) {
     return this.getLocalWallets().then(wallets => {
+
       let _catapultAccounts: any = wallets.catapultAccounts;
       let _nis1Accounts: any = wallets.nis1Accounts;
-
+     
       _catapultAccounts.map((res, index) => {
         if (res.account.name == wallet['account'].name) {
           _catapultAccounts.splice(index, 1);
         }
       });
 
-      _nis1Accounts.map((res, index) => {
-        if (res.account.name == wallet['account'].name) {
-          _nis1Accounts.splice(index, 1);
-        }
-      });
+      if (_nis1Accounts && _nis1Accounts.length > 0) {
+        _nis1Accounts.map((res, index) => {
+          if (res.account.name == wallet['account'].name) {
+            _nis1Accounts.splice(index, 1);
+          }
+        });
+      }
+     
 
       let _wallets = {
         catapultAccounts: _catapultAccounts,
@@ -211,14 +218,17 @@ export class WalletProvider {
  */
   public getLocalWallets(): Promise<any> {
     return this.storage.get('myWallets').then(wallets => {
+      
       let complete = wallets[0]
       let _wallets = wallets[0].catapultAccounts ? wallets[0].catapultAccounts : {};
       const WALLETS = _wallets ? _wallets : [];
+      
       if (wallets[0].catapultAccounts != null) {
         if (wallets) {
           const walletsMap = WALLETS.map(walletFile => {
             return { account: <SimpleWallet>(walletFile.account), publicAccount: walletFile.publicAccount, walletColor: walletFile.walletColor };
           });
+
           _wallets = {
             catapultAccounts: walletsMap,
             encrypted: complete.encrypted,
