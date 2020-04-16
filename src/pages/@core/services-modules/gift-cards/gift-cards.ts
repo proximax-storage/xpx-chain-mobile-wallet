@@ -3,9 +3,8 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { App } from '../../../../providers/app/app';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
-import { MosaicInfo, Mosaic, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert, NamespaceId } from 'tsjs-xpx-chain-sdk';
+import { MosaicInfo, Mosaic, UInt64, TransferTransaction, Deadline, PlainMessage, Address, AggregateTransaction, Account, SignedTransaction, Convert, NamespaceId, MosaicId } from 'tsjs-xpx-chain-sdk';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Storage } from "@ionic/storage";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +21,6 @@ import { MosaicsProvider } from '../../../../providers/mosaics/mosaics';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
 @IonicPage()
 @Component({
   selector: 'page-gift-cards',
@@ -44,7 +42,6 @@ export class GiftCardsPage {
   form: FormGroup;
   hexadecimal: any;
   loading: boolean = true;
-  mosaicsID: any;
   mosaics: any;
   mosaicsHex: any;
   mosaicsAmount: any;
@@ -63,7 +60,6 @@ export class GiftCardsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private proximaxProvider: ProximaxProvider,
-    private storage: Storage,
     private translateService: TranslateService,
     private transferTransaction: TransferTransactionProvider,
     public utils: UtilitiesProvider,
@@ -74,24 +70,22 @@ export class GiftCardsPage {
     this.dataGif = this.navParams.data;
     this.mosaicsHex = this.dataGif[0].mosaicGift.toLowerCase()
     this.mosaicsAmount = this.dataGif[0].amountGift
-    // this.addressDetination = AppConfig.accountGiftTest 
-    // this.nameMosaic = AppConfig.nameNamespaceGiftTest
-    this.amountFormatter = this.mosaicsAmount 
+    this.amountFormatter = this.mosaicsAmount
     const idValue = UInt64.fromHex(this.mosaicsHex)
+    const isMisaic = this.proximaxProvider.validateIsMosaics(idValue)
 
-
-    console.log('############', idValue);
-    
-    this.nameNamespace(idValue)
-    // this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
-    this.mosaics = new Mosaic(new NamespaceId([idValue.lower, idValue.higher]), UInt64.fromUint(Number(this.mosaicsAmount)));
-    console.log('this.mosaics', this.mosaics);
-    
+    if (!isMisaic) {
+      console.log('is namespace');
+      this.mosaics = new Mosaic(new NamespaceId([idValue.lower, idValue.higher]), UInt64.fromUint(Number(this.mosaicsAmount)));
+      this.nameNamespace(idValue)
+    } else {
+      console.log('is mosaic');
+      this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
+      this.mosaicName(idValue)
+      this.dataMosaics(idValue)
+    }
     this.createForm()
-    // this.nameNamespace(idValue)
-    // this.dataMosaics()
     this.getAccountSelected()
-    // this.mosaicName()
     this.subscribeValue()
     this.calculateFeeTxComplete()
 
@@ -102,32 +96,22 @@ export class GiftCardsPage {
     }
   }
 
-
-  async nameNamespace (namespaceIds) {
-    console.log('**************', namespaceIds);
-    
+  async nameNamespace(namespaceIds) {
     const namespaceNames = await this.getNamespacesName([namespaceIds]);
-    console.log('**************namespaceNames', namespaceNames);
-    if(namespaceNames.length >0 && namespaceNames[0].name) {
+    if (namespaceNames.length > 0 && namespaceNames[0].name) {
       this.nameMosaic = namespaceNames[0].name
     }
-      
-      const namespace = await this.getNamespaces(namespaceIds);
-      console.log('**************namespace', namespace);
-      if(namespace) {
-        this.addressDetination = namespace['owner'].address
+    const namespace = await this.getNamespaces(namespaceIds);
+    if (namespace) {
+      this.addressDetination = namespace['owner'].address
 
-        if (this.addressDetination.pretty()) {
-          // this.test()
-          this.loading = false
-        }
-        // this.nameMosaic = namespaceNames[0].name
+      if (this.addressDetination.pretty()) {
+        this.loading = false
       }
-    // }
-
+    }
   }
 
-  
+
   async getNamespaces(namespaceIds: NamespaceId) {
     try {
       //Gets array of NamespaceName for an account
@@ -215,20 +199,16 @@ export class GiftCardsPage {
       []
     );
     this.feeMax = aggregateTx.maxFee.compact() * 20 / 100 + aggregateTx.maxFee.compact()
-
-    console.log('this.feeMax', this.feeMax);
-    
   }
 
   // OBTENER INFO DEL MOSAIC 
-  async dataMosaics() {
-    const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.mosaicsID.id]).toPromise();
+  async dataMosaics(id) {
+    const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([id]).toPromise();
     this.addressDetination = mosaicsFound[0].owner.address
     this.divisibility = mosaicsFound[0].divisibility
     this.amountFormatter = this.proximaxProvider.amountFormatter(this.mosaicsAmount, this.divisibility)
 
     if (this.addressDetination.pretty()) {
-      // this.test()
       this.loading = false
     }
 
@@ -238,13 +218,6 @@ export class GiftCardsPage {
       this.showTransferable = true
     }
   }
-
-  // test(){
-  //   this.mosaicsProvider.getMosaics(this.addressDetination).subscribe(async mosaics => {
-
-  //     console.log('\n ########_______******** \n', JSON.stringify(mosaics))
-  //   })
-  // }
 
   dismiss() {
     this.viewCtrl.dismiss();
@@ -274,13 +247,13 @@ export class GiftCardsPage {
   }
 
   // OBTENER NAME DEL MOSAIC 
-  async mosaicName() {
-    this.proximaxProvider.getMosaicsName([this.mosaicsID.id]).subscribe(name => {
+  async mosaicName(id) {
+    this.proximaxProvider.getMosaicsName([id]).subscribe(name => {
       this.nameMosaic = name[0].names[0].name
     })
   }
 
-  maxCacarcter () {
+  maxCacarcter() {
     let str = this.form.controls.idenficatorUser.value;
     return str.length > this.caracterMax ? this.form.setErrors([{ caracterMax: true }]) : null;
   }
@@ -297,8 +270,8 @@ export class GiftCardsPage {
 
   onSubmit() {
     let addressDetination: any
-    
-    if(this.form.controls.recipientAddress.value === ''){
+
+    if (this.form.controls.recipientAddress.value === '') {
       addressDetination = this.addressDetination
     } else {
       addressDetination = this.proximaxProvider.createFromRawAddress(this.form.controls.recipientAddress.value)
@@ -311,8 +284,8 @@ export class GiftCardsPage {
     const deadLine = Deadline.create()
     const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
 
-    
-    
+
+
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       addressDetination,
@@ -321,7 +294,7 @@ export class GiftCardsPage {
       networkType
     )
 
-    console.log('******************* toDetinationTx', JSON.stringify(toDetinationTx) );
+    console.log('******************* toDetinationTx', JSON.stringify(toDetinationTx));
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -331,7 +304,7 @@ export class GiftCardsPage {
       networkType
     )
 
-    console.log('################## toOriginTx', JSON.stringify(toOriginTx) );
+    console.log('################## toOriginTx', JSON.stringify(toOriginTx));
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -345,12 +318,12 @@ export class GiftCardsPage {
     );
 
     console.log('max fee de la agregafa', this.feeMax);
-    
-    console.log('---------------------- aggregateTransaction', JSON.stringify(aggregateTransaction) );
+
+    console.log('---------------------- aggregateTransaction', JSON.stringify(aggregateTransaction));
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
 
-    console.log('---------------------- signedTransaction', JSON.stringify(signedTransaction) );
+    console.log('---------------------- signedTransaction', JSON.stringify(signedTransaction));
     // console.log('\n signedTransaction \n', JSON.stringify(signedTransaction))
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
@@ -361,13 +334,13 @@ export class GiftCardsPage {
     this.transferTransaction.checkTransaction(signedTransaction).subscribe(status => {
 
       console.log('eoroeroeroeroeroeoreoreoroeoreoroer', JSON.stringify(status));
-      
+
       if (status.group && status.group === 'unconfirmed' || status.group === 'confirmed') {
         this.block = false;
         this.displaySuccessMessage = true;
         this.showSuccessMessage();
       } else {
-        if(status.status){
+        if (status.status) {
           this.showErrorMessage(status.status);
           this.block = false;
         } else {
@@ -384,7 +357,7 @@ export class GiftCardsPage {
     const codeUin8 = Convert.hexToUint8(code)
     const dniUin8 = Convert.hexToUint8(Convert.utf8ToHex(Convert.rstr2utf8(dni)))
     return this.concatUniArray(codeUin8, dniUin8)
- }
+  }
 
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });
@@ -405,7 +378,7 @@ export class GiftCardsPage {
   showErrorInesperado() {
     this.haptic.notification({ type: 'warning' });
     this.alertProvider.showMessage(this.translateService.instant("APP.ERROR"));
-    
+
   }
 
   showSuccessMessage() {

@@ -115,10 +115,13 @@
 
           <ion-item padding>
             <ion-label stacked>{{"WALLETS.CREATE.IMPORT.PRIVATE_KEY.LABEL" | translate}}</ion-label>
-            <ion-textarea rows="3" [maxlength]="configurationForm.privateKey.maxLength"
+            <!-- <ion-textarea rows="3" [maxlength]="configurationForm.privateKey.maxLength"
               [minlength]="configurationForm.privateKey.minLength" formControlName="privateKey" type="text"
               autocapitalize="none" placeholder="{{'WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER' | translate}}">
-            </ion-textarea>
+            </ion-textarea> -->
+            <ion-input [maxlength]="configurationForm.privateKey.maxLength"
+            [minlength]="configurationForm.privateKey.minLength" formControlName="privateKey" type="password"
+            placeholder="{{'WALLETS.CREATE.IMPORT.PRIVATE_KEY.PLACEHOLDER' | translate}}"></ion-input>
           </ion-item>
 
           <!-- PASSWORD -->

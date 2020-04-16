@@ -5,7 +5,6 @@ import { AlertProvider } from '../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { ProximaxProvider } from '../../providers/proximax/proximax';
-import { Storage } from "@ionic/storage";
 import { WalletProvider } from '../../providers/wallet/wallet';
 
 /**
@@ -32,7 +31,6 @@ export class ServicesPage {
     private translateService: TranslateService,
     private barcodeScanner: BarcodeScanner,
     private proximaxProvider: ProximaxProvider,
-    private storage: Storage,
     private walletProvider: WalletProvider, ) {
   }
 
@@ -74,7 +72,7 @@ export class ServicesPage {
     await this.getCurrentAccount();
     if (this.account != null) {
 
-      // FUNCION SCAN QUE CAPTURA LOS VALORES DEL QR Y LOS DESERIALIZA
+    //   // FUNCION SCAN QUE CAPTURA LOS VALORES DEL QR Y LOS DESERIALIZA
       this.barcodeScanner
         .scan()
         .then(barcodeData => {
@@ -114,16 +112,16 @@ export class ServicesPage {
       //  const dataHex = '00000000000000019384F0FBC75F957BE0A8F3003FB9298779667ABCB31C9FBDE800A7F8AA7E3F75CF231D202AB020FA30B200B8'
 // 
        // misaics transferable
-      //  const dataHex = '00000000000000013035777FC55F5D6FD757C04F0CDB10D9A9766EC58264D19D316DF79EAB97D6C2CF231D202AB020FA31B200B8'
+      //  const dataHex = '00000000000000019384F0FBC75F957BE0A8F3003FB9298779667ABCB31C9FBDE800A7F8AA7E3F7513BFC518E40549D730B200B8'
  
-        //  const dataFormat = this.proximaxProvider.unSerialize(dataHex)
-        //  if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
-        //    console.log('dataFormat', dataFormat);
+      //    const dataFormat = this.proximaxProvider.unSerialize(dataHex)
+      //    if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
+      //      console.log('dataFormat', dataFormat);
            
-        //    this.gotoGift('GiftCardsPage', dataFormat)
-        //  } else {
-        //    this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
-        //  } 
+      //      this.gotoGift('GiftCardsPage', dataFormat)
+      //    } else {
+      //      this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
+      //    } 
  
       // FIN DATA DE PRUEBA BINARIO CERIALIZADO DE LA GIFT CARD
 

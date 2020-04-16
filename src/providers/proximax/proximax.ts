@@ -421,10 +421,6 @@ export class ProximaxProvider {
     const mosaic = Convert.uint8ToHex(mosaicId)
     const type = this.hexToString(Convert.uint8ToHex(typeUin8))
     const code = Convert.uint8ToHex(codeUin8)
-
-    console.log(amountUin32);
-    console.log(codeUin8);
-    
     const dataScan = [{
       "amountGift": amount.compact(),
       "pkGift": privatekey,
@@ -432,9 +428,6 @@ export class ProximaxProvider {
       "typeGif": type,
       "codeGift": code
     }]
-
-    // console.log('dataScan', dataScan);
-    
     return dataScan;
   }
 
@@ -704,5 +697,10 @@ export class ProximaxProvider {
       map(multisigInfo => multisigInfo.cosignatories.length > 0),
       catchError(() => of(false))
     );
+  }
+
+  validateIsMosaics(id) {
+    const bits = 0x7FFFFFFF
+    return (id.higher | bits) == bits
   }
 }
