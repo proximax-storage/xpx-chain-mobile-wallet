@@ -101,8 +101,10 @@ export class GiftCardsPage {
     if (namespaceNames.length > 0 && namespaceNames[0].name) {
       this.nameMosaic = namespaceNames[0].name
     }
+    console.log('############################## namespace id', JSON.stringify(namespaceIds));
     const namespace = await this.getNamespaces(namespaceIds);
-    if (namespace) {
+    console.log('############################## namespace', JSON.stringify(namespace));
+    if (namespace && namespace['owner']) {
       this.addressDetination = namespace['owner'].address
 
       if (this.addressDetination.pretty()) {
@@ -284,8 +286,6 @@ export class GiftCardsPage {
     const deadLine = Deadline.create()
     const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
 
-
-
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       addressDetination,
@@ -293,8 +293,6 @@ export class GiftCardsPage {
       PlainMessage.create(msg),
       networkType
     )
-
-    console.log('******************* toDetinationTx', JSON.stringify(toDetinationTx));
     // toOriginTx
     const toOriginTx = TransferTransaction.create(
       deadLine,
@@ -303,8 +301,6 @@ export class GiftCardsPage {
       PlainMessage.create(msg),
       networkType
     )
-
-    console.log('################## toOriginTx', JSON.stringify(toOriginTx));
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
@@ -316,15 +312,8 @@ export class GiftCardsPage {
       [],
       UInt64.fromUint(this.feeMax)
     );
-
-    console.log('max fee de la agregafa', this.feeMax);
-
-    console.log('---------------------- aggregateTransaction', JSON.stringify(aggregateTransaction));
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
-
-    console.log('---------------------- signedTransaction', JSON.stringify(signedTransaction));
-    // console.log('\n signedTransaction \n', JSON.stringify(signedTransaction))
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
       next => console.log('Tx sent......'),
@@ -332,23 +321,14 @@ export class GiftCardsPage {
     );
 
     this.transferTransaction.checkTransaction(signedTransaction).subscribe(status => {
-
-      console.log('eoroeroeroeroeroeoreoreoroeoreoroer', JSON.stringify(status));
-
+      this.block = false;
       if (status.group && status.group === 'unconfirmed' || status.group === 'confirmed') {
-        this.block = false;
         this.displaySuccessMessage = true;
         this.showSuccessMessage();
       } else {
-        if (status.status) {
-          this.showErrorMessage(status.status);
-          this.block = false;
-        } else {
-          this.showErrorInesperado();
-        }
+        this.showErrorMessage(status.status);
       }
     }, error => {
-      this.block = false;
       this.showErrorMessage(error);
     })
   }
@@ -361,7 +341,7 @@ export class GiftCardsPage {
 
   showErrorMessage(error) {
     this.haptic.notification({ type: 'warning' });
-    console.log(error);
+    console.log('error', error);
     if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
       this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.NOTES.PLACEHOLDER"));
     } else if (error.toString().indexOf('Failure_Core_Insufficient_Balance') >= 0) {
@@ -373,12 +353,6 @@ export class GiftCardsPage {
         error
       );
     }
-  }
-
-  showErrorInesperado() {
-    this.haptic.notification({ type: 'warning' });
-    this.alertProvider.showMessage(this.translateService.instant("APP.ERROR"));
-
   }
 
   showSuccessMessage() {
@@ -452,14 +426,11 @@ export class GiftCardsPage {
       const accountRecipient = value !== undefined && value !== null && value !== "" ? value.split("-").join("") : "";
       if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
         if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.addressOrigin.pretty(), accountRecipient)) {
-          // this.blockSendButton = true;
           this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
-          // this.blockSendButton = false;
           this.msgErrorUnsupported = "";
         }
       } else {
-        // this.blockSendButton = true;
         this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID");
       }
     });
