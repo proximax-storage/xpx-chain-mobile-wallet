@@ -91,16 +91,16 @@
   outline: none;
 }
 
-[gradient-button][color-1] {
-  background-image: linear-gradient(
-    to right,
-    #00735f,
-    #00735f,
-    #00735f,
-    #00735f
-  );
-  box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
-}
+// [gradient-button][color-1] {
+//   background-image: linear-gradient(
+//     to right,
+//     #00735f,
+//     #00735f,
+//     #00735f,
+//     #00735f
+//   );
+//   box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+// }
 [gradient-button][color-2] {
   background-image: linear-gradient(
     to right,
@@ -111,16 +111,16 @@
   );
   // box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
 }
-[gradient-button][color-3] {
-  background-image: linear-gradient(
-    to right,
-    #667eea,
-    #764ba2,
-    #6b8dd6,
-    #8e37d7
-  );
-  box-shadow: 0 4px 15px 0 rgba(116, 79, 168, 0.75);
-}
+// [gradient-button][color-3] {
+//   background-image: linear-gradient(
+//     to right,
+//     #667eea,
+//     #764ba2,
+//     #6b8dd6,
+//     #8e37d7
+//   );
+//   box-shadow: 0 4px 15px 0 rgba(116, 79, 168, 0.75);
+// }
 [gradient-button][color-4] {
   background-image: linear-gradient(
     to right,
@@ -131,26 +131,26 @@
   );
   // box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
 }
-[gradient-button][color-5] {
-  background-image: linear-gradient(
-    to right,
-    #1F6B86,
-    #008C9B,
-    #00AD9F,
-    #56CB93
-  );
-  // box-shadow: 0 2px 12px 0  rgba(0, 173, 159, .65)
-}
-[gradient-button][color-6] {
-  background-image: linear-gradient(
-    to right,
-    #2EBECC,
-    #2FCFC4,
-    #58DEB3,
-    #89EB9B
-  );
-  // box-shadow: 0 2px 12px 0 rgba(47, 207, 196, .65);
-}
+// [gradient-button][color-5] {
+//   background-image: linear-gradient(
+//     to right,
+//     #1F6B86,
+//     #008C9B,
+//     #00AD9F,
+//     #56CB93
+//   );
+//   // box-shadow: 0 2px 12px 0  rgba(0, 173, 159, .65)
+// }
+// [gradient-button][color-6] {
+//   background-image: linear-gradient(
+//     to right,
+//     #2EBECC,
+//     #2FCFC4,
+//     #58DEB3,
+//     #89EB9B
+//   );
+//   // box-shadow: 0 2px 12px 0 rgba(47, 207, 196, .65);
+// }
 [gradient-button][color-7] {
   background-image: linear-gradient(
     to right,
@@ -184,12 +184,18 @@
 [gradient-button][color-10] {
   background-image: linear-gradient(
     to right,
-    #F4820A
+    #2EBECC,
+    #2FCFC4,
+    #58DEB3,
+    #89EB9B
   );
 }
 [gradient-button][color-11] {
   background-image: linear-gradient(
     to right,
-    #7E0101
+    #1F6B86,
+    #008C9B,
+    #00AD9F,
+    #56CB93
   );
 }

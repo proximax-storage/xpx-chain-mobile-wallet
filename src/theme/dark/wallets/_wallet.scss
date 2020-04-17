@@ -39,35 +39,16 @@ ion-slide {
 }
 
 .wallet-logo {
-  height: 59px;
+  height: 24px;
 }
 
+.wallet-logo-add {
+  height: 40px;
+}
 .wallet-front-logo {
   position: absolute;
-  top: 8px;
-  // right: 228px;
-}
-
-.wallet-front-logo-new {
-  position: absolute;
-  top: 8px;
-  // right: 249px;
-}
-
-.wallet-text {
-  position: absolute;
-  top: 4px;
-  // right: 175px;
-  color: white;
-  font-size: 13px;
-}
-
-.wallet-text-new {
-  position: absolute;
-  top: 4px;
-  // right: 198px;
-  color: white;
-  font-size: 13px;
+  top: 24px;
+  right: 24px;
 }
 
 .wallet-number {

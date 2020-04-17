@@ -22,7 +22,7 @@
       [attr.selected]="selectedAccount?.name === account.account?.name ? true : null">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="account.walletColor" (click)="showWalletDetails(account)">
-          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+          <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
           <!-- <p class="wallet-text ">{{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p> -->
 
           <div *ngIf="!tablet">
@@ -50,9 +50,9 @@
     <ion-slide (click)="showAddWalletPrompt()">
       <div class="wallet">
         <div class="wallet-content" [ngClass]="'wallet-create'">
-          <img class="wallet-create-front-logo wallet-logo" style="display:block; margin:auto; color: #7E0101;"
+          <img class="wallet-create-front-logo wallet-logo-add" style="display:block; margin:auto; color: #15485f;"
             src="assets/imgs/wallet-add.svg">
-          <h2 class="wallet-create-title" style="text-align: center; color: #7E0101;">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
+          <h2 class="wallet-create-title" style="text-align: center; color: #15485f;">{{"WALLETS.CREATE.TITLE" | translate}}</h2>
           <p class="wallet-create-subtitle" style="text-align: center">{{"WALLETS.CREATE.DESC" | translate}}</p>
         </div>
       </div>

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="04" id="io.proximax.two4onewallet" ios-CFBundleVersion="01" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Two4one Wallet</name>
-    <description>A simple and secure wallet to store, send and receive your digital assets.</description>
-    <author email="two4oneapp@gmail.com">Two4one</author>
+<widget android-versionCode="04" id="o.proximax.siriuschainwallet" ios-CFBundleVersion="01" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>ProximaX Sirius Wallet</name>
+    <description>A simple and secure wallet to store, send and receive your ProximaX based digital assets. </description>
+    <author email="core.dev@proximax.io" href="http://proximax.io/">ProximaX Limited</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

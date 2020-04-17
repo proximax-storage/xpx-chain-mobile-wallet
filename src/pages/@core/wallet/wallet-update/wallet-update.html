@@ -22,14 +22,14 @@
 
       <ion-col>
         <div class="wallet">
-          <div class="wallet-content" [ngClass]="walletColor" >
-            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
+          <div class="wallet-content" [ngClass]="walletColor">
+            <img class="wallet-front-logo wallet-logo" src="assets/imgs/logo-proximax-sirius-wallet-white.svg">
             <!-- <p class="wallet-text ">{{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p> -->
-  
+
             <div *ngIf="!tablet">
               <p class="wallet-number">{{ walletAddress }}</p>
             </div>
-  
+
             <div class="wallet-label" style="font-size: 14px !important;">
               <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
               {{ walletName}}
@@ -46,28 +46,6 @@
           </div>
         </div>
       </ion-col>
-      <!-- <ion-col>
-        <div class="wallet">
-          <div class="wallet-content" [ngClass]="walletColor" text-center>
-            <img class="wallet-front-logo-new wallet-logo" src="assets/imgs/logo-two4one-mobile-wallet.svg">
-            <p class="wallet-text-new"> {{ "APP.HOME-1" | translate }} <br> {{ "APP.HOME-2" | translate }}</p>
-            <p class="wallet-number">{{walletAddress}}</p>
-            <div class="wallet-label" style="text-align: start !important;">
-              <span class="wallet-label"><strong>{{"WALLETS.ACCOUNT" | translate}}:</strong></span>
-              {{ walletName}}
-            </div>
-            <div class="wallet-label" style="text-align: start !important;">
-              <span class="wallet-label"><strong style="text-align: start !important;">XPX
-                  {{"WALLETS.BALANCE" | translate}}:</strong></span> <span class="wallet-space-25 wallet-label">
-                {{ amountXpx }}</span>
-            </div>
-            <div class="wallet-space-25 wallet-label">
-              <span class="wallet-label"><strong>US$
-                </strong></span>{{ (walletTotal>0?walletTotal:0) | number : '1.2-2'}}
-            </div>
-          </div>
-        </div>
-      </ion-col> -->
       <ion-col col-12 text-center>
         <br>
         <h3 ion-text color="dark">{{"WALLETS.COMMON.CHOOSE_COLOR" | translate}}</h3>
@@ -83,8 +61,29 @@
           <div class="color-box ">
             <button three (click)="changeWalletColor('wallet-3')"></button>
           </div>
+          <div class="color-box">
+            <button four (click)="changeWalletColor('wallet-4')"></button>
+          </div>
         </div>
       </ion-col>
+      <!-- <ion-col col-12>
+      </ion-col>
+      <ion-col text-center>
+        <div class="color-palette">
+          <div class="color-box ">
+            <button five (click)="changeWalletColor('wallet-5')"></button>
+          </div>
+          <div class="color-box">
+            <button six (click)="changeWalletColor('wallet-6')"></button>
+          </div>
+          <div class="color-box">
+            <button seven (click)="changeWalletColor('wallet-7')"></button>
+          </div>
+          <div class="color-box ">
+            <button eight (click)="changeWalletColor('wallet-8')"></button>
+          </div>
+        </div>
+      </ion-col> -->
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
           <ion-item transparent padding>
