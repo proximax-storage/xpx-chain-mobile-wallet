@@ -83,11 +83,9 @@
     </ion-row>
 
     <ion-row align-items-center *ngIf="delete && export && public">
-      <ion-col col="12" align-self-center>
         <button reduce-margin gradient-button quarter-width color-11 medium (click)="showWalletPublickey()">
           {{"WALLETS.EXPORT.EXPORT_PUBLIC_KEY" | translate}}
         </button>
-      </ion-col>
     </ion-row>
 
     <ion-row *ngIf="exportPublic">
