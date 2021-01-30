@@ -242,18 +242,15 @@ export class TransactionComponent {
           this.showTx = true;
         }
         break;
-
       case TransactionType.AGGREGATE_COMPLETE:
-
-
-
-        const valid = this.IsJsonString(this.tx['innerTransactions'][0].message.payload);
+        let valid = null
+        if(this.tx['innerTransactions'][0]["message"] && this.tx['innerTransactions'][0].message.payload) {
+        valid = this.IsJsonString(this.tx['innerTransactions'][0].message.payload);
+        }
         if (valid) {
           const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([this.tx['innerTransactions'][0].mosaics[0].id]).toPromise();
-          // console.log('mosaicsFoundmosaicsFoundmosaicsFound', this.tx['innerTransactions']);
           const msg = JSON.parse(this.tx['innerTransactions'][0]["message"].payload);
           if (msg && msg["type"] && msg["type"] === "gift") {
-            // console.log('---------------', this.tx['innerTransactions'][0]);
             if (this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.mosaicXpxInfo.id) {
               this.MESSAGE_ = "Sirius Gift Card";
               this.MOSAIC_INFO = null;
@@ -261,32 +258,16 @@ export class TransactionComponent {
               this.LOGO = App.LOGO.SIRIUSGIFTCARD;
               this.showTx = true;
               this.statusViewDetail = true;
-            // } else if(this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.namespaceLikipia){
             } else{
-
-              console.log('this.tx[innerTransactions][0].mosaics[0].id.toHex()', this.tx['innerTransactions'][0].mosaics[0].id.toHex());
-              
-              // this.proximaxProvider.getMosaicsName([this.tx['innerTransactions'][0].mosaics[0].id]).subscribe(name => {
               let namespaceIds = new NamespaceId([this.tx['innerTransactions'][0].mosaics[0].id.id.lower, this.tx['innerTransactions'][0].mosaics[0].id.id.higher])
               const name  = await this.proximaxProvider.namespaceHttp.getNamespacesName([namespaceIds]).toPromise();
               this.MESSAGE_ = name[0].name
               this.MOSAIC_INFO = null;
               this.AMOUNT = this.tx['innerTransactions'][0].mosaics[0].amount.compact();
-              this.LOGO = App.LOGO.OTHERGIFTCARD;
+              this.LOGO = App.LOGO.SIRIUSGIFTCARD;
               this.showTx = true;
               this.statusViewDetail = true;
-            // })
             } 
-            // else {
-              
-            //   this.MESSAGE_ = "Gift Card";
-            //   this.MOSAIC_INFO = null;
-            //   this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
-            //   this.LOGO = App.LOGO.SIRIUS;
-            //   this.showTx = true;
-            //   this.statusViewDetail = true;
-            // }
-
           } else {
             let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
             this.MESSAGE_ = 'Other Transactions';
@@ -307,22 +288,6 @@ export class TransactionComponent {
           this.statusViewDetail = false;
           this.showTx = true;
         }
-
-
-        // if (valid) {
-        //   const data = JSON.parse(this.tx['innerTransactions'][0].message.payload);
-        //   if (data.type && data.type === 'gift') {
-        //     console.log('***************** data', data);
-        //     this.MESSAGE_ = 'Burnt Gift Ca';
-        //     this.MOSAIC_INFO = null;
-        //     this.AMOUNT = null;
-        //     this.LOGO = App.LOGO.BONDED;
-        //     this.statusViewDetail = false;
-        //     this.showTx = true;
-
-
-        //   } 
-        // } 
         break;
       default:
         let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);

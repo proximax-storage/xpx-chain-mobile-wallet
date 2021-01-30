@@ -195,17 +195,17 @@ export class UtilitiesProvider {
   getLogo(mosaic: DefaultMosaic | string) {
     try {
       if (!mosaic) {
-        return AppProvider.LOGO.OTHERGIFTCARD;
+        return AppProvider.LOGO.SIRIUS;
       } else if (typeof(mosaic) === 'string') {
         if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
         } else {
           if (mosaic.toLowerCase()  === AppConfig.namespaceLikipia) {
-            return AppProvider.LOGO.OTHERGIFTCARD;
+            return AppProvider.LOGO.SIRIUS;
           }
         }
 
-        return AppProvider.LOGO.OTHERGIFTCARD;
+        return AppProvider.LOGO.SIRIUS;
       } else {
         if (
           (
@@ -238,7 +238,7 @@ export class UtilitiesProvider {
           ) ||
           mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
         ) {
-          return AppProvider.LOGO.OTHERGIFTCARD;
+          return AppProvider.LOGO.SIRIUS;
         } else if (
           mosaic.namespaceId &&
           mosaic.namespaceId !== '' &&
@@ -264,11 +264,11 @@ export class UtilitiesProvider {
         ) {
           return AppProvider.LOGO.XAR;
         } else {
-          return AppProvider.LOGO.OTHERGIFTCARD;
+          return AppProvider.LOGO.SIRIUS;
         }
       }
     } catch (error) {
-      return AppProvider.LOGO.OTHERGIFTCARD;
+      return AppProvider.LOGO.SIRIUS;
     }
   }
 

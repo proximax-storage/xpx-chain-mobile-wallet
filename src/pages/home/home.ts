@@ -76,6 +76,7 @@ export class HomePage {
   address: any;
   amountXpx: string;
   mosaicFound: any = [];
+  darkMode: boolean = true;
 
   constructor(
     public app: App,
@@ -94,7 +95,9 @@ export class HomePage {
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
-  ) {this.mosaicFound = []; }
+  ) {this.mosaicFound = []; 
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.darkMode = prefersDark.matches;}
 
   ionViewWillEnter() {
     this.utils.setHardwareBack();
@@ -127,8 +130,10 @@ export class HomePage {
     this.showLoaders();
     this.walletProvider.getAccountsCatapult().then(catapulAccounts => {
       this.accounts = catapulAccounts;
+      // console.log('this.accounts', this.accounts)
       if (this.accounts.length > 0) {
         this.walletProvider.getAccountSelected().then(selectedAccount => {
+          // console.log('selectedAccount', selectedAccount)
 
           if (selectedAccount) {
             this.selectedAccount = selectedAccount;
@@ -147,6 +152,8 @@ export class HomePage {
           try {
 
             this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics => {
+              console.log('mosaics', mosaics)
+              
               if (mosaics === null) {
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
@@ -278,15 +285,15 @@ export class HomePage {
    * @param {PublicAccount} publicAccount
    * @memberof HomePage
    */
-  getConfirmedTxn(publicAccount: PublicAccount, id = null) {
+  getConfirmedTxn(publicAccount: PublicAccount) {
+    
     let options: LoadingOptions = {
       content: "Loading..."
     };
-
     let loader = this.loadingCtrl.create(options);
     loader.present();
-    this.isLoading = true;
-    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount, id).subscribe(transactions => {
+    // this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
       this.isLoading = false;
       loader.dismiss();
       if (transactions.length > 0) {
@@ -295,7 +302,6 @@ export class HomePage {
         transactions.forEach(element => {
           txn.push(element);
         });
-
         this.confirmedTransactions = txn;
       }
     }, error => {
@@ -344,11 +350,6 @@ export class HomePage {
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
       if (transactions) {
-
-        console.log('transactionstransactionstransactions', transactions);
-        
-        // const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
-        // this.aggregateTransactions = transferTransactionsAggregate;
         this.aggregateTransactions = transactions;
         this.showEmptyTransaction = false;
       } else {

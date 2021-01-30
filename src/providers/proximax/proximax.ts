@@ -212,6 +212,11 @@ export class ProximaxProvider {
     return this.blockHttp.getBlockByHeight(height);
   }
 
+
+  getBlockInfoApp(url, height): Observable<BlockInfo> {
+    const blockHttp = new BlockHttp(url);
+    return blockHttp.getBlockByHeight(height);
+  }
   /**
    *
    *
@@ -221,7 +226,7 @@ export class ProximaxProvider {
    * @returns {Observable<Transaction[]>}
    * @memberof ProximaxProvider
    */
-  getTransactionsFromAccountId(publicAccount: PublicAccount, id: any = null, queryParams: number = 10): Observable<Transaction[]> {
+  getTransactionsFromAccountId(publicAccount: PublicAccount, id: any = null, queryParams: number = 100): Observable<Transaction[]> {
     const query = (id) ? new QueryParams(queryParams, id) : new QueryParams(queryParams);
     return this.accountHttp.transactions(publicAccount, query);
   }
