@@ -11,6 +11,7 @@ import { AuthProvider } from '../../../../providers/auth/auth';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
 import { Password } from 'tsjs-xpx-chain-sdk';
 import { AppConfig } from '../../../../app/app.config';
+import { ContactsProvider } from '../../../../providers/contacts/contacts';
 
 /**
  * Generated class for the WalletAddPage page.
@@ -51,6 +52,7 @@ export class WalletAddPage {
     private alertProvider: AlertProvider,
     private authProvider: AuthProvider,
     private walletProvider: WalletProvider,
+    public contactsProvider: ContactsProvider,
   ) {
 
     this.configurationForm = this.sharedService.configurationForm;
@@ -124,7 +126,7 @@ export class WalletAddPage {
   }
 
   goToBackup(wallet, password) {
-    return this.navCtrl.push('WalletBackupPage', {wallet: wallet, password: password});
+    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, password: password });
   }
 
   goHome() {
@@ -147,8 +149,12 @@ export class WalletAddPage {
           } else {
             this.walletProvider.storeWalletCatapult(this.catapultWallet, null, this.walletColor, new Password(form.password), '').then(_ => {
 
-              console.log('#######', _);
-              
+              const data = {
+                name: form.name.replace(" ", "-").concat('-owner'),
+                address: this.catapultWallet.address.plain(),
+                telegram: ""
+              }
+              this.contactsProvider.push(data)
               this.goToBackup(this.catapultWallet, form.password);
             });
           }

@@ -1,9 +1,3 @@
-<!--
-  Generated template for the ServicesPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-content background>
   <ion-list title transparent>
     <ion-item transparent>
@@ -16,84 +10,22 @@
   </ion-list>
 
   <ion-list transparent-items>
-  <!-- Uncomment to add Address Book -->
-  <ion-card (click)="goto('ContactListPage')">
-    <ion-item>
-      <ion-icon item-left name="custom-address"></ion-icon>
-      <h2>{{"SERVICES.ADDRESS_BOOK.TITLE" | translate}}</h2>
-      <!-- <p text-wrap>{{"SERVICES.ADDRESS_BOOK.DESC" | translate}}</p> -->
-    </ion-item>
-  </ion-card>
-
-  <!-- Uncomment to add multisig -->
-  <!-- <ion-card (click)="showModal('MultisigSupportPage')">
-    <ion-item>
-      <ion-icon item-left name="custom-multisig"></ion-icon>
-      <h2>{{"SERVICES.MULTISIGN_SUPPORT.TITLE" | translate}}</h2>
-      <p text-wrap>{{"SERVICES.MULTISIGN_SUPPORT.DESC" | translate}}</p>
-    </ion-item>
-  </ion-card> -->
-
-  <!-- <ion-card (click)="goto('FaucetPage')">
-    <ion-item>
-      <ion-icon item-left name="custom-faucet"></ion-icon>
-      <h2> {{ "SERVICES.TESTNET_FAUCET.TITLE" | translate }}</h2>
-      <p text-wrap>{{ "SERVICES.TESTNET_FAUCET.DESC" | translate}}</p>
-    </ion-item>
-  </ion-card> -->
-
-  <ion-card (click)="goto('Nis1WalletListPage')">
+    <ion-card (click)="goto('ContactListPage')">
+      <ion-item>
+        <ion-icon item-left name="custom-address"></ion-icon>
+        <h2>{{"SERVICES.ADDRESS_BOOK.TITLE" | translate}}</h2>
+      </ion-item>
+    </ion-card>
+      <ion-card (click)="goto('Nis1WalletListPage')">
     <ion-item>
       <ion-icon item-left name="custom-swap"></ion-icon>
       <h2>{{ "SERVICES.SWAP_PROCESS.TITLE" | translate }}</h2>
-      <!-- <p text-wrap>{{ "SERVICES.SWAP_PROCESS.DESC" | translate}}</p> -->
     </ion-item>
   </ion-card>
-
-
-
-  <!-- QR code of NEM address -->
-  <!-- <ion-card (click)="goto('NamespaceListPage')">
-    <ion-item>
-      <ion-icon item-left name="ios-albums-outline"></ion-icon>
-      <h2>Namespaces</h2>
-      <p text-wrap>Namespaces are domain names. Each namespace is unique and authenticates mosaics (assets) issued on it or on its subdomains.</p>
-    </ion-item>
-  </ion-card>
-
-  <ion-card (click)="goto('MosaicListPage')">
-    <ion-item>
-      <ion-icon item-left name="ios-apps-outline"></ion-icon>
-      <h2>Mosaics</h2>
-      <p text-wrap>Mosaics are assets that expose additional properties and other features. To be able to create a mosaic, an account must rent at least one root namespace</p>
-    </ion-item>
-  </ion-card> -->
-
-  <!-- Uncomment to add Harvesting -->
-  <!-- <ion-card (click)="showComingSoon()">
-    <ion-item>
-      <ion-icon item-left name="ios-leaf-outline"></ion-icon>
-      <h2>Harvesting</h2>
-      <p text-wrap>Allows "mining" even while your account is closed.</p>
-    </ion-item>
-  </ion-card> -->
-
-  <!-- Uncomment to add Apostille -->
-  <!-- <ion-card (click)="showComingSoon()">
-    <ion-item>
-      <ion-icon item-left name="ios-at-outline"></ion-icon>
-      <h2>Apostille</h2>
-      <p text-wrap>Use the NEM Apostille service to create blockchain based notarizations to time stamp, follow and audit file authenticity.</p>
-    </ion-item>
-  </ion-card> -->
-
-  <!-- Uncomment to add Voting -->
-  <!-- <ion-card (click)="showComingSoon()">
-    <ion-item>
-      <ion-icon item-left name="ios-pie-outline"></ion-icon>
-      <h2>Voting</h2>
-      <p text-wrap>Create and vote on polls</p>
-    </ion-item>
-  </ion-card>
+    <ion-card (click)="scanGiftCards()">
+      <ion-item>
+        <ion-icon item-left name="custom-gift"></ion-icon>
+        <h2>{{ "SERVICES.GIFT_CARD.TITLE" | translate }}</h2>
+      </ion-item>
+    </ion-card>
   </ion-list>
-</ion-content> -->

@@ -65,7 +65,6 @@ export class TransferDetailComponent {
   private async _getMosaicInfo() {
     try {
       // Get mosaic details
-      // console.log('\n\n this.tx.mosaics', this.tx.mosaics);
 
       if (this.tx.mosaics && this.tx.mosaics.length > 0) {
         const mosaics: Mosaic[] = this.tx.mosaics;
@@ -82,7 +81,6 @@ export class TransferDetailComponent {
               } else {
                 const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
                 const namespaceNames = await this.getNamespacesName(namespaceIds);
-                let name = '';
                 if (namespaceNames.length > 0) {
                   const exist = namespaceNames.find(name => name.namespaceId.toHex() === new NamespaceId([element.id.id.lower, element.id.id.higher]).toHex());
                   if (exist && exist.name) {
@@ -93,7 +91,6 @@ export class TransferDetailComponent {
             } else {
               const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
               const namespaceNames = await this.getNamespacesName(namespaceIds);
-              let name = '';
               if (namespaceNames.length > 0) {
                 const exist = namespaceNames.find(name => name.namespaceId.toHex() === new NamespaceId([element.id.id.lower, element.id.id.higher]).toHex());
                 if (exist && exist.name) {
@@ -111,7 +108,6 @@ export class TransferDetailComponent {
               name: name
             }));
           } else {
-            console.log('1.......... MOSAIC NOT FOUND ---->');
             const namespaceIds = mosaics.map(x => new NamespaceId([x.id.id.lower, x.id.id.higher]))
             const namespaceNames = await this.getNamespacesName(namespaceIds);
             let name = '';

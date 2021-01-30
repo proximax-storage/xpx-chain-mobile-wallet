@@ -45,8 +45,8 @@
             <span>{{ currentNode }}</span>
           </ion-item>
 
-          <ion-item select-node no-lines style="font-size: 13px !important;">
-            <ion-label ion-text color="dark"><strong>{{"SETTINGS.NODES" | translate}}:</strong></ion-label>
+          <ion-item select-node no-lines>
+            <strong>{{"SETTINGS.NODES" | translate}}:</strong>
             <ion-select (ionChange)="onChange()" [(ngModel)]="selectedNode" [selectOptions]="{
                   title: 'SETTINGS.NODES.SELECT' | translate,
                   subTitle: ''        
@@ -79,7 +79,7 @@
 
   <ion-row>
     <ion-col col-12 text-center>
-      <button half-width gradient-button color-5 ion-button icon-end no-margin color="dark" (click)="dismiss()">
+      <button half-width gradient-button color-11 ion-button icon-end no-margin (click)="dismiss()">
         {{"WALLETS.BUTTON.DONE" | translate}}
       </button>
     </ion-col>

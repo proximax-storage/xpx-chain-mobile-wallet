@@ -73,6 +73,8 @@ export class WalletDeletePage {
   }
 
   async onSubmit() {
+    // console.log('#################################this.selectedWallet', JSON.stringify(this.selectedWallet));
+    
       this.haptic.notification({ type:'success'});
     await this.walletProvider
       .deleteWallet(this.selectedWallet)

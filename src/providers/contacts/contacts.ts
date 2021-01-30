@@ -64,6 +64,9 @@ export class ContactsProvider {
    * @memberof ContactsProvider
    */
   push(contact) {
+
+    console.log('contactcontactcontact', contact);
+    
     return this.doesContactExist(contact).then(doesContactExist => {
       if (!doesContactExist) {
         return this.getAll().then(contacts => {

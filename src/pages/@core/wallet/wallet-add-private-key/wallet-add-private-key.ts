@@ -15,6 +15,7 @@ import { SharedService, ConfigurationForm } from '../../../../providers/shared-s
 import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { ContactsProvider } from '../../../../providers/contacts/contacts';
 /**
  * Generated class for the WalletAddPrivateKeyPage page.
  *
@@ -67,9 +68,9 @@ export class WalletAddPrivateKeyPage {
     private sharedService: SharedService,
     private barcodeScanner: BarcodeScanner,
     private proximaxProvider: ProximaxProvider,
+    public contactsProvider: ContactsProvider,
   ) {
     this.accountColor = 'wallet-1';
-    this.storage.set("isQrActive", true);
     this.configurationForm = this.sharedService.configurationForm;
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     this.createForm();
@@ -100,7 +101,14 @@ export class WalletAddPrivateKeyPage {
         if (!existAccount) {
           this.nis1Account = this.nem.createPrivateKeyWallet(form.name, form.password, form.privateKey);
           this.walletProvider.storeWalletCatapult(this.catapultAccount, this.nis1Account, this.accountColor, new Password(form.password), this.prefix).then(_ => {
-            this.goToBackup(this.catapultAccount, form.privateKey);
+            
+            const data = {
+              name: form.name.replace(" ", "-").concat('-owner'),
+              address: this.catapultAccount.address.plain(),
+              telegram: ""
+            }
+            this.contactsProvider.push(data)
+            this.goToBackup(this.catapultAccount, form.privateKey, form.password);
           });
 
           const nis1Account = this.nem.createAccountPrivateKey(form.privateKey);
@@ -177,8 +185,8 @@ export class WalletAddPrivateKeyPage {
    * @returns
    * @memberof WalletAddPrivateKeyPage
    */
-  goToBackup(wallet: SimpleWallet, privateKey: string) {
-    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, privateKey: privateKey });
+  goToBackup(wallet: SimpleWallet, privateKey: string, password: string) {
+    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, privateKey: privateKey, password: password });
   }
 
   /**
@@ -213,8 +221,6 @@ export class WalletAddPrivateKeyPage {
    */
   ionViewDidLeave() {
     // show tabs when page is dismissed
-    this.storage.set("isQrActive", true);
-
     let tabs = document.querySelectorAll('.tabbar');
     if (tabs !== null) {
       Object.keys(tabs).map((key) => {
@@ -229,7 +235,6 @@ export class WalletAddPrivateKeyPage {
    * @memberof WalletAddPrivateKeyPage
    */
   ionViewDidLoad() {
-    this.storage.set('isQrActive', true);
   }
 
   minName() {

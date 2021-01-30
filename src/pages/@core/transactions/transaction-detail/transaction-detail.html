@@ -26,8 +26,8 @@
     <transfer-detail *ngIf="tx?.type === TransactionType.TRANSFER || tx?.type === TransactionType.AGGREGATE_BONDED" [tx]="tx" [mosaics]="mosaics"
       [owner]="currentAccount?.account.address.address"></transfer-detail>
 
-    <!-- if importance transfer -->
-    <!-- <importance-transfer-detail *ngIf="tx.type == TransactionTypes.IMPORTANCE_TRANSFER" [tx]="tx"></importance-transfer-detail> -->
+    <!-- if gift cards -->
+    <importance-transfer-detail *ngIf="tx.type == TransactionType.AGGREGATE_COMPLETE" [tx]="tx"></importance-transfer-detail>
 
     <!-- if mosaic definition -->
     <!-- <mosaic-definition-detail *ngIf="tx.type == TransactionTypes.MOSAIC_DEFINITION" [tx]="tx"></mosaic-definition-detail> -->

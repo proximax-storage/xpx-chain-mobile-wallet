@@ -59,6 +59,7 @@ export class PostsProvider {
           } else {
             resolve(posts.length);
           }
+        }).catch(error => {console.log(error);
         })
       })
     })

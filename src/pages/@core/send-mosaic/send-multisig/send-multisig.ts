@@ -146,11 +146,9 @@ export class SendMultisigPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SendMultisigPage');
-    this.storage.set('isQrActive', true);
   }
 
   ionViewDidLeave() {
-    this.storage.set('isQrActive', false);
   }
 
 
@@ -241,7 +239,6 @@ export class SendMultisigPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
     this.barcodeScanner.scan().then(barcodeData => {
       console.log('Barcode data', barcodeData);
       barcodeData.format = "QR_CODE";

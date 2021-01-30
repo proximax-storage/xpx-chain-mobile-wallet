@@ -10,7 +10,7 @@ ion-slide {
 }
 
 .alert-wrapper {
-  border: 2px solid #01454d !important;
+  // border: 2px solid #01454d !important;
   border-radius: 2rem !important;
 }
 
@@ -42,6 +42,9 @@ ion-slide {
   height: 24px;
 }
 
+.wallet-logo-add {
+  height: 40px;
+}
 .wallet-front-logo {
   position: absolute;
   top: 24px;
@@ -56,8 +59,8 @@ ion-slide {
   letter-spacing: 1px;
   color: #fff;
   text-align: center;
-  margin-bottom: 20px;
-  margin-top: 50px;
+  margin-bottom: 10px;
+  margin-top: 60px;
 }
 
 .wallet-space-75 {

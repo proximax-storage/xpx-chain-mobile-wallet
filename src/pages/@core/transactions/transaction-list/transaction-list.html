@@ -33,7 +33,7 @@
             <p text-justify address *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
           </ion-item>
         </ion-list>
-        <button gradient-button quarter-width color-5 medium (click)="moreDetails()">
+        <button gradient-button quarter-width color-11 medium (click)="moreDetails()">
           {{"WALLETS.MORE_DETAILS" | translate}}
         </button>
       </ion-card-content>
@@ -148,13 +148,13 @@
     <ion-grid normal>
       <ion-row>
         <ion-col>
-          <button (click)="showReceiveModal()" gradient-button full color-5 ion-button icon-start no-margin>
+          <button (click)="showReceiveModal()" gradient-button full color-11 ion-button icon-start no-margin>
             <ion-icon name="custom-receive"></ion-icon>
             {{"WALLETS.RECEIVE" | translate}}
           </button>
         </ion-col>
         <ion-col>
-          <button (click)="showSendModal()" gradient-button full color-6 ion-button icon-end no-margin>
+          <button (click)="showSendModal()" gradient-button full color-10 ion-button icon-end no-margin>
             {{"WALLETS.SEND" | translate}}
             <ion-icon name="custom-send"></ion-icon>
           </button>

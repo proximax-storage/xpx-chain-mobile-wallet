@@ -34,6 +34,7 @@ import {
   Deadline,
   Mosaic,
   Convert,
+  SignedTransaction,
 } from 'tsjs-xpx-chain-sdk';
 import { crypto } from 'js-xpx-chain-library';
 import { MosaicNames } from 'tsjs-xpx-chain-sdk/dist/src/model/mosaic/MosaicNames';
@@ -95,6 +96,10 @@ export class ProximaxProvider {
       this.blockHttp = new BlockHttp(this.httpUrl);
 
     })
+  }
+
+  announceTx(signedTransaction: SignedTransaction) {
+    return this.transactionHttp.announce(signedTransaction)
   }
 
   /**
@@ -170,7 +175,7 @@ export class ProximaxProvider {
           this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
           return null;
         }
-        
+
         if (common) {
           return common.privateKey;;
         }
@@ -196,7 +201,7 @@ export class ProximaxProvider {
     // return null;
     return this.accountHttp.getAccountInfo(address);
   }
-  
+
   /**
    * Gets a BlockInfo for a given block height
    *  @param height - Block height
@@ -207,6 +212,11 @@ export class ProximaxProvider {
     return this.blockHttp.getBlockByHeight(height);
   }
 
+
+  getBlockInfoApp(url, height): Observable<BlockInfo> {
+    const blockHttp = new BlockHttp(url);
+    return blockHttp.getBlockByHeight(height);
+  }
   /**
    *
    *
@@ -216,7 +226,7 @@ export class ProximaxProvider {
    * @returns {Observable<Transaction[]>}
    * @memberof ProximaxProvider
    */
-  getTransactionsFromAccountId(publicAccount: PublicAccount, id: any = null, queryParams: number = 10): Observable<Transaction[]> {
+  getTransactionsFromAccountId(publicAccount: PublicAccount, id: any = null, queryParams: number = 100): Observable<Transaction[]> {
     const query = (id) ? new QueryParams(queryParams, id) : new QueryParams(queryParams);
     return this.accountHttp.transactions(publicAccount, query);
   }
@@ -261,7 +271,7 @@ export class ProximaxProvider {
     return this.accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(queryParams))
       .pipe(
         flatMap(txn => txn),
-        filter((txn: Transaction) => txn.type === TransactionType.AGGREGATE_BONDED),
+        filter((txn: Transaction) => txn.type === TransactionType.AGGREGATE_BONDED || txn.type === TransactionType.AGGREGATE_COMPLETE),
         map(txn => <AggregateTransaction>txn),
         toArray()
       );
@@ -337,12 +347,12 @@ export class ProximaxProvider {
   }
 
   /**
-   *
-   *
-   * @param {MosaicId[]} mosaicIsd
-   * @returns {Observable<MosaicInfo[]>}
-   * @memberof ProximaxProvider
-   */
+  *
+  *
+  * @param {MosaicId[]} mosaicIsd
+  * @returns {Observable<MosaicInfo[]>}
+  * @memberof ProximaxProvider
+  */
   getMosaics(mosaicIsd: MosaicId[]): Observable<MosaicInfo[]> {
     return this.mosaicHttp.getMosaics(mosaicIsd);
   }
@@ -397,6 +407,42 @@ export class ProximaxProvider {
     return Convert.isHexString(data);
   }
 
+  unSerialize(hex) {
+    const dataUin8 = Convert.hexToUint8(hex)
+    const amountUin8 = new Uint8Array(8)
+    let  amountUin32 = new Uint32Array(2)
+    const pkUin8 = new Uint8Array(32)
+    const mosaicId = new Uint8Array(8)
+    const typeUin8 = new Uint8Array(1)
+    const codeUin8 = new Uint8Array(3)
+    amountUin8.set(new Uint8Array(dataUin8.subarray(0, 8)), 0)
+    pkUin8.set(new Uint8Array(dataUin8.subarray(8, 40)), 0)
+    mosaicId.set(new Uint8Array(dataUin8.subarray(40, 48)), 0)
+    typeUin8.set(new Uint8Array(dataUin8.subarray(48, 49)), 0)
+    codeUin8.set(new Uint8Array(dataUin8.subarray(49, dataUin8.byteLength)), 0)
+    amountUin32 = Convert.uint8ToUint32(amountUin8)
+    const amount = UInt64.fromHex(Convert.uint8ToHex(amountUin8))
+    const privatekey = Convert.uint8ToHex(pkUin8)
+    const mosaic = Convert.uint8ToHex(mosaicId)
+    const type = this.hexToString(Convert.uint8ToHex(typeUin8))
+    const code = Convert.uint8ToHex(codeUin8)
+    const dataScan = [{
+      "amountGift": amount.compact(),
+      "pkGift": privatekey,
+      "mosaicGift": mosaic,
+      "typeGif": type,
+      "codeGift": code
+    }]
+    return dataScan;
+  }
+
+  hexToString(hex) {
+    var string = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      string += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return string;
+  }
   /**
    *
    *
@@ -600,9 +646,9 @@ export class ProximaxProvider {
     //   namespace
     // );
   }
-getMosaicId(id: string | number[]): MosaicId {
-  return new MosaicId(id);
-}
+  getMosaicId(id: string | number[]): MosaicId {
+    return new MosaicId(id);
+  }
   /**
  * Get the namespaces owned by the NEM address
  * @param address The NEM address
@@ -612,7 +658,7 @@ getMosaicId(id: string | number[]): MosaicId {
     return;
   }
 
- getMosaicsName(mosaicsId: MosaicId[]): Observable<MosaicNames[]> {
+  getMosaicsName(mosaicsId: MosaicId[]): Observable<MosaicNames[]> {
     return this.mosaicHttp.getMosaicsNames(mosaicsId); // Update-sdk-dragon
   }
   /**
@@ -656,5 +702,10 @@ getMosaicId(id: string | number[]): MosaicId {
       map(multisigInfo => multisigInfo.cosignatories.length > 0),
       catchError(() => of(false))
     );
+  }
+
+  validateIsMosaics(id) {
+    const bits = 0x7FFFFFFF
+    return (id.higher | bits) == bits
   }
 }

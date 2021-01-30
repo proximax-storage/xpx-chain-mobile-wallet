@@ -45,13 +45,17 @@ white: #FFFFFF,
 bg: #EFEFEF,
 grey: #666666,
 success: #00735f,
+orange: #F4820A,
 
 darkgreen: #b2e1d9,
 tabbgcolor: #17abda,
-gothic: #708A9C,
+gothic: #828486,
 puerto-rico-green: #43BDB5,
 
 
+// wallet-1: #333333,
+// wallet-2: #470304,
+// wallet-3: #1B3D26,
 wallet-1: #001029,
 wallet-2: #003849,
 wallet-3: #00A48B,
@@ -187,6 +191,9 @@ ion-icon {
   }
   &[class*="custom-swap"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-swap-gray.svg);
+  }
+  &[class*="custom-gift"] {
+    mask-image: url(../../../../assets/imgs/icon-wallet/icon-sirius-gift-green.svg);
   }
   &[class*="custom-guide"] {
     mask-image: url(../../../../assets/imgs/icon-wallet/icon-wallet-guide-green.svg);

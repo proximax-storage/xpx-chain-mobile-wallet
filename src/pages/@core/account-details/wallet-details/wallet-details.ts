@@ -40,6 +40,9 @@ export class WalletDetailsPage {
   configurationForm: ConfigurationForm = {};
   privateKey: string = '';
   amountXpx: any;
+  exportPublic: boolean = false;
+  public: boolean = true;
+  publicAccount: any;
 
 
   constructor(
@@ -62,6 +65,10 @@ export class WalletDetailsPage {
     this.totalBalance = this.navParams.get('totalBalance');
     this.amountXpx = this.navParams.get('amountXpx');
     this.selectedAccount = this.navParams.get('selectedAccount');
+    this.publicAccount = this.navParams.data.selectedAccount.publicAccount.publicKey
+
+    console.log('this.publicAccount', this.publicAccount);
+    
     this.createForm();
   }
 
@@ -103,18 +110,58 @@ export class WalletDetailsPage {
     this.pass = true;
     this.export = false
     this.deletePass = false;
-    this.delete = true
+    this.delete = false
+    this.exportPublic = false;
+    this.public = false
     this.form.get("password").setValue('');
   }
 
-  cancel(val) {
-    if (val === 1) {
+  showWalletDelete() {
+    this.deletePass = true;
+    this.delete = false
+    this.pass = false;
+    this.export = false
+    this.exportPublic = false;
+    this.public = false
+    this.form.get("password").setValue('');
+  }
+
+  showWalletPublickey() {
+    this.exportPublic = true;
+    this.public = false
+    this.deletePass = false;
+    this.delete = false
+    this.pass = false;
+    this.export = false
+    
+    this.form.get("password").setValue('');
+  }
+
+  cancel() {
+    // if (val === 1) {
       this.pass = false;
-      this.export = true
-    } else {
       this.deletePass = false;
+      this.exportPublic = false;
       this.delete = true
-    }
+      this.public = true
+      this.export = true
+      console.log('cancel 1');
+    // } 
+  //   else if (val === 2){
+  //     this.deletePass = false;
+  //     this.delete = true
+  //     this.public = true
+  //     this.export = true
+  //     console.log('cancel 2');
+  //   } else {
+  //     this.exportPublic = false;
+  //     this.delete = true
+  //     this.public = true
+  //     this.export = true
+  // console.log('cancel 3');
+
+  //   }
+
     this.form.get("password").setValue('');
   }
 
@@ -127,8 +174,7 @@ export class WalletDetailsPage {
 
     if (this.privateKey && this.privateKey !== '' && (this.privateKey.length === 64 || this.privateKey.length === 66)) {
       if (Number(val)  === 1) {
-        this.pass = false;
-        this.export = true
+        this.cancel()
 
         this.haptic.notification({ type: 'success' });
         this.socialSharing
@@ -142,10 +188,23 @@ export class WalletDetailsPage {
             this.dismiss();
           });
       } else if (Number(val) === 2) {
-        this.deletePass = false;
-        this.delete = true
         let page = "WalletDeletePage";
         this.showModal(page, { wallet: this.selectedAccount });
+        this.cancel()
+      } else if (Number(val) === 3){
+        console.log('acep 3 ');
+        this.cancel()
+        this.haptic.notification({ type: 'success' });
+        this.socialSharing
+          .share(
+            `Public key of ${this.selectedAccount.account.name}: \n${this.publicAccount}`,
+            null,
+            null,
+            null
+          )
+          .then(_ => {
+            this.dismiss();
+          });
       }
       this.form.get("password").setValue('');
     } else {
@@ -162,13 +221,7 @@ export class WalletDetailsPage {
     this.showModal(page, { wallet: this.selectedAccount, amountXpx: this.amountXpx, totalBalance: this.totalBalance });
   }
 
-  showWalletDelete() {
-    this.deletePass = true;
-    this.delete = false
-    this.pass = false;
-    this.export = true
-    this.form.get("password").setValue('');
-  }
+
 
   showModal(page, params) {
     const modal = this.modalCtrl.create(page, params, {

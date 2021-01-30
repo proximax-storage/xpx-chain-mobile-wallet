@@ -5,7 +5,7 @@
   
         <!-- Show MosaicInfo -->
         <ng-container *ngIf="(MOSAIC_INFO && MOSAIC_INFO?.fullName ) || (!MOSAIC_INFO && MESSAGE_ !== '')">
-          <h2 ion-text color="dark" style="display: flex;">
+          <h2 ion-text color="black" style="display: flex; font-size: 12px !important;">
             <ng-container *ngIf="MOSAIC_INFO?.fullName">
               {{ MOSAIC_INFO.fullName }}
             </ng-container>
@@ -24,7 +24,7 @@
   
         <section item-right>
           <ng-container *ngIf="AMOUNT">
-            <h2 text-right ion-text color="dark">
+            <h2 text-right ion-text>
               {{ AMOUNT  }}
             </h2>
           </ng-container>
@@ -35,15 +35,15 @@
             </small>
           </p> -->
   
-          <p float-right ion-text *ngIf="status === 'Confirmed'" color="success">
+          <p float-right ion-text *ngIf="status === 'Confirmed'" color="dark">
             <small>{{status}}</small>
           </p>
   
-          <p float-right ion-text *ngIf="status === 'Unconfirmed'" color="danger">
+          <p float-right ion-text *ngIf="status === 'Unconfirmed'" color="dark">
             <small>{{status}}</small>
           </p>
   
-          <p float-right ion-text *ngIf="status === 'Partial'" color="grey">
+          <p float-right ion-text *ngIf="status === 'Partial'" color="dark">
             <small>{{status}}</small>
           </p>
         </section>

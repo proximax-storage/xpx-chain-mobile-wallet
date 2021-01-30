@@ -43,13 +43,13 @@
       <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
         <ion-icon name='custom-address' item-start></ion-icon>
         {{"WALLETS.ADDRESS" | translate}}:
-        <p text-justify *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
+        <p class='black' text-justify *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
       </ion-item>
 
     </ion-list>
 
-    <ion-row *ngIf="export  && delete">
-      <button reduce-margin gradient-button quarter-width color-5 medium (click)="showExportPrivateKeyModal()">
+    <ion-row *ngIf="export  && delete && public">
+      <button reduce-margin gradient-button quarter-width color-11 medium (click)="showExportPrivateKeyModal()">
         {{"WALLETS.EXPORT.EXPORT_PRIVATE_KEY" | translate}}
       </button>
     </ion-row>
@@ -71,24 +71,59 @@
 
     <ion-row *ngIf="pass">
       <ion-col>
-        <button (click)="cancel(1)" gradient-button full color-5 no-margin>
+        <button (click)="cancel()" gradient-button full color-11 no-margin>
           {{"WALLETS.BUTTON.CANCEL" | translate}}
         </button>
       </ion-col>
       <ion-col>
-        <button (click)="aceptar(1)" [disabled]="form.invalid" gradient-button full color-5 no-margin>
+        <button (click)="aceptar(1)" [disabled]="form.invalid" gradient-button full color-11 no-margin>
           {{"WALLETS.BUTTON.CONFIRM" | translate}}
         </button>
       </ion-col>
     </ion-row>
 
-    <ion-row *ngIf="export && delete">
-      <button reduce-margin gradient-button quarter-width color-5 medium (click)="showWalletUpdate()">
+    <ion-row align-items-center *ngIf="delete && export && public">
+      <button reduce-margin gradient-button quarter-width color-11 medium (click)="showWalletPublickey()">
+        {{"WALLETS.EXPORT.EXPORT_PUBLIC_KEY" | translate}}
+      </button>
+    </ion-row>
+
+    <ion-row *ngIf="exportPublic">
+      <form [formGroup]="form">
+        <ion-item transparent padding>
+          <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+          <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+            <ion-icon item-right color="dark" [name]="passwordIcon">
+            </ion-icon>
+          </button>
+        </ion-item>
+      </form>
+    </ion-row>
+
+    <ion-row *ngIf="exportPublic">
+      <ion-col>
+        <button (click)="cancel()" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CANCEL" | translate}}
+        </button>
+      </ion-col>
+      <ion-col>
+        <button (click)="aceptar(3)" [disabled]="form.invalid" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CONFIRM" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="export && delete && public">
+      <button reduce-margin gradient-button quarter-width color-11 medium (click)="showWalletUpdate()">
         {{"WALLETS.EDIT" | translate}}
       </button>
     </ion-row>
 
-    <ion-row align-items-center *ngIf="delete && export">
+
+    <ion-row align-items-center *ngIf="delete && export && public">
       <ion-col col="12" align-self-center>
         <button text-center full ion-button color="danger" clear (click)="showWalletDelete()">
           {{"WALLETS.DELETE" | translate}}
@@ -113,12 +148,12 @@
 
     <ion-row *ngIf="deletePass">
       <ion-col>
-        <button (click)="cancel(2)" gradient-button full color-5 no-margin>
+        <button (click)="cancel()" gradient-button full color-11 no-margin>
           {{"WALLETS.BUTTON.CANCEL" | translate}}
         </button>
       </ion-col>
       <ion-col>
-        <button (click)="aceptar(2)" [disabled]="form.invalid" gradient-button full color-5 no-margin>
+        <button (click)="aceptar(2)" [disabled]="form.invalid" gradient-button full color-11 no-margin>
           {{"WALLETS.BUTTON.CONFIRM" | translate}}
         </button>
       </ion-col>

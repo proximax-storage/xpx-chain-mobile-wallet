@@ -93,7 +93,8 @@ export class VerificationCodePage {
   onSubmit(pin: string) {
     const verifyPinTitle = this.translateService.instant("APP.PIN.VERIFY.TITLE");
     let status: string = this.navParams.data.status;
-    // let destination = this.navParams.data.destination;
+    let destination = this.navParams.data.destination;
+
     let pinParams = this.navParams.data.pin;
     if (status === 'setup') {
       let page = "VerificationCodePage";
@@ -102,7 +103,7 @@ export class VerificationCodePage {
         title: verifyPinTitle,
         subtitle: " ",
         pin: this.pin.hash(pin),
-        destination: 'TabsPage'
+        destination: destination
       };
       return this.utils.showModal(page, data);
     }
@@ -110,7 +111,7 @@ export class VerificationCodePage {
     if (status === "verify" && BcryptJS.compareSync(pin, pinParams)) {
       this.haptic.notification({ type: 'success' });
       this.navCtrl.getActive()
-      let page = "TabsPage";
+      let page = destination;
       this.isVerify = true;
       this.previousPin = pin;
       return this.pin.set(pin).then(_ => {
@@ -131,7 +132,7 @@ export class VerificationCodePage {
       this.pin.compare(pin).then(isMatch => {
         if (isMatch) {
           this.haptic.notification({ type: 'success' });
-          let page = "TabsPage";
+          let page = destination;
           this.isVerify = true;
           this.previousPin = pin;
 

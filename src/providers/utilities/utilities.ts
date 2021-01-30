@@ -197,8 +197,12 @@ export class UtilitiesProvider {
       if (!mosaic) {
         return AppProvider.LOGO.SIRIUS;
       } else if (typeof(mosaic) === 'string') {
-        if (mosaic  === AppConfig.xpxHexId) {
+        if (mosaic.toLowerCase()  === AppConfig.xpxHexId) {
           return AppProvider.LOGO.XPX;
+        } else {
+          if (mosaic.toLowerCase()  === AppConfig.namespaceLikipia) {
+            return AppProvider.LOGO.SIRIUS;
+          }
         }
 
         return AppProvider.LOGO.SIRIUS;
@@ -220,6 +224,21 @@ export class UtilitiesProvider {
           mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.mosaicXpxInfo.namespaceId.toLowerCase()
         ) {
           return AppProvider.LOGO.XPX;
+        } else if (
+          (
+            mosaic.namespaceId &&
+            mosaic.namespaceId !== '' &&
+            mosaic.namespaceId.toLowerCase() === 'prx' ||
+            mosaic.namespaceId.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
+          ) &&
+          (
+            mosaic.mosaicId &&
+            mosaic.mosaicId !== '' &&
+            mosaic.mosaicId.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
+          ) ||
+          mosaic.hex !== '' && mosaic.hex.toLowerCase() === AppConfig.namespaceLikipia.toLowerCase()
+        ) {
+          return AppProvider.LOGO.SIRIUS;
         } else if (
           mosaic.namespaceId &&
           mosaic.namespaceId !== '' &&

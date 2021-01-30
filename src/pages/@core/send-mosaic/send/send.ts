@@ -26,7 +26,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
 import { Password, MosaicId } from 'tsjs-xpx-chain-sdk';
-import { emit } from 'cluster';
 
 /**
  * Generated class for the SendPage page.
@@ -210,7 +209,6 @@ export class SendPage {
   // }
 
   createForm() {
-    this.storage.set("isQrActive", true);
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: "",
@@ -471,7 +469,6 @@ export class SendPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
     this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true });
     this.barcodeScanner.scan().then(barcodeData => {
       barcodeData.format = "QR_CODE";

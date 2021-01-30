@@ -1,11 +1,14 @@
 ion-alert.alert-md,
 ion-alert.alert-ios {
   .alert-title,
-  .alert-sub-title,
-  .alert-radio-label,
   .alert-message,
   .alert-button-group .alert-button .button-inner {
     color: color($colors, dark);
+  }
+
+  .alert-sub-title,
+  .alert-radio-label {
+    color: color($colors, black);
   }
 
   [aria-checked='true'] .alert-radio-icon,

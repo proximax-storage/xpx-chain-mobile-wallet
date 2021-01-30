@@ -1,0 +1,166 @@
+<ion-header no-border>
+  <ion-navbar transparent>
+    <ion-title>
+      <strong>
+        <span ion-text color="dark"> {{ "GIFT_CARD.TITLE" | translate }}</span>
+      </strong>
+    </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only ion-text color="dark" (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content fullscreen background>
+  <ion-grid *ngIf="!displaySuccessMessage">
+    <ion-row>
+      <ion-col col-12 text-center *ngIf="!showTransferable && !noSoported">
+        <ion-list transparent-items>
+          <!-- Mosaic -->
+          <ion-card>
+            <ion-item>
+              <ion-avatar item-start>
+                <img [src]="utils.getLogo(mosaicsHex)">
+              </ion-avatar>
+              <p text-uppercase ion-text color="dark" *ngIf="!nameMosaic">
+                {{ mosaicsHex }}</p>
+              <p text-uppercase ion-text color="dark" *ngIf="nameMosaic">
+                {{ nameMosaic }}</p>
+              <section item-right>
+                <h3 style="padding-top: 3px !important;" color="black"><strong> {{ amountFormatter }} </strong></h3>
+              </section>
+            </ion-item>
+          </ion-card>
+          <!-- To -->
+          <h6 margin-left text-left ion-text color="dark">
+            {{"WALLETS.SEND.LABEL.TO" | translate}}
+          </h6>
+          <ion-card>
+            <!-- NO TRANSFERIBLE-->
+            <ion-item *ngIf="!showTransferable">
+              <img item-left logo-small color="dark" [src]="App.USER">
+              <p small ion-text color="black" *ngIf="addressDetination">
+                {{ addressDetination.pretty() }}
+              </p>
+              <ion-spinner name="crescent" *ngIf="loading" style="padding-right: 228px !important;"></ion-spinner>
+            </ion-item>
+            <!-- TRANSFERIBLE -->
+            <ion-item select-contact no-lines *ngIf="showTransferable">
+              <ion-label ion-text color="dark"></ion-label>
+              <ion-select [selectOptions]="{title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate, subTitle: ''}"
+                [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}"
+                (ionChange)="onChangeTo($event)">
+                <ion-option value="manual">{{"WALLETS.SEND.ADDRESS.OPTION1" | translate}}</ion-option>
+                <ion-option value="contact">{{"WALLETS.SEND.ADDRESS.OPTION2" | translate}}</ion-option>
+              </ion-select>
+            </ion-item>
+          </ion-card>
+          <!-- SELECTED CONTACS -->
+          <ion-card *ngIf="addressSourceType.to === 'contact'" (click)="selectContact('to')">
+            <ion-item>
+              <img item-left logo-small [src]="App.USER">
+              <h2 ion-text color="black">
+                {{ form.get('recipientName').value || "WALLETS.SEND.ADDRESS.OPTION2" | translate }}
+              </h2>
+              <p small ion-text color="black">
+                {{ form.get('recipientAddress').value || '' }}</p>
+            </ion-item>
+          </ion-card>
+          <!-- INPUT FORM RECIPIENT ADDRESS -->
+          <form [formGroup]="form">
+            <ion-card no-margin-bottom *ngIf="addressSourceType.to === 'manual' && showTransferable">
+              <ion-item>
+                <ion-input formControlName="recipientAddress" type="text" value=""
+                  placeholder="{{'WALLETS.SEND.ADDRESS' | translate}}"></ion-input>
+                <button clear item-right ion-button icon-only (click)="scan()">
+                  <ion-icon color="white" name="custom-qrcode"></ion-icon>
+                </button>
+              </ion-item>
+            </ion-card>
+            <div *ngIf="msgErrorUnsupported !== ''">
+              <strong style="color:red;padding-right: 17rem;">{{msgErrorUnsupported}}</strong>
+            </div>
+            <!-- Description -->
+            <h6 margin-left text-left ion-text color="dark">
+              {{"SERVICES.GIFT_CARD.CARD.DESC" | translate}}
+            </h6>
+            <ion-card no-margin-bottom>
+              <ion-item>
+                <ion-textarea ion-text color="black" autosize rows="2" ion-text formControlName="idenficatorUser"
+                  placeholder="{{'WALLETS.GIFT_CARD.DESC.PLACEHOLDER' | translate}}" (ionChange)="maxCacarcter()">
+                </ion-textarea>
+              </ion-item>
+            </ion-card>
+            <div *ngIf="form.controls.idenficatorUser.invalid">
+              <p error padding-left text-left style="color: #e06e36 !important; margin-top: -4px!important;"
+                *ngFor="let error of form.errors">
+                <strong>{{ (error.caracterMax ? ('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: caracterMax }) :'') }}</strong>
+              </p>
+            </div>
+          </form>
+          <!-- CARD NUMBER -->
+          <h6 margin-left text-left ion-text color="dark">
+            {{"SERVICES.GIFT_CARD.CARD.ID" | translate}}
+          </h6>
+          <ion-card>
+            <ion-item>
+              <p ion-text text-wrap color="black">
+                <span>
+                  {{ dataGif[0].codeGift }}
+                </span>
+              </p>
+            </ion-item>
+          </ion-card>
+        </ion-list>
+      </ion-col>
+      <ion-col *ngIf="noSoported">
+        <ion-grid padding empty>
+          <ion-row>
+            <ion-col>
+              <p>
+              </p>
+            </ion-col>
+          </ion-row>
+          <br>
+          <ion-row>
+            <ion-col>
+              <img quarter-width [src]="App.STICKERS.SORRY">
+              <h6 ion-text color="grey" text-wrap>
+                <strong>{{"APP.MESSAGE.ERROR_GIFY_NOT_SUPPOR" | translate}}</strong>
+              </h6>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+      <ion-col col-12 text-center *ngIf="!showTransferable && !noSoported">
+        <ion-col buttons col-12 text-center>
+          <button gradient-button ion-button color-11 type="submit" color="dark"
+            [disabled]="block || msgErrorUnsupported || dataGif[0].typeGif === '1' && form.controls.recipientAddress.value === '' || form.controls.idenficatorUser.invalid"
+            (click)="onSubmit()">
+            {{"WALLETS.BUTTON.CONFIRM" | translate}}
+            <ion-spinner color="white" *ngIf="block" style="padding-right: 38px !important;"></ion-spinner>
+          </button>
+        </ion-col>
+      </ion-col>
+      <ion-col col-12 text-center *ngIf="noSoported">
+        <ion-col buttons col-12 text-center>
+          <button gradient-button ion-button color-11 type="submit" color="dark" (click)="dismiss()">
+            {{"WALLETS.BUTTON.CANCEL" | translate}}
+            <ion-spinner color="white" *ngIf="block" style="padding-right: 38px !important;"></ion-spinner>
+          </button>
+        </ion-col>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div padding *ngIf="displaySuccessMessage" class="achievement-container">
+    <div class="medal">
+      <img class="image" src="assets/imgs/success.svg" />
+    </div>
+    <div padding class="message">
+      <h5 text-center>{{"APP.MESSAGE.SUCCESS.TITLE" | translate}}</h5>
+      <p text-center>{{"APP.MESSAGE.SUCCESS.SUBTITLE" | translate}}</p>
+    </div>
+  </div>
+</ion-content>

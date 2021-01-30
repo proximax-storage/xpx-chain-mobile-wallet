@@ -19,7 +19,6 @@ import {
   AggregateTransaction,
   PublicAccount,
   MosaicId,
-  NamespaceId,
 } from "tsjs-xpx-chain-sdk";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { App as AppConfi } from "../../providers/app/app";
@@ -53,40 +52,31 @@ import { AppConfig } from './../../app/app.config';
 export class HomePage {
   amount: string;
   hex: string;
-
   mosaicName: string[];
-
   @ViewChild(Slides) slides: Slides;
-
   menu = "mosaics";
   AppConfi = AppConfi;
-
   mosaics: Array<DefaultMosaic> = [];
   accounts: Array<CatapultsAccountsInterface> = [];
-
   data: any[] = [];
   totalWalletBalance = 0;
-
   App = App;
   TransactionType = TransactionType;
-
   unconfirmedTransactions: Array<Transaction> = [];
   aggregateTransactions: Array<AggregateTransaction> = [];
   confirmedTransactions = [];
   showEmptyTransaction: boolean = false;
   showEmptyMosaic: boolean = false;
   isLoading: boolean = false;
-
   tablet: boolean;
-
   selectedWallet: CatapultsAccountsInterface;
   selectedAccount: CatapultsAccountsInterface;
   accountInfo: AccountInfo;
-
   @ViewChild(Nav) navChild: Nav;
   address: any;
   amountXpx: string;
   mosaicFound: any = [];
+  darkMode: boolean = true;
 
   constructor(
     public app: App,
@@ -105,12 +95,12 @@ export class HomePage {
     private transactionsProvider: TransactionsProvider,
     public loadingCtrl: LoadingController,
     private proximaxProvider: ProximaxProvider
-  ) {this.mosaicFound = []; }
-
+  ) {this.mosaicFound = []; 
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.darkMode = prefersDark.matches;}
 
   ionViewWillEnter() {
     this.utils.setHardwareBack();
-    console.log('\n\n ------------ ionViewWillEnter ---> this.init() -------------------');
     this.init();
   }
 
@@ -133,14 +123,18 @@ export class HomePage {
       content: "Loading..."
     };
 
+    
     let loader = this.loadingCtrl.create(options);
     loader.present();
     this.totalWalletBalance = 0;
     this.showLoaders();
     this.walletProvider.getAccountsCatapult().then(catapulAccounts => {
       this.accounts = catapulAccounts;
+      // console.log('this.accounts', this.accounts)
       if (this.accounts.length > 0) {
         this.walletProvider.getAccountSelected().then(selectedAccount => {
+          // console.log('selectedAccount', selectedAccount)
+
           if (selectedAccount) {
             this.selectedAccount = selectedAccount;
           } else {
@@ -156,8 +150,14 @@ export class HomePage {
 
           this.address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address'])
           try {
+
             this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics => {
+              console.log('mosaics', mosaics)
+              
               if (mosaics === null) {
+                this.getConfirmedTxn(this.selectedAccount.publicAccount);
+                this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
+                this.getTransactionsAggregate(this.selectedAccount.publicAccount);
                 this.showEmptyMessage();
                 this.hideLoaders();
                 loader.dismiss();
@@ -172,7 +172,7 @@ export class HomePage {
 
                 let mosaicXpx = mosaics.filter(other => other.hex === AppConfig.xpxHexId);
 
-                console.log('mosaicXpx', mosaicXpx);
+                // console.log('mosaicXpx', mosaicXpx);
                 if(mosaicXpx && mosaicXpx.length > 0){
                   this.amountXpx = this.getAbsoluteAmount(mosaicXpx[0].amountCompact, mosaicXpx[0].divisibility);
                 }
@@ -186,6 +186,7 @@ export class HomePage {
                     element.name = value.names[0].name;
                   }
                 }
+
                 this.mosaics = mosaics;
                 this.getConfirmedTxn(this.selectedAccount.publicAccount);
                 this.getTransactionsUnconfirmed(this.selectedAccount.publicAccount);
@@ -221,12 +222,9 @@ export class HomePage {
    * @memberof HomePage
    */
   async onWalletSelect(selectedAccount: CatapultsAccountsInterface) {
-    console.log('\n\n-----------onWalletSelect --> init()-----------------\n\n');
-
     if (this.selectedAccount.account === selectedAccount.account) {
       this.selectedAccount = selectedAccount;
     }
-
     await this.walletProvider.setSelectedAccount(selectedAccount).then(async () => {
       await this.init();
     });
@@ -287,15 +285,15 @@ export class HomePage {
    * @param {PublicAccount} publicAccount
    * @memberof HomePage
    */
-  getConfirmedTxn(publicAccount: PublicAccount, id = null) {
+  getConfirmedTxn(publicAccount: PublicAccount) {
+    
     let options: LoadingOptions = {
       content: "Loading..."
     };
-
     let loader = this.loadingCtrl.create(options);
     loader.present();
-    this.isLoading = true;
-    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount, id).subscribe(transactions => {
+    // this.isLoading = true;
+    this.transactionsProvider.getAllTransactionsFromAccount(publicAccount).subscribe(transactions => {
       this.isLoading = false;
       loader.dismiss();
       if (transactions.length > 0) {
@@ -304,7 +302,6 @@ export class HomePage {
         transactions.forEach(element => {
           txn.push(element);
         });
-
         this.confirmedTransactions = txn;
       }
     }, error => {
@@ -353,8 +350,6 @@ export class HomePage {
     this.isLoading = true;
     this.transactionsProvider.getAllTransactionsAggregate(publicAccount).subscribe(transactions => {
       if (transactions) {
-        // const transferTransactionsAggregate: Array<AggregateTransaction> = transactions.filter(tx => tx.innerTransactions[0].type == TransactionType.TRANSFER);
-        // this.aggregateTransactions = transferTransactionsAggregate;
         this.aggregateTransactions = transactions;
         this.showEmptyTransaction = false;
       } else {

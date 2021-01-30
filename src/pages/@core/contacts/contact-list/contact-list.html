@@ -23,11 +23,11 @@
       <ion-col>
         <img half-width [src]="App.STICKERS.SORRY">
 
-        <h6 ion-text color="grey" text-wrap>
+        <h6 ion-text color="black" text-wrap>
           <strong>{{"APP.EMPTY.CONTACT" | translate}}</strong>
         </h6>
 
-        <button gradient-button color-5 (click)="showAddContactPrompt()">
+        <button gradient-button color-11 (click)="showAddContactPrompt()">
           {{"SERVICES.ADDRESS_BOOK.ADD_CONTACT" | translate}}
         </button>
       </ion-col>
@@ -39,17 +39,17 @@
       <ion-item>
         <!-- <img item-left logo-small [src]="App.USER"> -->
         <ion-icon item-start ion-text color="dark" name="custom-account"></ion-icon>
-        <h2 ion-text color="dark">{{ contact.name }}</h2>
-        <p small ion-text color="dark">{{ contact.address }}</p>
+        <h2 ion-text color="black">{{ contact.name }}</h2>
+        <p small ion-text color="black">{{ contact.address }}</p>
         <ion-icon item-end ion-text color="dark" name="ios-arrow-forward"></ion-icon>
       </ion-item>
     </ion-card>
 
     <section margin-top text-center>
-      <button no-margin gradient-button circle color-5 (click)="showAddContactPrompt()">
+      <button no-margin gradient-button circle color-11 (click)="showAddContactPrompt()">
         <ion-icon name="md-add"></ion-icon>
       </button>
-      <p text-wrap ion-text color="dark">{{"SERVICES.ADDRESS_BOOK.ADD_CONTACT" | translate}}</p>
+      <p text-wrap ion-text color="black">{{"SERVICES.ADDRESS_BOOK.ADD_CONTACT" | translate}}</p>
     </section>
   </ion-list>
 </ion-content>

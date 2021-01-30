@@ -8,8 +8,8 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { CustomSimpleWallet } from '../../../../providers/wallet/simple-wallet';
 
 /**
  * Generated class for the WalletUpdatePage page.
@@ -26,7 +26,7 @@ import { SharedService, ConfigurationForm } from '../../../../providers/shared-s
 export class WalletUpdatePage {
   App = App;
   formGroup: FormGroup;
-  selectedWallet: SimpleWallet;
+  selectedWallet: CustomSimpleWallet;
 
   PASSWORD: string;
 

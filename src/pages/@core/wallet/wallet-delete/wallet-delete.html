@@ -23,14 +23,14 @@
         <h3 ion-text color="danger">
             {{"WALLETS.DELETE.WARNING" | translate: {walletName: selectedWallet.account.name } }}
         </h3>
-        <p ion-text color="dark">
+        <p ion-text color="black">
             {{"WALLETS.DELETE.DESC" | translate}}
         </p>
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-          <button gradient-button color-5 type="submit" color="dark">
+          <button gradient-button color-11 type="submit" color="dark">
             {{"WALLETS.BUTTON.CONTINUE" | translate}}
           </button>
         </form>
