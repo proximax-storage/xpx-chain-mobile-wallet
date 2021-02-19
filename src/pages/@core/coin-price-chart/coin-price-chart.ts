@@ -27,6 +27,7 @@ import { UtilitiesProvider } from '../../../providers/utilities/utilities';
 import { DefaultMosaic } from '../../../models/default-mosaic';
 import { ProximaxProvider } from '../../../providers/proximax/proximax';
 import { CatapultsAccountsInterface } from '../../../providers/wallet/wallet';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the CoinPriceChartPage page.
@@ -101,6 +102,7 @@ export class CoinPriceChartPage {
     private haptic: HapticProvider,
     private browserTab: BrowserTab,
     private safariViewController: SafariViewController,
+    private translateService: TranslateService,
   ) {
     this.selectedSegment = 'transactions';
     this.durations = [
@@ -240,7 +242,7 @@ export class CoinPriceChartPage {
   copy() {
     const address = this.proximaxProvider.createFromRawAddress(this.selectedAccount.account.address['address']);
     this.clipboard.copy(address.plain()).then(_ => {
-      this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
+      this.toastProvider.show(this.translateService.instant("WALLETS.ADDRESS.COPY"), 3, true);
     });
   }
 

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { SimpleWallet as SimpleWalletNEM, Password } from 'nem-library';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../../../app/app.config';
@@ -62,7 +61,6 @@ export class WalletAddPrivateKeyPage {
     private authProvider: AuthProvider,
     private utils: UtilitiesProvider,
     private alertCtrl: AlertController,
-    private storage: Storage,
     private translateService: TranslateService,
     private modalCtrl: ModalController,
     private sharedService: SharedService,

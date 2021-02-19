@@ -101,7 +101,7 @@
                 *ngIf='nameMax'>{{('APP.SIGNUP.PASSWORD_MAX.MESSAGE' | translate: {Max: configurationForm.nameWallet.maxLength })}}</strong>
             </p>
           </div>
-          <button gradient-button color-11 [disabled]="formGroup.invalid" type="submit">
+          <button gradient-button color-11 type="submit">
             {{"WALLETS.BUTTON.SAVE" | translate}}
           </button>
         </form>

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Storage } from '@ionic/storage';
 import { IonicPage, ModalController, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
 import {
   Address,
@@ -68,7 +67,6 @@ export class SendMultisigPage {
     public viewCtrl: ViewController,
     public modalCtrl: ModalController,
     private barcodeScanner: BarcodeScanner,
-    private storage: Storage,
     public platform: Platform
   ) {
     console.log("Nav params", this.navParams.data);

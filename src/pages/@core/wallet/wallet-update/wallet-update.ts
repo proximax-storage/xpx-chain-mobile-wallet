@@ -95,7 +95,7 @@ export class WalletUpdatePage {
     
 
     this.formGroup = this.formBuilder.group({
-      name: ['', [
+      name: [this.walletName, [
         Validators.required,
         Validators.minLength(this.configurationForm.nameWallet.minLength),
         Validators.maxLength(this.configurationForm.nameWallet.maxLength)
@@ -116,7 +116,10 @@ export class WalletUpdatePage {
   }
 
   onSubmit(form) {
-    this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
+    this.walletProvider.checkIfWalletNameExists(form.name, this.walletAddress).then(isExist => {
+
+      console.log('exit', isExist);
+      
       if (isExist) {
         this.alertProvider.showMessage(this.translateService.instant("WALLETS.EDIT.WALLET.EXIST"));
       } else {

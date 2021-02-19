@@ -8,6 +8,7 @@ import { AlertProvider } from '../../../providers/alert/alert';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Keyboard } from '@ionic-native/keyboard';
 import { WalletProvider } from '../../../providers/wallet/wallet';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the RegisterPage page.
@@ -41,7 +42,8 @@ export class RegisterPage implements OnInit {
     private alertProvider: AlertProvider,
     private platform: Platform,
     private statusBar: StatusBar,
-    private keyboard: Keyboard
+    private keyboard: Keyboard,
+    private translateService: TranslateService
   ) {
     this.createForm();
     this.passwordType = "password";
@@ -80,7 +82,6 @@ export class RegisterPage implements OnInit {
     });
   }
 
-
   /**
    *
    *
@@ -88,11 +89,11 @@ export class RegisterPage implements OnInit {
    */
   createUser() {
     if (this.formRegisterUser.valid) {
-      const user = this.formRegisterUser.get("user").value;
-      const password = this.formRegisterUser.get("password").value;
+      const user = this.formRegisterUser.get('user').value;
+      const password = this.formRegisterUser.get('password').value;
       this.walletProvider.createUser(user, password).then(status => {
-        if (status === "duplicate") {
-          this.alertProvider.showMessage("Account already exist.");
+        if (status === 'duplicate') {
+          this.alertProvider.showMessage(this.translateService.instant('APP.SIGNUP.ERROR.ACCOUNT_EXIST'));
           this.haptic.notification({ type: 'error' });
         } else {
           this.haptic.notification({ type: 'success' });
@@ -101,7 +102,7 @@ export class RegisterPage implements OnInit {
             direction: 'forward'
           });
 
-          return this.utils.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage' });
+          return this.utils.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage', reload: true });
         }
       });
     }
@@ -119,7 +120,6 @@ export class RegisterPage implements OnInit {
     let confirmPass = value;
     return pass === confirmPass ? null : this.formRegisterUser.setErrors([{ passwordMismatch: true }]);
   }
-
 
   /**
    *

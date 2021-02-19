@@ -142,6 +142,8 @@ export class HomePage {
           }
 
           // Slide to selected wallet
+          console.log('this.accounts', this.accounts);
+          
           this.accounts.forEach((acc, index) => {
             if (this.selectedAccount.account.name === acc.account.name) {
               this.slides.slideTo(index);

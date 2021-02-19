@@ -5,6 +5,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 import { ToastProvider } from '../../../providers/toast/toast';
 import { HapticProvider } from '../../../providers/haptic/haptic';
 import { WalletProvider } from '../../../providers/wallet/wallet';
+import { TranslateService } from '@ngx-translate/core';
 /*
 * See https://ionicframework.com/docs/components/#navigation for more info on
 * Ionic pages and navigation.
@@ -27,7 +28,8 @@ export class ReceivePage {
     private toastProvider: ToastProvider,
     private haptic: HapticProvider,
     private platform: Platform,
-    private walletProvider: WalletProvider
+    private walletProvider: WalletProvider,
+    private translateService: TranslateService,
   ) {
     const wallet = this.navParams.data;
     console.log('account', wallet);
@@ -57,7 +59,7 @@ export class ReceivePage {
   copy() {
     this.clipboard.copy(this.address).then(_ => {
       this.haptic.notification({ type: 'success' });
-      this.toastProvider.show('Your address has been successfully copied to the clipboard.', 3, true);
+      this.toastProvider.show(this.translateService.instant("WALLETS.ADDRESS.COPY"), 3, true);
     });
   }
 

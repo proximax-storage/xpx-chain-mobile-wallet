@@ -55,7 +55,7 @@ export class VerificationCodePage {
       this.utils.disableHardwareBack();
     }
   }
-
+  
   /**
    *
    *
@@ -94,6 +94,8 @@ export class VerificationCodePage {
     const verifyPinTitle = this.translateService.instant("APP.PIN.VERIFY.TITLE");
     let status: string = this.navParams.data.status;
     let destination = this.navParams.data.destination;
+    let reload = this.navParams.data.reload;
+    console.log('#################################this.navParams.data.reload', this.navParams.data.reload);
 
     let pinParams = this.navParams.data.pin;
     if (status === 'setup') {
@@ -103,11 +105,18 @@ export class VerificationCodePage {
         title: verifyPinTitle,
         subtitle: " ",
         pin: this.pin.hash(pin),
-        destination: destination
+        destination: destination,
+        reload: reload
+
       };
       return this.utils.showModal(page, data);
     }
 
+    console.log('#################################status', status);
+    console.log('#################################pin', pin);
+    console.log('#################################pinParams', pinParams);
+    console.log('#################################pinParams', reload);
+    
     if (status === "verify" && BcryptJS.compareSync(pin, pinParams)) {
       this.haptic.notification({ type: 'success' });
       this.navCtrl.getActive()
@@ -126,8 +135,13 @@ export class VerificationCodePage {
           this.viewCtrl.dismiss();
         }
       });
+    } else if (reload != undefined) {
+      this.haptic.notification({ type: 'error' });
+      this.utils.showModal("VerificationCodePage", {
+        status: "setup",
+        destination: "TabsPage"
+      });
     }
-
     if (status === "confirm") {
       this.pin.compare(pin).then(isMatch => {
         if (isMatch) {

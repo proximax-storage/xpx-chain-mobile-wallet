@@ -87,7 +87,7 @@ export class TabsPage {
 
     if (this.account != null) {
       let actionSheet = this.actionsheetCtrl.create({
-        title: 'Options',
+        title: this.translateService.instant("WALLETS.OPTIONS"),
         cssClass: 'action-sheets-basic-page',
         buttons: [
           {

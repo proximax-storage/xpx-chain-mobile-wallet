@@ -19,7 +19,6 @@ import { AlertProvider } from "../../../../providers/alert/alert";
 
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
-import { Storage } from "@ionic/storage";
 import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
@@ -78,7 +77,6 @@ export class SendPage {
     public modalCtrl: ModalController,
     private coingeckoProvider: CoingeckoProvider,
     private barcodeScanner: BarcodeScanner,
-    private storage: Storage,
     public platform: Platform,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider,

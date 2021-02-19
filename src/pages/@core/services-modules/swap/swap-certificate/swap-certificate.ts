@@ -57,8 +57,17 @@ export class SwapCertificatePage {
   }
 
   copy(val, string) {
+    let label = ''
+    if (string === 'address') {
+      label = this.translateService.instant("WALLETS.ADDRESS.COPY")
+    } else if (string === 'publicKey') {
+      label = this.translateService.instant("WALLETS.EXPORT.COPY_PUBLIC_KEY.RESPONSE")
+    } else if (string === 'hash') {
+      label = this.translateService.instant("WALLETS.HASH.COPY")
+    }
+
     this.clipboard.copy(val).then(_ => {
-      this.toastProvider.show(`Your ${string} has been successfully copied to the clipboard`, 3, true);
+      this.toastProvider.show(label, 3, true);
     });
   }
 

@@ -9,7 +9,6 @@ import { AuthProvider } from '../../../../../providers/auth/auth';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { TranslateService } from '@ngx-translate/core';
-import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the ImportWalletPage page.
@@ -44,7 +43,7 @@ export class ImportWalletPage {
     private walletProvider: WalletProvider,
     private authProvider: AuthProvider,
     private utils: UtilitiesProvider,
-    private storage: Storage,
+  
     private translateService: TranslateService,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,

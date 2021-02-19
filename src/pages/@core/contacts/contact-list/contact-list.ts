@@ -15,7 +15,6 @@ import { App } from './../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { TranslateService } from '@ngx-translate/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Storage } from "@ionic/storage";
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 
@@ -61,7 +60,6 @@ export class ContactListPage {
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private modalCtrl: ModalController,
-    private storage: Storage,
     private translateService: TranslateService,
   ) {
     // this.address = this.walletProvider.selectesAccount.account.address.address;

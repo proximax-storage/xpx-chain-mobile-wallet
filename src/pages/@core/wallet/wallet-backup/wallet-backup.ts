@@ -97,14 +97,14 @@ export class WalletBackupPage {
     if (val === 1) {
       this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
         let alertTitle = value;
-        this.clipboard.copy(this.data.privateKey).then(_ => {
+        this.clipboard.copy(this.data.privateKey.toUpperCase() ).then(_ => {
           this.toastProvider.show(alertTitle, 3, true);
         });
       })
     } else {
-      this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
+      this.translateService.get('WALLETS.EXPORT.COPY_PUBLIC_KEY.RESPONSE').subscribe(value => {
         let alertTitle = value;
-        this.clipboard.copy(this.publicAccount.publicKey).then(_ => {
+        this.clipboard.copy(this.publicAccount.publicKey.toUpperCase() ).then(_ => {
           this.toastProvider.show(alertTitle, 3, true);
         });
       })
