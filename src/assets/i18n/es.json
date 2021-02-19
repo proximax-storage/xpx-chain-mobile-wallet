@@ -18,7 +18,7 @@
     "APP.COMMON.PASSWROD.PLACEHOLDER": "Ingrese su contraseña",
     "APP.EMPTY.MOSAICS": "Aquí se mostrarán sus activos. No hay ninguno por el momento.",
     "APP.EMPTY.MOSAICS.INFO": "Aquí se mostrará la información del activo. No hay ninguno en este momento.",
-    "APP.EMPTY.TRANSACTIONS": "Aquí se mostrará sus transacciones. No hay ninguna por el momento.",
+    "APP.EMPTY.TRANSACTIONS": "Aquí se mostrarán sus transacciones. No hay ninguna por el momento.",
     "APP.EMPTY.CONTACT": "Aquí se mostrarán tus contactos. No hay ninguno por el momento.",
     "APP.LOGIN": "Iniciar sesión",
     "APP.LOGIN.DESC": "Inicie sesión en su cuenta para acceder a su wallet.",
