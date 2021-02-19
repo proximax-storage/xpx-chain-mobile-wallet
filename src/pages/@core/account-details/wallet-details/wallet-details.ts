@@ -65,6 +65,7 @@ export class WalletDetailsPage {
     this.amountXpx = this.navParams.get('amountXpx');
     this.selectedAccount = this.navParams.get('selectedAccount');
     this.publicAccount = this.navParams.data.selectedAccount.publicAccount.publicKey.toUpperCase() 
+    
     this.createForm();
   }
 

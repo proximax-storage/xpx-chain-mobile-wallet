@@ -100,7 +100,7 @@ export class TransactionListPage {
    */
   copy(val: string) {
     this.clipboard.copy(val).then(_ => {
-      this.toastProvider.show(this.translateService.instant("WALLETS.DETAIL.COPY_ADDRESS"), 3, true);
+      this.toastProvider.show(this.translateService.instant("WALLETS.ADDRESS.COPY"), 3, true);
     });
   }
 
