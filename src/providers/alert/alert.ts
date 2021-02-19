@@ -44,6 +44,28 @@ export class AlertProvider {
    * @param title Any title to an alert.
    * @param message Any text to show.
    */
+  showTranslated(title: string, message: string) {
+    return new Promise((resolve, reject) => {
+      this.translateService.get([ title, message ]).toPromise().then(translated => {
+        this.alertCtrl.create({
+          subTitle: translated[title],
+          message: translated[message],
+          buttons: [{
+            text: 'Ok',
+            handler: () => {
+              resolve(true);
+            }
+          }]
+        }).present().catch(reject);
+      }).catch(reject);
+    });
+  }
+
+  /**
+   * Shows an alert.
+   * @param title Any title to an alert.
+   * @param message Any text to show.
+   */
   showMessage(message: string) {
     this.alertCtrl.create({
       message: message,

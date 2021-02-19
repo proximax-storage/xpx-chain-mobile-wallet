@@ -1,13 +1,7 @@
 import { AuthProvider } from './../../../../providers/auth/auth';
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, App, ModalController, AlertController, Platform } from "ionic-angular";
-import { Clipboard } from "@ionic-native/clipboard";
-
+import { IonicPage, NavController, NavParams, ModalController, AlertController, Platform } from "ionic-angular";
 import { SimpleWallet, AccountInfoWithMetaData } from "nem-library";
-
-import { WalletProvider } from "../../../../providers/wallet/wallet";
-import { NemProvider } from "../../../../providers/nem/nem";
-import { ToastProvider } from "./../../../../providers/toast/toast";
 import { UtilitiesProvider } from "../../../../providers/utilities/utilities";
 import { AppVersion } from '@ionic-native/app-version';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
@@ -31,13 +25,12 @@ import { AlertProvider } from '../../../../providers/alert/alert';
 export class SettingListPage {
   currentWallet: SimpleWallet;
   accountInfo: AccountInfoWithMetaData;
-  version: string = '0.0.1';
+  version: string = '0.1.0';
   buildNumber: any = '10';
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private walletProvider: WalletProvider,
     private utils: UtilitiesProvider,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
@@ -50,39 +43,55 @@ export class SettingListPage {
     private translateService: TranslateService
   ) {
     if (this.platform.is('cordova')) {
-      this.appVersion.getVersionNumber().then(version=> {
-        this.version = version || '0.0.1';
-      }).then(_=> {
-        this.appVersion.getVersionCode().then(build=>{
-          this.buildNumber = build || '10';
+      this.appVersion.getVersionNumber().then(version => {
+        this.version = version || '0.1.0';
+      }).then(_ => {
+        this.appVersion.getVersionCode().then(build => {
+          this.buildNumber = build || '0';
         })
       })
     }
   }
 
-  ionViewWillEnter() {
-    // this.utils.setTabIndex(0);
-    // this.walletProvider.getWallets().then(wallets=> {
-    //   if (wallets) {
-    //     this.walletProvider.getSelectedWallet().then(currentWallet => {
-    //       if (currentWallet) {
-    //         this.currentWallet = currentWallet;
-    //       }
-    //     })
-    //   }
-    // })
-
+  /**
+   *
+   *
+   * @memberof SettingListPage
+   */
+  logOut() {
+    this.authProvider.logout();
+    this.haptic.selection();
+    this.utils.setHardwareBackToPage("LoginPage");
+    this.utils.setHardwareBack();
+    this.utils.setRoot('LoginPage');
   }
 
-  // getAccountInfo() {
-  //   this.nemProvider
-  //     .getAccountInfo(this.currentWallet.address)
-  //     .subscribe(accountInfo => {
-  //       this.accountInfo = accountInfo;
-  //       console.log(this.accountInfo)
-  //     });
-  // }
 
+  /**
+   *
+   *
+   * @memberof SettingListPage
+   */
+  showLanguage() {
+    this.storage.get("lang").then(lang => {
+      this.utils.showInsetModal('LanguagePage', {
+        selectedLanguage: lang
+      }).subscribe(lang => {
+        if (lang) {
+          console.log('Selected language', lang);
+          const alertTitle = this.translateService.instant("SETTINGS.LANGUAGE.SWITCH", { 'lang': lang.name });
+          this.alertProvider.showMessage(alertTitle)
+          this.storage.set("lang", lang.value).then(_ => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 400)
+          })
+        }
+      });
+    })
+  }
+
+  // ------------------------------------------------------------
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad SettingListPage");
@@ -103,7 +112,7 @@ export class SettingListPage {
 
   resetPIN() {
     // Reset pin first.
-    this.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage' });
+    this.showModal('VerificationCodePage', { status: 'setup', destination: 'TabsPage', reload: true });
   }
 
   showResetPINPrompt() {
@@ -151,31 +160,7 @@ export class SettingListPage {
     this.showModal("WhatsNewPage", {});
   }
 
-  showLanguage(){
-    this.storage.get("lang").then(lang=>{
-    this.storage.set("isQrActive", true);
-
-      this.utils
-      .showInsetModal('LanguagePage', {
-        selectedLanguage: lang
-      })
-      .subscribe(lang => {
-        if (lang) {
-          console.log('Selected language', lang);
-          const alertTitle = this.translateService.instant("SETTINGS.LANGUAGE.SWITCH", {'lang' : lang.name} );
-          this.alertProvider.showMessage(alertTitle )
-          this.storage.set("lang", lang.value).then(_=> {
-            setTimeout(()=> {
-              window.location.reload();
-            }, 400)
-          })
-        }
-      });
-
-    })
-
-    
-  }
+  
 
   showModal(page, params) {
     const modal = this.modalCtrl.create(page, params, {
@@ -185,14 +170,5 @@ export class SettingListPage {
     modal.present();
   }
 
-  logOut() {
-    this.authProvider.logout().then(_ => {
-      this.haptic.selection();
-      console.log("Logging out", _);
-      // this.utils.setTabIndex(0);
-      this.utils.setHardwareBackToPage("LoginPage");
-      this.utils.setHardwareBack();
-      this.utils.setRoot('LoginPage');
-    })
-  }
+
 }

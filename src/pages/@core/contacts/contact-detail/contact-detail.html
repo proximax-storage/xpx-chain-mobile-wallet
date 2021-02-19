@@ -29,24 +29,32 @@
     <h6 margin-left ion-text color="dark">{{"SERVICES.ADDRESS_BOOK.FIELDS.NAME" | translate}}</h6>
     <ion-card>
       <ion-item>
-        <p ion-text color="dark">{{ selectedContact?.name }}</p>
+        <p ion-text color="black">{{ selectedContact?.name }}</p>
       </ion-item>
     </ion-card>
 
     <h6 margin-left ion-text color="dark">{{"SERVICES.ADDRESS_BOOK.FIELDS.WALLET_ADDRESS" | translate}}</h6>
     <ion-card (click)="copyAddress()">
       <ion-item>
-        <p ion-text color="dark">{{ selectedContact?.address || 'None' }}</p>
-         <ion-icon item-end ion-text color="dark" name="ios-copy-outline"></ion-icon>
+        <p ion-text color="black">{{ selectedContact?.address || 'None' }}</p>
+        <ion-icon item-end ion-text color="dark" name="ios-copy-outline"></ion-icon>
       </ion-item>
     </ion-card>
 
-    <h6 margin-left ion-text color="dark" (click)="gotoTelegram(selectedContact.telegram)">{{"SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM" | translate}}</h6>
-    <ion-card (click)="gotoTelegram(selectedContact.telegram)">
+    <h6 margin-left ion-text color="dark" (click)="gotoTelegram(selectedContact.telegram)" *ngIf="selectedContact.telegram!=''">
+      {{"SERVICES.ADDRESS_BOOK.FIELDS.TELEGRAM" | translate}}</h6>
+    <ion-card (click)="gotoTelegram(selectedContact.telegram)" *ngIf="selectedContact.telegram!=''">
       <ion-item>
-        <p ion-text color="dark">{{ selectedContact?.telegram || '' }}</p>
+        <p ion-text color="black">{{ selectedContact?.telegram || '' }}</p>
         <ion-icon item-right ion-text color="dark" name="ios-open-outline" *ngIf="selectedContact.telegram"></ion-icon>
       </ion-item>
     </ion-card>
+
+    <section text-center>
+      <button gradient-button color-11 type="button" (click)="confirm()">
+        {{"WALLETS.BUTTON.DELETE" | translate}}
+      </button>
+    </section>
   </ion-list>
+
 </ion-content>

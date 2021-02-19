@@ -15,10 +15,8 @@ import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from './../../../../providers/wallet/wallet';
 
-import sortBy from 'lodash/sortBy';
 import { AuthProvider } from '../../../../providers/auth/auth';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the WalletListPage page.
@@ -55,7 +53,7 @@ export class WalletListPage {
     public utils: UtilitiesProvider,
     private viewCtrl: ViewController
   ) {
-    const wallets = this.navParams.data.wallets;
+    const wallets = this.navParams.data.account;
     console.log("SIRIUS CHAIN WALLET: WalletListPage -> wallets", wallets)
 
     this.wallets = wallets;

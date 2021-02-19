@@ -1,6 +1,5 @@
-import { CoingeckoProvider } from './../../../../../providers/coingecko/coingecko';
-import { SimpleWallet, AssetDefinition, XEM, AssetTransferable, Address, TransferTransaction, PublicAccount, PlainMessage } from 'nem-library';
-import { NemProvider } from './../../../../../providers/nem/nem';
+import { AssetTransferable, Address, TransferTransaction, PlainMessage, Account as AccountNIS1 } from 'nem-library';
+import { NemProvider, AccountsInfoNis1Interface } from './../../../../../providers/nem/nem';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingOptions, LoadingController, Platform, AlertController, ModalController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -8,11 +7,11 @@ import { UtilitiesProvider } from '../../../../../providers/utilities/utilities'
 import { App } from '../../../../../providers/app/app';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthProvider } from '../../../../../providers/auth/auth';
 import { AppConfig } from '../../../../../app/app.config'
-import { HapticProvider } from '../../../../../providers/haptic/haptic';
-import { Password } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
+import { ConfigurationForm, SharedService } from '../../../../../providers/shared-service/shared-service';
+import { SimpleWallet, Password, PublicAccount as PublicAccountTsjs, Address as AddressTsjs } from 'tsjs-xpx-chain-sdk';
+import { first, timeout } from 'rxjs/operators';
 
 /**
  * Generated class for the WalletInfoPage page.
@@ -28,18 +27,21 @@ import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 })
 export class WalletInfoPage {
 
+  password = '';
+  blockButton = false;
+  maxAmount: number = 0;
   publicAccount: any;
   transferTransaction: TransferTransaction;
   hash: any;
-  catapultWallet: any;
-  message: PlainMessage;
+  catapultAccount: SimpleWallet;
+  publicKey: string;
   selectedMosaic: AssetTransferable;
   credentials: { password: string; privateKey: string };
   privateKey: string;
   total: number;
   address: Address;
-  nemWallet: any;
-  recipient = AppConfig.swap.burnAccountAddress
+  nis1Account: any;
+  recipient = AppConfig.swap.burnAddress;
   optionsXPX = {
     prefix: '',
     thousands: ',',
@@ -60,6 +62,12 @@ export class WalletInfoPage {
   };
   App = App;
   decimalCount: number;
+  accountInfoNis1: AccountsInfoNis1Interface;
+  insufficientBalance = false;
+  configurationForm: ConfigurationForm = {};
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
+  processing = false;
 
   constructor(
     public navCtrl: NavController,
@@ -70,228 +78,225 @@ export class WalletInfoPage {
     private loadingCtrl: LoadingController,
     private formBuilder: FormBuilder,
     public platform: Platform,
-    private coingeckoProvider: CoingeckoProvider,
     public utils: UtilitiesProvider,
     public alertProvider: AlertProvider,
     public translateService: TranslateService,
     private alertCtrl: AlertController,
-    private authProvider: AuthProvider,
-    private haptic: HapticProvider,
     private modalCtrl: ModalController,
+    private sharedService: SharedService
   ) {
 
-    // Show loader
-    let options: LoadingOptions = {
-      content: 'Getting account information...'
-    };
-    let loader = this.loadingCtrl.create(options);
+    this.configurationForm = this.sharedService.configurationForm;
+    const options: LoadingOptions = { content: this.translateService.instant("SERVICES.SWAP_PROCESS.GETTING_INFORMATION") };
+    const loader = this.loadingCtrl.create(options);
     loader.present();
+    this.nis1Account = this.navParams.data.data.nis1Account;
+    this.catapultAccount = Object.assign({}, this.navParams.data.data.catapultAccount);
+    this.accountInfoNis1 = this.navParams.data.data.accountInfoNis1;
+    this.address = new Address(this.nis1Account.address.value);
+    this.maxAmount = this.accountInfoNis1.balance.length;
 
-    this.nemWallet = this.navParams.data.data.nemWallet;
-    this.catapultWallet = this.navParams.data.data.catapultWallet;
-    this.privateKey = this.navParams.data.data.privateKey;
-    this.address = new Address(this.nemWallet.address.value);
-
-    // 0. initialize form
-    this.init();
-
-    // 1. Get wallet info
-    this.getAccountInfo(this.address);
-
-    // 2. Get mosaics
-    this.ownedMosaics(this.address);
-
-    // 3. Display XPX and ask for amount to be converted
-    // TODO: Reuse Send Mosaic Page - ETA 30 mins
-
-    // 4. Subscribe to amount change
-    this.onAmountChange();
-
-    // 5. Get coin price
-    this.coingeckoProvider.getDetails('proximax').subscribe(coin => {
-      this.coinGecko = coin;
-    });
-    // 6. Get password  
-    this.authProvider.getPassword().then(password => {
-      console.log('password', password)
-      this.credentials = {
-        password: password,
-        privateKey: ''
-      };
-    })
-
+    this.createForm();
+    this.amountChange();
     loader.dismiss();
   }
 
-  confirmSwap() {
-    
-
-    let total = this.coinGecko.market_data.current_price.usd * Number(this.form.get('amount').value);
-    let alert = this.alertCtrl.create({
-      title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
-      message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
-      buttons: [
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
-          handler: () => {
-            this.onSubmit()
-          }
-        }
-      ]
-    });
-    alert.present();
-    
-  }
-
-  async onSubmit() {
-    let options:LoadingOptions = {
-      content: 'Initiating swap...'
-    };
-    let loader = this.loadingCtrl.create(options);
-
-    loader.present();
-    let quantity = this.form.get('amount').value;
-    const recipient = new Address(this.recipient)
-
-    if (this.multisig) {
-      // console.log('es multifirma', transferTransaction);
-
-    } else {
-
-      if (this._allowedToSendTx()) {
-
-        console.log("TCL: onSubmit -> this.credentials.privateKey", this.credentials.privateKey)
-        // return;
-        
-        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.privateKey, AppConfig.sirius.networkType)
-        console.log('this.publicAccount publicKey', publicAccount.publicKey)
-        
-        const account = this.nemProvider.createAccountPrivateKey(this.privateKey);
-        console.log('this.account', account)
-        
-        const transaction = await this.nemProvider.createTransaction(publicAccount.publicKey , this.selectedMosaic.assetId, quantity);
-        this.transferTransaction = transaction;
-
-        console.log('this.transferTransaction', this.transferTransaction)
-        
-        this.nemProvider.anounceTransaction(transaction, account)
-          .then(resp => {
-            this.hash = resp.transactionHash;
-            this.showSuccessMessage()
-            loader.dismiss();
-          })
-          .catch(error => {
-            this.showErrorMessage(error)
-          });
-      } else {
-        this.showGenericError();
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  async createTransaction() {
+    if (!this.processing) {
+      this.processing = true;
+      const decrypt = this.proximaxProvider.decryptPrivateKey(new Password(this.form.get("password").value), this.catapultAccount.encryptedPrivateKey.encryptedKey, this.catapultAccount.encryptedPrivateKey.iv);
+      if (decrypt) {
+        const account = this.nemProvider.createAccountPrivateKey(decrypt);
+        const quantity = this.form.get("amount").value;
+        const assetId = this.accountInfoNis1.mosaic.assetId;
+        const publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(decrypt, this.catapultAccount.network);
+        const payloadTx = PlainMessage.create(publicAccount.publicKey);
+        const transaction = await this.nemProvider.createTransaction(payloadTx, assetId, quantity);
+        this.anounceTransaction(transaction, account, publicAccount);
       }
-    }
-    
-  }
-
-  clearPlaceholder() {
-    this.amountPlaceholder = "";
-  }
-
-  onAmountChange() {
-    this.form.get('amount').valueChanges.subscribe(value => {
-      if (value > this.mosaic.balance) {
-        const message = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
-        this.alertProvider.showMessage(message);
-        this.amount = 0;
-      }
-    }
-    );
-  }
-
-  init() {
-    // Initialize form
-    this.form = this.formBuilder.group({
-      amount: ['', Validators.required],
-    });
-  }
-
-  ownedMosaics(address: Address) {
-    console.log()
-    this.nemProvider.getOwnedMosaics(address).subscribe(mosaics => {
-      // console.log('LOG: WalletInfoPage -> ownedMosaics -> mosaics', mosaics);
-      let xpx = mosaics.filter(m => {
-        return m.assetId.name === 'xpx' && m.assetId.namespaceId === 'prx'
-      })
-      // console.log('LOG: WalletInfoPage -> ownedMosaics -> xpx', xpx);
-      if (xpx) {
-        const XPX = xpx[0];
-        this.selectedMosaic = XPX;
-        this.mosaic = {
-          namespaceId: XPX.assetId.namespaceId,
-          mosaicId: XPX.assetId.name,
-          balance: XPX.quantity
-        }
-      }
-    })
-  }
-
-  getAccountInfo(address: Address) {
-    // console.log("This is a multisig account", address)
-    try {
-      this.nemProvider
-        .getAccountInfo(address)
-        .subscribe(accountInfo => {
-          if (accountInfo) {
-            console.log("This is a multisig account", accountInfo);
-            this.message = PlainMessage.create(accountInfo.publicAccount.publicKey);
-            // // Check if account is a cosignatory of multisig account(s)
-            console.log("This is a multisig account", accountInfo.cosignatoryOf);
-            if (accountInfo.cosignatoryOf.length > 0) {
-              console.log("This is a multisig account");
-              // this.isMultisig = true;
-            }
-          }
-        }, (err: any) => {
-          console.log(err)
-          // this.isMultisig = false;
-        });
-    } catch (error) {
-      console.log(error);
     }
   }
 
   /**
- * User checking if it can do the send transaction.
- */
-  private _allowedToSendTx() {
-    if (this.credentials.password) {
-      try {
-        return true;
-      } catch (err) {
-        return false;
-      }
+   *
+   *
+   * @param {TransferTransaction} transaction
+   * @param {AccountNIS1} account
+   * @param {PublicAccountTsjs} siriusAccount
+   * @memberof WalletInfoPage
+   */
+  anounceTransaction(transaction: TransferTransaction, account: AccountNIS1, siriusAccount: PublicAccountTsjs) {
+    let options: LoadingOptions = {
+      content: this.translateService.instant("SERVICES.SWAP_PROCESS.INITIALIZING_SWAP")
+    };
+    let loader = this.loadingCtrl.create(options);
+    loader.present();
+    try {
+      this.nemProvider.anounceTransaction(transaction, account).pipe(first()).pipe((timeout(AppConfig.timeOutTransactionNis1))).subscribe(next => {
+        if (next && next['message'] && next['message'].toLowerCase() === 'success') {
+          this.transferTransaction = transaction;
+          this.publicKey = transaction.message.payload;
+          this.hash = next['transactionHash'].data;
+          this.showSuccessMessage()
+          loader.dismiss();
+        } else {
+          loader.dismiss();
+          this.nemProvider.validateCodeMsgError(next['code'], next['message']);
+        }
+      }, error => {
+        loader.dismiss();
+        this.nemProvider.validateCodeMsgError(error.error.code, error.error.message);
+      });
+    } catch (error) {
+      loader.dismiss();
     }
-    return false;
   }
 
+
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  amountChange() {
+    this.form.get('amount').valueChanges.subscribe(value => {
+      console.log(value);
+      if (value !== null && value !== undefined) {
+        if (value > parseFloat(this.accountInfoNis1.balance.split(',').join(''))) {
+          this.blockButton = true;
+          this.insufficientBalance = true;
+        } else if (value === 0) {
+          this.blockButton = true;
+          this.insufficientBalance = false;
+        } else if (value === '0.000000' || value === '0') {
+          this.blockButton = true;
+          this.insufficientBalance = false;
+        } else {
+          this.blockButton = false;
+          this.insufficientBalance = false;
+        }
+      } else {
+        this.form.get('amount').setValue('0.000000');
+      }
+    });
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  createForm() {
+    this.form = this.formBuilder.group({
+      amount: ['', Validators.required],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(this.configurationForm.passwordWallet.minLength),
+        Validators.minLength(this.configurationForm.passwordWallet.minLength)
+      ]]
+    });
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  confirmSwap() {
+    let alert = this.alertCtrl.create({
+      title: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.TITLE"),
+      message: this.translateService.instant("SERVICES.SWAP_PROCESS.STEP2.CONFIRM_SWAP.MASSAGE"),
+      buttons: [{
+        text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
+        role: 'cancel',
+        handler: () => { }
+      }, {
+        text: this.translateService.instant("WALLETS.BUTTON.CONTINUE"),
+        handler: () => {
+          this.createTransaction()
+        }
+      }]
+    });
+    alert.present();
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
+  /**
+   *
+   *
+   * @param {Event} e
+   * @memberof WalletInfoPage
+   */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
   showSuccessMessage() {
     console.log("NIS1 transaction has been made.")
-    // this.navCtrl.setRoot(
-    //   'TabsPage',
-    //   {},
-    //   {
-    //     animate: true,
-    //     direction: 'backward'
-    //   }
-    // );
-    this.showWalletCertificate(this.message, this.hash, this.transferTransaction, this.catapultWallet.address);
+    this.navCtrl.setRoot('TabsPage', {}, {
+      animate: true,
+      direction: 'backward'
+    });
+    this.showWalletCertificate(this.publicKey, this.hash, this.transferTransaction, this.catapultAccount.address);
   }
 
-  showWalletCertificate(publicKey: PlainMessage, hash: any, transaction: TransferTransaction, address: Address) {
+  /**
+   *
+   *
+   * @param {*} page
+   * @param {*} params
+   * @memberof WalletInfoPage
+   */
+  showModal(page: any, params: any) {
+    const modal = this.modalCtrl.create(page, params, {
+      enableBackdropDismiss: false,
+      showBackdrop: true
+    });
+    modal.present().then(_ => {
+      this.dismiss();
+    })
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletInfoPage
+   */
+  selectMaxAmount() {
+    this.form.get('amount').setValue(this.accountInfoNis1.balance.split(',').join(''));
+  }
+
+  /**
+   *
+   *
+   * @param {PlainMessage} publicKey
+   * @param {*} hash
+   * @param {TransferTransaction} transaction
+   * @param {AddressTsjs} address
+   * @memberof WalletInfoPage
+   */
+  showWalletCertificate(publicKey: string, hash: any, transaction: TransferTransaction, address: AddressTsjs) {
     const page = "SwapCertificatePage"
     this.showModal(page, {
       publicKey: publicKey,
@@ -299,110 +304,6 @@ export class WalletInfoPage {
       timestamp: transaction.timeWindow.timeStamp,
       address: address
     });
-
-  }
-
-  showModal(page, params) {
-    console.log("TCL: showModal -> params", params)
-    console.log("Showing modal");
-    const modal = this.modalCtrl.create(page, params , {
-      enableBackdropDismiss: false,
-      showBackdrop: true
-    });
-    modal.present().then(_=>{
-      this.dismiss();
-    })
-  }
-
-  showErrorMessage(error) {
-    this.haptic.notification({ type: 'warning' });
-    console.log(error);
-    if (error.toString().indexOf('FAILURE_INSUFFICIENT_BALANCE') >= 0) {
-      this.alertProvider.showMessage(
-        'Sorry, you don\'t have enough balance to continue the transaction.'
-      );
-    } else if (
-      error.toString().indexOf('FAILURE_MESSAGE_TOO_LARGE') >= 0
-    ) {
-      this.alertProvider.showMessage(
-        'The note you entered is too long. Please try again.'
-      );
-    } else if (error.statusCode == 404) {
-      this.alertProvider.showMessage(
-        'This address does not belong to this network'
-      );
-    } else if (error.toString().indexOf('FAILURE_TRANSACTION_NOT_ALLOWED_FOR_MULTISIG') >= 0) {
-      this.alertProvider.showMessage(
-        'Transaction is not allowed for multisignature enabled wallets.'
-      );
-    } else {
-      // this.alertProvider.showMessage(
-      //   'An error occured. Please try again.'
-      // );
-      this.alertProvider.showMessage(
-        error
-      );
-    }
-  }
-
-  showGenericError() {
-    this.translateService.get('APP.ERROR').subscribe(
-      value => {
-        let alertTitle = value;
-        this.alertProvider.showMessage(alertTitle);
-      });
-
-  }
-
-  dismiss() {
-    this.viewCtrl.dismiss();
-  }
-
-  countDecimals(value) {
-    if (Math.floor(value) !== value)
-      return value.toString().split(".")[1].length || 0;
-    return 0;
-  }
-
-  checkAllowedInput(e) {this.message
-    const AMOUNT = this.form.get('amount').value;
-    console.log("LOG: WalletInfoPage -> checkAllowedInput -> AMOUNT", AMOUNT);
-
-    // Prevent "+" and "-"
-    if (e.key === "-" || e.key === "+" || e.charCode === 43 || e.charCode === 45 || e.keyCode === 189 || e.keyCode === 187 || e.key === "Unindentified" || e.keyCode === 229) {
-      e.preventDefault();
-      if (AMOUNT == null) {
-        this.form.get('amount').setValue("")
-        this.form.get('amount').reset();
-        this.periodCount = 0
-      }
-    }
-
-    if (AMOUNT == null) {
-      this.periodCount = 0;
-    }
-
-    if (this.decimalCount >= 6 && e.key !== "Backspace") {
-      e.preventDefault();
-    }
-
-    if ((e.charCode >= 48 && e.charCode <= 57) || (e.key == "." || e.charCode == 46 || e.keyCode == 8 || e.key == "Backspace")) {
-
-      // Check for "." or char code "46"
-      if (e.key == "." || e.charCode == 46) {
-        ++this.periodCount;
-      }
-
-      if (this.periodCount > 1) {
-        e.preventDefault();
-        --this.periodCount;
-      }
-      console.log("LOG: WalletInfoPage -> checkAllowedInput -> this.periodCount", this.periodCount);
-    }
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletInfoPage');
   }
 
 }

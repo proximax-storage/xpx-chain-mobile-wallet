@@ -10,12 +10,6 @@ import {
   ModalController,
   Platform
 } from "ionic-angular";
-import {
-  SimpleWallet,
-  Password,
-  Account,
-  AccountInfo
-} from "tsjs-xpx-chain-sdk";
 
 import { App } from "../../../../providers/app/app";
 import { NemProvider } from "./../../../../providers/nem/nem";
@@ -25,13 +19,12 @@ import { AlertProvider } from "../../../../providers/alert/alert";
 
 import { CoingeckoProvider } from "../../../../providers/coingecko/coingecko";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
-import { Storage } from "@ionic/storage";
-import { Observable } from "rxjs";
-import { AuthProvider } from "../../../../providers/auth/auth";
 import { MosaicsProvider } from "../../../../providers/mosaics/mosaics";
 import { ProximaxProvider } from "../../../../providers/proximax/proximax";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultMosaic } from "../../../../models/default-mosaic";
+import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { Password, MosaicId } from 'tsjs-xpx-chain-sdk';
 
 /**
  * Generated class for the SendPage page.
@@ -52,22 +45,24 @@ export class SendPage {
   mosaics: DefaultMosaic[] = [];
   App = App;
   addressSourceType: { from: string; to: string };
-  currentWallet: SimpleWallet;
-  selectedMosaic: DefaultMosaic = new DefaultMosaic({namespaceId: 'prx', mosaicId:'xpx', hex:AppConfig.xpxHexId, amount:0, divisibility:0});
+  currentWallet: any;
+  selectedMosaic: DefaultMosaic = new DefaultMosaic({ namespaceId: 'prx', mosaicId: 'xpx', hex: AppConfig.xpxHexId, name: 'prx.xpx', amount: 0, amountCompact: 0, divisibility: 0 });
   selectedCoin: any;
   form: FormGroup;
   fee: number = 0;
-  amount: number;
+  amount: number = 0;
   selectedMosaicName: string;
-  amountPlaceholder: string = "0";
   periodCount = 0;
   decimalCount: number = 0;
-  optionsXPX = {
-    prefix: "",
-    thousands: ",",
-    decimal: ".",
-    precision: "6"
-  };
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
+  payload: any = {};
+  configurationForm: ConfigurationForm = {};
+  address: any;
+  maxAmount: number;
+  show: boolean = false;
+  divisibility: any;
+  optionsXPX: { prefix: string; thousands: string; decimal: string; precision: any; };
 
   constructor(
     public navCtrl: NavController,
@@ -82,29 +77,47 @@ export class SendPage {
     public modalCtrl: ModalController,
     private coingeckoProvider: CoingeckoProvider,
     private barcodeScanner: BarcodeScanner,
-    private storage: Storage,
     public platform: Platform,
-    private authProvider: AuthProvider,
     public mosaicsProvider: MosaicsProvider,
     private proximaxProvider: ProximaxProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sharedService: SharedService
   ) {
+    // console.log("TCL: SendPage -> this.navParams.data", JSON.stringify(this.navParams.data));
     this.selectedMosaicName = this.navParams.get("mosaicSelectedName");
+    this.divisibility = this.navParams.get("divisibility");
+    this.configurationForm = this.sharedService.configurationForm;
 
-    console.log("this.mosaicSelectedName", this.selectedMosaicName);
+    console.log('-------------------2222', this.divisibility);
+    if (this.divisibility === undefined) {
+      this.optionsXPX = {
+        prefix: "",
+        thousands: ",",
+        decimal: ".",
+        precision: "6"
+      };
+    } else {
+      this.optionsXPX = {
+        prefix: "",
+        thousands: ",",
+        decimal: ".",
+        precision: this.divisibility
+      }
+    }
+
+
     // If no mosaic selected, fallback to xpx
     if (!this.selectedMosaicName) {
       this.selectedMosaicName = "xpx";
     }
-
-    this.init();
+    this.createForm();
     this.subscribeValue();
+    this.amount = 0;
   }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-      console.log("currentWallet ", currentWallet);
+    this.walletProvider.getAccountSelected().then(currentWallet => {
 
       if (!currentWallet) {
         this.navCtrl.setRoot(
@@ -117,20 +130,34 @@ export class SendPage {
         );
       } else {
         this.currentWallet = currentWallet;
+        console.log('this.currentWalle', this.currentWallet);
 
-        this.getAccount(this.currentWallet).subscribe(account => {
-          this.wallet = account.address.plain();
+        this.address = this.proximaxProvider.createFromRawAddress(this.currentWallet.account.address.address)
+        this.wallet = this.address.plain();
+        console.log(' this.wallet', this.wallet);
 
-          this.mosaicsProvider
-            .getMosaics(account.address)
-            .subscribe(mosaics => {
-              this.mosaics = mosaics;
+        this.mosaicsProvider
+          .getMosaics(this.address)
+          .subscribe(mosaics => {
+            this.mosaics = mosaics;
 
-              mosaics.forEach(_mosaic => {
+            if (this.mosaics && this.mosaics.length > 0) {
+              mosaics.forEach(async _mosaic => {
                 if (_mosaic.mosaicId === this.selectedMosaicName) {
-                  this.selectedMosaic = this.selectedMosaic.divisibility===0? _mosaic : this.selectedMosaic ;
-                }
+                  this.selectedMosaic = this.selectedMosaic.divisibility === 0 ? _mosaic : this.selectedMosaic;
+                  console.log('trae name', this.selectedMosaic);
+                  this.divisibility = this.selectedMosaic.divisibility
 
+                  let names = [];
+                  names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
+                  for (const element of mosaics) {
+                    let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
+                    if (value.names && value.names.length > 0) {
+                      element.name = value.names[0].name;
+                    }
+                    this.show = true;
+                  }
+                }
                 let mosaicId = _mosaic.mosaicId;
                 let coinId: string;
 
@@ -148,44 +175,38 @@ export class SendPage {
                   });
                 }
               });
-            });
-        });
+            }
+
+          });
         // Set sender address to currenWallet.address
         this.form.get("senderName").setValue(this.currentWallet.name);
         this.form.get("senderAddress").setValue(this.currentWallet.address);
       }
     });
+
+    // if deeplink
+    this.payload = this.navParams.data;
+    if (this.payload.amount) {
+      this.form.patchValue({ amount: this.payload.amount });
+      this.form.patchValue({ recipientAddress: this.payload.address });
+      this.form.patchValue({ message: this.payload.message });
+    }
+
   }
 
-
-  private getAccount(wallet: SimpleWallet): Observable<Account> {
-    return new Observable(observer => {
-      // Get user's password and unlock the wallet to get the account
-      this.authProvider.getPassword().then(password => {
-        // Get user's passwordmosaics
-        const myPassword = new Password(password);
-
-        // Convert current wallet to SimpleWallet
-        const myWallet = this.walletProvider.convertToSimpleWallet(wallet);
-
-        // Unlock wallet to get an account using user's password
-        const account = myWallet.open(myPassword);
-
-        observer.next(account);
-      });
-    });
+  async getNameMosacis(idMosaics: MosaicId[]) {
+    return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
   }
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad SendPage");
-    this.storage.set("isQrActive", true);
   }
 
-  ionViewDidLeave() {
-    this.storage.set("isQrActive", false);
-  }
+  // ionViewDidLeave() {
+  //   // this.storage.set("isQrActive", false);
+  // }
 
-  init() {
+  createForm() {
     // Initialize form
     this.form = this.formBuilder.group({
       senderName: "",
@@ -195,14 +216,27 @@ export class SendPage {
         "",
         [
           Validators.required,
-          Validators.minLength(40),
-          Validators.maxLength(46)
+          Validators.minLength(this.configurationForm.address.minLength),
+          Validators.maxLength(this.configurationForm.address.maxLength)
         ]
       ],
       isMosaicTransfer: [false, Validators.required],
-      message: [""],
-      amount: ["", Validators.required],
-      fee: [""]
+      message: ["", [Validators.maxLength(this.configurationForm.message.maxLength)]],
+      amount: [
+        "",
+        [
+          Validators.required,
+        ]
+      ],
+      fee: [""],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.configurationForm.passwordWallet.minLength),
+          Validators.maxLength(this.configurationForm.passwordWallet.maxLength)
+        ]
+      ]
     });
 
     // Initialize source type of NEM address in from and to
@@ -221,47 +255,36 @@ export class SendPage {
     this.amount = null;
   }
 
+  getAbsoluteAmount(amount, divisibility) {
+    const amountFormatter = this.proximaxProvider.amountFormatter(amount, divisibility)
+    //   this.maxAmount = String(amountFormatter).length
+    //   console.log('this.maxAmount', this.maxAmount);
+    return amountFormatter;
+  }
+
   subscribeValue() {
     // Account recipient
     this.form.get("recipientAddress").valueChanges.subscribe(value => {
       console.log("value", value);
-      const accountRecipient =
-        value !== undefined && value !== null && value !== ""
-          ? value.split("-").join("")
-          : "";
+      const accountRecipient = value !== undefined && value !== null && value !== "" ? value.split("-").join("") : "";
 
-      if (
-        accountRecipient !== null &&
-        accountRecipient !== undefined &&
-        accountRecipient.length === 40
-      ) {
-        if (
-          !this.proximaxProvider.verifyNetworkAddressEqualsNetwork(
-            this.walletProvider.selectedWallet.address.plain(),
-            accountRecipient
-          )
-        ) {
+      if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
+        if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, accountRecipient)) {
           // this.blockSendButton = true;
-          this.msgErrorUnsupported = this.translateService.instant(
-            "WALLETS.SEND.ADDRESS.UNSOPPORTED"
-          );
+          this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {
           // this.blockSendButton = false;
           this.msgErrorUnsupported = "";
         }
       } else {
         // this.blockSendButton = true;
-        this.msgErrorUnsupported = this.translateService.instant(
-          "WALLETS.SEND.ADDRESS.INVALID"
-        );
+        this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID");
       }
     });
 
     this.form.get("amount").valueChanges.subscribe(value => {
       if (value > this.selectedMosaic.amount) {
-        this.msgErrorBalance = this.translateService.instant(
-          "WALLETS.SEND.ERROR.BALANCE"
-        );
+        this.msgErrorBalance = this.translateService.instant("WALLETS.SEND.ERROR.BALANCE");
       } else {
         this.msgErrorBalance = "";
       }
@@ -274,9 +297,7 @@ export class SendPage {
       this.form.get("senderAddress").setValue(null);
     } else {
       this.form.get("senderName").setValue("Current wallet");
-      this.form
-        .get("senderAddress")
-        .setValue(this.currentWallet.address.plain());
+      this.form.get("senderAddress").setValue(this.address.plain());
     }
   }
 
@@ -291,79 +312,64 @@ export class SendPage {
   }
 
   selectMosaic() {
-    this.utils
-      .showInsetModal("SendMosaicSelectPage", {
-        selectedMosaic: this.selectMosaic,
-        walletAddress: this.currentWallet.address.plain()
-      })
-      .subscribe(data => {
+    this.utils.showInsetModal("SendMosaicSelectPage", {
+      selectedMosaic: this.selectMosaic,
+      walletAddress: this.address.plain()
+    }).subscribe(data => {
       console.log("TCL: SendPage -> selectMosaic -> data", data)
-        if (data) {
-          this.optionsXPX = {
-            prefix: "",
-            thousands: ",",
-            decimal: ".",
-            precision: data.divisibility
-          };
-          this.selectedMosaic = data;
-          // this.mosaics = data;
-        }
-      });
+      if (data) {
+        this.divisibility = data.divisibility
+        this.optionsXPX = {
+          prefix: "",
+          thousands: ",",
+          decimal: ".",
+          precision: data.divisibility
+        };
+        this.selectedMosaic = data;
+        // this.mosaics = data;
+      }
+    });
   }
 
   selectContact(title) {
-    this.utils
-      .showInsetModal("SendContactSelectPage", { title: title })
-      .subscribe(data => {
-        if (data != undefined || data != null) {
-          this.form.get("recipientName").setValue(data.name);
-          this.form.get("recipientAddress").setValue(data.address);
-        }
-      });
+    this.utils.showInsetModal("SendContactSelectPage", { title: title }).subscribe(data => {
+      if (data != undefined || data != null) {
+        this.form.get("recipientName").setValue(data.name);
+        this.form.get("recipientAddress").setValue(data.address);
+      }
+    });
   }
 
-  /**
-   * Sets transaction amount and determine if it is mosaic or xem transaction, updating fees
-   */
-  onSubmit() {
-    if (!this.form.get("amount").value) this.form.get("amount").setValue(0);
-    if (
-      !this.form.get("senderAddress").value ||
-      !this.form.get("recipientAddress").value
-    ) {
-      if (this.addressSourceType.to === "contact") {
-        this.alertProvider.showMessage("Please select a recipient first.");
+  send() {
+    const password = new Password(this.form.get("password").value);
+    const iv = this.currentWallet.account.encryptedPrivateKey.iv;
+    const encryptedKey = this.currentWallet.account.encryptedPrivateKey.encryptedKey;
+    const privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
+
+    const mosaicsToSend = this.validateMosaicsToSend();
+
+    if (privateKey) {
+      let total;
+      console.log('Number(this.form.get("amount").value', Number(this.form.get("amount").value));
+      if ( Number(this.form.get("amount").value) !=  0 ){
+        total = this.selectedCoin.market_data.current_price.usd * Number(this.form.get("amount").value);
       } else {
-        this.alertProvider.showMessage(
-          "Please enter the recipient's address first."
-        );
+        total = '0';
       }
-      return;
-    }
-
-    try {
-      let recipient = this.form
-        .get("recipientAddress")
-        .value.toUpperCase()
-        .replace("-", "");
       let message = this.form.get("message").value;
-      const prueba = this.selectedCoin.market_data.current_price.usd;
-      console.log("por este multiploca", prueba);
-      let total =
-        this.selectedCoin.market_data.current_price.usd *
-        Number(this.form.get("amount").value);
-
-      // Show confirm transaction
+      
       let page = "SendMosaicConfirmationPage";
       const modal = this.modalCtrl.create(
         page,
         {
           ...this.form.value,
-          mosaic: this.selectedMosaic,
+          mosaic: mosaicsToSend,
           currentWallet: this.currentWallet,
           transactionType: "normal",
           total: total,
-          message: message
+          divisibility: this.divisibility,
+          message: message,
+          privateKey: privateKey
         },
         {
           enableBackdropDismiss: false,
@@ -371,13 +377,89 @@ export class SendPage {
         }
       );
       modal.present();
-      // }
-    } catch (err) {
-      console.log("puto");
-      this.alertProvider.showMessage(
-        this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED")
-      );
+    } else {
+      this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
     }
+  }
+
+
+  validateMosaicsToSend() {
+    const mosaics = [];
+    const amountXpx = this.form.get('amount').value;
+
+    console.log('-----amountXpx', amountXpx);
+    
+
+    if (amountXpx !== '' && amountXpx !== null && Number(amountXpx) !== 0) {
+      // console.log(amountXpx);
+      const arrAmount = amountXpx.toString().replace(/,/g, '').split('.');
+
+      console.log('######### arrAmount', arrAmount);
+      
+      let decimal;
+      let realAmount;
+      const divisibility = (this.selectedMosaic) ? this.selectedMosaic.divisibility : 6;
+
+      if (arrAmount.length < 2) {
+        decimal = this.addZeros(divisibility);
+      } else {
+        const arrDecimals = arrAmount[1].split('');
+
+        console.log('restando', divisibility - arrDecimals.length);
+        
+        decimal = this.addZeros(divisibility - arrDecimals.length, arrAmount[1]);
+
+        console.log('decimal', decimal);
+        
+      }
+      realAmount = `${arrAmount[0]}${decimal}`;
+
+      console.log('------realAmount', realAmount);
+      
+      mosaics.push({
+        id: new MosaicId(this.selectedMosaic.hex),
+        amount: realAmount
+      });
+    }
+
+    return mosaics
+  }
+
+
+  addZeros(cant: any, amount: string = '0') {
+    if (cant > 0) {
+      const x = '0';
+      if (amount === '0') {
+        for (let index = 0; index < cant - 1; index++) {
+          amount += x;
+        }
+      } else {
+        for (let index = 0; index < cant; index++) {
+          amount += x;
+        }
+      }
+      return amount;
+    }
+
+    if (amount === '0') {
+      return ''
+    }
+
+    return amount;
+
+
+  }
+
+  /**
+ *
+ *
+ * @param {Event} e
+ * @memberof WalletInfoPage
+ */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
   }
 
   dismiss() {
@@ -385,34 +467,26 @@ export class SendPage {
   }
 
   scan() {
-    this.storage.set("isQrActive", true);
-    this.barcodeScanner
-      .scan()
-      .then(barcodeData => {
-        console.log("Barcode data", JSON.stringify(barcodeData, null, 4));
-        barcodeData.format = "QR_CODE";
+    this.form.patchValue({ recipientAddress: "", emitEvent: false, onlySelf: true });
+    this.barcodeScanner.scan().then(barcodeData => {
+      barcodeData.format = "QR_CODE";
+      let address = barcodeData.text.split("-").join("")
+      if (address.length != 40) {
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.INVALID"))
+
+      } else if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.wallet, address)) {
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED"))
+      } else {
         this.form.patchValue({ recipientAddress: barcodeData.text });
-      })
-      .catch(err => {
-        console.log("Error", err);
-        if (
-          err
-            .toString()
-            .indexOf(
-              this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")
-            ) >= 0
-        ) {
-          let message = this.translateService.instant(
-            "WALLETS.SEND.ERROR.CAMERA2"
-          );
-          this.alertProvider.showMessage(message);
-        }
-      });
+      }
+    }).catch(err => {
+      if (err.toString().indexOf(this.translateService.instant("WALLETS.SEND.ERROR.CAMERA1")) >= 0) {
+        let message = this.translateService.instant("WALLETS.SEND.ERROR.CAMERA2");
+        this.alertProvider.showMessage(message);
+      }
+    });
   }
 
-  clearPlaceholder() {
-    this.amountPlaceholder = "";
-  }
 
   countDecimals(value) {
     if (Math.floor(value) !== value)
@@ -422,9 +496,6 @@ export class SendPage {
 
   checkAllowedInput(e) {
     const AMOUNT = this.form.get("amount").value;
-    console.log("LOG: SendPage -> checkAllowedInput -> AMOUNT", AMOUNT);
-
-    // Prevent "+" and "-"
     if (
       e.key === "-" ||
       e.key === "+" ||
@@ -451,26 +522,14 @@ export class SendPage {
       e.preventDefault();
     }
 
-    if (
-      (e.charCode >= 48 && e.charCode <= 57) ||
-      (e.key == "." ||
-        e.charCode == 46 ||
-        e.keyCode == 8 ||
-        e.key == "Backspace")
-    ) {
-      // Check for "." or char code "46"
+    if ((e.charCode >= 48 && e.charCode <= 57) || (e.key == "." || e.charCode == 46 || e.keyCode == 8 || e.key == "Backspace")) {
       if (e.key == "." || e.charCode == 46) {
         ++this.periodCount;
       }
-
       if (this.periodCount > 1) {
         e.preventDefault();
         --this.periodCount;
       }
-      console.log(
-        "LOG: SendPage -> checkAllowedInput -> this.periodCount",
-        this.periodCount
-      );
     }
   }
 }

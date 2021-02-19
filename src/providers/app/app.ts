@@ -12,11 +12,11 @@ export class App {
   private static ASSETS = "assets/imgs";
   public static STICKERS = {
     SORRY: `${App.ASSETS}/stickers/sorry.png`,
-    HINT: `${App.ASSETS}/stickers/icon-private-key-full-color-80h.svg`,
+    HINT: `${App.ASSETS}/slides/icon-private-key-full-color-80h.svg`,
     INVALID: `${App.ASSETS}/stickers/invalid.png`
   };
   public static SLIDES = {
-    SLIDE1: `${App.ASSETS}/slides/logo-proximax-sirius-wallet-beta.svg`,
+    SLIDE1: `${App.ASSETS}/slides/logo-proximax-sirius-wallet.svg`,
     SLIDE2: `${App.ASSETS}/slides/icon-private-key-full-color-80h.svg`,
     SLIDE3: `${App.ASSETS}/slides/icon-storage-full-color-80h.svg`,
     SLIDE4: `${App.ASSETS}/slides/icon-blockchain-full-color-80h.svg`,
@@ -29,6 +29,13 @@ export class App {
     SFT: `assets/imgs/mosaics/sft.png`,
     XAR: `assets/imgs/mosaics/xar.png`,
     DEFAULT: `assets/imgs/mosaics/default.png`,
+    SWAP: `assets/imgs/xpx-swap.png`,
+    OTHERGIFTCARD: `assets/imgs/icon-centum-mosaic.svg`,
+    SIRIUSGIFTCARD: `assets/imgs/icon-sirius-mosaics-sirius-gift.svg`,
+    
+    BONDED: `assets/imgs/icon-aggregate-bonded.svg`,
+    SIRIUS: `assets/imgs/icon-sirius-mosaics.svg`,
+    OTHER: `assets/imgs/icon-other-transactions.svg`,
   };
   public static USER = `${App.ASSETS}/user.svg`;
   public static INFO = `${App.ASSETS}/info.svg`;
@@ -46,6 +53,5 @@ export class App {
   };
 
   constructor(public http: HttpClient) {
-    console.log("Hello AppProvider Provider");
   }
 }

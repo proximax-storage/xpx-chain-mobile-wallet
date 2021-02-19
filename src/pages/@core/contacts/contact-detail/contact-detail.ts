@@ -2,10 +2,12 @@ import { BrowserTab } from '@ionic-native/browser-tab';
 import { ToastProvider } from './../../../../providers/toast/toast';
 import { Clipboard } from '@ionic-native/clipboard';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ActionSheetController, Platform } from 'ionic-angular';
 import { App } from '../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { SafariViewController } from '@ionic-native/safari-view-controller';
+import { ContactsProvider } from '../../../../providers/contacts/contacts';
+import { TranslateService } from '@ngx-translate/core';
 
 
 /**
@@ -31,16 +33,20 @@ export class ContactDetailPage {
   };
 
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams, 
-    public utils: UtilitiesProvider, 
+    public actionSheetCtrl: ActionSheetController,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public utils: UtilitiesProvider,
     private viewCtrl: ViewController,
+    private contactProvider: ContactsProvider,
     private clipboard: Clipboard,
+    public platform: Platform,
     private toastProvider: ToastProvider,
+    private translateService: TranslateService,
     private browserTab: BrowserTab,
     private safariViewController: SafariViewController
-    ) {
-    console.log(this.navParams.data);
+
+  ) {
     this.selectedContact = this.navParams.data.data;
   }
 
@@ -58,7 +64,6 @@ export class ContactDetailPage {
           if (isAvailable) {
             this.browserTab.openUrl(link);
           } else {
-            // open URL with InAppBrowser instead or SafariViewController
 
             this.safariViewController.isAvailable()
               .then((available: boolean) => {
@@ -88,17 +93,49 @@ export class ContactDetailPage {
           }
         });
     }
-
-    
-  }
-
-  dismiss(){
-    this.viewCtrl.dismiss();
   }
 
   copyAddress() {
-    this.clipboard.copy(this.selectedContact.address).then(_=> {
-      this.toastProvider.show(`${this.selectedContact.name}'s address has been successfully copied to the clipboard.`, 3, true);
+    this.clipboard.copy(this.selectedContact.address).then(_ => {
+      this.toastProvider.show(this.translateService.instant("WALLETS.ADDRESS.COPY"), 3, true);
     })
+  }
+  
+  confirm() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: this.translateService.instant("SERVICES.ADDRESS_BOOK.DELETE.WARNING"),
+      cssClass: 'wallet-on-press',
+      buttons: [
+        {
+          text: this.translateService.instant("WALLETS.BUTTON.DELETE"),
+          role: 'destructive',
+          icon: this.platform.is('ios') ? null : 'trash',
+          handler: () => {
+            this.deleteContacts();
+          }
+        },
+        {
+          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
+          role: 'cancel',
+          icon: this.platform.is('ios') ? null : 'close',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+
+  deleteContacts() {
+    this.contactProvider
+      .remove(this.selectedContact.id)
+      .then(_ => {
+        return this.dismiss();
+      });
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 }

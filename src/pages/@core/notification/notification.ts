@@ -15,28 +15,23 @@ import { PostsProvider } from '../../../providers/posts/posts';
   templateUrl: 'notification.html',
 })
 export class NotificationPage {
-  posts:Array<any>=[];
+  posts: Array<any> = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private articles: PostsProvider) {
 
-    this.articles.getAll().subscribe(posts=> {
-      console.log("Blog posts", posts);
+    this.articles.getAll().subscribe(posts => {
       this.posts = posts;
     })
-   
+
 
     this.articles.getUnreadCount().then(res => {
-      console.log("Unread count", res);
     })
 
   }
 
   doRefresh(refresher) {
     setTimeout(() => {
-      console.log('Async operation has ended');
-
-      this.articles.getAll().subscribe(posts=> {
-        console.log("Blog posts", posts);
+      this.articles.getAll().subscribe(posts => {
         this.posts = posts;
       })
 
@@ -44,47 +39,37 @@ export class NotificationPage {
     }, 2000);
   }
 
- seenPost(postId) {
-    console.log('post id', postId)
-    this.articles.seenPost(postId).then(res=> {
-      console.log("seenPosts", res);
+  seenPost(postId) {
+    this.articles.seenPost(postId).then(res => {
       this.getAllSeenPosts();
-      this.articles.getUnreadCount().then(res  => {
-        console.log("Unread count", res); 
+      this.articles.getUnreadCount().then(res => {
       })
-
-
     })
   }
 
-  getAllSeenPosts(){
-    this.articles.getSeenPosts().then(res=> {
-      console.log("getAllSeenPosts", res);
+  getAllSeenPosts() {
+    this.articles.getSeenPosts().then(res => {
     });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NotificationPage');
   }
 
-  showMore(post){
-
+  showMore(post) {
     this.posts.map((_post) => {
+      if (post._id == _post._id) {
+        _post.expanded = !_post.expanded;
+      } else {
+        _post.expanded = false;
+      }
 
-        if(post._id == _post._id){
-            _post.expanded = !_post.expanded;
-        } else {
-            _post.expanded = false;
-        }
-
-        return _post;
-
+      return _post;
     });
 
-  } 
+  }
 
   isNew(postId) {
-    if(!this.articles.isNew(postId)) {
+    if (!this.articles.isNew(postId)) {
       return "New"
     } else {
       return ''

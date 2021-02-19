@@ -1,23 +1,16 @@
-<!--
-  Generated template for the SendPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header no-border>
-
   <ion-navbar transparent>
-    <ion-title>
+    <ion-title title color="dark">
+        <strong>
       <span ion-text color="dark">{{"WALLETS.SEND" | translate}}</span>
+    </strong>
     </ion-title>
-
     <ion-buttons end>
       <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content background padding>
@@ -28,62 +21,59 @@
 
       <!-- Price -->
       <section title text-center>
-        <h2 price ion-text color="dark" *ngIf="selectedCoin">
-            {{'WALLETS.SEND.AMOUNT' | translate}}</h2>
+        <h2 price ion-text style="font-weight: bold;" *ngIf="selectedCoin">
+            {{'WALLETS.SEND.AMOUNT' | translate}}
+
+        </h2>
       </section>
 
 
       <!-- Amount -->
-      <ion-card amount *ngIf="platform.is('ios')">
+      <ion-card amount *ngIf="platform.is('ios') || platform.is('android')">
         <ion-item>
           <ion-label>
-            <!-- <input type="text" pattern="[0-9]*" decimal="true"  button-char="." decimal-char="." formControlName="amount" [(ngModel)]="amount"  [placeholder]="amountPlaceholder" (click)="clearPlaceholder()" (keypress)="checkAllowedInput($event)" (input)="validateInput()"/> -->
-            <input pattern="^[+]?([0-9]*[.])?[0-9]+$" [placeholder]="amountPlaceholder" formControlName="amount" [(ngModel)]="amount" currencyMask [options]="optionsXPX" (click)="clearPlaceholder()" (keypress)="checkAllowedInput($event)"/>
+            <input pattern="^[+]?([0-9]*[.])?[0-9]+$" formControlName="amount" [(ngModel)]="amount" currencyMask
+              [options]="optionsXPX" (keypress)="checkAllowedInput($event)" />
           </ion-label>
         </ion-item>
       </ion-card>
 
-      <ion-card amount *ngIf="platform.is('android')">
-          <ion-item>
-            <ion-label>
-              <!-- <input type="number" pattern="\\d*" formControlName="amount" [(ngModel)]="amount" -->
-                <!-- [placeholder]="amountPlaceholder" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" (click)="clearPlaceholder()" (keypress)="checkAllowedInput($event)" (input)="validateInput()"/> -->
-                <input pattern="^[+]?([0-9]*[.])?[0-9]+$" [placeholder]="amountPlaceholder" formControlName="amount" [(ngModel)]="amount" currencyMask [options]="optionsXPX" (click)="clearPlaceholder()" (keypress)="checkAllowedInput($event)"/>
-              </ion-label>
-          </ion-item>
-        </ion-card>
-
       <section total text-center>
-        <h2 price ion-text color="dark" *ngIf="selectedCoin">
-          ≈ {{ selectedCoin?.market_data.current_price.usd * amount  | currency: 'USD': 'symbol': '1.2-6' }}</h2>
-          <div *ngIf="msgErrorBalance !== ''">
-                <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
-            </div>
-        </section>
-      
+        <h2 price ion-text *ngIf="selectedCoin">
+            US$ {{ selectedCoin?.market_data.current_price.usd * amount  | number : '1.2-6' }}</h2>
+        <div *ngIf="msgErrorBalance !== ''">
+          <strong style="color:red;padding-left: 2rem;">{{msgErrorBalance}}</strong>
+        </div>
+      </section>
+
 
       <!-- Mosaic -->
-      <!-- (click)="selectMosaic()" -->
-      <ion-card no-margin-bottom *ngIf="selectedMosaic" (click)="selectMosaic()">
-        <ion-item mosaic>
+      <ion-card  (click)="selectMosaic()">
+        <ion-label text-left padding-left> {{ "WALLETS.BALANCE" | translate}}:</ion-label>
+
+        <ion-item background-white>
           <ion-avatar item-start>
             <img [src]="utils.getLogo(selectedMosaic)">
           </ion-avatar>
-          <h2 text-uppercase ion-text color="dark" >{{ selectedMosaic?.mosaicId || '' }}</h2>
-          <p text-uppercase ion-text color="dark">{{ selectedMosaic?.namespaceId || selectedMosaic.hex.toLocaleUpperCase() }}</p>
+          <h2 ion-text *ngIf="selectedMosaic.name != undefined && selectedMosaic.name.length !=0 ">
+              {{ selectedMosaic.name | uppercase }}</h2>
+            <h3 ion-text *ngIf="selectedMosaic.name === undefined || selectedMosaic.name.length === 0">
+              {{ selectedMosaic.hex | uppercase }}
+            </h3>
+          <!-- <h2 text-uppercase ion-text>{{ selectedMosaic?.mosaicId || '' }}</h2>
+          <p text-uppercase ion-text>
+            {{ selectedMosaic?.namespaceId || selectedMosaic.hex.toLocaleUpperCase() }}</p> -->
 
           <section item-right>
-            <!-- <h2 ion-text color="dark">{{ selectedMosaic?.amount | number:'1.2' }}</h2> -->
-            <h2 ion-text color="dark">{{  selectedMosaic?.amount }}</h2>
-            <p text-right text-left ion-text color="dark">
-              <small>
-                {{  ((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | currency: 'USD': 'symbol': '1.2-6'  }}
-              </small>
+            <h2 ion-text bold>
+              {{getAbsoluteAmount(selectedMosaic.amountCompact, selectedMosaic.divisibility)}}</h2>
+            <p text-right style="font-size: 10px !important">
+              USD$ {{((selectedMosaic.mosaicId == 'xpx') ? (selectedCoin?.market_data.current_price.usd * selectedMosaic?.amount) : 0) | number : '1.2-6'  }}
             </p>
           </section>
         </ion-item>
       </ion-card>
-      
+
       <ion-card no-margin-bottom fake-card *ngIf="!selectedMosaic">
         <ion-item text-center>
           <ion-spinner name="dots"></ion-spinner>
@@ -91,15 +81,11 @@
       </ion-card>
 
       <!-- Recipient -->
-
       <ion-item select-contact no-lines>
-        <ion-label ion-text color="dark"></ion-label>
-        <ion-select [selectOptions]="{
-    title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate,
-    subTitle: ''        
-  }" [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}" (ionChange)="onChangeTo($event)">
+        <ion-label ion-text></ion-label>
+        <ion-select [selectOptions]="{title: 'WALLETS.SEND.ADDRESS.OPTION.TITLE' | translate, subTitle: ''}"
+          [(ngModel)]="addressSourceType.to" [ngModelOptions]="{standalone: true}" (ionChange)="onChangeTo($event)">
           <ion-option value="manual">{{"WALLETS.SEND.ADDRESS.OPTION1" | translate}}</ion-option>
-          <!-- <ion-option value="qrcode">Scan QR code</ion-option> -->
           <ion-option value="contact">{{"WALLETS.SEND.ADDRESS.OPTION2" | translate}}</ion-option>
         </ion-select>
       </ion-item>
@@ -108,8 +94,9 @@
       <ion-card *ngIf="addressSourceType.to === 'contact'" (click)="selectContact('to')">
         <ion-item>
           <img item-left logo-small [src]="App.USER">
-          <h2 ion-text color="dark">{{ form.get('recipientName').value || "WALLETS.SEND.ADDRESS.OPTION2" | translate }}</h2>
-          <p small ion-text color="dark">
+          <h2 ion-text>{{ form.get('recipientName').value || "WALLETS.SEND.ADDRESS.OPTION2" | translate }}
+          </h2>
+          <p small ion-text>
             {{ form.get('recipientAddress').value || '' }}</p>
         </ion-item>
       </ion-card>
@@ -119,32 +106,43 @@
           <ion-input formControlName="recipientAddress" type="text" value=""
             placeholder="{{'WALLETS.SEND.ADDRESS' | translate}}"></ion-input>
           <button clear item-right ion-button icon-only (click)="scan()">
-            <ion-icon color="white" name="custom-qrcode"></ion-icon>
+            <ion-icon  name="custom-qrcode"></ion-icon>
           </button>
         </ion-item>
       </ion-card>
       <div *ngIf="msgErrorUnsupported !== ''">
-          <!-- <p error padding-left text-left color="danger" *ngFor="let error of formGroup.errors"> -->
-            <strong style="color:red;padding-left: 2rem;">{{msgErrorUnsupported}}</strong>
-          <!-- </p> -->
-        </div>
+        <strong style="color:red;padding-left: 2rem;">{{msgErrorUnsupported}}</strong>
+      </div>
 
       <!-- Note -->
       <ion-card>
-        <ion-item no-border>
-          <ion-textarea ion-text color="dark" autosize rows="2" ion-text color="dark" formControlName="message"
+        <ion-item no-border  padding>
+          <ion-textarea ion-text autosize rows="2" ion-text formControlName="message"
             placeholder="{{'WALLETS.SEND.NOTES' | translate}}"></ion-textarea>
         </ion-item>
       </ion-card>
 
+      <ion-card >
+        <ion-item padding>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+          <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+            <ion-icon item-right [name]="passwordIcon">
+            </ion-icon>
+          </button>
+        </ion-item>
+      </ion-card>
     </form>
 
   </ion-list>
 
   <section text-center>
-    <button gradient-button half color-6 ion-button icon-end no-margin [disabled]="msgErrorBalance || msgErrorUnsupported || form.invalid" (click)="onSubmit()">
-        {{"WALLETS.SEND" | translate}}
-      <ion-icon name="arrow-round-up"></ion-icon>
+    <button gradient-button half color-10 ion-button icon-end no-margin
+      [disabled]="msgErrorBalance || msgErrorUnsupported || form.invalid" (click)="send()">
+      {{"WALLETS.SEND" | translate}}
+      <ion-icon name="custom-send"></ion-icon>
     </button>
   </section>
+  <br><br>
 </ion-content>

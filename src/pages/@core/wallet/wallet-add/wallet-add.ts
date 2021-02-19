@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { App } from '../../../../providers/app/app';
-import { NemProvider } from '../../../../providers/nem/nem';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { AuthProvider } from '../../../../providers/auth/auth';
-import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { HapticProvider } from '../../../../providers/haptic/haptic';
-import { TranslateService } from '@ngx-translate/core';
-import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { AlertProvider } from '../../../../providers/alert/alert';
+import { AuthProvider } from '../../../../providers/auth/auth';
+import { WalletProvider } from '../../../../providers/wallet/wallet';
+import { Password } from 'tsjs-xpx-chain-sdk';
+import { AppConfig } from '../../../../app/app.config';
+import { ContactsProvider } from '../../../../providers/contacts/contacts';
 
 /**
  * Generated class for the WalletAddPage page.
@@ -27,43 +28,73 @@ import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 export class WalletAddPage {
   App = App;
   formGroup: FormGroup;
-
   PASSWORD: string;
 
-  walletColor:string = "wallet-4";
+  walletColor: string = "wallet-4";
   walletName: string = "Primary";
 
   tablet: boolean = false;
+  configurationForm: ConfigurationForm = {};
+  catapultWallet: any;
+  passwordType: string = "password";
+  passwordIcon: string = "ios-eye-outline";
+  nameMin: boolean;
+  nameMax: boolean;
+  exampleAccount = AppConfig.accountExample
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    private nemProvider: NemProvider,
-    private walletProvider: WalletProvider,
-    private authProvider: AuthProvider,
-    private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
-    private haptic: HapticProvider,
-    private translateService : TranslateService,
+    private translateService: TranslateService,
+    private sharedService: SharedService,
+    private alertProvider: AlertProvider,
+    private authProvider: AuthProvider,
+    private walletProvider: WalletProvider,
+    public contactsProvider: ContactsProvider,
   ) {
-    this.init();
+
+    this.configurationForm = this.sharedService.configurationForm;
     this.walletColor = "wallet-1";
     this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
+    this.init();
+    this.subcribe();
   }
 
-  changeWalletColor(color){
+  changeWalletColor(color) {
     this.walletColor = color;
   }
 
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
+
+    // Hide Tabs
+    let tabs = document.querySelectorAll('.tabbar');
+    if (tabs !== null) {
+      Object.keys(tabs).map((key) => {
+        // tabs[ key ].style.transform = 'translateY(56px)';
+        tabs[key].style.display = 'none';
+      });
+    } // end if
+  }
+
+  ionViewDidLeave() {
+    let tabs = document.querySelectorAll('.tabbar');
+    if (tabs !== null) {
+      Object.keys(tabs).map((key) => {
+        tabs[key].style.display = 'flex';
+      });
+    } // end if
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletAddPage');
+    // console.log('ionViewDidLoad WalletAddPage');
   }
 
+  subcribe() {
+
+  }
   init() {
 
     if (window.screen.width >= 768) { // 768px portrait
@@ -71,16 +102,31 @@ export class WalletAddPage {
     }
 
     this.formGroup = this.formBuilder.group({
-      name: ['', [Validators.minLength(3), Validators.required]]
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.configurationForm.nameWallet.minLength),
+          Validators.maxLength(this.configurationForm.nameWallet.maxLength)
+        ]
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(this.configurationForm.passwordWallet.minLength),
+          Validators.minLength(this.configurationForm.passwordWallet.minLength)
+        ]
+      ]
     });
 
-    this.authProvider.getPassword().then(password => {
-      this.PASSWORD = password;
-    });
+    // this.authProvider.getPassword().then(password => {
+    //   this.PASSWORD = password;
+    // });
   }
 
-  gotoBackup(wallet) {
-    return this.navCtrl.push('WalletBackupPage', wallet);
+  goToBackup(wallet, password) {
+    return this.navCtrl.push('WalletBackupPage', { wallet: wallet, password: password });
   }
 
   goHome() {
@@ -92,37 +138,63 @@ export class WalletAddPage {
     );
   }
 
-  onSubmit(form) {
-    this.walletProvider.checkIfWalletNameExists(form.name, '').then(value => {
-      if (value) {
-        const title = `<${this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS")}>`
-        this.alertProvider.showMessage(title);
+  async onSubmit(form: { name: any; password: any; }) {
+    try {
+      const decrypted = await this.authProvider.decryptAccountUser(form.password);
+      if (decrypted) {
+        this.catapultWallet = this.walletProvider.createSimpleWallet(form.name, form.password);
+        this.walletProvider.checkIfWalletNameExists(this.catapultWallet.name, this.catapultWallet.address.plain()).then(async value => {
+          if (value) {
+            this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.NAME_EXISTS"));
+          } else {
+            this.walletProvider.storeWalletCatapult(this.catapultWallet, null, this.walletColor, new Password(form.password), '').then(_ => {
+
+              const data = {
+                name: form.name.replace(" ", "-").concat('-owner'),
+                address: this.catapultWallet.address.plain(),
+                telegram: ""
+              }
+              this.contactsProvider.push(data)
+              this.goToBackup(this.catapultWallet, form.password);
+            });
+          }
+        })
       } else {
-        
-        
-        const newWallet = this.walletProvider.createSimpleWallet({ walletName: form.name, password: this.PASSWORD });
-
-        console.log("LOG: WalletAddPage -> onSubmit -> newWallet", newWallet);
-        
-        this.walletProvider.storeWallet(newWallet, this.walletColor).then(value => {
-
-          newWallet.walletColor = this.walletColor;
-          console.log("New wallet:",newWallet);
-          return this.walletProvider.setSelectedWallet(newWallet);
-        }).then(() => {
-          this.haptic.notification({ type: 'success' });
-          delete newWallet.total;
-          delete newWallet.walletColor;
-          this.gotoBackup(newWallet);
-        });
+        this.alertProvider.showMessage(this.translateService.instant("APP.INVALID.PASSWORD"));
       }
-    });
+    } catch (error) {
+      this.alertProvider.showMessage(this.translateService.instant("WALLETS.IMPORT.PRIVATE_KEY_INVALID"));
+    }
+  }
+
+  /**
+ *
+ *
+ * @param {Event} e
+ * @memberof WalletAddPrivateKeyPage
+ */
+  showHidePassword(e: Event) {
+    e.preventDefault();
+    this.passwordType = this.passwordType === "password" ? "text" : "password";
+    this.passwordIcon = this.passwordIcon === "ios-eye-outline" ? "ios-eye-off-outline" : "ios-eye-outline";
+  }
+
+  minName() {
+    let name = this.formGroup.controls.name.value;
+    if (name.length < this.configurationForm.nameWallet.minLength) {
+      this.nameMin = true;
+    } else if (name.length > this.configurationForm.nameWallet.maxLength) {
+      this.nameMax = true;
+    } else {
+      this.nameMin = false
+      this.nameMax = false;
+    }
   }
 
   updateName() {
-		let name = this.formGroup.value.name
-		console.log("LOG: WalletAddPage -> updateName -> name", name);
-    if(name) {
+    let name = this.formGroup.value.name
+    // console.log("LOG: WalletAddPage -> updateName -> name", name);
+    if (name) {
       this.walletName = name;
     } else {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;

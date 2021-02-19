@@ -31,22 +31,25 @@ ion-tabs {
         color: color($colors, gothic);
       }
     }
-
-
-
-
   }
+}
+
+.fab-md-in-list {
+  color: #ffffff;
 }
 
 ion-fab[fab-button-center] {
   button[gradient-button] {
-    height: 64px;
-    width: 64px;
-    margin: 0;
+    height:40px;
+    width: 40px;
+    margin: 1px;
+    margin-left: 5px;
+  
   }
 
   z-index: 999 !important;
 }
+
 
 .ion-page {
   z-index: 1000 !important;

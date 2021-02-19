@@ -4,12 +4,12 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 
 import { App } from '../../../../providers/app/app';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { AuthProvider } from '../../../../providers/auth/auth';
 import { AlertProvider } from '../../../../providers/alert/alert';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
 import { HapticProvider } from '../../../../providers/haptic/haptic';
 import { TranslateService } from '@ngx-translate/core';
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
+import { SharedService, ConfigurationForm } from '../../../../providers/shared-service/shared-service';
+import { CustomSimpleWallet } from '../../../../providers/wallet/simple-wallet';
 
 /**
  * Generated class for the WalletUpdatePage page.
@@ -26,7 +26,7 @@ import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
 export class WalletUpdatePage {
   App = App;
   formGroup: FormGroup;
-  selectedWallet: SimpleWallet;
+  selectedWallet: CustomSimpleWallet;
 
   PASSWORD: string;
 
@@ -35,25 +35,43 @@ export class WalletUpdatePage {
   walletAddress: string = "TDDG3UDZBGZUIOCDCOPT45NB7C7VJMPMMNWVO4MH";
   walletTotal: number = 0;
   previousWalletName: any;
+  nameMin: boolean;
+  nameMax: boolean;
+  configurationForm: ConfigurationForm = {};
+  amountXpx: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     private walletProvider: WalletProvider,
-    private authProvider: AuthProvider,
     private alertProvider: AlertProvider,
     private utils: UtilitiesProvider,
     private viewCtrl: ViewController,
     private haptic: HapticProvider,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sharedService: SharedService,
   ) {
-    // this.walletColor = "wallet-1"; // to be change with current wallet color
+    this.configurationForm = this.sharedService.configurationForm;
     this.init();
   }
 
   changeWalletColor(color) {
     this.walletColor = color;
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss()
+  }
+
+  goBack() {
+    return this.navCtrl.setRoot(
+      'TabsPage',
+      {},
+      {
+        animate: true,
+      }
+    );
   }
 
   ionViewWillEnter() {
@@ -65,83 +83,60 @@ export class WalletUpdatePage {
   }
 
   init() {
-    console.log(this.navParams.get('wallet'));
     this.selectedWallet = this.navParams.get('wallet');
     this.walletColor = this.selectedWallet.walletColor;
-    this.walletName = this.selectedWallet.name;
-    this.previousWalletName = this.selectedWallet.name;
-    this.walletAddress = this.selectedWallet.address.plain()
-    this.walletTotal = this.selectedWallet.total;
+    this.walletName = this.selectedWallet['account'].name;
+    this.previousWalletName = this.selectedWallet['account'].name;
+    this.walletAddress = this.selectedWallet['account'].address.address
+    this.walletTotal = this.navParams.get('totalBalance');
+    this.amountXpx = this.navParams.get('amountXpx');
 
-    console.log("Total", this.walletTotal);
+    console.log('this.navParams', this.navParams);
+    
 
     this.formGroup = this.formBuilder.group({
-      name: [
-        this.selectedWallet.name || '',
-        [Validators.minLength(3), Validators.required]
-      ]
-    });
-
-    this.authProvider.getPassword().then(password => {
-      this.PASSWORD = password;
+      name: [this.walletName, [
+        Validators.required,
+        Validators.minLength(this.configurationForm.nameWallet.minLength),
+        Validators.maxLength(this.configurationForm.nameWallet.maxLength)
+      ]]
     });
   }
 
-  goBack() {
-    return this.navCtrl.setRoot(
-      'TabsPage',
-      {},
-      {
-        animate: true,
-        // direction: 'forward'
-      }
-    );
-  }
-
-  onSubmit(form) {
-    if (this.previousWalletName == form.name) {
-      this.walletProvider
-        .updateWalletName(this.selectedWallet, form.name, this.walletColor)
-        .then(selectedWallet => {
-          console.log(selectedWallet);
-          return this.walletProvider.setSelectedWallet(selectedWallet.wallet);
-        })
-        .then(selectedWallet => {
-          this.haptic.notification({ type: 'success' });
-          this.goBack();
-        });
+  minName() {
+    let name = this.formGroup.controls.name.value;
+    if (name.length < this.configurationForm.nameWallet.minLength) {
+      this.nameMin = true;
+    } else if (name.length > this.configurationForm.nameWallet.maxLength) {
+      this.nameMax = true;
     } else {
-      this.walletProvider.checkIfWalletNameExists(form.name, '').then(isExist => {
-				console.log("LOG: WalletUpdatePage -> onSubmit -> isExist", isExist);
-        if (isExist) {
-        this.alertProvider.showMessage('Wallet name already exist. Please choose a new one.');
-        } else {
-          this.walletProvider
-            .updateWalletName(this.selectedWallet, form.name, this.walletColor)
-            .then(selectedWallet => {
-              console.log(selectedWallet);
-              return this.walletProvider.setSelectedWallet(selectedWallet.wallet);
-            })
-            .then(selectedWallet => {
-              this.haptic.notification({ type: 'success' });
-              this.goBack();
-            });
-        }
-      });
+      this.nameMin = false
+      this.nameMax = false;
     }
   }
 
+  onSubmit(form) {
+    this.walletProvider.checkIfWalletNameExists(form.name, this.walletAddress).then(isExist => {
+
+      console.log('exit', isExist);
+      
+      if (isExist) {
+        this.alertProvider.showMessage(this.translateService.instant("WALLETS.EDIT.WALLET.EXIST"));
+      } else {
+        this.walletProvider.updateWalletName(this.selectedWallet['account'], form.name, this.walletColor).then(_ => {
+          this.haptic.notification({ type: 'success' });
+          this.goBack();
+        });
+      }
+    });
+  }
+
   updateName() {
-		let name = this.formGroup.value.name
-		console.log("LOG: WalletAddPage -> updateName -> name", name);
-    if(name) {
+    let name = this.formGroup.value.name
+    if (name) {
       this.walletName = name;
     } else {
       this.walletName = `<${this.translateService.instant("WALLETS.COMMON.LABEL.WALLET_NAME")}>`;
     }
-  }
-
-  dismiss() {
-    this.viewCtrl.dismiss()
   }
 }

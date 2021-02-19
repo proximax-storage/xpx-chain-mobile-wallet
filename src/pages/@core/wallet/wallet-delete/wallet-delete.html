@@ -1,15 +1,11 @@
-<!--
-  Generated template for the WalletDeletePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header no-border>
 
   <ion-navbar transparent>
-    <ion-title>{{"WALLETS.DELETE" | translate}}</ion-title>
-
-
+      <ion-title>
+          <strong>
+            <span ion-text color="dark">{{"WALLETS.DELETE" | translate}}</span>
+          </strong>
+        </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="dismiss()" color="dark">
         <ion-icon name="close"></ion-icon>
@@ -25,16 +21,16 @@
 
       <ion-col col-12 text-center>
         <h3 ion-text color="danger">
-            {{"WALLETS.DELETE.WARNING" | translate: {walletName: selectedWallet.name } }}
+            {{"WALLETS.DELETE.WARNING" | translate: {walletName: selectedWallet.account.name } }}
         </h3>
-        <p ion-text color="dark">
+        <p ion-text color="black">
             {{"WALLETS.DELETE.DESC" | translate}}
         </p>
       </ion-col>
 
       <ion-col buttons padding col-12 text-center>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-          <button gradient-button color-5 type="submit" color="dark">
+          <button gradient-button color-11 type="submit" color="dark">
             {{"WALLETS.BUTTON.CONTINUE" | translate}}
           </button>
         </form>

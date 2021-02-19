@@ -43,140 +43,127 @@ export class VerificationCodePage {
     private translateService: TranslateService
   ) { }
 
+  /**
+   *
+   *
+   * @memberof VerificationCodePage
+   */
   ionViewWillEnter() {
-    console.log(
-      "VerificationCodePage :: ionViewWillEnter",
-      !this.navParams.data.destination &&
-      this.navParams.data.status === "verify"
-    );
-
-    if (
-      !this.navParams.data.destination &&
-      this.navParams.data.status === "verify"
-    ) {
+    if (!this.navParams.data.destination && this.navParams.data.status === "verify") {
       this.utils.disableHardwareBack();
     } else {
       this.utils.disableHardwareBack();
-      // this.utils.setHardwareBackModal(this.viewCtrl);
     }
   }
-
+  
+  /**
+   *
+   *
+   * @memberof VerificationCodePage
+   */
   ionViewDidLoad() {
-    console.log("ionViewDidLoad VerificationCodePage");
-    console.log(
-      this.navParams.data,
-      this.navParams.data.title,
-      this.navParams.data.subtitle,
-      this.navParams.data.invalidPinMessage
-    );
-
     const setupPinTitle = this.translateService.instant("APP.PIN.SETUP.TITLE");
     const setupPinSubTitle = this.translateService.instant("APP.PIN.SETUP.DESC");
 
-    this.pinTitle = this.navParams.data.title
-      ? this.navParams.data.title
-      : setupPinTitle;
-
-    this.pinSubtitle = this.navParams.data.subtitle
-      ? this.navParams.data.subtitle
-      : setupPinSubTitle;
-
-    this.invalidPinMessage = this.navParams.data.invalidPinMessage
-      ? this.navParams.data.invalidPinMessage
-      : "Your pin is not equal to previous one. Please try again.";
-
+    this.pinTitle = this.navParams.data.title ? this.navParams.data.title : setupPinTitle;
+    this.pinSubtitle = this.navParams.data.subtitle ? this.navParams.data.subtitle : setupPinSubTitle;
+    this.invalidPinMessage = this.navParams.data.invalidPinMessage ? this.navParams.data.invalidPinMessage : "Your pin is not equal to previous one. Please try again.";
 
     // Used in pin component to compare previous and current pin
-
     if (this.navParams.data.status === "verify") {
       this.isVerify = true;
       this.previousPin = this.navParams.data.pin;
-      console.log("LOG: VerificationCodePage -> ionViewDidLoad -> this.previousPin", this.previousPin)
     }
 
     if (this.navParams.data.status === "confirm") {
       this.isVerify = true;
       this.pin.get().then(pin => {
-        console.log("LOG: VerificationCodePage -> ionViewDidLoad -> pin", pin)
         this.previousPin = pin.toString();
       });
     }
   }
 
-  onSubmit(pin) {
-
+  /**
+   *
+   *
+   * @param {string} pin
+   * @returns
+   * @memberof VerificationCodePage
+   */
+  onSubmit(pin: string) {
     const verifyPinTitle = this.translateService.instant("APP.PIN.VERIFY.TITLE");
-
     let status: string = this.navParams.data.status;
     let destination = this.navParams.data.destination;
-    console.log(destination)
-    let pinParams = this.navParams.data.pin;
+    let reload = this.navParams.data.reload;
+    console.log('#################################this.navParams.data.reload', this.navParams.data.reload);
 
+    let pinParams = this.navParams.data.pin;
     if (status === 'setup') {
-      console.log("status === 'setup'");
-      console.log("VerificationCodePage : pin", pin);
       let page = "VerificationCodePage";
       let data: any = {
         status: 'verify',
         title: verifyPinTitle,
         subtitle: " ",
         pin: this.pin.hash(pin),
-        destination: 'TabsPage'
+        destination: destination,
+        reload: reload
+
       };
       return this.utils.showModal(page, data);
     }
 
+    console.log('#################################status', status);
+    console.log('#################################pin', pin);
+    console.log('#################################pinParams', pinParams);
+    console.log('#################################pinParams', reload);
+    
     if (status === "verify" && BcryptJS.compareSync(pin, pinParams)) {
-      console.log("status === 'verify'");
-
       this.haptic.notification({ type: 'success' });
-      let page = "TabsPage";
+      this.navCtrl.getActive()
+      let page = destination;
       this.isVerify = true;
       this.previousPin = pin;
-      return this.pin.set(pin)
-        .then(_ => {
-          return this.storage.set("isModalShown", false);
-        })
-        .then(_ => {
-          if (page) {
-            return this.navCtrl.setRoot(page, {
-              animate: true,
-              direction: "forward"
-            });
-          } else {
-            this.viewCtrl.dismiss();
-          }
-        });
-
+      return this.pin.set(pin).then(_ => {
+        return this.storage.set("isModalShown", false);
+      }).then(_ => {
+        if (page) {
+          return this.navCtrl.setRoot(page, {
+            animate: true,
+            direction: "forward"
+          });
+        } else {
+          this.viewCtrl.dismiss();
+        }
+      });
+    } else if (reload != undefined) {
+      this.haptic.notification({ type: 'error' });
+      this.utils.showModal("VerificationCodePage", {
+        status: "setup",
+        destination: "TabsPage"
+      });
     }
-
     if (status === "confirm") {
-      console.log("status === 'confirm'");
       this.pin.compare(pin).then(isMatch => {
-        console.log("TCL: VerificationCodePage -> onSubmit -> isMatch", isMatch)
-
         if (isMatch) {
           this.haptic.notification({ type: 'success' });
-          let page = "TabsPage";
+          let page = destination;
           this.isVerify = true;
           this.previousPin = pin;
 
-          return this.pin.set(pin)
-            .then(_ => {
-              return this.storage.set("isModalShown", false);
-            })
-            .then(_ => {
-              if (page) {
-                return this.navCtrl.setRoot(page, {}, {
-                  animate: true,
-                  direction: "forward"
-                });
-              } else {
-                this.viewCtrl.dismiss();
-              }
-            });
+          return this.pin.set(pin).then(_ => {
+            return this.storage.set("isModalShown", false);
+          }).then(_ => {
+            if (page) {
+              this.viewCtrl.dismiss();
+              return this.navCtrl.setRoot(page, {}, {
+                animate: true,
+                direction: "forward"
+              });
+            } else {
+              this.viewCtrl.dismiss();
+            }
+          });
         }
-
       })
     }
   }

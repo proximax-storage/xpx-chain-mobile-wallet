@@ -5,16 +5,18 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-
   <ion-navbar transparent>
-    <ion-title>{{"WALLETS.MORE_DETAILS" | translate}}</ion-title>
+    <ion-title title color="dark">
+      <strong>
+        <span ion-text color="dark">{{"WALLETS.MORE_DETAILS" | translate}}</span>
+      </strong>
+    </ion-title>
 
-    
     <ion-buttons end>
-        <button ion-button icon-only (click)="dismiss()" color="dark">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
+      <button ion-button icon-only (click)="dismiss()" color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -22,58 +24,139 @@
 
 <ion-content background>
 
-    <ion-card balance>
-        <!-- <ion-card-header>
-            Wallet name: {{walletName }}
-        </ion-card-header> -->
-        <!-- <ion-card-content>
-          <h2><strong>Balance:</strong> $0.00</h2>
-          <h2><strong>Address: </strong>{{currentWallet?.address.value}}</h2>
-        </ion-card-content> -->
+  <ion-card balance>
+    <ion-list transparent-items>
 
-        <ion-list transparent-items>
+      <ion-item *ngIf="selectedAccount">
+        <ion-icon name='custom-account' item-start></ion-icon>
+        {{"WALLETS.WALLET_NAME" | translate}}:
+        <span item-end>{{selectedAccount.account?.name }}</span>
+      </ion-item>
 
-            <ion-item *ngIf="selectedAccount">
-                <ion-icon name='custom-account' item-start></ion-icon>
-                {{"WALLETS.WALLET_NAME" | translate}}:
-                <span item-end>{{selectedAccount?.name }}</span>
-            </ion-item>
+      <ion-item *ngIf="selectedAccount">
+        <ion-icon name='custom-balance' item-start></ion-icon>
+        {{"WALLETS.BALANCE" | translate}}:
+        <!-- <span item-end *ngIf="selectedAccount">USD$ {{ (totalBalance? totalBalance:0) | number : '1.2-2'}}</span> -->
+        <span item-end *ngIf="selectedAccount">XPX {{ amountXpx}} </span>
+      </ion-item>
 
-            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
-                <ion-icon name='custom-balance' item-start></ion-icon>
-                {{"WALLETS.BALANCE" | translate}}:
-                <span item-end *ngIf="selectedAccount">${{ (totalBalance? totalBalance:0) | number : '1.2-2'}} USD</span>
-            </ion-item>
+      <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.account.address.address)">
+        <ion-icon name='custom-address' item-start></ion-icon>
+        {{"WALLETS.ADDRESS" | translate}}:
+        <p class='black' text-justify *ngIf="selectedAccount">{{ selectedAccount.account?.address.address }} </p>
+      </ion-item>
 
-            <ion-item *ngIf="selectedAccount" (click)="copy(selectedAccount.address.plain())">
-                <ion-icon name='custom-address' item-start></ion-icon>
-                {{"WALLETS.ADDRESS" | translate}}:
-                <p text-justify  *ngIf="selectedAccount">{{ selectedAccount?.address.plain() }} </p>
-            </ion-item>
-          
-          </ion-list>
+    </ion-list>
 
-        <ion-row>
+    <ion-row *ngIf="export  && delete && public">
+      <button reduce-margin gradient-button quarter-width color-11 medium (click)="showExportPrivateKeyModal()">
+        {{"WALLETS.EXPORT.EXPORT_PRIVATE_KEY" | translate}}
+      </button>
+    </ion-row>
 
-            <button reduce-margin gradient-button quarter-width color-5 medium (click)="showExportPrivateKeyModal()">
-              {{"WALLETS.EXPORT" | translate}}
-            </button>
-        </ion-row>
-        
-        <ion-row>
-          <button reduce-margin gradient-button quarter-width color-5 medium (click)="showWalletUpdate()">
-            {{"WALLETS.EDIT" | translate}}
+    <ion-row *ngIf="pass">
+      <form [formGroup]="form">
+        <ion-item transparent padding>
+          <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+          <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+            <ion-icon item-right color="dark" [name]="passwordIcon">
+            </ion-icon>
           </button>
-        </ion-row>
+        </ion-item>
+      </form>
+    </ion-row>
 
-        <ion-row align-items-center>
-          <ion-col col="12" align-self-center>
-            <button text-center full ion-button color="danger" clear (click)="showWalletDelete()">
-              {{"WALLETS.DELETE" | translate}}
-            </button>
-          </ion-col>
-        </ion-row>
-      </ion-card>
+    <ion-row *ngIf="pass">
+      <ion-col>
+        <button (click)="cancel()" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CANCEL" | translate}}
+        </button>
+      </ion-col>
+      <ion-col>
+        <button (click)="aceptar(1)" [disabled]="form.invalid" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CONFIRM" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row align-items-center *ngIf="delete && export && public">
+      <button reduce-margin gradient-button quarter-width color-11 medium (click)="showWalletPublickey()">
+        {{"WALLETS.EXPORT.EXPORT_PUBLIC_KEY" | translate}}
+      </button>
+    </ion-row>
+
+    <ion-row *ngIf="exportPublic">
+      <form [formGroup]="form">
+        <ion-item transparent padding>
+          <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+          <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+            <ion-icon item-right color="dark" [name]="passwordIcon">
+            </ion-icon>
+          </button>
+        </ion-item>
+      </form>
+    </ion-row>
+
+    <ion-row *ngIf="exportPublic">
+      <ion-col>
+        <button (click)="cancel()" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CANCEL" | translate}}
+        </button>
+      </ion-col>
+      <ion-col>
+        <button (click)="aceptar(3)" [disabled]="form.invalid" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CONFIRM" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="export && delete && public">
+      <button reduce-margin gradient-button quarter-width color-11 medium (click)="showWalletUpdate()">
+        {{"WALLETS.EDIT" | translate}}
+      </button>
+    </ion-row>
 
 
+    <ion-row align-items-center *ngIf="delete && export && public">
+      <ion-col col="12" align-self-center>
+        <button text-center full ion-button color="danger" clear (click)="showWalletDelete()">
+          {{"WALLETS.DELETE" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="deletePass">
+      <form [formGroup]="form">
+        <ion-item transparent padding>
+          <ion-label stacked>{{"APP.COMMON.PASSWROD" | translate}}</ion-label>
+          <ion-input formControlName="password" [type]="passwordType"
+            placeholder="{{'APP.COMMON.PASSWROD.PLACEHOLDER' | translate}}"></ion-input>
+
+          <button type="button" (click)="showHidePassword($event)" clear item-right ion-button icon-only>
+            <ion-icon item-right color="dark" [name]="passwordIcon">
+            </ion-icon>
+          </button>
+        </ion-item>
+      </form>
+    </ion-row>
+
+    <ion-row *ngIf="deletePass">
+      <ion-col>
+        <button (click)="cancel()" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CANCEL" | translate}}
+        </button>
+      </ion-col>
+      <ion-col>
+        <button (click)="aceptar(2)" [disabled]="form.invalid" gradient-button full color-11 no-margin>
+          {{"WALLETS.BUTTON.CONFIRM" | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 </ion-content>

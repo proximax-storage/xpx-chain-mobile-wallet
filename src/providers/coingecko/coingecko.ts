@@ -18,7 +18,7 @@ export class CoingeckoProvider {
   url = 'https://api.coingecko.com/api/v3';
 
   constructor(public http: HttpClient, private cache: LocalCacheProvider) {
-    console.log('Hello CoingeckoProvider Provider');
+    // console.log('Hello CoingeckoProvider Provider');
   }
 
   getAll(): Observable<any> {
@@ -27,21 +27,13 @@ export class CoingeckoProvider {
     let url = `${this.url}/coins`;
     let requestObservable = this.http.get(url);
     this.cache.observable('getAllPrice', requestObservable, 60*30).subscribe(result => {
-      console.log("getAllPrice",result)
+      // console.log("getAllPrice",result)
   });
 
     return this.http.get(`${this.url}/coins`);
   }
 
   getDetails(coin_id: string): Observable<any> {
-    // let url = `${this.url}/coins/${coin_id}`;
-    // let requestObservable = this.http.get(url);
-    // console.log(requestObservable);
-    
-    // this.cache.observable(coin_id, requestObservable, 60*30).subscribe(result => {
-    //   console.log("getDetailsPrice",result)
-    // });
-    // return this.cache.observable(coin_id, requestObservable, 60*30)
     return this.http.get(`${this.url}/coins/${coin_id}`);
   }
 

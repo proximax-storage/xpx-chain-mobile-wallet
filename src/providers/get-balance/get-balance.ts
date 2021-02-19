@@ -1,18 +1,4 @@
-import { NemProvider } from './../nem/nem';
 import { Injectable } from '@angular/core';
-
-import {
-  Address,
-  MosaicId,
-  MosaicProperties,
-  SimpleWallet,
-  MosaicAmountView,
-  Mosaic,
-} from 'tsjs-xpx-chain-sdk';
-import { Observable } from 'rxjs';
-
-import findIndex from 'lodash/findIndex';
-import { CoingeckoProvider } from '../coingecko/coingecko';
 
 /*
   Generated class for the GetBalanceProvider provider.
@@ -22,7 +8,7 @@ import { CoingeckoProvider } from '../coingecko/coingecko';
 */
 @Injectable()
 export class GetBalanceProvider {
-  constructor(private nemProvider: NemProvider, private coingeckoProvider: CoingeckoProvider,) {
+  constructor() {
     console.log('Hello GetBalanceProvider Provider');
   }
 

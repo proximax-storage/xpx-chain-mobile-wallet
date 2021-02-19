@@ -1,13 +1,13 @@
-import { Component } from "@angular/core";
-import { Platform } from "ionic-angular";
+import { Component, ViewChild } from "@angular/core";
+import { Platform, Nav } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Storage } from "@ionic/storage";
 import { UtilitiesProvider } from "../providers/utilities/utilities";
-import { OneSignal } from "@ionic-native/onesignal";
-import { Keyboard } from "@ionic-native/keyboard";
+//import { OneSignal } from "@ionic-native/onesignal";
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../app/app.config';
+import { Deeplinks, DeeplinkMatch } from "@ionic-native/deeplinks";
 
 @Component({
   templateUrl: "app.html"
@@ -15,44 +15,68 @@ import { AppConfig } from '../app/app.config';
 export class MyApp {
   rootPage: string;
 
+  @ViewChild(Nav) navChild:Nav;
+
+  match : DeeplinkMatch;
+  listNodes: string[];
+
   constructor(
     statusBar: StatusBar,
     private splashScreen: SplashScreen,
     private platform: Platform,
     private storage: Storage,
     private utils: UtilitiesProvider,
-    private oneSignal: OneSignal,
-    private keyboard: Keyboard,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private deeplinks: Deeplinks
   ) {
-    platform.ready().then(() => {
+    platform.ready().then(async () => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
+      this.storage.set('isQrActive', true);
+      // Handle Deeplinks
 
       this.initTranslate();
       
-      // Add class when keyboard is on
-      this.keyboard.onKeyboardShow().subscribe(() => {
-        document.body.classList.add('keyboard-is-open');
-      });
-  
-      this.keyboard.onKeyboardHide().subscribe(() => {
-        document.body.classList.remove('keyboard-is-open');
-      });
-
       this.getNode();
 
+      // let isDeepLink: boolean = false;
+      // let redirectLink:string= "TabsPage";
+      // let params:any ={};
+
+      await this.deeplinks.routeWithNavController(this.navChild, {
+        '/send': "SendPage",
+      }).subscribe((match) => {
+        console.log('Successfully routed', JSON.stringify(match));
+        // isDeepLink = true;
+        // redirectLink = match.$route;
+        // params = match.$args
+
+        this.match = match;
+      }, (nomatch) => {
+        // isDeepLink = false;
+        console.log('Unmatched Route', nomatch);        
+    });
+
+    // if(isDeepLink) {
+    //   this.navChild.push(redirectLink, params)
+    //   this.initOnPauseResume();
+    //   this.showPin(redirectLink);
+      
+    // } else {
       this.initGetRoot().then(rootPage => {
         this.rootPage = rootPage;
-
+  
         setTimeout(() => {
           this.splashScreen.hide();
         }, 1000);
       });
+  
+     
       this.initOnPauseResume();
       this.showPin();
-    });
+    // }
+  });
   }
 
   /**
@@ -85,12 +109,17 @@ export class MyApp {
   }
 
   getNode(){
-    this.storage.get("node").then(nodeStorage => {
-      if(nodeStorage === null || nodeStorage === undefined){
-        this.storage.set("node", AppConfig.sirius.httpNodeUrl);
-      }
-    })
 
+    console.log('node');
+    
+    this.storage.get("node").then(nodeStorage => {
+      this.listNodes =  AppConfig.sirius.nodes
+
+      console.log('this.listNodes', this.listNodes);
+      
+      const nodeSelected = (nodeStorage === null || nodeStorage === '') ? this.listNodes[Math.floor(Math.random() * this.listNodes.length)] : nodeStorage;
+        this.storage.set("node", nodeSelected);
+    })
   }
 
   initOnPauseResume() {
@@ -121,7 +150,7 @@ export class MyApp {
     });
   }
 
-  private showPin() {
+  private  showPin() {
     Promise.all([
       this.storage.get("pin"),
       this.storage.get("isLoggedIn"),
@@ -135,18 +164,19 @@ export class MyApp {
       const isModalShown = results[3];
       const isQrActive = !!results[4];
       console.log(
-        "rootPage:", this.rootPage ,
-        this.rootPage !== "OnboardingPage" && this.rootPage !== "WelcomePage"
+        // "rootPage:", this.rootPage ,
+        // // this.rootPage !== "OnboardingPage" && this.rootPage !== "WelcomePage"
       );
       console.log("isModalShown:", !isModalShown);
       console.log("isAppPaused:", !isAppPaused);
       console.log("isLoggedIn:", isLoggedIn);
+      console.log("isQrActive:", isQrActive);
       console.log("pin:", pin);
 
       console.log(
         "showModal:",
-        this.rootPage !== "OnboardingPage" &&
-          this.rootPage !== "WelcomePage" &&
+        // this.rootPage !== "OnboardingPage" &&
+          // this.rootPage !== "WelcomePage" &&
           !isModalShown &&
           !isAppPaused &&
           !!pin &&
@@ -154,14 +184,14 @@ export class MyApp {
       );
 
       // alert(
-      //     "OnboardingPage:" + this.rootPage + 
+          // "OnboardingPage:" + this.rootPage + 
       //     ",isModalShown:" + !isModalShown +
       //     ",isAppPaused:" + isAppPaused +
       //     ",pin:" + !!pin +
       //     ",isLoggedIn:" + isLoggedIn);++
 
       // alert(
-      //   "1OnboardingPage:" + this.rootPage + 
+        // "1OnboardingPage:" + this.rootPage + 
       //   ",isModalShown:" + !isModalShown +
       //   ",isAppPaused:" + isAppPaused +
       //   ",pin:" + !!pin +
@@ -170,11 +200,15 @@ export class MyApp {
 
       if (!pin && isLoggedIn) {
         // alert("showModal: VerificationCodePage");
-        return this.utils.showModal("VerificationCodePage", {
+        this.utils.showModal("VerificationCodePage", {
           status: "setup",
           destination: "TabsPage"
         });
       }
+
+      // if(this.match) {
+      //   this.utils.showModal(this.match.$route, { mosaicSelectedName: 'xpx', payload: this.match.$args })
+      // }
 
           // if (isAppPaused) {
       //   return this.storage.set("isAppPaused", false);
@@ -184,8 +218,8 @@ export class MyApp {
          return this.storage.set('isQrActive', false);
 
       } else if (
-        this.rootPage !== "OnboardingPage" &&
-        this.rootPage !== "WelcomePage" &&
+        // this.rootPage !== "OnboardingPage" &&
+        // this.rootPage !== "WelcomePage" &&
         !isModalShown &&
         isAppPaused &&
         !!pin &&
@@ -193,7 +227,7 @@ export class MyApp {
         !isQrActive
       ) {
         // alert(
-        //   "2OnboardingPage:" + this.rootPage + 
+          "2OnboardingPage:" + this.rootPage + 
         //   ",isModalShown:" + !isModalShown +
         //   ",isAppPaused:" + isAppPaused +
         //   ",pin:" + !!pin +
@@ -216,7 +250,7 @@ export class MyApp {
     });
   }
 
-  initOneSignal() {
+/*  initOneSignal() {
     if (this.platform.is('cordova')) {
       console.log("You're on a mobile device");
       this.oneSignal.startInit(
@@ -229,18 +263,16 @@ export class MyApp {
       );
 
       this.oneSignal.handleNotificationReceived().subscribe(data => {
-        // do something when notification is received
         alert(data);
       });
 
       this.oneSignal.handleNotificationOpened().subscribe(() => {
-        // do something when a notification is opened
       });
 
       this.oneSignal.endInit();
     }
   }
-
+*/
   private initTranslate()
   {
      // Set the default language for translation strings, and the current language.

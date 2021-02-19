@@ -7,10 +7,15 @@ ion-slides {
       padding-bottom: 16px;
 }
 ion-slides[onboarding] {
-  height: 100%;
+  height: 70%;
 }
 ion-slide {
   margin-bottom: 1rem;
+}
+
+.alert-wrapper {
+  // border: 2px solid #01454d !important;
+  border-radius: 2rem !important;
 }
 
 .wallet {
@@ -25,6 +30,7 @@ ion-slide {
   position: absolute;
   z-index: 1000;
   left: 0;
+  // left: 25px;
   display: inline-block;
   width: 96%;
   height: 190px;
@@ -40,6 +46,9 @@ ion-slide {
   height: 24px;
 }
 
+.wallet-logo-add {
+  height: 40px;
+}
 .wallet-front-logo {
   position: absolute;
   top: 24px;
@@ -50,31 +59,31 @@ ion-slide {
   display: block;
   width: 100%;
   word-spacing: 1px;
-  font-size: 0.8em;
+  font-size: 0.6em;
   letter-spacing: 1px;
   color: #fff;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   margin-top: 60px;
 }
 
 .wallet-space-75 {
-  width: auto;
+  width: 58%;
   float: left;
   color: #fff;
 }
 
 .wallet-space-25 {
-  width: auto;
+  // width: 40%;
   float: right;
   color: #fff;
 }
 
 .wallet-label {
-  font-size: 10px;
-  text-transform: uppercase;
+  font-size: 14px;
+  // text-transform: uppercase;
   color: rgba(255, 255, 255, 0.8);
-  letter-spacing: 1px;
+  // letter-spacing: 1px;
 }
 
 .wallet-info {
@@ -87,155 +96,154 @@ ion-slide {
   // text-transform: uppercase;
 }
 
-
 // Single Wallet
 .single-wallet {
-    width: 100%;
-    height: 190px;
+  width: 100%;
+  height: 190px;
 }
 
 .single-wallet-content {
-    background: #F5F8F9;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 15px;
-    padding: 18px;
-    // box-shadow: 1px 1px #aaa3a3;
-    top: 0;
-    position: absolute;
-    z-index: 1000;
-    left: 0;
-    display: inline-block;
-    width: 94%;
-    height: 190px;
-    //   background-image: url('https://image.ibb.co/bVnMrc/g3095.png'),
-    //       linear-gradient(to right bottom, #C86F97, lighten(#C86F97, 1%), darken(#C86F97, 10%), darken(#C86F97, 15%), darken(#C86F97, 20%));
-    // background-repeat: no-repeat;
-    // background-position: center;
-    // background-size: cover;
-    // border-radius: 8px;
+  background: #f5f8f9;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  padding: 18px;
+  // box-shadow: 1px 1px #aaa3a3;
+  top: 0;
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  display: inline-block;
+  width: 94%;
+  height: 190px;
+  //   background-image: url('https://image.ibb.co/bVnMrc/g3095.png'),
+  //       linear-gradient(to right bottom, #C86F97, lighten(#C86F97, 1%), darken(#C86F97, 10%), darken(#C86F97, 15%), darken(#C86F97, 20%));
+  // background-repeat: no-repeat;
+  // background-position: center;
+  // background-size: cover;
+  // border-radius: 8px;
 }
 
 .single-wallet-logo {
-    height: 24px;
+  height: 24px;
 }
 
 .single-wallet-front-logo {
-    position: absolute;
-    top: 24px;
-    right: 24px;
+  position: absolute;
+  top: 24px;
+  right: 24px;
 }
 
-.single-wallet-number {
-    display: block;
-    width: 100%;
-    word-spacing: 1px;
-    font-size: 0.8em;
-    letter-spacing: 1px;
-    color: #43BDB5;
-    text-align: left;
-    margin-bottom: 20px;
-    margin-top: 60px;
+.single-f {
+  display: block;
+  width: 100%;
+  word-spacing: 1px;
+  font-size: 0.8em;
+  letter-spacing: 1px;
+  color: #43bdb5;
+  text-align: left;
+  margin-bottom: 20px;
+  margin-top: 60px;
 }
 
 .single-wallet-info {
-    width: auto;
-    text-align: left;
+  width: auto;
+  text-align: left;
 }
 
 .single-button-left {
-    width: 45%;
-    position: absolute;
-    float: left;
+  width: 45%;
+  position: absolute;
+  float: left;
 
-    button {
-        padding-left: 1.1em;
-        span {
-            ion-icon {
-                    background: #002E43;
-                    border-radius: 50px;
-                    margin: 7px;
-                    height: 22px;
-                    width: 22px;
-                    padding-top: 1px;
-                    padding-left: 7px;
-                    padding-right: 6px;
-            }
-        }
+  button {
+    padding-left: 1.1em;
+    span {
+      ion-icon {
+        background: #002e43;
+        border-radius: 50px;
+        margin: 7px;
+        height: 22px;
+        width: 22px;
+        padding-top: 1px;
+        padding-left: 7px;
+        padding-right: 6px;
+      }
     }
+  }
 }
 
 .single-button-right {
-    width: 46%;
-    position: absolute;
-    float: right;
-    right: 0;
-    padding-right: 16px;
+  width: 46%;
+  position: absolute;
+  float: right;
+  right: 0;
+  padding-right: 16px;
 
-    button {
-        padding-left: 1.1em;
-      span {
-        ion-icon {
-          background: #1B867F;
-          border-radius: 50px;
-          margin: 7px;
-          height: 22px;
-          width: 22px;
-          padding-top: 1px;
-          padding-left: 7px;
-          padding-right: 6px;
-        }
+  button {
+    padding-left: 1.1em;
+    span {
+      ion-icon {
+        background: #1b867f;
+        border-radius: 50px;
+        margin: 7px;
+        height: 22px;
+        width: 22px;
+        padding-top: 1px;
+        padding-left: 7px;
+        padding-right: 6px;
       }
     }
+  }
 }
 
 .single-wallet-name {
-    font-size: 24px;
-    // text-transform: uppercase;
-    color: #43BDB5;
-    letter-spacing: 1px;
-    text-align: left;
+  font-size: 24px;
+  // text-transform: uppercase;
+  color: #43bdb5;
+  letter-spacing: 1px;
+  text-align: left;
 }
 
 .single-wallet-balance {
-    margin-bottom: 0;
-    margin-top: 15px;
-    font-size: 36px;
-    line-height: 18px;
-    color: #131515;
+  margin-bottom: 0;
+  margin-top: 15px;
+  font-size: 36px;
+  line-height: 18px;
+  color: #131515;
 }
 
 .single-price-tick {
   font-size: 12px;
   // text-transform: uppercase;
-  color: #43BDB5;
+  color: #43bdb5;
   letter-spacing: 1px;
   text-align: left;
 }
 
 //   Create wallet
-.wallet-create{
-    width: 94%;
-    height: 190px;
+.wallet-create {
+  width: 94%;
+  height: 190px;
 }
 
 .wallet-create-front-logo {
-    position: initial;
-    top: 30px;
-    right: 30px;
-    margin-bottom: -1.8em;
+  position: initial;
+  top: 30px;
+  right: 30px;
+  margin-bottom: -1.8em;
 }
 
 .wallet-create-title {
-    color: #333;
-    font-size: 2.6rem;
-    margin-bottom: 1rem;
-    margin-top: 33px;
+  color: #333;
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
+  margin-top: 33px;
 }
 
 .wallet-create-subtitle {
-    color: #333;
-    margin-top: inherit;
-    font-size: 1.5rem;
+  color: #333;
+  margin-top: inherit;
+  font-size: 1.5rem;
 }
 
 //   .wallet-secret-last {
@@ -270,6 +278,7 @@ ion-slide {
     position: absolute;
     z-index: 1000;
     left: 0;
+    // left: 25px;
     display: inline-block;
     width: 96%;
     height: 300px;
@@ -292,16 +301,14 @@ ion-slide {
   }
 
   .wallet-number {
-      margin-top: 120px;
+    margin-top: 120px;
   }
 
   ion-slides {
-      height: 335px;
+    height: 335px;
   }
 
   ion-slides[onboarding] {
     height: 100%;
   }
-
-
 }

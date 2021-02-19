@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { IonicApp, IonicModule, IonicErrorHandler, FabContainer } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 
@@ -45,7 +45,6 @@ import { NgXtruncateModule } from 'ngx-truncate';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { LocalCacheProvider } from '../providers/local-cache/local-cache';
 import { LocalStorageProvider } from '../providers/local-storage/local-storage';
-import { OneSignal } from '@ionic-native/onesignal';
 import { PostsProvider } from '../providers/posts/posts';
 import { MarkdownModule } from '@ngx-markdown/core';
 import { TapticEngine } from '@ionic-native/taptic-engine';
@@ -68,8 +67,9 @@ import { FileTransfer } from '@ionic-native/file-transfer';
 import { Screenshot } from '@ionic-native/screenshot';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
-import { Diagnostic } from '@ionic-native/diagnostic';
-
+import { Deeplinks } from '@ionic-native/deeplinks';
+import { SharedService } from '../providers/shared-service/shared-service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -92,7 +92,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       tabsHideOnSubPages: true
     }),
     IonicStorageModule.forRoot({
-      name: '__nem_wallet',
+      name: 'proximax-sirius-wallet',
       driverOrder: ['indexeddb', 'sqlite', 'websql']
     }),
     ComponentsModule,
@@ -112,6 +112,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     Device,
     Clipboard,
     SocialSharing,
+    FabContainer,
     BarcodeScanner,
     FileChooser,
     FilePath,
@@ -120,6 +121,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DecimalPipe,
     App,
     AuthProvider,
+    SharedService,
     NemProvider,
     WalletProvider,
     AlertProvider,
@@ -138,7 +140,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     BarcodeScanner,
     LocalCacheProvider,
     LocalStorageProvider,
-    OneSignal,
     PostsProvider,
     TapticEngine,
     AppVersion,
@@ -159,7 +160,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     Screenshot,
     PhotoLibrary,
     Base64ToGallery,
-    Diagnostic,
+    Deeplinks,
+    ScreenOrientation
   ]
 })
 export class AppModule {}

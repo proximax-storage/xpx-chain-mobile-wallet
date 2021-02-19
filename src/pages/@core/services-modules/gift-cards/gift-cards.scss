@@ -1,0 +1,25 @@
+page-gift-cards {
+    .background-white {
+        background: #f3f3f3 !important;
+      }
+    
+      ion-content {
+        position: none;
+         background-color: white !important; 
+        font-family: 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        height: 100%;
+        width: 100%;
+    }
+
+    .image {
+      max-height: 50%;
+      max-width: 90%;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 80%;
+    }
+}
+
+  

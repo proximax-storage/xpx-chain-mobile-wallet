@@ -1,16 +1,12 @@
-import { File } from '@ionic-native/file';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Platform, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ToastProvider } from '../../../../../providers/toast/toast';
 import { Clipboard } from '@ionic-native/clipboard';
-import { Screenshot } from '@ionic-native/screenshot';
 import { Address } from 'tsjs-xpx-chain-sdk';
-import { PhotoLibrary } from '@ionic-native/photo-library';
-import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
-import { Diagnostic } from '@ionic-native/diagnostic';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
-// import * as qrcode from 'qrcode-generator';
-// import { Address } from 'tsjs-xpx-chain-sdk';
+import { SocialSharing } from '@ionic-native/social-sharing';
+import { TranslateService } from '@ngx-translate/core';
+import { AppConfig } from '../../../../../app/app.config'
+
 
 /**
  * Generated class for the SwapCertificatePage page.
@@ -30,53 +26,66 @@ export class SwapCertificatePage {
   address: any;
   timestamp: Date;
   screenshotDone: boolean = false;
+  url: string;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
+    private socialSharing: SocialSharing,
+    public translateService: TranslateService,
   ) {
-
-    const params = this.navParams.data;
-    console.log("TCL: SwapCertificatePage -> this.navParams.data", JSON.stringify(this.navParams.data, null, 4))
-    console.log('params this.params', JSON.stringify(params, null, 4));
-    this.publicKey = params.publicKey.payload;
-    this.transactionHash = params.transactionHash.data;
-    let address = Address.createFromRawAddress(params.address.address);
+    this.publicKey = this.navParams.data.publicKey;
+    this.transactionHash = this.navParams.data.transactionHash;
+    let address = Address.createFromRawAddress(this.navParams.data.address.address);
     this.address = address.pretty();
-    this.timestamp = new Date(params.timestamp);
+    this.timestamp = new Date(this.navParams.data.timestamp);
+    this.url = AppConfig.swap.urlExplorer.concat(this.transactionHash);
+    // this.url = `http://testnet-explorer.nemtool.com/#/s_tx?hash=${this.transactionHash}`;
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SwapCertificatePage');
-  }
 
   qrCreate() {
     let qr = qrcode(10, 'H')
-    let url = `http://bob.nem.ninja:8765/#/search/${this.transactionHash}`;
-    qr.addData(url);
+    this.url;
+    qr.addData(this.url);
     qr.make()
     // console.log('urlurlurl', url)
     return qr.createDataURL()
   }
 
   copy(val, string) {
+    let label = ''
+    if (string === 'address') {
+      label = this.translateService.instant("WALLETS.ADDRESS.COPY")
+    } else if (string === 'publicKey') {
+      label = this.translateService.instant("WALLETS.EXPORT.COPY_PUBLIC_KEY.RESPONSE")
+    } else if (string === 'hash') {
+      label = this.translateService.instant("WALLETS.HASH.COPY")
+    }
+
     this.clipboard.copy(val).then(_ => {
-      this.toastProvider.show(`Your ${string} has been successfully copied to the clipboard`, 3, true);
+      this.toastProvider.show(label, 3, true);
     });
   }
 
-
+  shared() {
+    this.socialSharing
+      .share(
+        `${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.DATE")}: ${this.timestamp} \n
+         ${this.translateService.instant("SERVICES.SWAP_PROCESS.SIRIUS_WALLET")}: ${this.address} \n
+         ${this.translateService.instant("WALLETS.TRANSACTION.DETAIL.HASH.NIS")}: ${this.transactionHash} \n`,
+        null,
+        null,
+        this.url).then(_ => {
+          this.dismiss();
+        });
+  }
   dismiss() {
     this.viewCtrl.dismiss();
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {
-        animate: true
-      }
-    );
+    this.navCtrl.setRoot('TabsPage', { animate: true });
   }
 
 }

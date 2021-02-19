@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { App } from './../../../../providers/app/app';
-import { WalletBackupProvider } from '../../../../providers/wallet-backup/wallet-backup';
 import { SocialSharing } from '../../../../../node_modules/@ionic-native/social-sharing';
-import { AuthProvider } from '../../../../providers/auth/auth';
-import { NemProvider } from '../../../../providers/nem/nem';
 import { UtilitiesProvider } from '../../../../providers/utilities/utilities';
-import { SimpleWallet } from 'tsjs-xpx-chain-sdk';
-import { WalletProvider } from '../../../../providers/wallet/wallet';
+import { SimpleWallet, Password } from 'tsjs-xpx-chain-sdk';
+import { Clipboard } from '@ionic-native/clipboard';
+import { ProximaxProvider } from '../../../../providers/proximax/proximax';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastProvider } from '../../../../providers/toast/toast';
 /**
  * Generated class for the WalletBackupPage page.
  *
@@ -25,6 +25,7 @@ import { WalletProvider } from '../../../../providers/wallet/wallet';
 export class WalletBackupPage {
   App = App;
 
+  data = null;
   options: Array<{
     name: string;
     value: number;
@@ -34,71 +35,124 @@ export class WalletBackupPage {
   showBackupfile: boolean;
   privateKey: string;
   currentWallet: SimpleWallet;
+  publicAccount: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private walletBackupProvider: WalletBackupProvider,
     private socialSharing: SocialSharing,
     private modalCtrl: ModalController,
     private utils: UtilitiesProvider,
-    private walletProvider: WalletProvider
+    private proximaxProvider: ProximaxProvider,
+    private clipboard: Clipboard,
+    private toastProvider: ToastProvider,
+    private translateService: TranslateService
+
   ) {
+    this.data = this.navParams.data;
+
+
+    console.log('his.data', this.data);
+
+    if (this.data && this.data.password) {
+      let password = new Password(this.data.password);
+      this.data.privateKey = this.proximaxProvider.decryptPrivateKey(password, this.data.wallet.encryptedPrivateKey.encryptedKey,
+        this.data.wallet.encryptedPrivateKey.iv);
+        this.publicAccount = this.proximaxProvider.getPublicAccountFromPrivateKey(this.data.privateKey, this.data.wallet.network)
+    }
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   ionViewWillEnter() {
     this.utils.setHardwareBack(this.navCtrl);
-
-    this.walletProvider.getSelectedWallet().then(currentWallet => {
-    console.log("SIRIUS CHAIN WALLET: PrivateKeyPage -> ionViewWillEnter -> currentWallet", currentWallet)
-      if (currentWallet) {
-      this.currentWallet = currentWallet;
-      this.walletProvider.getAccount(currentWallet).subscribe(account=> {
-        this.privateKey = account.privateKey;
-      })
-      }
-    });
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   ionViewDidLoad() {
   }
 
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   ionViewDidLeave() {
     this.navCtrl.popToRoot();
   }
 
-
-  goHome() {
-    this.navCtrl.setRoot(
-      'TabsPage',
-      {
-        animate: true
-      }
-    );
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  copy(val) {
+    if (val === 1) {
+      this.translateService.get('WALLETS.EXPORT.COPY_PRIVATE_KEY.RESPONSE').subscribe(value => {
+        let alertTitle = value;
+        this.clipboard.copy(this.data.privateKey.toUpperCase() ).then(_ => {
+          this.toastProvider.show(alertTitle, 3, true);
+        });
+      })
+    } else {
+      this.translateService.get('WALLETS.EXPORT.COPY_PUBLIC_KEY.RESPONSE').subscribe(value => {
+        let alertTitle = value;
+        this.clipboard.copy(this.publicAccount.publicKey.toUpperCase() ).then(_ => {
+          this.toastProvider.show(alertTitle, 3, true);
+        });
+      })
+    }
   }
 
-  copy() {
-    this.walletBackupProvider.copyToClipboard(this.privateKey);
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  dismiss() {
     this.goHome();
   }
 
-  share() {
-      this.socialSharing.share(
-      this.privateKey, null, null)
-      // this.goHome();
-  }
-
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
   gotoQRCodePage() {
     let page = "WalletBackupQrcodePage";
-    const modal = this.modalCtrl.create(page, {privateKey: this.privateKey, walletName: this.currentWallet.name } ,{
+    const modal = this.modalCtrl.create(page, { privateKey: this.data.privateKey, walletName: this.data.wallet.name }, {
       enableBackdropDismiss: false,
       showBackdrop: true
     });
     modal.present();
-    
   }
 
-  dismiss() {
-    this.goHome();
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  goHome() {
+    this.navCtrl.setRoot('TabsPage', { animate: true });
+  }
+
+  /**
+   *
+   *
+   * @memberof WalletBackupPage
+   */
+  shared(val) {
+    if (val === 1) {
+      this.socialSharing.share(this.data.privateKey, null, null)
+    } else {
+      this.socialSharing.share(this.publicAccount.publicKey, null, null)
+    }
   }
 }
