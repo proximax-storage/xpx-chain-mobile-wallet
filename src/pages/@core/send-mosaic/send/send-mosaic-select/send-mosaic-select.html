@@ -24,6 +24,13 @@
       </ion-item>
     </ion-card>
 
+    <ion-card no-margin-bottom 
+    *ngIf="mosaics.length === 0 ">
+    <ion-item >
+      <h2 ion-text color="dark" > {{ 'WALLETS.SEND.ERROR.ASSETS' | translate}} </h2>
+    </ion-item>
+  </ion-card>
+
     <section [hidden]="mosaics">
       <ion-card  no-margin-bottom fake-card *ngFor="let fakeCard of fakeList">
         <ion-item>

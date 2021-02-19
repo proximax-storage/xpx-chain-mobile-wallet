@@ -7,7 +7,6 @@ import { ContactsProvider } from '../../../../providers/contacts/contacts';
 import { ProximaxProvider } from '../../../../providers/proximax/proximax';
 import { TranslateService } from '@ngx-translate/core';
 import { WalletProvider } from '../../../../providers/wallet/wallet';
-import { Storage } from "@ionic/storage";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 /**
  * Generated class for the ContactAddPage page.
@@ -40,7 +39,6 @@ export class ContactAddPage {
     private proximaxProvider: ProximaxProvider,
     private translateService: TranslateService,
     private walletProvider: WalletProvider,
-    private storage: Storage,
     private barcodeScanner: BarcodeScanner,
     
   ) {
@@ -76,15 +74,19 @@ export class ContactAddPage {
       value => {
         const accountRecipient = (value !== undefined && value !== null && value !== '') ? value.split('-').join('') : '';
 
+        console.log("accountRecipientaccountRecipientaccountRecipient", accountRecipient);
+        
+        console.log("lengthlength", accountRecipient.length);
         if (accountRecipient !== null && accountRecipient !== undefined && accountRecipient.length === 40) {
           if (!this.proximaxProvider.verifyNetworkAddressEqualsNetwork(this.walletProvider.selectesAccount.account.address.address, accountRecipient)) {
+            console.log("entra aqui");
             // this.blockSendButton = true;
             this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
           } else {
             // this.blockSendButton = false;
             this.msgErrorUnsupported = '';
           }
-        } else if (!this.formGroup.get('address').getError("required") && this.formGroup.get('address').valid) {
+        } else if (!this.formGroup.get('address').getError("required") && this.formGroup.get('address').valid || accountRecipient.length > 40 || accountRecipient.length < 40) {
           // this.blockSendButton = true;
           this.msgErrorUnsupported = this.translateService.instant("WALLETS.SEND.ADDRESS.UNSOPPORTED");
         } else {

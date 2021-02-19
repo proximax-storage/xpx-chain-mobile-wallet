@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
 import { App } from '../../../../../providers/app/app';
 import { UtilitiesProvider } from '../../../../../providers/utilities/utilities';
 import { NavParams } from 'ionic-angular';
-import { Convert, MosaicInfo, NamespaceId } from 'tsjs-xpx-chain-sdk';
+import { Convert, NamespaceId } from 'tsjs-xpx-chain-sdk';
 import { ProximaxProvider } from '../../../../../providers/proximax/proximax';
 
 @Component({

@@ -36,15 +36,16 @@
           </p> -->
   
           <p float-right ion-text *ngIf="status === 'Confirmed'" color="dark">
-            <small>{{status}}</small>
+            
+            <small>{{"APP.ITEM.CONFIRMED" | translate}}</small>
           </p>
   
           <p float-right ion-text *ngIf="status === 'Unconfirmed'" color="dark">
-            <small>{{status}}</small>
+            <small>{{"APP.ITEM.UNCONFIRMED" | translate}}</small>
           </p>
   
           <p float-right ion-text *ngIf="status === 'Partial'" color="dark">
-            <small>{{status}}</small>
+            <small>{{"APP.ITEM.PARTIALS" | translate}}</small>
           </p>
         </section>
   
@@ -54,21 +55,5 @@
           </p>
         </ng-container>
       </ion-item>
-  
-      <!-- <ion-item transaction-status>
-        <section item-right>
-          <p float-right ion-text *ngIf="status === 'Confirmed'" color="success">
-            <small>{{status}}</small>
-          </p>
-  
-          <p float-right ion-text *ngIf="status === 'Unconfirmed'" color="danger">
-            <small>{{status}}</small>
-          </p>
-  
-          <p float-right ion-text *ngIf="status === 'Partial'" color="grey">
-            <small>{{status}}</small>
-          </p>
-        </section>
-      </ion-item> -->
     </ion-card-header>
   </ng-container>

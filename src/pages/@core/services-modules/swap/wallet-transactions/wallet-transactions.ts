@@ -8,6 +8,7 @@ import { Address } from 'tsjs-xpx-chain-sdk';
 import { File } from '@ionic-native/file';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/';
 import { Screenshot } from '@ionic-native/screenshot';
+import { TranslateService } from '@ngx-translate/core';
 /**
  * Generated class for the WalletTransactionsPage page.
  *
@@ -39,7 +40,8 @@ export class WalletTransactionsPage {
     private toastProvider: ToastProvider,
     private file: File,
     private transfer: FileTransfer,
-    private screenshot: Screenshot
+    private screenshot: Screenshot,
+    private translateService: TranslateService,
   ) {
     
     this.params = this.navParams.data;
@@ -68,8 +70,17 @@ export class WalletTransactionsPage {
     return qr.createDataURL()
   }
   copy(val, string) {
+    let label = ''
+    if (string === 'address') {
+      label = this.translateService.instant("WALLETS.ADDRESS.COPY")
+    } else if (string === 'publicKey') {
+      label = this.translateService.instant("WALLETS.EXPORT.COPY_PUBLIC_KEY.RESPONSE")
+    } else if (string === 'hash') {
+      label = this.translateService.instant("WALLETS.HASH.COPY")
+    }
     this.clipboard.copy(val).then(_ => {
-      this.toastProvider.show(`Your ${string} has been successfully copied to the clipboard`, 3, true);
+      this.toastProvider.show(label, 3, true);
+      
     });
   }
 

@@ -6,9 +6,9 @@
 -->
 
 <ion-header no-border>
-  <ion-navbar hideBackButton transparent>
+  <ion-navbar hideBackButton color="white">
     <ion-title>
-      <span ion-text color="dark">{{"WALLETS.EXPORT.BACKUP_WALLET" | translate}}</span>
+      <span ion-text color="dark">{{"WALLETS.EXPORT.PRIVATE_KEY_TITLE" | translate}}</span>
     </ion-title>
 
     <ion-buttons end>
@@ -23,12 +23,6 @@
 <ion-content fullscreen background>
   <ion-list transparent-items radio-group [(ngModel)]="selectedOption">
     <ion-card margin-bottom>
-      <ion-card-header text-center>
-        <ion-card-title text-wrap>
-          {{"WALLETS.EXPORT.PRIVATE_KEY_TITLE" | translate}}
-        </ion-card-title>
-        <img quarter-width [src]="App.STICKERS.HINT">
-      </ion-card-header>
       <ion-card-content>
         <h4 text-wrap text-justify ion-text color="black">
           {{"WALLETS.EXPORT.PRIVATE_KEY_DESC" | translate}}

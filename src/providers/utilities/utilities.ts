@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastProvider } from '../toast/toast';
 import { DefaultMosaic } from '../../models/default-mosaic';
+import { TranslateService } from '@ngx-translate/core';
 
 /*
   Generated class for the UtilitiesProvider provider.
@@ -26,6 +27,7 @@ export class UtilitiesProvider {
     private events: Events,
     private clipboard: Clipboard,
     private toastProvider: ToastProvider,
+    private translateService: TranslateService,
   ) { }
 
 
@@ -172,15 +174,15 @@ export class UtilitiesProvider {
     let message: string = '';
 
     if (type === 'sender') {
-      message = 'Sender\'s address copied successfully';
+      message = this.translateService.instant("WALLETS.SENDER.COPY");
     } else if (type === 'receiver') {
-      message = 'Receiver\'s address copied successfully';
+      message =  this.translateService.instant("WALLETS.RECEIVER.COPY");
     } else if (type === 'hash') {
-      message = 'Hash copied successfully';
+      message = this.translateService.instant("WALLETS.HASH.COPY");
     } else if (type === 'message') {
-      message = 'Message copied successfully';
+      message = this.translateService.instant("WALLETS.MESSAGE.COPY");
     } else if (type === 'cosigner') {
-      message = 'Cosigner\'s address copied successfully';
+      message = this.translateService.instant("WALLETS.COSIGNER.COPY");
     }
 
     this.clipboard.copy(text).then(_ => {

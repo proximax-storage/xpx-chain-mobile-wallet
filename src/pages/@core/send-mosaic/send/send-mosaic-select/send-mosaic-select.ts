@@ -54,49 +54,44 @@ export class SendMosaicSelectPage {
   ) {
     this.fakeList = [{}, {}];
     this.selectedMosaicc = this.navParams.data.selectedMosaic;
-
-    console.log('this.navParams.data', this.navParams.data);
-    
   }
 
   getAbsoluteAmount(amount, divisibility) {
     return this.proximaxProvider.amountFormatter(amount, divisibility)
   }
-  
+
   async ionViewWillEnter() {
     this.walletProvider.getAccountSelected().then(selectedWallet => {
       this.selectedWallet = selectedWallet
-      console.log('this.selectedWallet', this.selectedWallet);
-      
-        this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
-        this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics=>{
+      this.address = this.proximaxProvider.createFromRawAddress(this.selectedWallet.account.address.address)
+      this.mosaicsProvider.getMosaics(this.address).subscribe(async mosaics => {
+
+        if (mosaics != null) {
 
           let names = [];
           names = await this.getNameMosacis(mosaics.map(x => new MosaicId(x.hex)));
 
-          console.log('.........................names', names);
-          
           for (const element of mosaics) {
             let value = names.find(x => x.mosaicId.id.toHex() === element.hex)
-            console.log('.........................value', value);
-            
-            if(value.names  && value.names.length > 0){
+
+            if (value.names && value.names.length > 0) {
               element.name = value.names[0].name;
             }
           }
 
           this.mosaics = mosaics;
+        }
 
-          console.log('this.mosaics', this.mosaics);
-          
-        })
-    });
+      }, error => {
+        // console.log('errrrrrrrr', error);
+      });
+    })
   }
 
   async getNameMosacis(idMosaics: MosaicId[]) {
     return await this.proximaxProvider.getMosaicsName(idMosaics).toPromise();
   }
-  
+
   loadDefaultMosaics() {
     return this.mosaicsProvider.loadDefaultMosaics();
   }

@@ -72,7 +72,7 @@ export class ServicesPage {
     await this.getCurrentAccount();
     if (this.account != null) {
 
-    //   // FUNCION SCAN QUE CAPTURA LOS VALORES DEL QR Y LOS DESERIALIZA
+    // //   // FUNCION SCAN QUE CAPTURA LOS VALORES DEL QR Y LOS DESERIALIZA
       this.barcodeScanner
         .scan()
         .then(barcodeData => {
@@ -86,7 +86,7 @@ export class ServicesPage {
 
             console.log( JSON.stringify(dataFormat));
             
-            if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
+            if (dataFormat && dataFormat[0].amountGift && dataFormat[0].pkGift) {
               this.gotoGift('GiftCardsPage', dataFormat)
             } else {
               this.alertProvider.showMessage(this.translateService.instant("SERVICES.GIFT_CARD.TRANSFER.ERROR"));
@@ -111,12 +111,14 @@ export class ServicesPage {
       // namespace no transferable
       //  const dataHex = '00000000000000019384F0FBC75F957BE0A8F3003FB9298779667ABCB31C9FBDE800A7F8AA7E3F75CF231D202AB020FA30B200B8'
 // 
-       // misaics transferable
-      //  const dataHex = '00000000000000019384F0FBC75F957BE0A8F3003FB9298779667ABCB31C9FBDE800A7F8AA7E3F7513BFC518E40549D730B200B8'
+      //  misaics transferable
+      //  const dataHex = '0000000001C9C380C7BDEC3A6B27A04417F0C7F2F5A9D0F69C4143DD6ACE6A9C1A9F08275130EA917465737420737364'
  
       //    const dataFormat = this.proximaxProvider.unSerialize(dataHex)
-      //    if (dataFormat && dataFormat[0].mosaicGift && dataFormat[0].pkGift) {
-      //      console.log('dataFormat', dataFormat);
+      //    console.log('dataFormat0, ',dataFormat);
+         
+      //    if (dataFormat && dataFormat[0].amountGift && dataFormat[0].pkGift) {
+      //   //    console.log('dataFormat', dataFormat);
            
       //      this.gotoGift('GiftCardsPage', dataFormat)
       //    } else {

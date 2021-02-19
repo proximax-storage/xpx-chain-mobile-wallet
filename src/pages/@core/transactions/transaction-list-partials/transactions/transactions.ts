@@ -10,6 +10,7 @@ import { AppConfig } from '../../../../../app/app.config';
 import { AlertProvider } from '../../../../../providers/alert/alert';
 import { MosaicsProvider } from '../../../../../providers/mosaics/mosaics';
 
+
 @Component({
   selector: 'transactions',
   templateUrl: 'transactions.html'
@@ -26,51 +27,51 @@ export class TransactionComponent {
   arraTypeTransaction = {
     transfer: {
       id: TransactionType.TRANSFER,
-      name: "Transfer"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.TRANSFER')
     },
     registerNameSpace: {
       id: TransactionType.REGISTER_NAMESPACE,
-      name: "Register Namespace"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.REGISTER_NAMESPACE')
     },
     mosaicDefinition: {
       id: TransactionType.MOSAIC_DEFINITION,
-      name: "Mosaic Definition"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.MOSAIC_DEFINITION')
     },
     mosaicSupplyChange: {
       id: TransactionType.MOSAIC_SUPPLY_CHANGE,
-      name: "Mosaic Supply Change"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.MOSAIC_SUPPLY_CHANGE')
     },
     modifyMultisigAccount: {
       id: TransactionType.MODIFY_MULTISIG_ACCOUNT,
-      name: "Modify Multisig Account"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.MODIFY_MULTISIG_ACCOUNT')
     },
     aggregateComplete: {
       id: TransactionType.AGGREGATE_COMPLETE,
-      name: "Aggregate Complete"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.AGGREGATE_COMPLETE')
     },
     aggregateBonded: {
       id: TransactionType.AGGREGATE_BONDED,
-      name: "Aggregate Bonded"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.AGGREGATE_BONDED')
     },
     mosaicAlias: {
       id: TransactionType.MOSAIC_ALIAS,
-      name: "Mosaic Alias"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.MOSAIC_ALIAS')
     },
     addressAlias: {
       id: TransactionType.ADDRESS_ALIAS,
-      name: "Address Alias"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.ADDRESS_ALIAS')
     },
     lock: {
       id: TransactionType.LOCK,
-      name: "LockFund"
+      name: this.translateService.instant('WALLETS.TRANSACTION.TYPE.LOCK')
     },
     secretLock: {
       id: TransactionType.SECRET_LOCK,
-      name: "Secret lock"
+      name: this.translateService.instant('WALLETS.TRANSACTION.LOCK')
     },
     secretProof: {
       id: TransactionType.SECRET_PROOF,
-      name: "Secret proof"
+      name: this.translateService.instant('WALLETS.TRANSACTION.SECRET_PROOF')
     }
   };
   App = App;
@@ -127,11 +128,12 @@ export class TransactionComponent {
               this.LOGO = this.utils.getLogo(this.MOSAIC_INFO);
               this.showTx = true;
               this.statusViewDetail = true;
-              this.type = 'Transfer';
+              this.type = this.translateService.instant('WALLETS.TRANSACTION.TRANSFER');
             } else {
               const mosaic = (this.mosaics.length > 0) ? this.mosaics.find(next => next.hex === this.tx.mosaics[0].id.toHex()) : null;
               if (mosaic) {
-                this.MESSAGE_ = 'ProximaX Digital Asset';
+                
+                this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.ASSETS_PROXIAX');
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
                 this.showTx = true;
@@ -139,7 +141,7 @@ export class TransactionComponent {
                 this.statusViewDetail = true;
                 this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx.mosaics[0].amount.compact(), mosaic.divisibility);
               } else {
-                this.MESSAGE_ = 'ProximaX Digital Assets';
+                this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.ASSETS_PROXIAX');
                 this.MOSAIC_INFO = null
                 this.LOGO = App.LOGO.SIRIUS;
                 this.showTx = true;
@@ -156,11 +158,12 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'ProximaX Digital Asset';
+            this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.ASSETS_PROXIAX');
             this.MOSAIC_INFO = null;
             this.LOGO = App.LOGO.SIRIUS;
             this.showTx = true;
-            this.type = `Digital Assets (${this.tx.mosaics.length})`;
+            this.type = this.translateService.instant("WALLETS.TRANSACTION.TYPE1", { 'assets': this.tx.mosaics.length});
+            // this.type = `Digital Assets (${this.tx.mosaics.length})`;
             this.statusViewDetail = true;
             this.AMOUNT = null;
             const mosaics = [].slice(0);
@@ -175,12 +178,12 @@ export class TransactionComponent {
             this.mosaics = mosaics.slice(0);
           }
         } else {
-          this.MESSAGE_ = 'Other transactions';
+          this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.OTHER');
           this.MOSAIC_INFO = null;
           this.AMOUNT = null;
           this.LOGO = App.LOGO.OTHER;
           this.showTx = true;
-          this.type = 'Transfer';
+          this.type = this.translateService.instant('WALLETS.TRANSACTION.TRANSFER');
           this.statusViewDetail = true;
         }
         break;
@@ -194,7 +197,7 @@ export class TransactionComponent {
               const addressSender = this.tx['innerTransactions'][0].signer.address.plain();
               if ((addressSender === addressAccountMultisig) || (addressSender === addressAccountSimple)) {
                 if (msg && msg["type"] && msg["type"] === "Swap") {
-                  this.MESSAGE_ = "ProximaX Swap";
+                  this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.SWAP');
                   this.MOSAIC_INFO = null;
                   this.AMOUNT = null;
                   this.LOGO = App.LOGO.SWAP;
@@ -204,7 +207,7 @@ export class TransactionComponent {
                 }
               }
             } catch (error) {
-              this.MESSAGE_ = 'Aggregate Bonded';
+              this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.AGGREGATE');
               this.MOSAIC_INFO = null;
               this.AMOUNT = null;
               this.LOGO = App.LOGO.BONDED;
@@ -219,7 +222,7 @@ export class TransactionComponent {
               }
             }
           } else {
-            this.MESSAGE_ = 'Aggregate Bonded';
+            this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.AGGREGATE');
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
             this.LOGO = App.LOGO.BONDED;
@@ -234,7 +237,7 @@ export class TransactionComponent {
             }
           }
         } else {
-          this.MESSAGE_ = 'Aggregate Bonded';
+          this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.AGGREGATE');
           this.MOSAIC_INFO = null;
           this.AMOUNT = null;
           this.LOGO = App.LOGO.BONDED;
@@ -252,7 +255,7 @@ export class TransactionComponent {
           const msg = JSON.parse(this.tx['innerTransactions'][0]["message"].payload);
           if (msg && msg["type"] && msg["type"] === "gift") {
             if (this.tx['innerTransactions'][0].mosaics[0].id.toHex() === AppConfig.mosaicXpxInfo.id) {
-              this.MESSAGE_ = "Sirius Gift Card";
+              this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.GIFT');
               this.MOSAIC_INFO = null;
               this.AMOUNT = this.proximaxProvider.amountFormatter(this.tx['innerTransactions'][0].mosaics[0].amount.compact(), mosaicsFound[0].divisibility);
               this.LOGO = App.LOGO.SIRIUSGIFTCARD;
@@ -270,7 +273,7 @@ export class TransactionComponent {
             } 
           } else {
             let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
-            this.MESSAGE_ = 'Other Transactions';
+            this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.OTHER');
             this.MOSAIC_INFO = null;
             this.AMOUNT = null;
             this.LOGO = App.LOGO.OTHER;
@@ -280,7 +283,7 @@ export class TransactionComponent {
           }
         } else {
           let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
-          this.MESSAGE_ = 'Other Transactions';
+          this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.OTHER');
           this.MOSAIC_INFO = null;
           this.AMOUNT = null;
           this.LOGO = App.LOGO.OTHER;
@@ -291,7 +294,7 @@ export class TransactionComponent {
         break;
       default:
         let type = Object.keys(this.arraTypeTransaction).find(position => this.arraTypeTransaction[position].id === this.tx.type);
-        this.MESSAGE_ = 'Other Transactions';
+        this.MESSAGE_ = this.translateService.instant('WALLETS.TRANSACTION.OTHER');
         this.MOSAIC_INFO = null;
         this.AMOUNT = null;
         this.LOGO = App.LOGO.OTHER;

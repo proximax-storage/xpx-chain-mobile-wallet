@@ -16,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   imports: [
     PipesModule,
-    IonicModule
+    IonicModule,
+    TranslateModule.forChild()
   ],
   declarations: [
     ImportanceTransferTransactionComponent,
@@ -39,7 +40,6 @@ import { TranslateModule } from '@ngx-translate/core';
     TransactionComponent,
     TransferTransactionFilterComponent,
     MultisigAggregateModificationTransactionComponent,
-    TranslateModule
   ]
 })
 

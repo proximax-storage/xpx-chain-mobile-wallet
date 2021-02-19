@@ -54,15 +54,12 @@ export class WalletProvider {
   checkIfWalletNameExists(walletName: string, walletAddress: string): Promise<boolean> {
     let exists = false;
     return this.getLocalWallets().then(wallets => {
-      console.log('wallets', wallets);
-      
+
       if (wallets.length != 0) {
         let _catapultAccounts: any = wallets.catapultAccounts;
-        for (var i = 0; i < _catapultAccounts.length; i++) {
-          if (_catapultAccounts[i].account.name === walletName || _catapultAccounts[i].account.address.address === walletAddress) {
-            exists = true;
-            break;
-          }
+        const value = _catapultAccounts.find(x => x.account.name === walletName && x.account.address.address != walletAddress)
+        if (value != undefined) {
+          exists = true;
         }
       } else {
         exists = false;
@@ -133,7 +130,7 @@ export class WalletProvider {
 
       let _catapultAccounts: any = wallets.catapultAccounts;
       let _nis1Accounts: any = wallets.nis1Accounts;
-     
+
       _catapultAccounts.map((res, index) => {
         if (res.account.name == wallet['account'].name) {
           _catapultAccounts.splice(index, 1);
@@ -147,7 +144,7 @@ export class WalletProvider {
           }
         });
       }
-     
+
 
       let _wallets = {
         catapultAccounts: _catapultAccounts,
@@ -218,11 +215,11 @@ export class WalletProvider {
  */
   public getLocalWallets(): Promise<any> {
     return this.storage.get('myWallets').then(wallets => {
-      
+
       let complete = wallets[0]
       let _wallets = wallets[0].catapultAccounts ? wallets[0].catapultAccounts : {};
       const WALLETS = _wallets ? _wallets : [];
-      
+
       if (wallets[0].catapultAccounts != null) {
         if (wallets) {
           const walletsMap = WALLETS.map(walletFile => {
@@ -331,7 +328,7 @@ export class WalletProvider {
       );
 
       console.log('publicAccountNis1', publicAccountNis1);
-      
+
 
       const accountnis1 = {
         account: nis1Account,
@@ -343,14 +340,14 @@ export class WalletProvider {
 
       nis1Accounts.push(accountnis1);
       walletSelected['nis1Accounts'] = nis1Accounts;
-      const x= this.proximaxProvider.decryptPrivateKey(
+      const x = this.proximaxProvider.decryptPrivateKey(
         password,
         catapultAccount.encryptedPrivateKey.encryptedKey,
         catapultAccount.encryptedPrivateKey.iv
       )
 
       console.log('#####____________', x);
-      
+
     }
 
     const accountCatapult = { account: catapultAccount, walletColor: walletColor, publicAccount: publicAccount }
@@ -411,13 +408,16 @@ export class WalletProvider {
           updateWallet = _catapultAccounts[i];
         };
       }
-      for (let i = 0; i < _nis1Accounts.length; i++) {
+      if (_nis1Accounts && _nis1Accounts.length != 0) {
+        for (let i = 0; i < _nis1Accounts.length; i++) {
 
-        if (_nis1Accounts[i].account.name == wallet.name) {
-          _nis1Accounts[i].account.name = newWalletName;
-          _nis1Accounts[i].walletColor = walletColor;
-        };
+          if (_nis1Accounts[i].account.name == wallet.name) {
+            _nis1Accounts[i].account.name = newWalletName;
+            _nis1Accounts[i].walletColor = walletColor;
+          };
+        }
       }
+
 
       let _wallets = {
         catapultAccounts: _catapultAccounts,

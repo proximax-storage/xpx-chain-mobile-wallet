@@ -60,15 +60,11 @@ export class WalletDetailsPage {
     private translateService: TranslateService,
     private viewCtrl: ViewController,
   ) {
-    console.log("SIRIUS CHAIN WALLET: WalletDetailsPage -> this.navParams.data", this.navParams.data)
     this.configurationForm = this.sharedService.configurationForm;
     this.totalBalance = this.navParams.get('totalBalance');
     this.amountXpx = this.navParams.get('amountXpx');
     this.selectedAccount = this.navParams.get('selectedAccount');
-    this.publicAccount = this.navParams.data.selectedAccount.publicAccount.publicKey
-
-    console.log('this.publicAccount', this.publicAccount);
-    
+    this.publicAccount = this.navParams.data.selectedAccount.publicAccount.publicKey.toUpperCase() 
     this.createForm();
   }
 
@@ -145,7 +141,6 @@ export class WalletDetailsPage {
       this.delete = true
       this.public = true
       this.export = true
-      console.log('cancel 1');
     // } 
   //   else if (val === 2){
   //     this.deletePass = false;
@@ -170,7 +165,7 @@ export class WalletDetailsPage {
     let password = new Password(this.form.get("password").value);
     const iv = this.selectedAccount.account.encryptedPrivateKey.iv;
     const encryptedKey = this.selectedAccount.account.encryptedPrivateKey.encryptedKey;
-    this.privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv);
+    this.privateKey = this.proximaxProvider.decryptPrivateKey(password, encryptedKey, iv).toUpperCase();
 
     if (this.privateKey && this.privateKey !== '' && (this.privateKey.length === 64 || this.privateKey.length === 66)) {
       if (Number(val)  === 1) {
@@ -192,7 +187,6 @@ export class WalletDetailsPage {
         this.showModal(page, { wallet: this.selectedAccount });
         this.cancel()
       } else if (Number(val) === 3){
-        console.log('acep 3 ');
         this.cancel()
         this.haptic.notification({ type: 'success' });
         this.socialSharing

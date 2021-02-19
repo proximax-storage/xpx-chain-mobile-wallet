@@ -97,17 +97,17 @@ export class ContactDetailPage {
 
   copyAddress() {
     this.clipboard.copy(this.selectedContact.address).then(_ => {
-      this.toastProvider.show(`${this.selectedContact.name}'s address has been successfully copied to the clipboard.`, 3, true);
+      this.toastProvider.show(this.translateService.instant("WALLETS.ADDRESS.COPY"), 3, true);
     })
   }
-
+  
   confirm() {
     const actionSheet = this.actionSheetCtrl.create({
       title: this.translateService.instant("SERVICES.ADDRESS_BOOK.DELETE.WARNING"),
       cssClass: 'wallet-on-press',
       buttons: [
         {
-          text: 'Delete',
+          text: this.translateService.instant("WALLETS.BUTTON.DELETE"),
           role: 'destructive',
           icon: this.platform.is('ios') ? null : 'trash',
           handler: () => {
@@ -115,7 +115,7 @@ export class ContactDetailPage {
           }
         },
         {
-          text: 'Cancel',
+          text: this.translateService.instant("WALLETS.BUTTON.CANCEL"),
           role: 'cancel',
           icon: this.platform.is('ios') ? null : 'close',
           handler: () => {

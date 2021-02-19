@@ -45,9 +45,10 @@ export class GiftCardsPage {
   mosaics: any;
   mosaicsHex: any;
   mosaicsAmount: any;
+  idenficatorUser: any;
   msgErrorUnsupported: any;
   nameMosaic: string;
-  showTransferable: boolean;
+  showTransferable: boolean= true;
   feeMax: number;
   caracterMax: number = 10;
   noSoported: boolean = false;
@@ -68,18 +69,17 @@ export class GiftCardsPage {
     public mosaicsProvider: MosaicsProvider,
   ) {
     this.dataGif = this.navParams.data;
-    this.mosaicsHex = this.dataGif[0].mosaicGift.toLowerCase()
+    this.mosaicsHex = AppConfig.xpxHexId.toLowerCase()
     this.mosaicsAmount = this.dataGif[0].amountGift
+    // this.idenficatorUser = this.dataGif[0].des
     this.amountFormatter = this.mosaicsAmount
     const idValue = UInt64.fromHex(this.mosaicsHex)
     const isMisaic = this.proximaxProvider.validateIsMosaics(idValue)
 
     if (!isMisaic) {
-      console.log('is namespace');
       this.mosaics = new Mosaic(new NamespaceId([idValue.lower, idValue.higher]), UInt64.fromUint(Number(this.mosaicsAmount)));
       this.nameNamespace(idValue)
     } else {
-      console.log('is mosaic');
       this.mosaics = new Mosaic(new MosaicId(this.mosaicsHex), UInt64.fromUint(Number(this.mosaicsAmount)));
       this.mosaicName(idValue)
       this.dataMosaics(idValue)
@@ -89,11 +89,11 @@ export class GiftCardsPage {
     this.subscribeValue()
     this.calculateFeeTxComplete()
 
-    if (this.dataGif[0].typeGif === '0') {
-      this.showTransferable = false
-    } else {
-      this.noSoported = true
-    }
+    // if (this.dataGif[0].typeGif === '0') {
+    //   this.showTransferable = false
+    // } else {
+    //   this.noSoported = true
+    // }
   }
 
   async nameNamespace(namespaceIds) {
@@ -101,9 +101,7 @@ export class GiftCardsPage {
     if (namespaceNames.length > 0 && namespaceNames[0].name) {
       this.nameMosaic = namespaceNames[0].name
     }
-    console.log('############################## namespace id', JSON.stringify(namespaceIds));
     const namespace = await this.getNamespaces(namespaceIds);
-    console.log('############################## namespace', JSON.stringify(namespace));
     if (namespace && namespace['owner']) {
       this.addressDetination = namespace['owner'].address
 
@@ -148,7 +146,7 @@ export class GiftCardsPage {
         ]
       ],
       idenficatorUser: [
-        "",
+        this.dataGif[0].des ,
         [
           Validators.required,
           Validators.maxLength(this.caracterMax),
@@ -172,7 +170,7 @@ export class GiftCardsPage {
   calculateFeeTxComplete() {
     const networkType = AppConfig.sirius.networkType
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
-    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, '1237654637') })
+    const msg = JSON.stringify({ type: 'gift'})
     const deadLine = Deadline.create()
 
     const Tx1 = TransferTransaction.create(
@@ -206,19 +204,20 @@ export class GiftCardsPage {
   // OBTENER INFO DEL MOSAIC 
   async dataMosaics(id) {
     const mosaicsFound: MosaicInfo[] = await this.proximaxProvider.getMosaics([id]).toPromise();
-    this.addressDetination = mosaicsFound[0].owner.address
+
+    // this.addressDetination = mosaicsFound[0].owner.address
     this.divisibility = mosaicsFound[0].divisibility
     this.amountFormatter = this.proximaxProvider.amountFormatter(this.mosaicsAmount, this.divisibility)
 
-    if (this.addressDetination.pretty()) {
-      this.loading = false
-    }
+    // if (this.addressDetination.pretty()) {
+    //   this.loading = false
+    // }
 
-    if (this.dataGif[0].typeGif === '0') {
-      this.showTransferable = false
-    } else {
-      this.showTransferable = true
-    }
+    // if (this.dataGif[0].typeGif === '0') {
+    //   this.showTransferable = false
+    // } else {
+      // this.showTransferable = true
+    // }
   }
 
   dismiss() {
@@ -251,7 +250,9 @@ export class GiftCardsPage {
   // OBTENER NAME DEL MOSAIC 
   async mosaicName(id) {
     this.proximaxProvider.getMosaicsName([id]).subscribe(name => {
-      this.nameMosaic = name[0].names[0].name
+      if(name[0].names && name[0].names.length > 0){
+        this.nameMosaic = name[0].names[0].name
+      }
     })
   }
 
@@ -282,41 +283,48 @@ export class GiftCardsPage {
     this.block = true;
     const networkType = AppConfig.sirius.networkType
     const giftCardAccount: Account = Account.createFromPrivateKey(this.dataGif[0].pkGift, networkType);
+    
     // toGovernmentTx
     const deadLine = Deadline.create()
-    const msg = JSON.stringify({ type: 'gift', msg: this.serializeData(this.dataGif[0].codeGift, this.form.get("idenficatorUser").value) })
+    const msg = JSON.stringify({ type: 'gift', msg: 'gift card mobile wallet' })
 
     const toDetinationTx = TransferTransaction.create(
       deadLine,
       addressDetination,
       [this.mosaics],
       PlainMessage.create(msg),
-      networkType
+      networkType,
+      UInt64.fromUint(0)
     )
+
+    // console.log('toDetinationTx;', toDetinationTx);
+
     // toOriginTx
-    const toOriginTx = TransferTransaction.create(
-      deadLine,
-      this.addressOrigin,
-      [],
-      PlainMessage.create(msg),
-      networkType
-    )
+    // const toOriginTx = TransferTransaction.create(
+    //   deadLine,
+    //   this.addressOrigin,
+    //   [],
+    //   PlainMessage.create(msg),
+    //   networkType
+    // )
+
     // Build Complete Transaction
     const aggregateTransaction = AggregateTransaction.createComplete(
       deadLine,
       [
         toDetinationTx.toAggregate(giftCardAccount.publicAccount),
-        toOriginTx.toAggregate(giftCardAccount.publicAccount)
+        // toOriginTx.toAggregate(giftCardAccount.publicAccount)
       ],
       networkType,
       [],
-      UInt64.fromUint(this.feeMax)
+      UInt64.fromUint(0)
+      // UInt64.fromUint(this.feeMax)
     );
     // Sign bonded Transaction
     const signedTransaction: SignedTransaction = giftCardAccount.sign(aggregateTransaction, AppConfig.sirius.networkGenerationHash);
     // Announce Transaction
     this.proximaxProvider.announceTx(signedTransaction).subscribe(
-      next => console.log('Tx sent......'),
+      next => console.log('Tx sent......', signedTransaction),
       error => console.log('Error to Sent ->', error)
     );
 
