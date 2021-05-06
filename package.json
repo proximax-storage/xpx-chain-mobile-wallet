@@ -87,7 +87,7 @@
     "cordova-res": "^0.8.1",
     "crypto-js": "3.1.9-1",
     "es6-promise-plugin": "^4.2.2",
-    "highcharts": "6.1.1",
+    "highcharts": "9.0.0",
     "ionic-angular": "3.9.2",
     "ionic-plugin-deeplinks": "^1.0.20",
     "ionic-tooltips": "2.0.1",
