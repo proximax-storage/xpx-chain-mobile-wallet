@@ -98,7 +98,7 @@
     "jspdf": "^1.5.3",
     "lodash": "4.17.10",
     "luxon": "1.3.1",
-    "moment": "2.22.2",
+    "moment": "2.29.2",
     "nem-library": "^2.0.0-RC4",
     "nem-sdk": "^1.5.1",
     "ng2-currency-mask": "^5.3.1",
